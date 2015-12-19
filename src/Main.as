@@ -483,7 +483,7 @@ package
 		
 		public function handleMouseWheel(pEvent:MouseEvent) : void {
 			if(this.mouseX < this.shopTabs.x) {
-				scaleSlider.value += pEvent.delta * 0.1;
+				scaleSlider.value += pEvent.delta * 0.2;
 				the_mouse.mouse.scaleX = scaleSlider.value;
 				the_mouse.mouse.scaleY = scaleSlider.value;
 			}
