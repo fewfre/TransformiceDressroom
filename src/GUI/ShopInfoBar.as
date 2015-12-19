@@ -83,11 +83,15 @@ package GUI
 		public function ChangeImage(pMC:MovieClip) : void
 		{
 			if(this.Image != null) { imageCont.removeChild(this.Image); }
+			
+			var tBounds:Rectangle = pMC.getBounds(pMC);
+			var tOffset:Point = tBounds.topLeft;
+			
 			this.Image = pMC;
+			this.Image.x = 50 / 2 - (tBounds.width / 2 + tOffset.x)* 0.75;
+			this.Image.y = 50 / 2 - (tBounds.height / 2 + tOffset.y)* 0.75;
 			this.Image.scaleX = 0.75;
 			this.Image.scaleY = 0.75;
-			this.Image.x = 50 * 0.5;
-			this.Image.y = 50 * 0.5;
 			imageCont.addChild(this.Image);
 		}
 		
