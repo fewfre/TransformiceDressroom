@@ -44,11 +44,11 @@ package GUI
 		}
 
 		public function Unpressed() : void {
-			this.draw(3952740, 7, 6126992, 1120028, 3952740);
+			this.draw(ConstantsApp.COLOR_BUTTON_BLUE, 7, ConstantsApp.COLOR_BUTTON_OUTSET_TOP, ConstantsApp.COLOR_BUTTON_OUTSET_BOTTOM, ConstantsApp.COLOR_BUTTON_BLUE);
 		}
 
 		public function Pressed() : void {
-			this.draw(3952740, 7, 1120028, 6126992, 3952740);
+			this.draw(ConstantsApp.COLOR_BUTTON_DOWN, 7, ConstantsApp.COLOR_BUTTON_OUTSET_BOTTOM, ConstantsApp.COLOR_BUTTON_BLUE, ConstantsApp.COLOR_BUTTON_DOWN);
 		}
 
 		internal function Mouse_Down(pEvent:MouseEvent) : void

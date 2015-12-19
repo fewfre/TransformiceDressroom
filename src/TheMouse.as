@@ -112,7 +112,7 @@ package
 				case ItemType.NECK	: return this.neck; break;
 				case ItemType.HAIR	: return this.hair; break;
 				case ItemType.TAIL	: return this.tail; break;
-				// case FUR	: 
+				case ItemType.FUR	: return this.mouse; break;
 				default: trace("[TheMouse](getItemFromIndex) Unknown Type: "+pType); break;
 			}
 		}

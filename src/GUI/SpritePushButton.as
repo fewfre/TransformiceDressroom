@@ -2,6 +2,8 @@ package GUI
 {
 	import flash.display.*;
 	import flash.events.MouseEvent;
+	import flash.geom.Rectangle;
+	import flash.geom.Point;
 	
 	public class SpritePushButton extends RoundedRectangle
 	{
@@ -28,11 +30,14 @@ package GUI
 			addEventListener(MouseEvent.ROLL_OVER, this.Mouse_Over);
 			addEventListener(MouseEvent.ROLL_OUT, this.Mouse_Out);
 			
+			var tBounds:Rectangle = pMC.getBounds(pMC);
+			var tOffset:Point = tBounds.topLeft;
+			
 			this.Image = pMC;
-			this.Image.x = pWidth / 2;
-			this.Image.y = pHeight / 2;
-			this.Image.scaleX = 0.75;
-			this.Image.scaleY = 0.75;
+			this.Image.x = pWidth / 2 - (tBounds.width / 2 + tOffset.x);
+			this.Image.y = pHeight / 2 - (tBounds.height / 2 + tOffset.y);
+			this.Image.scaleX = 1;
+			this.Image.scaleY = 1;
 			addChild(this.Image);
 			
 			this.Unpressed();
@@ -41,12 +46,12 @@ package GUI
 
 		public function Unpressed():*
 		{
-			this.draw(3952740, 7, 6126992, 1120028, 3952740);
+			this.draw(ConstantsApp.COLOR_BUTTON_BLUE, 7, ConstantsApp.COLOR_BUTTON_OUTSET_TOP, ConstantsApp.COLOR_BUTTON_OUTSET_BOTTOM, ConstantsApp.COLOR_BUTTON_BLUE);
 		}
 
 		public function Pressed():*
 		{
-			this.draw(3952740, 7, 1120028, 6126992, 3952740);
+			this.draw(ConstantsApp.COLOR_BUTTON_DOWN, 7, ConstantsApp.COLOR_BUTTON_OUTSET_BOTTOM, ConstantsApp.COLOR_BUTTON_BLUE, ConstantsApp.COLOR_BUTTON_DOWN);
 		}
 
 		public function Toggle():*

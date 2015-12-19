@@ -372,7 +372,7 @@ package
 			var shopItem : MovieClip;
 			var shopItemButton : GUI.SpritePushButton;
 			
-			pPane.addInfoBar( new ShopInfoBar() );
+			pPane.addInfoBar( new ShopInfoBar({}) );
 			
 			var xoff = 15;
 			var yoff = 5;//15;
@@ -388,13 +388,13 @@ package
 					shopItem = new pItemArray[i].itemClass();
 					costumes.colorDefault(shopItem);
 				}
-				shopItemButton = new GUI.SpritePushButton(xoff + 55 * w, yoff + 55 * h, 50, 50, shopItem, i);
+				shopItemButton = new GUI.SpritePushButton(xoff + 65 * w, yoff + 65 * h, 60, 60, shopItem, i);
 				pPane.addItem(shopItemButton);
 				pButtonArray.push(shopItemButton);
 				shopItemButton.addEventListener("state_changed_after", pChangeListener, false, 0, true);
 				++wCtr;
 				++w;
-				if (wCtr > 6) 
+				if (wCtr > 5) 
 				{
 					w = 0;
 					wCtr = 0;
@@ -408,8 +408,9 @@ package
 		
 		private function _setupColorPickerPane() : void {
 			this.tabColorPane = new GUI.Tab();
-			this.tabColorPane.addInfoBar( new ShopInfoBar() );
-			this.tabColorPane.infoBar.colorWheelEnabled = false;
+			this.tabColorPane.addInfoBar( new ShopInfoBar({ showBackButton:true }) );
+			// this.tabColorPane.infoBar.colorWheelEnabled = false;
+			this.tabColorPane.infoBar.colorWheel.addEventListener(MouseEvent.MOUSE_UP, this.colorPickerBackClicked, false, 0, true);
 			
 			this.psColorPick = new com.piterwilson.utils.ColorPicker();
 			this.psColorPick.x = 105;
@@ -587,7 +588,10 @@ package
 					
 					//pTabButt.ChangeImage( costumes.copyColor(tButton.Image, new tData.itemClass()) );
 					
-					if(pInfoBar != null) { pInfoBar.addInfo( tData, costumes.copyColor(tButton.Image, new tData.itemClass()) ); }
+					if(pInfoBar != null) {
+						pInfoBar.addInfo( tData, costumes.copyColor(tButton.Image, new tData.itemClass()) );
+						pInfoBar.colorWheelActive = costumes.getNumOfCustomColors(tButton.Image) > 0;
+					}
 					
 					if(pColorDefault) { this.the_mouse.colorDefault(pType); }
 				} else {
@@ -625,6 +629,7 @@ package
 					setCurItemID(ItemType.FUR, tButton.id);
 					this.the_mouse.switchFurs(tButton.id);
 					getInfoBarByType(ItemType.FUR).addInfo( costumes.furs[tButton.id], new Fur(costumes.furs[tButton.id]) );
+					// getInfoBarByType(ItemType.FUR).colorWheelActive = costumes.furs[tButton.id].id == -1;
 				} else {
 					this.the_mouse.switchFurs(ConstantsApp.DEFAULT_SKIN_INDEX);
 					getInfoBarByType(ItemType.FUR).addInfo( costumes.furs[ConstantsApp.DEFAULT_SKIN_INDEX], new Fur(costumes.furs[ConstantsApp.DEFAULT_SKIN_INDEX]) );
@@ -776,7 +781,6 @@ package
 			
 			this.selectSwatch(0, false);
 			this.HideAllTabs();
-			this.shopTabs.UnpressAll();
 			this.tabColorPane.active = true;
 			var tData:ShopItemData = getInfoBarByType(pType).data;
 			this.tabColorPane.infoBar.addInfo( tData, costumes.copyColor(this.the_mouse.getItemFromIndex(pType), new tData.itemClass()) );
@@ -796,6 +800,10 @@ package
 				costumes.copyColor(tMC, this.tabColorPane.infoBar.Image);
 				this.setupSwatches( this.the_mouse.getColors(this.currentlyColoringType) );
 			}
+		}
+		
+		function colorPickerBackClicked(pEvent:Event):void {
+			_tabClicked( getTabByType( this.tabColorPane.infoBar.data.type ) );
 		}
 
 		internal function colorSwatch1OnEnterPressed(pEvent:Event) : void { this.selectSwatch(0); }
@@ -826,7 +834,7 @@ package
 			colorSwatches[pNum].select();
 			if(pSetCursor) { this.psColorPick.setCursor(this.colorSwatches[pNum].TextValue); }
 		}
-
+		
 		internal function __setProp_scaleSlider_Scene1_Layer1_0():*
 		{
 			try {

@@ -46,6 +46,9 @@ package
 			// this.colors = new Array();
 			this.furs = new Array();
 			
+			// Multi-color fur
+			//this.furs.push( new FurData( -1, ItemType.COLOR ).initColor(0xFF0000) );
+			
 			for(var i = 0; i < 7; i++) {
 				this.furs.push( new FurData( i, ItemType.COLOR ).initColor() );
 			}
@@ -83,55 +86,67 @@ package
 			return tArray;
 		}
 
-		public function copyColor(arg1:MovieClip, arg2:MovieClip) : MovieClip {
-			var loc2:*=undefined;
-			var loc3:*=undefined;
-			if (arg1 == null || arg2 == null) 
+		public function copyColor(copyFromMC:MovieClip, copyToMC:MovieClip) : MovieClip {
+			if (copyFromMC == null || copyToMC == null) { return; }
+			var tChild1:*=null;
+			var tChild2:*=null;
+			var i:int = 0;
+			while (i < copyFromMC.numChildren) 
 			{
-				return;
-			}
-			var loc1:*=0;
-			while (loc1 < arg1.numChildren) 
-			{
-				loc2 = arg1.getChildAt(loc1);
-				loc3 = arg2.getChildAt(loc1);
-				if (loc2.name.indexOf("Couleur") == 0 && loc2.name.length > 7) 
+				tChild1 = copyFromMC.getChildAt(i);
+				tChild2 = copyToMC.getChildAt(i);
+				if (tChild1.name.indexOf("Couleur") == 0 && tChild1.name.length > 7) 
 				{
-					loc3.transform.colorTransform = loc2.transform.colorTransform;
+					tChild2.transform.colorTransform = tChild1.transform.colorTransform;
 				}
-				++loc1;
+				++i;
 			}
-			return arg2;
+			return copyToMC;
 		}
 
-		public function colorDefault(arg1:MovieClip) : MovieClip {
-			var loc2:*=undefined;
-			var loc3:*=null;
-			var loc4:*=0;
-			var loc5:*=0;
-			var loc6:*=0;
-			var loc7:*=0;
-			var loc8:*=null;
-			if (arg1 == null) 
+		public function colorDefault(pMC:MovieClip) : MovieClip {
+			var tChild:*=null;
+			var tChildName:*=null;
+			var tHex:int=0;
+			var tR:*=0;
+			var tG:*=0;
+			var tB:*=0;
+			if (pMC == null) 
 			{
 				return;
 			}
 			var loc1:*=0;
-			while (loc1 < arg1.numChildren) 
+			while (loc1 < pMC.numChildren) 
 			{
-				loc2 = arg1.getChildAt(loc1);
-				if (loc2.name.indexOf("Couleur") == 0 && loc2.name.length > 7) 
+				tChild = pMC.getChildAt(loc1);
+				if (tChild.name.indexOf("Couleur") == 0 && tChild.name.length > 7) 
 				{
-					loc3 = loc2.name;
-					loc5 = (loc4 = int("0x" + loc3.substr(loc3.indexOf("_") + 1, 6))) >> 16 & 255;
-					loc6 = loc4 >> 8 & 255;
-					loc7 = loc4 & 255;
-					loc8 = new flash.geom.ColorTransform(loc5 / 128, loc6 / 128, loc7 / 128);
-					loc2.transform.colorTransform = loc8;
+					tChildName = tChild.name;
+					tHex = int("0x" + tChildName.substr(tChildName.indexOf("_") + 1, 6));
+					tR = tHex >> 16 & 255;
+					tG = tHex >> 8 & 255;
+					tB = tHex & 255;
+					tChild.transform.colorTransform = new flash.geom.ColorTransform(tR / 128, tG / 128, tB / 128);;
 				}
 				++loc1;
 			}
-			return arg1;
+			return pMC;
+		}
+		
+		public function getNumOfCustomColors(pMC:MovieClip) : int {
+			var tChild:*=null;
+			var num:int = 0;
+			var i:int = 0;
+			while (i < pMC.numChildren) 
+			{
+				tChild = pMC.getChildAt(i);
+				if (tChild.name.indexOf("Couleur") == 0 && tChild.name.length > 7) 
+				{
+					num++;
+				}
+				++i;
+			}
+			return num;
 		}
 	}
 }

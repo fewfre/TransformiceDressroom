@@ -24,13 +24,12 @@ package GUI
 		
 		public function get hasData() : Boolean { return data != null; }
 		public function get colorWheelActive() : Boolean { return colorWheel.alpha != 0; }
-		
-		// Constants
-		private var _ITEM_SAVE_SCALE : Number = 4;
+		public function set colorWheelActive(pVal:Boolean) { colorWheelEnabled = pVal; colorWheel.alpha = pVal ? 1 : 0; }
 		
 		// Constructor
-		public function ShopInfoBar() {
+		public function ShopInfoBar(pParams:Object=null) {
 			super();
+			pParams = pParams==null ? {} : pParams;
 			this.Width = ConstantsApp.PANE_WIDTH;
 			data = null;
 			
@@ -40,7 +39,7 @@ package GUI
 			
 			ChangeImage( new $NoItem() );
 			
-			this.colorWheel = new GUI.ScaleButton(80, 24, new $ColorWheel());
+			this.colorWheel = new GUI.ScaleButton(80, 24, pParams.showBackButton ? new $BackArrow() : new $ColorWheel());
 			this.colorWheel.x = 80;
 			this.colorWheel.y = 24;
 			addChild(this.colorWheel);
@@ -102,7 +101,7 @@ package GUI
 			ChangeImage(pMC);
 			_updateID();
 			
-			if(colorWheelEnabled) colorWheel.alpha = 1;
+			colorWheelActive = colorWheelEnabled;
 			Text.alpha = 1;
 			downloadButton.alpha = 1;
 		}
@@ -124,9 +123,9 @@ package GUI
 			pName = "shop-"+data.type+data.id+".png";
 			
 			var tRect:flash.geom.Rectangle = pElem.getBounds(pElem);
-			var tBitmap:flash.display.BitmapData = new flash.display.BitmapData(pElem.width*_ITEM_SAVE_SCALE, pElem.height*_ITEM_SAVE_SCALE, true, 16777215);
+			var tBitmap:flash.display.BitmapData = new flash.display.BitmapData(pElem.width*ConstantsApp.ITEM_SAVE_SCALE, pElem.height*ConstantsApp.ITEM_SAVE_SCALE, true, 16777215);
 			var tMatrix:flash.geom.Matrix = new flash.geom.Matrix(1, 0, 0, 1, -tRect.left, -tRect.top);
-			tMatrix.scale(_ITEM_SAVE_SCALE, _ITEM_SAVE_SCALE);
+			tMatrix.scale(ConstantsApp.ITEM_SAVE_SCALE, ConstantsApp.ITEM_SAVE_SCALE);
 			tBitmap.draw(pElem, tMatrix);
 			( new flash.net.FileReference() ).save( com.adobe.images.PNGEncoder.encode(tBitmap), pName );
 		}

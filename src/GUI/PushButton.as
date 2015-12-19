@@ -27,7 +27,7 @@ package GUI
 			addEventListener(MouseEvent.ROLL_OUT, this.Mouse_Out);
 			
 			this.Text = new flash.text.TextField();
-			this.Text.defaultTextFormat = new flash.text.TextFormat("Verdana", 11, 12763866);
+			this.Text.defaultTextFormat = new flash.text.TextFormat("Verdana", 11, 0xC2C2DA);
 			this.Text.autoSize = flash.text.TextFieldAutoSize.CENTER;
 			this.Text.text = pText;
 			addChild(this.Text);
@@ -38,7 +38,7 @@ package GUI
 
 		public function Unpressed():*
 		{
-			this.draw(3952740, 7, 6126992, 1120028, 3952740);
+			this.draw(ConstantsApp.COLOR_BUTTON_BLUE, 7, ConstantsApp.COLOR_BUTTON_OUTSET_TOP, ConstantsApp.COLOR_BUTTON_OUTSET_BOTTOM, ConstantsApp.COLOR_BUTTON_BLUE);
 			
 			this.Text.x = (this.Width - this.Text.textWidth) / 2 - 2;
 			this.Text.y = (this.Height - this.Text.textHeight) / 2 - 2;
@@ -46,7 +46,7 @@ package GUI
 
 		public function Pressed():*
 		{
-			this.draw(3952740, 7, 1120028, 6126992, 3952740);
+			this.draw(ConstantsApp.COLOR_BUTTON_DOWN, 7, ConstantsApp.COLOR_BUTTON_OUTSET_BOTTOM, ConstantsApp.COLOR_BUTTON_BLUE, ConstantsApp.COLOR_BUTTON_DOWN);
 			
 			this.Text.x = (this.Width - this.Text.textWidth) / 2;
 			this.Text.y = (this.Height - this.Text.textHeight) / 2;
@@ -68,14 +68,14 @@ package GUI
 		{
 			this.Pushed = true;
 			this.Pressed();
-			this.Text.textColor = 16766976;
+			this.Text.textColor = 0xFFD800;
 		}
 
 		public function ToggleOff():*
 		{
 			this.Pushed = false;
 			this.Unpressed();
-			this.Text.textColor = 12763866;
+			this.Text.textColor = 0xC2C2DA;
 		}
 
 		internal function Mouse_Click(pEvent:MouseEvent):*
@@ -96,7 +96,7 @@ package GUI
 
 		internal function Mouse_Out(pEvent:MouseEvent):*
 		{
-			this.Text.textColor = this.Pushed ? 16766976 : 12763866;
+			this.Text.textColor = this.Pushed ? 0xFFD800 : 0xC2C2DA;
 		}
 	}
 }
