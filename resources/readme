@@ -4,4 +4,5 @@ The swfs found in this directory can be updated by replacing them with the follo
 * http://www.transformice.com/images/x_bibliotheques/x_meli_costumes.swf
 * http://www.transformice.com/images/x_bibliotheques/x_fourrures.swf
 * http://www.transformice.com/images/x_bibliotheques/x_fourrures2.swf
-The "version; 1,###" shows at what game version they were last updated (update file name if swfs updated).
+
+update.php provides a quick and easy way to do this.
