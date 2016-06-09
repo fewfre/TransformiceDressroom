@@ -8,8 +8,8 @@ package GUI
 	public class RoundedRectangle extends flash.display.Sprite
 	{
 		// Storage
-		var Width:Number;
-		var Height:Number;
+		public var Width:Number;
+		public var Height:Number;
 		
 		// Constructor
 		public function RoundedRectangle(pX:Number, pY:Number, pWidth:Number, pHeight:Number)

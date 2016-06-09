@@ -2,13 +2,13 @@ package
 {
 	import flash.display.*;
 	import flash.display.MovieClip;
-    import flash.geom.*;
+	import flash.geom.*;
 	
 	public class Costumes
 	{
 		private const _MAX_COSTUMES_TO_CHECK_TO:Number = 250;
 		
-		public var loadedData:Array;
+		public var assets:AssetManager;
 		
 		public var head:Array;
 		public var eyes:Array;
@@ -25,9 +25,9 @@ package
 		// public var colors:Array;
 		public var furs:Array;
 		
-		public function Costumes(pMCs:Array) {
+		public function Costumes(pAssets:AssetManager) {
 			super();
-			loadedData = pMCs;
+			assets = pAssets;
 		}
 		
 		public function init() : Costumes {
@@ -39,9 +39,9 @@ package
 			this.hair = _setupCostumeArray("$Costume_5_", ItemType.HAIR);
 			this.tail = _setupCostumeArray("$Costume_6_", ItemType.TAIL);
 			
-			this.hand = getLoadedClass("$Costume_7_1");
-			this.backHand = getLoadedClass("$Costume_8_1");
-			this.fromage = getLoadedClass("FromageSouris");
+			this.hand = assets.getLoadedClass("$Costume_7_1");
+			this.backHand = assets.getLoadedClass("$Costume_8_1");
+			this.fromage = assets.getLoadedClass("FromageSouris");
 			
 			// this.colors = new Array();
 			this.furs = new Array();
@@ -55,7 +55,7 @@ package
 			
 			this.furs.push( new FurData( 1, ItemType.FUR ).initColor(FurData.DEFAULT_COLOR) );
 			for(var i = 2; i < _MAX_COSTUMES_TO_CHECK_TO; i++) {
-				if(getLoadedClass( "_Corps_2_"+i+"_1" ) != null) {
+				if(assets.getLoadedClass( "_Corps_2_"+i+"_1" ) != null) {
 					//this.furs.push( new Fur().initFur( i, _setupFur(i) ) );
 					this.furs.push( new FurData( i, ItemType.FUR ).initFur() );
 				}
@@ -64,26 +64,45 @@ package
 			return this;
 		}
 		
-		public function getLoadedClass(pName:String, pTrace:Boolean=false) : Class {
-			for(var i = 0; i < loadedData.length; i++) {
-				if(loadedData[i].loaderInfo.applicationDomain.hasDefinition(pName)) {
-					return loadedData[i].loaderInfo.applicationDomain.getDefinition( pName ) as Class;
-				}
-			}
-			if(pTrace) { trace("ERROR: No Linkage by name: "+pName); }
-			return null;
-		}
-		
 		private function _setupCostumeArray(pBase:String, pType:String) : Array {
 			var tArray:Array = new Array();
 			var tClass:Class;
 			for(var i = 1; i <= _MAX_COSTUMES_TO_CHECK_TO; i++) {
-				tClass = getLoadedClass( pBase+i );
+				tClass = assets.getLoadedClass( pBase+i );
 				if(tClass != null) {
 					tArray.push( new ShopItemData(i, pType, tClass) );
 				}
 			}
 			return tArray;
+		}
+		
+		public function getArrayByType(pType:String) : Array {
+			switch(pType) {
+				case ItemType.HAT:		return head;
+				case ItemType.EYES:		return eyes;
+				case ItemType.EARS:		return ears;
+				case ItemType.MOUTH:	return mouth;
+				case ItemType.NECK:		return neck;
+				case ItemType.HAIR:		return hair;
+				case ItemType.TAIL:		return tail;
+				case ItemType.FUR:		return furs;
+				default: trace("[Costumes](getArrayByType) Unknown type: "+pType);
+			}
+			return null;
+		}
+		
+		public function getItemFromTypeID(pType:String, pID:int) : ShopItemData {
+			var tArray:Array = getArrayByType(pType);
+			return tArray[getIndexFromArrayWithID(tArray, pID)];
+		}
+		
+		public function getIndexFromArrayWithID(pArray:Array, pID:int) : int {
+			for(var i = 0; i < pArray.length; i++) {
+				if(pArray[i].id == pID) {
+					return i;
+				}
+			}
+			return null;
 		}
 
 		public function copyColor(copyFromMC:MovieClip, copyToMC:MovieClip) : MovieClip {

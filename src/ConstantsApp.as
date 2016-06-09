@@ -17,5 +17,7 @@ package
 		public static const COLOR_BUTTON_DOWN				: int = 0x2C3947;
 		public static const COLOR_BUTTON_OUTSET_BOTTOM		: int = 0x11171C;
 		public static const COLOR_BUTTON_OUTSET_TOP			: int = 0x5D7D90;
+		
+		public static const EVENT_SHOP_TAB_CLICKED			: String = "shop_tab_clicked";
 	}
 }

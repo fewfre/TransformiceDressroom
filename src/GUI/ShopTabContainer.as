@@ -9,27 +9,8 @@ package GUI
 		// Storage
 		public var DefaultX:Number;
 		public var DefaultY:Number;
-
-		var headTab		: GUI.PushButton;
-		var hairTab		: GUI.PushButton;
-		var earsTab		: GUI.PushButton;
-		var eyesTab		: GUI.PushButton;
-		var mouthTab	: GUI.PushButton;
-		var neckTab		: GUI.PushButton;
-		var tailTab		: GUI.PushButton;
-		var furTab		: GUI.PushButton;
-		var otherTab	: GUI.PushButton;
 		
-		// Constants
-		public static const TAB_HEAD_CLICK:String="tab1_click";
-		public static const TAB_EYES_CLICK:String="tab2_click";
-		public static const TAB_EARS_CLICK:String="tab3_click";
-		public static const TAB_MOUTH_CLICK:String="tab4_click";
-		public static const TAB_NECK_CLICK:String="tab5_click";
-		public static const TAB_FUR_CLICK:String="tab6_click";
-		public static const TAB_OTHER_CLICK:String="tab7_click";
-		public static const TAB_TAIL_CLICK:String="tab8_click";
-		public static const TAB_HAIR_CLICK:String="tab9_click";
+		var tabs:Array;
 		
 		// Constructor
 		public function ShopTabContainer(pX:Number, pY:Number, pWidth:Number, pHeight:Number)
@@ -38,7 +19,7 @@ package GUI
 			this.DefaultX = pX;
 			this.DefaultY = pY;
 			
-			this.drawSimpleGradient([ 0x112528, 0x1E3D42 ], 15, 6983586, 1120028, 3294800);
+			this.drawSimpleGradient([ 0x112528, 0x1E3D42 ], 15, 0x6a8fa2, 0x11171c, 0x324650);
 			
 			// _drawLine(5, 29, this.Width);
 			
@@ -49,23 +30,25 @@ package GUI
 			var tWidth:Number = 50;
 			var tHeight:Number = 38;
 			
-			this.headTab = _addTab("Head", tX += tXSpacing, tY += tYSpacing, tWidth, tHeight, this.tabHeadClicked);
-			this.hairTab = _addTab("Hair", tX += tXSpacing, tY += tYSpacing, tWidth, tHeight, this.tabHairClicked);
-			this.earsTab = _addTab("Ears", tX += tXSpacing, tY += tYSpacing, tWidth, tHeight, this.tabEarsClicked);
-			this.eyesTab = _addTab("Eyes", tX += tXSpacing, tY += tYSpacing, tWidth, tHeight, this.tabEyesClicked);
-			this.mouthTab = _addTab("Mouth", tX += tXSpacing, tY += tYSpacing, tWidth, tHeight, this.tabMouthClicked);
-			this.neckTab = _addTab("Neck", tX += tXSpacing, tY += tYSpacing, tWidth, tHeight, this.tabNeckClicked);
-			this.tailTab = _addTab("Tail", tX += tXSpacing, tY += tYSpacing, tWidth, tHeight, this.tabTailClicked);
-			this.furTab = _addTab("Furs", tX += tXSpacing, tY += tYSpacing, tWidth, tHeight, this.tabFursClicked);
-			this.otherTab = _addTab("Other", tX += tXSpacing, tY += tYSpacing, tWidth, tHeight, this.tabOtherClicked);
+			tabs = new Array();
 			
-			this.headTab.ToggleOn();
+			_addTab("Head", tX += tXSpacing, tY += tYSpacing, tWidth, tHeight, ItemType.HAT);
+			_addTab("Hair", tX += tXSpacing, tY += tYSpacing, tWidth, tHeight, ItemType.HAIR);
+			_addTab("Ears", tX += tXSpacing, tY += tYSpacing, tWidth, tHeight, ItemType.EARS);
+			_addTab("Eyes", tX += tXSpacing, tY += tYSpacing, tWidth, tHeight, ItemType.EYES);
+			_addTab("Mouth", tX += tXSpacing, tY += tYSpacing, tWidth, tHeight, ItemType.MOUTH);
+			_addTab("Neck", tX += tXSpacing, tY += tYSpacing, tWidth, tHeight, ItemType.NECK);
+			_addTab("Tail", tX += tXSpacing, tY += tYSpacing, tWidth, tHeight, ItemType.TAIL);
+			_addTab("Furs", tX += tXSpacing, tY += tYSpacing, tWidth, tHeight, ItemType.FUR);
+			_addTab("Other", tX += tXSpacing, tY += tYSpacing, tWidth, tHeight, "other");
+			
+			tabs[0].ToggleOn();
 		}
 		
-		private function _addTab(pText:String, pX:Number, pY:Number, pWidth:Number, pHeight:Number, pEvent:Function) : GUI.PushButton {
+		private function _addTab(pText:String, pX:Number, pY:Number, pWidth:Number, pHeight:Number, pEvent:String) : GUI.PushButton {
 			var tBttn:GUI.PushButton = new GUI.PushButton(pX, pY, pWidth, pHeight, pText);
-			addChild(tBttn);
-			tBttn.addEventListener("state_changed_before", pEvent, false, 0, true);
+			tabs.push(addChild(tBttn));
+			tBttn.addEventListener(MouseEvent.MOUSE_UP, function(tBttn){ return function(){ untoggle(tBttn, pEvent); }; }(tBttn));//, false, 0, true
 			return tBttn;
 		}
 		
@@ -75,24 +58,14 @@ package GUI
 			tLine.y = pY;
 			addChild(tLine);
 			
-			tLine.graphics.lineStyle(1, 1120284, 1, true);
+			tLine.graphics.lineStyle(1, 0x11181C, 1, true);
 			tLine.graphics.moveTo(0, 0);
 			tLine.graphics.lineTo(pWidth - 10, 0);
 			
-			tLine.graphics.lineStyle(1, 6325657, 1, true);
+			tLine.graphics.lineStyle(1, 0x608599, 1, true);
 			tLine.graphics.moveTo(0, 1);
 			tLine.graphics.lineTo(pWidth - 10, 1);
 		}
-
-		function tabHeadClicked(arg1:*) : void	{ untoggle(this.headTab, TAB_HEAD_CLICK); }
-		function tabHairClicked(arg1:*) : void	{ untoggle(this.hairTab, TAB_HAIR_CLICK); }
-		function tabEarsClicked(arg1:*) : void	{ untoggle(this.earsTab, TAB_EARS_CLICK); }
-		function tabEyesClicked(arg1:*) : void	{ untoggle(this.eyesTab, TAB_EYES_CLICK); }
-		function tabMouthClicked(arg1:*) : void	{ untoggle(this.mouthTab, TAB_MOUTH_CLICK); }
-		function tabNeckClicked(arg1:*) : void	{ untoggle(this.neckTab, TAB_NECK_CLICK); }
-		function tabTailClicked(arg1:*) : void	{ untoggle(this.tailTab, TAB_TAIL_CLICK); }
-		function tabFursClicked(arg1:*) : void	{ untoggle(this.furTab, TAB_FUR_CLICK); }
-		function tabOtherClicked(arg1:*) : void	{ untoggle(this.otherTab, TAB_OTHER_CLICK); }
 
 		public function UnpressAll() : void {
 			untoggle();
@@ -101,34 +74,13 @@ package GUI
 		private function untoggle(pTab:GUI.PushButton=null, pEvent:String=null) : void {
 			if (pTab != null && pTab.Pushed) { return; }
 			
-			if (this.headTab.Pushed && this.headTab != pTab) {
-				this.headTab.ToggleOff();
+			for(var i:int = 0; i < tabs.length; i++) {
+				if (tabs[i].Pushed && tabs[i] != pTab) {
+					tabs[i].ToggleOff();
+				}
 			}
-			if (this.eyesTab.Pushed && this.eyesTab != pTab) {
-				this.eyesTab.ToggleOff();
-			}
-			if (this.earsTab.Pushed && this.earsTab != pTab) {
-				this.earsTab.ToggleOff();
-			}
-			if (this.mouthTab.Pushed && this.mouthTab != pTab) {
-				this.mouthTab.ToggleOff();
-			}
-			if (this.neckTab.Pushed && this.neckTab != pTab) {
-				this.neckTab.ToggleOff();
-			}
-			if (this.furTab.Pushed && this.furTab != pTab) {
-				this.furTab.ToggleOff();
-			}
-			if (this.otherTab.Pushed && this.otherTab != pTab) {
-				this.otherTab.ToggleOff();
-			}
-			if (this.tailTab.Pushed && this.tailTab != pTab) {
-				this.tailTab.ToggleOff();
-			}
-			if (this.hairTab.Pushed && this.hairTab != pTab) {
-				this.hairTab.ToggleOff();
-			}
-			if(pEvent!=null) { dispatchEvent(new flash.events.Event(pEvent)); }
+			
+			if(pEvent!=null) { dispatchEvent(new DataEvent(ConstantsApp.EVENT_SHOP_TAB_CLICKED, false, false, pEvent)); }
 		}
 	}
 }

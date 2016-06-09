@@ -53,20 +53,20 @@ package
 		public function initFur() : FurData {
 			var tNum:int = id;
 			
-			earFar		= Main.costumes.getLoadedClass( "_OreilleG_1_"+tNum+"_1" );
-			footFar		= Main.costumes.getLoadedClass( "_PiedG_1_"+tNum+"_1" );
-			legFar		= Main.costumes.getLoadedClass( "_CuisseG_1_"+tNum+"_1" );
-			armFar		= Main.costumes.getLoadedClass( "_PatteG_1_"+tNum+"_1" );
-			footClose	= Main.costumes.getLoadedClass( "_PiedD_1_"+tNum+"_1" );
-			tailOrnament= Main.costumes.getLoadedClass( "_Boule_1_"+tNum+"_1" );
-			wings		= Main.costumes.getLoadedClass( "_Ailes_1_"+tNum+"_1" );
-			body		= Main.costumes.getLoadedClass( "_Corps_1_"+tNum+"_1" );
-			tail		= Main.costumes.getLoadedClass( "_Queue_1_"+tNum+"_1" );
-			legClose	= Main.costumes.getLoadedClass( "_CuisseD_1_"+tNum+"_1" );
-			armClose	= Main.costumes.getLoadedClass( "_PatteD_1_"+tNum+"_1" );
-			face		= Main.costumes.getLoadedClass( "_Tete_1_"+tNum+"_1" );
-			eyes		= Main.costumes.getLoadedClass( "_Oeil_1_"+tNum+"_1" );
-			earClose	= Main.costumes.getLoadedClass( "_OreilleD_1_"+tNum+"_1" );
+			earFar		= Main.assets.getLoadedClass( "_OreilleG_1_"+tNum+"_1" );
+			footFar		= Main.assets.getLoadedClass( "_PiedG_1_"+tNum+"_1" );
+			legFar		= Main.assets.getLoadedClass( "_CuisseG_1_"+tNum+"_1" );
+			armFar		= Main.assets.getLoadedClass( "_PatteG_1_"+tNum+"_1" );
+			footClose	= Main.assets.getLoadedClass( "_PiedD_1_"+tNum+"_1" );
+			tailOrnament= Main.assets.getLoadedClass( "_Boule_1_"+tNum+"_1" );
+			wings		= Main.assets.getLoadedClass( "_Ailes_1_"+tNum+"_1" );
+			body		= Main.assets.getLoadedClass( "_Corps_1_"+tNum+"_1" );
+			tail		= Main.assets.getLoadedClass( "_Queue_1_"+tNum+"_1" );
+			legClose	= Main.assets.getLoadedClass( "_CuisseD_1_"+tNum+"_1" );
+			armClose	= Main.assets.getLoadedClass( "_PatteD_1_"+tNum+"_1" );
+			face		= Main.assets.getLoadedClass( "_Tete_1_"+tNum+"_1" );
+			eyes		= Main.assets.getLoadedClass( "_Oeil_1_"+tNum+"_1" );
+			earClose	= Main.assets.getLoadedClass( "_OreilleD_1_"+tNum+"_1" );
 			
 			return this;
 		}

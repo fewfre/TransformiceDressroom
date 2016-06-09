@@ -34,7 +34,7 @@ package GUI
 			data = null;
 			
 			imageCont = new GUI.RoundedRectangle(0, 0, 50, 50);
-			imageCont.draw(0x6A7495, 15, 6126992, 1120028, 3952740);
+			imageCont.draw(0x6A7495, 15, 0x5d7d90, 0x11171c, 0x3c5064);
 			addChild( imageCont );
 			
 			ChangeImage( new $NoItem() );
@@ -49,9 +49,10 @@ package GUI
 			this.Text = new flash.text.TextField();
 			this.Text.x = 115;
 			this.Text.y = 13;
-			this.Text.defaultTextFormat = new flash.text.TextFormat("Verdana", 18, 12763866);
+			this.Text.defaultTextFormat = new flash.text.TextFormat("Verdana", 18, 0xc2c2da);
 			this.Text.autoSize = flash.text.TextFieldAutoSize.LEFT;
 			this.Text.text = "ID: ";
+			this.Text.alpha = 0;
 			addChild(this.Text);
 			
 			downloadButton = new SpriteButton(this.Width - 50, 0, 50, 50, new $SimpleDownload(), 1);
@@ -71,11 +72,11 @@ package GUI
 			tLine.y = pY;
 			addChild(tLine);
 			
-			tLine.graphics.lineStyle(1, 1120284, 1, true);
+			tLine.graphics.lineStyle(1, 0x11181c, 1, true);
 			tLine.graphics.moveTo(0, 0);
 			tLine.graphics.lineTo(pWidth - 10, 0);
 			
-			tLine.graphics.lineStyle(1, 6325657, 1, true);
+			tLine.graphics.lineStyle(1, 0x608599, 1, true);
 			tLine.graphics.moveTo(0, 1);
 			tLine.graphics.lineTo(pWidth - 10, 1);
 		}
@@ -115,7 +116,7 @@ package GUI
 			ChangeImage(new $NoItem());
 			
 			colorWheel.alpha = 0;
-			//Text.alpha = 0;
+			Text.alpha = 0;
 			this.Text.text = "ID: ";
 			downloadButton.alpha = 0;
 		}

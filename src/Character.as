@@ -7,10 +7,10 @@ package
 	import flash.events.*;
 	import flash.geom.*;
 	
-	public class TheMouse extends flash.display.Sprite
+	public class Character extends flash.display.Sprite
 	{
 		// Storage
-		public var mouse:Fur;
+		public var outfit:Fur;
 		
 		internal var hat:MovieClip;
 		internal var eye:MovieClip;
@@ -37,7 +37,7 @@ package
 		public static var TAIL_INDEX:int=6;*/
 		
 		// Constructor
-		public function TheMouse(hat_item:MovieClip, eye_item:MovieClip, ear_item:MovieClip, mouth_item:MovieClip, neck_item:MovieClip, hair_item:MovieClip, tail_item:MovieClip, paw_item:MovieClip, back_item:MovieClip, backPaw_item:MovieClip, hide_hat:Boolean=true, hide_eye:Boolean=true, hide_ear:Boolean=true, hide_mouth:Boolean=true, hide_neck:Boolean=true)
+		public function Character(hat_item:MovieClip, eye_item:MovieClip, ear_item:MovieClip, mouth_item:MovieClip, neck_item:MovieClip, hair_item:MovieClip, tail_item:MovieClip, paw_item:MovieClip, back_item:MovieClip, backPaw_item:MovieClip, hide_hat:Boolean=true, hide_eye:Boolean=true, hide_ear:Boolean=true, hide_mouth:Boolean=true, hide_neck:Boolean=true)
 		{
 			super();
 			
@@ -79,27 +79,27 @@ package
 		}
 
 		public function Update() : void {
-			this.tail.x = this.mouse.tailOrnament.x + 4;//getChildAt(5).x + 4;
-			this.tail.y = this.mouse.tailOrnament.y - 8;//getChildAt(5).y - 8;
-			this.hair.x = this.mouse.face.x;//getChildAt(10).x;
-			this.hair.y = this.mouse.face.y;//getChildAt(10).y;
-			this.hat.x = this.mouse.face.x;//getChildAt(10).x;
-			this.hat.y = this.mouse.face.y;//getChildAt(10).y;
-			this.eye.x = this.mouse.eyes.x;//getChildAt(11).x;
-			this.eye.y = this.mouse.eyes.y;//getChildAt(11).y;
-			this.neck.x = this.mouse.face.x - 0.2;//getChildAt(10).x - 0.2;
-			this.neck.y = this.mouse.face.y;//getChildAt(10).y;
-			this.mouth.x = this.mouse.face.x;//getChildAt(10).x;
-			this.mouth.y = this.mouse.face.y;//getChildAt(10).y;
-			this.ear.x = this.mouse.earClose.x;//getChildAt(18).x;
-			this.ear.y = this.mouse.earClose.y;//getChildAt(18).y;
-			this.back.x = this.mouse.body.x - 21;
-			this.back.y = this.mouse.body.y - 20.5;
-			this.paw.x = this.mouse.armClose.x;
-			this.paw.y = this.mouse.armClose.y + 3.3;
+			this.tail.x = this.outfit.tailOrnament.x + 4;//getChildAt(5).x + 4;
+			this.tail.y = this.outfit.tailOrnament.y - 8;//getChildAt(5).y - 8;
+			this.hair.x = this.outfit.face.x;//getChildAt(10).x;
+			this.hair.y = this.outfit.face.y;//getChildAt(10).y;
+			this.hat.x = this.outfit.face.x;//getChildAt(10).x;
+			this.hat.y = this.outfit.face.y;//getChildAt(10).y;
+			this.eye.x = this.outfit.eyes.x;//getChildAt(11).x;
+			this.eye.y = this.outfit.eyes.y;//getChildAt(11).y;
+			this.neck.x = this.outfit.face.x - 0.2;//getChildAt(10).x - 0.2;
+			this.neck.y = this.outfit.face.y;//getChildAt(10).y;
+			this.mouth.x = this.outfit.face.x;//getChildAt(10).x;
+			this.mouth.y = this.outfit.face.y;//getChildAt(10).y;
+			this.ear.x = this.outfit.earClose.x;//getChildAt(18).x;
+			this.ear.y = this.outfit.earClose.y;//getChildAt(18).y;
+			this.back.x = this.outfit.body.x - 21;
+			this.back.y = this.outfit.body.y - 20.5;
+			this.paw.x = this.outfit.armClose.x;
+			this.paw.y = this.outfit.armClose.y + 3.3;
 			this.paw.rotation = 18;
-			this.backPaw.x = this.mouse.armFar.x + 3.5;
-			this.backPaw.y = this.mouse.armFar.y + 1.3;
+			this.backPaw.x = this.outfit.armFar.x + 3.5;
+			this.backPaw.y = this.outfit.armFar.y + 1.3;
 		}
 
 		public function getItemFromIndex(pType:String):MovieClip
@@ -112,8 +112,8 @@ package
 				case ItemType.NECK	: return this.neck; break;
 				case ItemType.HAIR	: return this.hair; break;
 				case ItemType.TAIL	: return this.tail; break;
-				case ItemType.FUR	: return this.mouse; break;
-				default: trace("[TheMouse](getItemFromIndex) Unknown Type: "+pType); break;
+				case ItemType.FUR	: return this.outfit; break;
+				default: trace("[Character](getItemFromIndex) Unknown Type: "+pType); break;
 			}
 		}
 
@@ -195,94 +195,94 @@ package
 		}
 
 		public function setHat(pMC:MovieClip, pRemove:Boolean=true) : void {
-			if(pRemove) { this.mouse.removeChild(this.hat); }
+			if(pRemove) { this.outfit.removeChild(this.hat); }
 			_insertAbove(this.hat = pMC, this.tail);
 		}
 
 		public function setEyes(pMC:MovieClip, pRemove:Boolean=true) : void {
-			if(pRemove) { this.mouse.removeChild(this.eye); }
+			if(pRemove) { this.outfit.removeChild(this.eye); }
 			_insertAbove(this.eye = pMC, this.hat);
 		}
 
 		public function setEar(pMC:MovieClip, pRemove:Boolean=true) : void {
-			if(pRemove) { this.mouse.removeChild(this.ear); }
-			_insertAbove(this.ear = pMC, this.mouse.earClose);
+			if(pRemove) { this.outfit.removeChild(this.ear); }
+			_insertAbove(this.ear = pMC, this.outfit.earClose);
 		}
 
 		public function setMouth(pMC:MovieClip, pRemove:Boolean=true) : void {
-			if(pRemove) { this.mouse.removeChild(this.mouth); }
+			if(pRemove) { this.outfit.removeChild(this.mouth); }
 			_insertAbove(this.mouth = pMC, this.hair);
 		}
 
 		public function setNeck(pMC:MovieClip, pRemove:Boolean=true) : void {
-			if(pRemove) { this.mouse.removeChild(this.neck); }
-			_insertAbove(this.neck = pMC, this.mouse.eyes);
+			if(pRemove) { this.outfit.removeChild(this.neck); }
+			_insertAbove(this.neck = pMC, this.outfit.eyes);
 		}
 
 		public function setHair(pMC:MovieClip, pRemove:Boolean=true) : void {
-			if(pRemove) { this.mouse.removeChild(this.hair); }
+			if(pRemove) { this.outfit.removeChild(this.hair); }
 			_insertAbove(this.hair = pMC, this.neck);
 		}
 
 		public function setTailItem(pMC:MovieClip, pRemove:Boolean=true) : void {
-			if(pRemove) { this.mouse.removeChild(this.tail); }
+			if(pRemove) { this.outfit.removeChild(this.tail); }
 			_insertAbove(this.tail = pMC, this.mouth);
 		}
 
 		public function setBack(pMC:MovieClip, pRemove:Boolean=true) : void {
-			if(pRemove) { this.mouse.removeChild(this.back); }
-			_insertAbove(this.back = pMC, this.mouse.tailOrnament);
+			if(pRemove) { this.outfit.removeChild(this.back); }
+			_insertAbove(this.back = pMC, this.outfit.tailOrnament);
 		}
 
 		public function setPaw(pMC:MovieClip, pRemove:Boolean=true) : void {
-			if(pRemove) { this.mouse.removeChild(this.paw); }
-			_insertBehind(this.paw = pMC, this.mouse.armClose);
+			if(pRemove) { this.outfit.removeChild(this.paw); }
+			_insertBehind(this.paw = pMC, this.outfit.armClose);
 		}
 
 		public function setBackPaw(pMC:MovieClip, pRemove:Boolean=true) : void {
-			if(pRemove) { this.mouse.removeChild(this.backPaw); }
-			_insertBehind(this.backPaw = pMC, this.mouse.armFar);
+			if(pRemove) { this.outfit.removeChild(this.backPaw); }
+			_insertBehind(this.backPaw = pMC, this.outfit.armFar);
 		}
 
 		public function switchFurs(pFurIndex:int) : void {
-			var oldScale:Number = this.mouse.scaleX;
+			var oldScale:Number = this.outfit.scaleX;
 			
 			// Remove fur
-			this.mouse.removeChild(this.eye);
-			this.mouse.removeChild(this.neck);
-			this.mouse.removeChild(this.mouth);
-			this.mouse.removeChild(this.hat);
-			this.mouse.removeChild(this.tail);
-			this.mouse.removeChild(this.ear);
+			this.outfit.removeChild(this.eye);
+			this.outfit.removeChild(this.neck);
+			this.outfit.removeChild(this.mouth);
+			this.outfit.removeChild(this.hat);
+			this.outfit.removeChild(this.tail);
+			this.outfit.removeChild(this.ear);
 			
-			this.mouse.removeChild(this.back);
-			this.mouse.removeChild(this.paw);
-			this.mouse.removeChild(this.backPaw);
-			removeChild(this.mouse);
-			this.mouse = null;
+			this.outfit.removeChild(this.back);
+			this.outfit.removeChild(this.paw);
+			this.outfit.removeChild(this.backPaw);
+			removeChild(this.outfit);
+			this.outfit = null;
 			
 			// Add new fur
 			_addFur(pFurIndex, oldScale);
 		}
 		
 		private function _addFur(pNum:int, pScale:Number) : void {
-			this.mouse = new Fur(Main.costumes.furs[pNum]);
-			this.mouse.x = 180;
-			this.mouse.y = 300;
-			this.mouse.scaleX = pScale;
-			this.mouse.scaleY = pScale;
-			this.mouse.buttonMode = true;
-			this.mouse.addEventListener(flash.events.MouseEvent.MOUSE_DOWN, function ():*
+			this.outfit = new Fur(Main.costumes.furs[pNum]);
+			this.outfit.x = 180;
+			this.outfit.y = 300;
+			this.outfit.scaleX = pScale;
+			this.outfit.scaleY = pScale;
+			this.outfit.buttonMode = true;
+			this.outfit.addEventListener(flash.events.MouseEvent.MOUSE_DOWN, function ():*
 			{
-				mouse.startDrag();
+				outfit.startDrag();
 				return;
 			})
-			this.mouse.addEventListener(flash.events.MouseEvent.MOUSE_UP, function ():*
+			this.outfit.addEventListener(flash.events.MouseEvent.MOUSE_UP, function ():*
 			{
-				mouse.stopDrag();
+				outfit.stopDrag();
 				return;
 			})
-			addChild(this.mouse);
+			addChild(this.outfit);
 			
 			// Add items
 			setNeck(this.neck, false);
@@ -299,11 +299,11 @@ package
 		}
 		
 		private function _insertBehind(pMC:MovieClip, pMC2:MovieClip) : void {
-			this.mouse.addChildAt(pMC, this.mouse.getChildIndex(pMC2));
+			this.outfit.addChildAt(pMC, this.outfit.getChildIndex(pMC2));
 		}
 		
 		private function _insertAbove(pMC:MovieClip, pMC2:MovieClip) : void {
-			this.mouse.addChildAt(pMC, this.mouse.getChildIndex(pMC2)+1);
+			this.outfit.addChildAt(pMC, this.outfit.getChildIndex(pMC2)+1);
 		}
 		
 		public function addItem(pType:String, pItem:MovieClip) : void {
@@ -319,7 +319,7 @@ package
 				case ItemType.PAW	: setPaw(pItem); break;
 				case ItemType.BACK	: setBack(pItem); break;
 				case ItemType.PAW_BACK	: setBackPaw(pItem); break;
-				default: trace("[TheMouse](addItem) Unknown Type: "+pType); break;
+				default: trace("[Character](addItem) Unknown Type: "+pType); break;
 			}
 		}
 		
@@ -336,7 +336,7 @@ package
 				case ItemType.PAW	: this.paw.alpha = 0; break;
 				case ItemType.BACK	: this.back.alpha = 0; break;
 				case ItemType.PAW_BACK	: this.backPaw.alpha = 0; break;
-				default: trace("[TheMouse](removeItem) Unknown Type: "+pType); break;
+				default: trace("[Character](removeItem) Unknown Type: "+pType); break;
 			}
 		}
 	}
