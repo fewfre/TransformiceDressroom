@@ -68,6 +68,7 @@ package
 			
 			stage.align = flash.display.StageAlign.TOP;
 			stage.scaleMode = flash.display.StageScaleMode.NO_SCALE;
+			stage.frameRate = 10;
 			
 			addEventListener("enterFrame", this.Update);
 			stage.addEventListener(MouseEvent.MOUSE_WHEEL, handleMouseWheel);

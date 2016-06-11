@@ -1,2 +1,6 @@
 # TransformiceDressroom
-Based on http://cheese.formice.com/forum/threads/mouse-dressroom.37408/ by Baffler
+Transformice dressingroom, with options to dress, color, and tweak your character for high-detail images!
+
+View it live at: http://projects.fewfre.com/tfm_dressroom/
+
+Based on cheese.formice dressroom by Baffler
