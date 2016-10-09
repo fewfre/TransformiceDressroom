@@ -1,0 +1,3 @@
+-share link working
+-specify flag-waving image?
+-custom colorable (default) fur
