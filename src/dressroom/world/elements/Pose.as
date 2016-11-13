@@ -51,7 +51,7 @@ package dressroom.world.elements
 			var tChild:DisplayObject = null;
 			var tSlotName:String;
 			
-			var tShamanMode = pData.shamanMode != null ? pData.shamanMode : Main.costumes.shamanMode;
+			pData.shamanMode = pData.shamanMode != null ? pData.shamanMode : Main.costumes.shamanMode;
 			
 			// This works because poses, skins, and items have a group of letters/numbers that let each other know they should be grouped together.
 			// For example; the "head" of a pose is T, as is the skin's head, hats, and hair. Thus they all go onto same area of the skin.
@@ -60,11 +60,11 @@ package dressroom.world.elements
 				tSlotName = tChild.name;
 				for(var j:int = 0; j < tShopData.length; j++) {
 					if(tTailData != null && tShopData[j].isSkin() && tSlotName.indexOf("Boule_") > -1) { continue; }
-					part = _addToPoseIfCan(tChild, tShopData[j], tSlotName, { shamanMode:tShamanMode });
+					part = _addToPoseIfCan(tChild, tShopData[j], tSlotName, pData);
 					_colorPart(part, tShopData[j], tSlotName);
 				}
 				// A complete hack to get shaman wings. Can't figure out the "proper" way to do it.
-				if(tSlotName.indexOf("CuisseD_") > -1 && tSkinData != null && tShamanMode == SHAMAN_MODE.DIVINE
+				if(tSlotName.indexOf("CuisseD_") > -1 && tSkinData != null && pData.shamanMode == SHAMAN_MODE.DIVINE
 					&& (_poseData.id == "Statique" || _poseData.id == "Course" || _poseData.id == "Duck") // Wings only show for these animations in-game
 				) {
 					part = tChild.addChild(new (Main.assets.getLoadedClass("$AileChamane"))());

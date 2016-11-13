@@ -12,7 +12,7 @@
 			margin: 0;
 		}
 		html, body {
-			height: 100%;
+			min-height: 100%;
 		}
 		body {
 			background: #1e1915 center top no-repeat;
@@ -39,6 +39,10 @@
 			margin: 0 auto;
 			border-bottom: 5px solid currentColor;
 		}
+		#nav {
+			position: relative;
+			top: -4px;
+		}
 		#content {
 			
 		}
@@ -57,6 +61,7 @@
 		.wrapper {
 			min-height: 100%;
 			margin: 0 auto -45px; /* the bottom margin is the negative value of the footer's height */
+			outline: #574a42 1px solid;
 		}
 		footer, .push {
 			height: 45px; /* '.push' must be the same height as 'footer' */
@@ -96,6 +101,23 @@
 			</section>
 			<section>
 				<p>Code based off of the <a href="http://cheese.formice.com/dressroom">cheese.formice</a> dressroom made by Baffler.</p>
+			</section>
+			<section style="padding-bottom:0;">
+				Feel free to chat and post links to your outfits below! Please flag any inappropriate comments or spam.
+				<div id="disqus_thread"></div>
+				<script>
+				var disqus_config = function () {
+					// this.page.url = "http://projects.fewfre.com/a801/transformice/dressroom/";
+					this.page.identifier = "a801-transformice-dressroom";
+				};
+				(function() { // DON'T EDIT BELOW THIS LINE
+					var d = document, s = d.createElement('script');
+					s.src = '//fewfre.disqus.com/embed.js';
+					s.setAttribute('data-timestamp', +new Date());
+					(d.head || d.body).appendChild(s);
+				})();
+				</script>
+				<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 			</section>
 		</div>
 		<div class="push"></div>

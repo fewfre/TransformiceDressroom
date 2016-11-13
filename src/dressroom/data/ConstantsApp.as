@@ -12,7 +12,7 @@ package dressroom.data
 		/****************************
 		* General
 		*****************************/
-		public static const SOURCE_URL				: String = "https://github.com/fewfre/DeadMazeDressroom";
+		public static const SOURCE_URL				: String = "https://github.com/fewfre/TransformiceDressroom";
 		
 		public static const DEFAULT_SKIN_ID			: int = 0;
 		public static const DEFAULT_POSE_ID			: int = 0;

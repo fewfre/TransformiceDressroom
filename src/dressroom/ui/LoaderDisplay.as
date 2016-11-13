@@ -1,4 +1,4 @@
-package dressroom.ui 
+package dressroom.ui
 {
 	import com.fewfre.utils.AssetManager;
 	import com.fewfre.events.FewfEvent;
@@ -45,17 +45,21 @@ package dressroom.ui
 			_loadProgressText.autoSize = flash.text.TextFieldAutoSize.CENTER;
 			_loadProgressText.x = -_loadProgressText.textWidth * 0.5 - 2;
 			_loadProgressText.y = 35;
+			
+			addEventListener(Event.ENTER_FRAME, update);
 		}
 		
 		public function destroy() {
 			assets.removeEventListener(ProgressEvent.PROGRESS, _onLoadProgress);
+			removeEventListener(Event.ENTER_FRAME, update);
 			
 			assets = null;
 			_loadingSpinner = null;
 		}
 		
-		public function update(dt:Number):void
+		public function update(pEvent:Event):void
 		{
+			dt = 0.1;
 			if(_loadingSpinner != null) {
 				_loadingSpinner.rotation += 360 * dt;
 			}

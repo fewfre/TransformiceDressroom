@@ -18,6 +18,6 @@ package dressroom.data
 		public static const PAW_BACK			: String = "back-paw";
 		
 		// Order of item layering when occupying the same spot.
-		public static const LAYERING			: Array = [ SKIN, SKIN_COLOR, HAIR, HAT, EYES, EARS, MOUTH, NECK, TAIL, PAW, BACK, PAW_BACK ];
+		public static const LAYERING			: Array = [ SKIN, SKIN_COLOR, NECK, HAIR, HAT, EARS, MOUTH, EYES, TAIL, PAW, BACK, PAW_BACK ];
 	}
 }

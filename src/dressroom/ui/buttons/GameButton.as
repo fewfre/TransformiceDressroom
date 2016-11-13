@@ -18,10 +18,10 @@ package dressroom.ui.buttons
 		public function get Height():Number { return _bg.Height; }
 		
 		// Constructor
-		// pData = { x:Number, y:Number, width:Number, height:Number }
+		// pData = { x:Number, y:Number, width:Number, height:Number, ?origin:Number, ?originX:Number, ?originY:Number }
 		public function GameButton(pData:Object)
 		{
-			_bg = addChild(new RoundedRectangle({ x:0, y:0, width:pData.width, height:pData.height }));
+			_bg = addChild(new RoundedRectangle({ x:0, y:0, width:pData.width, height:pData.height, origin:pData.origin, originX:pData.originX, originY:pData.originY }));
 			super(pData);
 		}
 

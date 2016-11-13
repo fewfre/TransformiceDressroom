@@ -9,25 +9,47 @@ package dressroom.ui.panes
 	public class TabPane extends MovieClip
 	{
 		// Storage
-		public var active : Boolean;
+		protected var _flagOpen : Boolean;
+		protected var _flagDirty : Boolean;
 		public var infoBar : ShopInfoBar;
 		public var buttons : Array;
 		public var grid : Grid;
 		public var selectedButtonIndex : int;
+		public var populateFunction : Function;
 
 		protected var _scrollPane : ScrollPane;
 		var content:MovieClip;
 		var contentBack:MovieClip;//For scrollwheel to work, it has to hit a child element of the ScrollPane source.
+		
+		// Properties
+		public function get flagOpen() : Boolean { return _flagOpen; }
 
 		// Constructor
 		public function TabPane() {
 			super();
-			active = false;
+			_flagOpen = false;
+			_flagDirty = true;
 			infoBar = null;
 			buttons = [];
 			selectedButtonIndex = -1;
 			this.content = new MovieClip();
 			this.contentBack = addItem(new MovieClip());
+		}
+		
+		public function open() : void {
+			_flagOpen = true;
+			if(_flagDirty && populateFunction != null) {
+				_flagDirty = false;
+				populateFunction();
+			}
+		}
+		
+		public function close() : void {
+			_flagOpen = false;
+		}
+		
+		public function makeDirty() : void {
+			_flagDirty = true;
 		}
 
 		public function addItem(pItem:Sprite) : Sprite {
