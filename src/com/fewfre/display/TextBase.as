@@ -1,100 +1,124 @@
 package com.fewfre.display
 {
+	import com.fewfre.utils.*;
 	import flash.display.*;
 	import flash.text.*;
-
+	
 	public class TextBase extends Sprite
 	{
 		// Constants
-		public static const DEFAULT_FONT : String = "Verdana";
 		public static const DEFAULT_SIZE : Number = 12;
 		public static const DEFAULT_COLOR : int = 0xC2C2DA;
 
 		// Storage
-		protected var _text			: TextField;
+		protected var _text			: String;
+		protected var _i18n			: String;
+		protected var _values		: String; // Values used in i18n if {0} variables exist.
+		
+		protected var _field		: TextField;
+		
 		protected var _originX		: Number;
 		protected var _originY		: Number;
+		
+		protected var _color		: int;
+		protected var _size			: Number;
+		protected var _font			: String;
+		protected var _align		: String;
+		protected var _scale		: Number;
 
 		// Properties
-		public function get field() : TextField { return _text; }
-
-		public function get text() : String { return _text.text; }
-		public function set text(pVal:String) { _text.text = pVal; }
+		public function get text() : String { return _field.text; }
+		public function set text(pVal:String) : void { setText(pVal); }
+		
+		public function get field() : TextField { return _field; }
+		
+		public function set color(pVal:int) : void { _color = pVal; _render(); }
+		public function set size(pVal:Number) : void { _size = pVal; _render(); }
+		public function set font(pVal:String) : void { _font = pVal; _render(); }
+		public function set align(pVal:String) : void { _align = pVal; _render(); }
 
 		// Constructor
-		// pData = { x:Number, y:Number, ?text:String, ?font:String, ?size:Number, ?color:int, ?origin:Number=0.5, ?originX:Number=0.5, ?originY:Number=0.5 }
-		public function TextBase(pData:Object) {
+		// pArgs = { x:Number, y:Number, ?text:String, ?font:String, ?size:Number, ?color:int, ?origin:Number=0.5,
+		//			?originX:Number=0.5, ?originY:Number=0.5, ?alpha:Number=1, ?align:String(left, right, center)=center, ?values:*|Array }
+		public function TextBase(pArgs:Object) {
 			super();
-			this.x = pData.x != null ? pData.x : 0;
-			this.y = pData.y != null ? pData.y : 0;
-
-			_text = addChild(new TextField());
-			_text.defaultTextFormat = new TextFormat(
-				pData.font != null ? pData.font : DEFAULT_FONT,
-				pData.size != null ? pData.size : DEFAULT_SIZE,
-				pData.color != null ? pData.color : DEFAULT_COLOR
-			);
-			_text.autoSize = TextFieldAutoSize.CENTER;
-			_text.text = pData.text != null ? pData.text : "";
-
-			originX = 0.5;
-			originY = 0.5;
-			if(pData.origin != null) { originX = originY = pData.origin; }
-			if(pData.originX != null) { originX = pData.originX; }
-			if(pData.originY != null) { originY = pData.originY; }
-
-			_text.x = -_text.textWidth * originX - 2;
-			_text.y = -_text.textHeight * originY - 2;
+			this.x = pArgs.x != null ? pArgs.x : 0;
+			this.y = pArgs.y != null ? pArgs.y : 0;
+			
+			_color = pArgs.color != null ? pArgs.color : DEFAULT_COLOR;
+			_size = pArgs.size != null ? pArgs.size : DEFAULT_SIZE;
+			_font = pArgs.font != null ? pArgs.font : Fewf.i18n.defaultFont;
+			_align = pArgs.align != null ? pArgs.align : "center";
+			_scale = 1;
+			
+			_i18n = "";
+			_text = "";
+			_values = pArgs.values != null ? (pArgs.values is Array ? pArgs.values : [pArgs.values]) : null;
+			if(pArgs.text) {
+				_setI18nData(pArgs.text);
+			}
+			
+			_originX = 0.5;
+			_originY = 0.5;
+			if(pArgs.origin != null) { _originX = _originY = pArgs.origin; }
+			if(pArgs.originX != null) { _originX = pArgs.originX; }
+			if(pArgs.originY != null) { _originY = pArgs.originY; }
+			originX = _originX;
+			originY = _originY;
+			
+			alpha = pArgs.alpha != null ? pArgs.alpha : 1;
+			
+			_field = addChild(new TextField());
+			_render();
 		}
 
 		/****************************
 		* Render
 		*****************************/
-		protected function _renderUp() : void {
-			this.scaleX = this.scaleY = 1;
-		}
-
-		protected function _renderDown() : void
-		{
-			this.scaleX = this.scaleY = 0.9;
-		}
-
-		protected function _renderOver() : void {
-			this.scaleX = this.scaleY = 1.1;
-		}
-
-		protected function _renderOut() : void {
-			_renderUp();
-		}
-
-		protected function _renderDisabled() : void {
-			this.scaleX = this.scaleY = 1;
+		protected function _render() : void {
+			_field.defaultTextFormat = new TextFormat(_font, _size * _scale, _color);
+			_field.autoSize = _convertAlignToAutoSize();
+			_field.text = _values != null ? FewfUtils.stringSubstitute(_text, _values) : _text;
+			_field.x = -_field.textWidth * _originX - 2;
+			_field.y = -_field.textHeight * _originY - 2;
 		}
 
 		/****************************
-		* Methods
+		* Public
 		*****************************/
-		public function _dispatch(pEvent:String) : void {
-			if(!_returnData) { dispatchEvent(new Event(pEvent)); }
-			else {
-				dispatchEvent(new FewfEvent(pEvent, _returnData));
+		public function setText(pKey:String, ...pValues) : void {
+			_setI18nData(pKey != null ? pKey : "");
+			_values = pValues[0] is Array ? pValues[0] : pValues;
+			_render();
+		}
+		
+		public function setValues(...pValues) : void {
+			_values = pValues[0] is Array ? pValues[0] : pValues;
+			_render();
+		}
+		
+		/****************************
+		* Helper
+		*****************************/
+		private function _setI18nData(pKey:String) : void {
+			_i18n = pKey;
+			var tI18nData = Fewf.i18n.getData(pKey);
+			if(tI18nData != null) {
+				_text = tI18nData.text;
+				_scale = tI18nData.scale != null ? tI18nData.scale : 1;
+				_font = tI18nData.font != null ? tI18nData.font : Fewf.i18n.defaultFont;
+			} else {
+				_text = "<"+pKey+">";
 			}
 		}
-
-		public function enable() : ButtonBase {
-			_flagEnabled = true;
-			_state = BUTTON_STATE_UP;
-			_renderUp();
-			return this;
-		}
-
-		/**********************************************************
-		@description
-		 **********************************************************/
-		public function disable() : ButtonBase {
-			_flagEnabled = false;
-			_renderDisabled();
-			return this;
+		
+		private function _convertAlignToAutoSize() : String {
+			switch(_align) {
+				case "left": return TextFieldAutoSize.LEFT;
+				case "right": return TextFieldAutoSize.RIGHT;
+				case "center": return TextFieldAutoSize.CENTER;
+			}
+			return TextFieldAutoSize.CENTER;
 		}
 	}
 }

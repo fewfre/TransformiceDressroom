@@ -30,7 +30,7 @@ package dressroom.ui.buttons
 			}
 			
 			if(pData.text) {
-				this.Text = addChild(new TextBase({ text:pData.text, size:11, x:this.Width * 0.5 - 2, y:this.Height * 0.5 - 2 }));
+				this.Text = addChild(new TextBase({ text:pData.text, size:11, x:this.Width * (0.5 - _bg.originX) - 2, y:this.Height * (0.5 - _bg.originY) - 2 }));
 			}
 		}
 
@@ -45,17 +45,17 @@ package dressroom.ui.buttons
 		}
 		
 		override protected function _renderDown() : void {
-			if(this.Text) this.Text.field.textColor = 0xC2C2DA;
+			if(this.Text) this.Text.color = 0xC2C2DA;
 			super._renderDown();
 		}
 		
 		override protected function _renderOver() : void {
-			if(this.Text) this.Text.field.textColor = 0x012345;
+			if(this.Text) this.Text.color = 0x012345;
 			super._renderOver();
 		}
 		
 		override protected function _renderOut() : void {
-			if(this.Text) this.Text.field.textColor = 0xC2C2DA;
+			if(this.Text) this.Text.color = 0xC2C2DA;
 			super._renderOut();
 		}
 	}

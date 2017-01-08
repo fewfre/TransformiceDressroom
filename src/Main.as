@@ -29,7 +29,6 @@ package
 		// Storage
 		private const _LOAD_LOCAL:Boolean = true;
 
-		public static var assets	: AssetManager;
 		public static var costumes	: Costumes;
 
 		internal var character		: Character;
@@ -56,18 +55,7 @@ package
 		public function Main()
 		{
 			super();
-
-			assets = new AssetManager();
-			assets.load([
-				_LOAD_LOCAL ? "resources/x_meli_costumes.swf" : "http://www.transformice.com/images/x_bibliotheques/x_meli_costumes.swf",
-				_LOAD_LOCAL ? "resources/x_fourrures.swf" : "http://www.transformice.com/images/x_bibliotheques/x_fourrures.swf",
-				_LOAD_LOCAL ? "resources/x_fourrures2.swf" : "http://www.transformice.com/images/x_bibliotheques/x_fourrures2.swf",
-				_LOAD_LOCAL ? "resources/x_fourrures3.swf" : "http://www.transformice.com/images/x_bibliotheques/x_fourrures3.swf",
-				"resources/poses.swf",
-			]);
-			assets.addEventListener(AssetManager.LOADING_FINISHED, _onLoadComplete);
-
-			loaderDisplay = addChild( new LoaderDisplay({ x:stage.stageWidth * 0.5, y:stage.stageHeight * 0.5, assetManager:assets }) );
+			Fewf.init();
 
 			stage.align = StageAlign.TOP;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
@@ -75,15 +63,46 @@ package
 
 			BrowserMouseWheelPrevention.init(stage);
 			stage.addEventListener(MouseEvent.MOUSE_WHEEL, handleMouseWheel);
+			
+			// Start preload
+			Fewf.assets = new AssetManager();
+			Fewf.assets.load([
+				"resources/config.json",
+			]);
+			Fewf.assets.addEventListener(AssetManager.LOADING_FINISHED, _onPreloadComplete);
+
+			loaderDisplay = addChild( new LoaderDisplay({ x:stage.stageWidth * 0.5, y:stage.stageHeight * 0.5 }) );
+		}
+		
+		internal function _onPreloadComplete(event:Event) : void {
+			Fewf.assets.removeEventListener(AssetManager.LOADING_FINISHED, _onPreloadComplete);
+			ConstantsApp.lang = Fewf.assets.getData("config").language;
+			
+			// Start main load
+			Fewf.assets.load([
+				_LOAD_LOCAL ? "resources/x_meli_costumes.swf" : "http://www.transformice.com/images/x_bibliotheques/x_meli_costumes.swf",
+				_LOAD_LOCAL ? "resources/x_fourrures.swf" : "http://www.transformice.com/images/x_bibliotheques/x_fourrures.swf",
+				_LOAD_LOCAL ? "resources/x_fourrures2.swf" : "http://www.transformice.com/images/x_bibliotheques/x_fourrures2.swf",
+				_LOAD_LOCAL ? "resources/x_fourrures3.swf" : "http://www.transformice.com/images/x_bibliotheques/x_fourrures3.swf",
+				"resources/poses.swf",
+				"resources/i18n/"+ConstantsApp.lang+".json",
+			]);
+			Fewf.assets.addEventListener(AssetManager.LOADING_FINISHED, _onLoadComplete);
 		}
 
-		internal function _onLoadComplete(event:Event) : void
-		{
+		internal function _onLoadComplete(event:Event) : void {
+			Fewf.assets.removeEventListener(AssetManager.LOADING_FINISHED, _onLoadComplete);
 			loaderDisplay.destroy();
 			removeChild( loaderDisplay );
 			loaderDisplay = null;
-
-			costumes = new Costumes( assets );
+			
+			Fewf.i18n.parseFile(Fewf.assets.getData(ConstantsApp.lang));
+			
+			_init();
+		}
+		
+		private function _init() : void {
+			costumes = new Costumes();
 			costumes.init();
 
 			/****************************
@@ -114,16 +133,16 @@ package
 			
 			this.shopTabs = addChild(new ShopTabContainer({ x:380, y:10, width:60, height:ConstantsApp.APP_HEIGHT,
 				tabs:[
-					{ text:"Head", event:ITEM.HAT },
-					{ text:"Hair", event:ITEM.HAIR },
-					{ text:"Ears", event:ITEM.EARS },
-					{ text:"Eyes", event:ITEM.EYES },
-					{ text:"Mouth", event:ITEM.MOUTH },
-					{ text:"Neck", event:ITEM.NECK },
-					{ text:"Tail", event:ITEM.TAIL },
-					{ text:"Furs", event:ITEM.SKIN },
-					{ text:"Pose", event:ITEM.POSE },
-					{ text:"Other", event:"other" }
+					{ text:"tab_head", event:ITEM.HAT },
+					{ text:"tab_hair", event:ITEM.HAIR },
+					{ text:"tab_ears", event:ITEM.EARS },
+					{ text:"tab_eyes", event:ITEM.EYES },
+					{ text:"tab_mouth", event:ITEM.MOUTH },
+					{ text:"tab_neck", event:ITEM.NECK },
+					{ text:"tab_tail", event:ITEM.TAIL },
+					{ text:"tab_furs", event:ITEM.SKIN },
+					{ text:"tab_poses", event:ITEM.POSE },
+					{ text:"tab_other", event:"other" }
 				]
 			}));
 			this.shopTabs.addEventListener(ShopTabContainer.EVENT_SHOP_TAB_CLICKED, _onTabClicked);

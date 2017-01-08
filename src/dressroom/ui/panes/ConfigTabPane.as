@@ -35,9 +35,9 @@ package dressroom.ui.panes
 			shamanButtons = [];
 			var icon = addItem(new $ShamFeather()); icon.x = (xx += spacingx) + sizex*0.5; icon.y = yy + sizey*0.5; icon.scaleX = icon.scaleY = 2;
 			icon.addEventListener(MouseEvent.CLICK, _onNoShamanButtonClicked);
-			shamanButtons.push(tButton = addItem(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextBase({ text:"Normal" }), id:SHAMAN_MODE.NORMAL })));
-			shamanButtons.push(tButton = addItem(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextBase({ text:"Hard" }), id:SHAMAN_MODE.HARD })));
-			shamanButtons.push(tButton = addItem(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextBase({ text:"Divine" }), id:SHAMAN_MODE.DIVINE })));
+			shamanButtons.push(tButton = addItem(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextBase({ text:"btn_normal_mode", text:"Normal" }), id:SHAMAN_MODE.NORMAL })));
+			shamanButtons.push(tButton = addItem(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextBase({ text:"btn_hard_mode", text:"Hard" }), id:SHAMAN_MODE.HARD })));
+			shamanButtons.push(tButton = addItem(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextBase({ text:"btn_divine_mode", text:"Divine" }), id:SHAMAN_MODE.DIVINE })));
 			_registerClickHandler(shamanButtons, _onShamanButtonClicked);
 			
 			addItem( shamanColorPickerButton = new ScaleButton({ x:xx += spacingx + sizex*0.5, y:yy + sizey*0.5, obj:new $ColorWheel() }) );

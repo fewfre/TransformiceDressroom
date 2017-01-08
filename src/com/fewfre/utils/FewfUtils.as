@@ -15,5 +15,14 @@ package com.fewfre.utils
 			}
 			return -1;
 		}
+		
+		public static function stringSubstitute(pVal:String, ...pValues) : String {
+			if(pValues[0] is Array) { pValues = pValues[0]; }
+			// pVal.replace(/{(.*?)}/gi, "a");
+			for(var i:int in pValues) {
+				pVal = pVal.replace("{"+i+"}", pValues[i]);
+			}
+			return pVal;
+		}
 	}
 }

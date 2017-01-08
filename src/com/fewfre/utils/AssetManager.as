@@ -7,7 +7,9 @@ package com.fewfre.utils
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
 	import flash.events.ProgressEvent;
+	import flash.net.URLLoader;
 	import flash.net.URLRequest;
+	import flash.utils.Dictionary;
 	import flash.utils.setTimeout;
 	
 	public class AssetManager extends Sprite
@@ -18,14 +20,16 @@ package com.fewfre.utils
 		
 		// Storage
 		internal var _urlsToLoad:Array;
-		internal var _loadedData:Array;
+		internal var _loadedAssetData:Array;
+		internal var _loadedData:Dictionary;
 		
 		// Properties
 		public function get itemsLeftToLoad():int { return _urlsToLoad.length; }
 		
 		public function AssetManager() {
 			super();
-			_loadedData = [];
+			_loadedAssetData = [];
+			_loadedData = new Dictionary();
 		}
 		
 		/****************************
@@ -33,33 +37,66 @@ package com.fewfre.utils
 		*****************************/
 			public function load(pURLs:Array) : void {
 				_urlsToLoad = pURLs;
-				_newAssetLoader( _urlsToLoad.shift() );
+				_newLoader( _urlsToLoad.shift() );
 			}
 			
-			private function _newAssetLoader(pUrl:String) : Loader {
-				var tLoader:Loader = new Loader();
-				tLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, _onDataLoaded);
-				tLoader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, _onLoadError);
-				tLoader.contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS, _onProgress);
-				tLoader.load(new URLRequest(pUrl));
-				return tLoader;
+			private function _newLoader(pUrl:String) : void {
+				var tUrlParts = pUrl.split("/").pop().split("."), tName = tUrlParts[0], tType = tUrlParts[1];
+				switch(tType) {
+					case "swf":
+					case "swc":
+						var tLoader:Loader = new Loader();
+						tLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, _onAssetsLoaded);
+						tLoader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, _onLoadError);
+						tLoader.contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS, _onProgress);
+						tLoader.load(new URLRequest(pUrl));
+						break;
+					case "json":
+						var tUrlLoader:URLLoader = new URLLoader();
+						tUrlLoader.addEventListener(Event.COMPLETE, function(e:Event){ _onJsonLoaded(e, tName, arguments.callee); });
+						tUrlLoader.addEventListener(IOErrorEvent.IO_ERROR, function(e:Event){ _onURLLoadError(e, pUrl, arguments.callee); });
+						tUrlLoader.addEventListener(ProgressEvent.PROGRESS, _onProgress);
+						tUrlLoader.load(new URLRequest(pUrl));
+						break;
+					default:
+						trace("[AssetManager](_newLoader) Unknown file type: "+tType);
+						break;
+				}
 			}
 			
 			private function _destroyAssetLoader(pLoader:Loader) : void {
-				pLoader.contentLoaderInfo.removeEventListener(Event.COMPLETE, _onDataLoaded);
+				pLoader.contentLoaderInfo.removeEventListener(Event.COMPLETE, _onAssetsLoaded);
 				pLoader.contentLoaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, _onLoadError);
 				pLoader.contentLoaderInfo.removeEventListener(ProgressEvent.PROGRESS, _onProgress);
 			}
 			
-			private function _onDataLoaded(e:Event) : void {
-				_loadedData.push( MovieClip(e.target.content) );
+			private function _destroyURLLoader(pLoader:URLLoader, pOnComplete) : void {
+				pLoader.removeEventListener(Event.COMPLETE, pOnComplete);
+				pLoader.removeEventListener(IOErrorEvent.IO_ERROR, _onURLLoadError);
+				pLoader.removeEventListener(ProgressEvent.PROGRESS, _onProgress);
+			}
+			
+			private function _onAssetsLoaded(e:Event) : void {
+				_loadedAssetData.push( MovieClip(e.target.content) );
 				_destroyAssetLoader(e.target.loader);
+				_checkIfLoadingDone();
+			}
+			
+			private function _onJsonLoaded(e:Event, pKey:String, pOnComplete) : void {
+				_loadedData[pKey] = JSON.parse(e.target.data);
+				_destroyURLLoader(e.target, pOnComplete);
 				_checkIfLoadingDone();
 			}
 			
 			private function _onLoadError(e:IOErrorEvent) : void {
 				trace("[AssetManager](_onLoadError) ERROR("+e.errorID+"): Was not able to load url: "+e.target.url);
 				_destroyAssetLoader(e.target.loader);
+				_checkIfLoadingDone();
+			}
+			
+			private function _onURLLoadError(e:IOErrorEvent, pUrl:String, pOnComplete) : void {
+				trace("[AssetManager](_onLoadError) ERROR("+e.errorID+"): Was not able to load url: "+pUrl);
+				_destroyURLLoader(e.target, pOnComplete);
 				_checkIfLoadingDone();
 			}
 			
@@ -71,7 +108,7 @@ package com.fewfre.utils
 			private function _checkIfLoadingDone() : void {
 				dispatchEvent(new FewfEvent(PACK_LOADED, { itemsLeftToLoad:itemsLeftToLoad }));
 				if(_urlsToLoad.length > 0) {
-					_newAssetLoader( _urlsToLoad.shift() );
+					_newLoader( _urlsToLoad.shift() );
 				} else {
 					trace("[AssetManager](_checkIfLoadingDone) All resources loaded.");
 					setTimeout(function(){ dispatchEvent(new Event(AssetManager.LOADING_FINISHED)); }, 0);
@@ -81,10 +118,14 @@ package com.fewfre.utils
 		/****************************
 		* Access Assets
 		*****************************/
+			public function getData(pKey:String) : * {
+				return _loadedData[pKey];
+			}
+			
 			public function getLoadedClass(pName:String, pTrace:Boolean=false) : Class {
-				for(var i = 0; i < _loadedData.length; i++) {
-					if(_loadedData[i].loaderInfo.applicationDomain.hasDefinition(pName)) {
-						return _loadedData[i].loaderInfo.applicationDomain.getDefinition( pName ) as Class;
+				for(var i = 0; i < _loadedAssetData.length; i++) {
+					if(_loadedAssetData[i].loaderInfo.applicationDomain.hasDefinition(pName)) {
+						return _loadedAssetData[i].loaderInfo.applicationDomain.getDefinition( pName ) as Class;
 					}
 				}
 				if(pTrace) { trace("[AssetManager](getLoadedClass) ERROR: No Linkage by name: "+pName); }

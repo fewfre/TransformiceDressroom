@@ -67,7 +67,7 @@ package dressroom.world.elements
 				if(tSlotName.indexOf("CuisseD_") > -1 && tSkinData != null && pData.shamanMode == SHAMAN_MODE.DIVINE
 					&& (_poseData.id == "Statique" || _poseData.id == "Course" || _poseData.id == "Duck") // Wings only show for these animations in-game
 				) {
-					part = tChild.addChild(new (Main.assets.getLoadedClass("$AileChamane"))());
+					part = tChild.addChild(new (Fewf.assets.getLoadedClass("$AileChamane"))());
 					_colorPart(part, tSkinData, "shamanwings");
 					part.x += 15; part.y -= 10; part.rotation-=9;
 				}

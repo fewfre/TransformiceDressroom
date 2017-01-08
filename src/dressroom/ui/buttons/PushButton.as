@@ -1,6 +1,6 @@
 package dressroom.ui.buttons
 {
-	import com.fewfre.display.ButtonBase;
+	import com.fewfre.display.*;
 	import dressroom.data.*;
 	import dressroom.ui.*;
 	import flash.display.*;
@@ -18,40 +18,34 @@ package dressroom.ui.buttons
 		public var id:int;
 		public var pushed:Boolean;
 		public var allowToggleOff:Boolean; // Only controls the behavior on internal click controls.
-		public var Text:flash.text.TextField;
-		public var Image:flash.display.DisplayObject;
+		public var Text:TextBase;
+		public var Image:DisplayObject;
 		
 		// Constructor
-		// pData = { x:Number, y:Number, width:Number, height:Number, ?obj:DisplayObject, ?obj_scale:Number, ?text:String, ?id:int, ?allowToggleOff:Boolean=true }
-		public function PushButton(pData:Object)
+		// pArgs = { x:Number, y:Number, width:Number, height:Number, ?obj:DisplayObject, ?obj_scale:Number, ?text:String, ?id:int, ?allowToggleOff:Boolean=true }
+		public function PushButton(pArgs:Object)
 		{
-			super(pData);
-			if(pData.id) { id = pData.id; }
+			super(pArgs);
+			if(pArgs.id) { id = pArgs.id; }
 			
-			if(pData.text) {
-				this.Text = new flash.text.TextField();
-				this.Text.defaultTextFormat = new flash.text.TextFormat("Verdana", 11, 0xC2C2DA);
-				this.Text.autoSize = flash.text.TextFieldAutoSize.CENTER;
-				this.Text.text = pData.text;
-				this.Text.x = (this.Width - this.Text.textWidth) / 2 - 2;
-				this.Text.y = (this.Height - this.Text.textHeight) / 2 - 2;
-				addChild(this.Text);
+			if(pArgs.text) {
+				this.Text = addChild(new TextBase({ text:pArgs.text, x:pArgs.width*(0.5 - _bg.originX), y:pArgs.height*(0.5 - _bg.originY) }));
 			}
 			
-			if(pData.obj) {
-				var tBounds:Rectangle = pData.obj.getBounds(pData.obj);
+			if(pArgs.obj) {
+				var tBounds:Rectangle = pArgs.obj.getBounds(pArgs.obj);
 				var tOffset:Point = tBounds.topLeft;
 				
-				var tScale:Number = pData.obj_scale ? pData.obj_scale : 1;
-				this.Image = pData.obj;
-				this.Image.x = pData.width / 2 - (tBounds.width / 2 + tOffset.x)*tScale * this.Image.scaleX;
-				this.Image.y = pData.height / 2 - (tBounds.height / 2 + tOffset.y)*tScale * this.Image.scaleY;
+				var tScale:Number = pArgs.obj_scale ? pArgs.obj_scale : 1;
+				this.Image = pArgs.obj;
+				this.Image.x = pArgs.width / 2 - (tBounds.width / 2 + tOffset.x)*tScale * this.Image.scaleX;
+				this.Image.y = pArgs.height / 2 - (tBounds.height / 2 + tOffset.y)*tScale * this.Image.scaleY;
 				this.Image.scaleX *= tScale;
 				this.Image.scaleY *= tScale;
 				addChild(this.Image);
 			}
 			
-			this.allowToggleOff = pData.allowToggleOff == null ? true : pData.allowToggleOffs;
+			this.allowToggleOff = pArgs.allowToggleOff == null ? true : pArgs.allowToggleOffs;
 			this.pushed = false;
 			_renderUnpressed();
 		}
@@ -59,13 +53,13 @@ package dressroom.ui.buttons
 		protected function _renderUnpressed() : void
 		{
 			super._renderUp();
-			if(this.Text) { this.Text.textColor = 0xC2C2DA; }
+			if(this.Text) { this.Text.color = 0xC2C2DA; }
 		}
 
 		protected function _renderPressed() : void
 		{
 			_bg.draw(ConstantsApp.COLOR_BUTTON_MOUSE_DOWN, 7, 0x5D7A91, 0x5D7A91, 0x6C8DA8);
-			if(this.Text) { this.Text.textColor = 0xFFD800; }
+			if(this.Text) { this.Text.color = 0xFFD800; }
 		}
 
 		public function toggle(pOn=null, pFireEvent:Boolean=true) : void
@@ -104,21 +98,21 @@ package dressroom.ui.buttons
 		
 		override protected function _renderDown() : void {
 			if (this.pushed == false) {
-				if(this.Text) this.Text.textColor = 0xC2C2DA;
+				if(this.Text) this.Text.color = 0xC2C2DA;
 				super._renderDown();
 			}
 		}
 		
 		override protected function _renderOver() : void {
 			if (this.pushed == false) {
-				if(this.Text) this.Text.textColor = 0x012345;
+				if(this.Text) this.Text.color = 0x012345;
 				super._renderOver();
 			}
 		}
 		
 		override protected function _renderOut() : void {
 			if(this.pushed == false) {
-				if(this.Text) this.Text.textColor = 0xC2C2DA;
+				if(this.Text) this.Text.color = 0xC2C2DA;
 				super._renderOut();
 			}
 		}

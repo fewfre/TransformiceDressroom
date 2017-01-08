@@ -1,0 +1,35 @@
+{
+	"defaultFont": "Verdana",
+	"defaultScale": 1,
+	"strings": {
+		"example":				{
+			"text":"Only text field is required. Scale is 1 by default. Any {0}s will be replaced by a value. Comma placement is important.",
+			"scale":0.7,
+			"font":"Wingdings"
+		},
+		"example2":				{ "text":"Example", "scale":0.9, "font":"Monospace" },
+		
+		"btn_normal_mode":		{ "text":"Normal" },
+		"btn_hard_mode":		{ "text":"Hard" },
+		"btn_divine_mode":		{ "text":"Divine" },
+		
+		"tab_head":				{ "text":"Head" },
+		"tab_hair":				{ "text":"Hair" },
+		"tab_ears":				{ "text":"Ears" },
+		"tab_eyes":				{ "text":"Eyes" },
+		"tab_mouth":			{ "text":"Mouth" },
+		"tab_neck":				{ "text":"Neck" },
+		"tab_tail":				{ "text":"Tail" },
+		"tab_furs":				{ "text":"Furs" },
+		"tab_poses":			{ "text":"Pose" },
+		"tab_other":			{ "text":"Other" },
+		
+		"btn_color_defaults":	{ "text":"Defaults" },
+		
+		"share_header":			{ "text":"Share your Creation!" },
+		"share_link_copied":	{ "text":"Link copied to clipboard! Paste to use." },
+		"share_copy":			{ "text":"copy" },
+		
+		"infobar_id":			{ "text":"ID: {0}" }
+	}
+}

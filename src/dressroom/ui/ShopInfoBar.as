@@ -1,6 +1,6 @@
 package dressroom.ui
 {
-	import com.fewfre.display.ButtonBase;
+	import com.fewfre.display.*;
 	import com.adobe.images.*;
 	import dressroom.data.*;
 	import dressroom.ui.*;
@@ -21,7 +21,7 @@ package dressroom.ui
 		public var Image			: MovieClip;
 		public var imageCont		: RoundedRectangle;
 		
-		public var Text				: TextField;
+		public var Text				: TextBase;
 		public var colorWheel		: ScaleButton;
 		public var downloadButton	: SpriteButton;
 		public var refreshButton	: ScaleButton;
@@ -47,13 +47,7 @@ package dressroom.ui
 			this.colorWheel.y = 24;
 			// Add event listener in Main
 			
-			this.Text = addChild(new TextField());
-			this.Text.x = 115;
-			this.Text.y = 13;
-			this.Text.defaultTextFormat = new flash.text.TextFormat("Verdana", 18, 0xc2c2da);
-			this.Text.autoSize = flash.text.TextFieldAutoSize.LEFT;
-			this.Text.text = "ID: ";
-			this.Text.alpha = 0;
+			this.Text = addChild(new TextBase({ text:"infobar_id", x:115, y:13, size:18, origin:0, align:"left", alpha:0 }));
 			
 			showColorWheel(pData.showBackButton);
 			
@@ -110,7 +104,7 @@ package dressroom.ui
 		}
 		
 		private function _updateID() : void {
-			this.Text.text = "ID: "+data.id;
+			this.Text.setValues(data.id);
 		}
 		
 		public function addInfo(pData:ItemData, pMC:MovieClip) : void {

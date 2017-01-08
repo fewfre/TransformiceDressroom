@@ -1,4 +1,4 @@
-package dressroom.ui 
+package dressroom.ui
 {
 	import flash.display.*;
 	import flash.geom.Matrix;
@@ -12,7 +12,7 @@ package dressroom.ui
 		public var originY:Number;
 		
 		// Constructor
-		// pData = { x:Number, y:Number, width:Number, height:Number, ?origin:Number, ?originX:Number, ?originY:Number }
+		// pData = { x:Number, y:Number, width:Number, height:Number, ?origin:Number, ?originX:Number=0, ?originY:Number=0 }
 		public function RoundedRectangle(pData:Object)
 		{
 			super();
@@ -63,17 +63,17 @@ package dressroom.ui
 			//var colors:Array = [0x00FF00, 0x000088];
 			var alphas:Array = [1, 1];
 			var ratios:Array = [0, 255];
-			var spreadMethod:String = SpreadMethod.PAD; 
-			var interp:String = InterpolationMethod.LINEAR_RGB; 
-			var focalPtRatio:Number = 0; 
+			var spreadMethod:String = SpreadMethod.PAD;
+			var interp:String = InterpolationMethod.LINEAR_RGB;
+			var focalPtRatio:Number = 0;
 			
-			var matrix:Matrix = new Matrix(); 
-			var boxWidth:Number = this.Width; 
-			var boxHeight:Number = this.Height; 
-			var boxRotation:Number = Math.PI/2; // 90° 
+			var matrix:Matrix = new Matrix();
+			var boxWidth:Number = this.Width;
+			var boxHeight:Number = this.Height;
+			var boxRotation:Number = Math.PI/2; // 90°
 			var tx:Number = tX;
 			var ty:Number = tY-(this.Height)*0.1;
-			matrix.createGradientBox(boxWidth, boxHeight, boxRotation, tx, ty); 
+			matrix.createGradientBox(boxWidth, boxHeight, boxRotation, tx, ty);
 			 
 			this.graphics.beginGradientFill(
 				type,
@@ -84,7 +84,7 @@ package dressroom.ui
 				spreadMethod,
 				interp,
 				focalPtRatio
-			); 
+			);
 			//this.graphics.drawRect(0, 0, this.Width, this.Height);
 			
 			// Finish

@@ -14,8 +14,6 @@ package dressroom.data
 	{
 		private const _MAX_COSTUMES_TO_CHECK_TO:Number = 250;//999;
 
-		public var assets:AssetManager;
-
 		public var hair:Array;
 		public var head:Array;
 		public var eyes:Array;
@@ -37,9 +35,8 @@ package dressroom.data
 		public var shamanMode:int = SHAMAN_MODE.OFF;
 		public var shamanColor:int = 0x95D9D6;
 
-		public function Costumes(pAssets:AssetManager) {
+		public function Costumes() {
 			super();
-			assets = pAssets;
 		}
 
 		public function init() : Costumes {
@@ -53,11 +50,11 @@ package dressroom.data
 			this.hair = _setupCostumeArray({ base:"$Costume_5_", type:ITEM.HAIR, itemClassToClassMap:"Tete_1" });
 			this.tail = _setupCostumeArray({ base:"$Costume_6_", type:ITEM.TAIL, itemClassToClassMap:"Boule_1" });
 
-			this.hand = new ItemData({ type:ITEM.PAW, itemClass:assets.getLoadedClass("$Costume_7_1") });
+			this.hand = new ItemData({ type:ITEM.PAW, itemClass:Fewf.assets.getLoadedClass("$Costume_7_1") });
 			this.hand.classMap = { Arme_1:this.hand.itemClass };
-			this.backHand = new ItemData({ type:ITEM.PAW_BACK, itemClass:assets.getLoadedClass("$Costume_8_1") });
+			this.backHand = new ItemData({ type:ITEM.PAW_BACK, itemClass:Fewf.assets.getLoadedClass("$Costume_8_1") });
 			this.backHand.classMap = { PatteG_1:this.backHand.itemClass };
-			this.fromage = new ItemData({ type:ITEM.BACK, itemClass:assets.getLoadedClass("FromageSouris") });
+			this.fromage = new ItemData({ type:ITEM.BACK, itemClass:Fewf.assets.getLoadedClass("FromageSouris") });
 			this.fromage.classMap = { ClipGrosse:this.fromage.itemClass };
 
 			this.skins = new Array();
@@ -69,7 +66,7 @@ package dressroom.data
 			
 			this.skins.push( new SkinData({ id:1, assetID:1, color:0x78583A, type:ITEM.SKIN }) );
 			for(i = 2; i < _MAX_COSTUMES_TO_CHECK_TO; i++) {
-				if(assets.getLoadedClass( "_Corps_2_"+i+"_1" ) != null) {
+				if(Fewf.assets.getLoadedClass( "_Corps_2_"+i+"_1" ) != null) {
 					this.skins.push( new SkinData({ id:i }) );
 				}
 			}
@@ -81,7 +78,7 @@ package dressroom.data
 
 			this.furs.push( new FurData( 1, ItemType.FUR ).initColor(FurData.DEFAULT_COLOR) );
 			for(var i = 2; i < _MAX_COSTUMES_TO_CHECK_TO; i++) {
-				if(assets.getLoadedClass( "_Corps_2_"+i+"_1" ) != null) {
+				if(Fewf.assets.getLoadedClass( "_Corps_2_"+i+"_1" ) != null) {
 					//this.furs.push( new Fur().initFur( i, _setupFur(i) ) );
 					this.furs.push( new FurData( i, ItemType.FUR ).initFur() );
 				}
@@ -96,7 +93,7 @@ package dressroom.data
 			];
 			// Unused: Calin,
 			for(i = 0; i < tPoseClasses.length; i++) {
-				this.poses.push(new ItemData({ id:tPoseClasses[i], type:ITEM.POSE, itemClass:assets.getLoadedClass( "Anim"+tPoseClasses[i] ) }));
+				this.poses.push(new ItemData({ id:tPoseClasses[i], type:ITEM.POSE, itemClass:Fewf.assets.getLoadedClass( "Anim"+tPoseClasses[i] ) }));
 			}
 			this.defaultPoseIndex = 0;//FewfUtils.getIndexFromArrayWithKeyVal(this.poses, "id", ConstantsApp.DEFAULT_POSE_ID);
 
@@ -115,10 +112,10 @@ package dressroom.data
 						var tClassMap = {  }, tClassSuccess = null;
 						tSexSpecificParts = 0;
 						for(var j = 0; j <= pData.map.length; j++) {
-							tClass = assets.getLoadedClass( tClassName = pData.base+(pData.pad ? zeroPad(i, pData.pad) : i)+(pData.after ? pData.after : "")+pData.map[j] );
+							tClass = Fewf.assets.getLoadedClass( tClassName = pData.base+(pData.pad ? zeroPad(i, pData.pad) : i)+(pData.after ? pData.after : "")+pData.map[j] );
 							if(tClass) { tClassMap[pData.map[j]] = tClass; tClassSuccess = tClass; }
 							else if(pData.sex){
-								tClass = assets.getLoadedClass( tClassName+"_"+(g==0?1:2) );
+								tClass = Fewf.assets.getLoadedClass( tClassName+"_"+(g==0?1:2) );
 								if(tClass) { tClassMap[pData.map[j]] = tClass; tClassSuccess = tClass; tSexSpecificParts++ }
 							}
 						}
@@ -131,7 +128,7 @@ package dressroom.data
 						}
 					}
 				} else {
-					tClass = assets.getLoadedClass( pData.base+(pData.pad ? zeroPad(i, pData.pad) : i)+(pData.after ? pData.after : "") );
+					tClass = Fewf.assets.getLoadedClass( pData.base+(pData.pad ? zeroPad(i, pData.pad) : i)+(pData.after ? pData.after : "") );
 					if(tClass != null) {
 						tArray.push( new ItemData({ id:i, type:pData.type, itemClass:tClass}) );
 						if(pData.itemClassToClassMap) {

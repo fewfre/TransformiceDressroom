@@ -28,16 +28,16 @@ package com.fewfre.display
 		public function get data():Object { return _returnData; }
 		
 		// Constructor
-		// pData = { x:Number, y:Number, ?data:* }
-		public function ButtonBase(pData:Object)
+		// pArgs = { x:Number, y:Number, ?data:* }
+		public function ButtonBase(pArgs:Object)
 		{
 			super();
 			_state = BUTTON_STATE_UP;
 			
-			this.x = pData.x != null ? pData.x : 0;
-			this.y = pData.y != null ? pData.y : 0;
+			this.x = pArgs.x != null ? pArgs.x : 0;
+			this.y = pArgs.y != null ? pArgs.y : 0;
 			
-			_returnData = pData.data;
+			_returnData = pArgs.data;
 			
 			buttonMode = true;
 			useHandCursor = true;

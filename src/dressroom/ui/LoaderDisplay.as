@@ -1,6 +1,7 @@
 package dressroom.ui
 {
-	import com.fewfre.utils.AssetManager;
+	import com.fewfre.display.*;
+	import com.fewfre.utils.*;
 	import com.fewfre.events.FewfEvent;
 	import dressroom.data.*;
 	import flash.display.*;
@@ -9,13 +10,12 @@ package dressroom.ui
 	
 	public class LoaderDisplay extends RoundedRectangle
 	{
-		private var assets			: AssetManager;
 		private var _loadingSpinner	: MovieClip;
-		private var _leftToLoadText	: TextField;
-		private var _loadProgressText: TextField;
+		private var _leftToLoadText	: TextBase;
+		private var _loadProgressText: TextBase;
 		
 		// Constructor
-		// pData = { x:Number, y:Number, assetManager:AssetManager }
+		// pData = { x:Number, y:Number }
 		public function LoaderDisplay(pData:Object)
 		{
 			pData.width = 500;
@@ -24,36 +24,24 @@ package dressroom.ui
 			super(pData);
 			this.drawSimpleGradient(ConstantsApp.COLOR_TRAY_GRADIENT, 15, ConstantsApp.COLOR_TRAY_B_1, ConstantsApp.COLOR_TRAY_B_2, ConstantsApp.COLOR_TRAY_B_3);
 			
-			assets = pData.assetManager;
-			assets.addEventListener(ProgressEvent.PROGRESS, _onLoadProgress);
-			assets.addEventListener(AssetManager.PACK_LOADED, _onPackLoaded);
+			Fewf.assets.addEventListener(ProgressEvent.PROGRESS, _onLoadProgress);
+			Fewf.assets.addEventListener(AssetManager.PACK_LOADED, _onPackLoaded);
 			
 			_loadingSpinner = addChild( new $Loader() );
 			_loadingSpinner.y -= 45;
 			_loadingSpinner.scaleX = 2;
 			_loadingSpinner.scaleY = 2;
 			
-			_leftToLoadText = addChild( new TextField() );
-			_leftToLoadText.defaultTextFormat = new flash.text.TextFormat("Verdana", 18, 0xc2c2da);
-			_leftToLoadText.autoSize = flash.text.TextFieldAutoSize.CENTER;
-			_leftToLoadText.x = -_leftToLoadText.textWidth * 0.5 - 2;
-			_leftToLoadText.y = 10;
-			_leftToLoadText.text = "Items left to load: "+(assets.itemsLeftToLoad+1);
-			
-			_loadProgressText = addChild( new TextField() );
-			_loadProgressText.defaultTextFormat = new flash.text.TextFormat("Verdana", 18, 0xc2c2da);
-			_loadProgressText.autoSize = flash.text.TextFieldAutoSize.CENTER;
-			_loadProgressText.x = -_loadProgressText.textWidth * 0.5 - 2;
-			_loadProgressText.y = 35;
+			_leftToLoadText = addChild(new TextBase({ text:"loading", values:Fewf.assets.itemsLeftToLoad+1, size:18, x:0, y:10 }));
+			_loadProgressText = addChild(new TextBase({ text:"loading_progress", values:"", size:18, x:0, y:35 }));
 			
 			addEventListener(Event.ENTER_FRAME, update);
 		}
 		
 		public function destroy() {
-			assets.removeEventListener(ProgressEvent.PROGRESS, _onLoadProgress);
+			Fewf.assets.removeEventListener(ProgressEvent.PROGRESS, _onLoadProgress);
 			removeEventListener(Event.ENTER_FRAME, update);
 			
-			assets = null;
 			_loadingSpinner = null;
 		}
 		
@@ -66,9 +54,9 @@ package dressroom.ui
 		}
 		
 		function _onPackLoaded(e:FewfEvent) : void {
-			_leftToLoadText.text = "Items left to load: "+e.data.itemsLeftToLoad;
+			_leftToLoadText.setText("loading", e.data.itemsLeftToLoad);
 			if(e.data.itemsLeftToLoad <= 0) {
-				_leftToLoadText.text = "Loading complete. Initializing...";
+				_leftToLoadText.text = "loading_finished";
 				_loadProgressText.text = "";
 			}
 		}
@@ -76,7 +64,7 @@ package dressroom.ui
 		function _onLoadProgress(e:ProgressEvent) : void {
 			//_loadingSpinner.rotation += 10;
 			//trace("Loading: "+String(Math.floor(e.bytesLoaded/1024))+" KB of "+String(Math.floor(e.bytesTotal/1024))+" KB.");
-			_loadProgressText.text = String(Math.floor(e.bytesLoaded/1024))+" KB / "+String(Math.floor(e.bytesTotal/1024))+" KB";
+			_loadProgressText.setValues(String(Math.floor(e.bytesLoaded/1024))+" KB / "+String(Math.floor(e.bytesTotal/1024))+" KB");
 		}
 	}
 }

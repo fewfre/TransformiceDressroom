@@ -1,6 +1,6 @@
 package dressroom.ui
 {
-	import com.fewfre.display.ButtonBase;
+	import com.fewfre.display.*;
 	import com.adobe.images.*;
 	import dressroom.data.*;
 	import dressroom.ui.*;
@@ -23,7 +23,7 @@ package dressroom.ui
 		// Storage
 		private var _bg				: RoundedRectangle;
 		public var _text			: TextField;
-		public var _textCopiedMessage: TextField;
+		public var _textCopiedMessage: TextBase;
 		public var _textCopyTween	: Tween;
 		
 		// Constructor
@@ -53,12 +53,7 @@ package dressroom.ui
 			/****************************
 			* Header
 			*****************************/
-			var tHeader:TextField = addChild(new TextField());
-			tHeader.defaultTextFormat = new flash.text.TextFormat("Verdana", 25, 0xc2c2da);
-			tHeader.autoSize = TextFieldAutoSize.CENTER;
-			tHeader.text = "Share your Creation!";
-			tHeader.x = (0 - tHeader.textWidth) * 0.5 - 2;
-			tHeader.y = -75;
+			addChild(new TextBase({ text:"share_header", size:25, y:-63 }));
 			
 			/****************************
 			* Selectable text field
@@ -80,15 +75,10 @@ package dressroom.ui
 			/****************************
 			* Copy Button and message
 			*****************************/
-			var tCopyButton:SpriteButton = addChild(new SpriteButton({ x:tWidth*0.5-75, y: 40, text:"copy", width:50, height:25 }));
+			var tCopyButton:SpriteButton = addChild(new SpriteButton({ x:tWidth*0.5-75+25, y:52, text:"share_copy", width:50, height:25, origin:0.5 }));
 			tCopyButton.addEventListener(ButtonBase.CLICK, function(){ _copyToClipboard(); });
 			
-			_textCopiedMessage = addChild(new TextField());
-			_textCopiedMessage.defaultTextFormat = new flash.text.TextFormat("Verdana", 17, 0xc2c2da);
-			_textCopiedMessage.autoSize = TextFieldAutoSize.RIGHT;
-			_textCopiedMessage.x = tCopyButton.x - 40;
-			_textCopiedMessage.y = tCopyButton.y;
-			_textCopiedMessage.text = "Link copied to clipboard! Paste to use.";
+			_textCopiedMessage = addChild(new TextBase({ text:"share_link_copied", size:17, align:"right", originX:1, x:tCopyButton.x - 40, y:tCopyButton.y, alpha:0 }));
 			
 			/****************************
 			* Close Button

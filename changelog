@@ -1,0 +1,9 @@
+== V1.0 - 7 January 2017 ==
+- Using version numbers
+- Added localization support.
+	- Uses json file.
+	- AssetManager changed to handle loading json files
+	- Added an I18n class for localization support
+	- TextBase now requires use of localization.
+- Added TextBase to everywhere that was using hardcoded text.
+- Added Fewf class that holds instances of AssetManager and I18n for easy accessing across classes.
