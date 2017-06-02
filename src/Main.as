@@ -52,8 +52,7 @@ package
 		public static const CONFIG_COLOR_PANE_ID = "configColorPane";
 		
 		// Constructor
-		public function Main()
-		{
+		public function Main() {
 			super();
 			Fewf.init();
 
@@ -65,7 +64,6 @@ package
 			stage.addEventListener(MouseEvent.MOUSE_WHEEL, handleMouseWheel);
 			
 			// Start preload
-			Fewf.assets = new AssetManager();
 			Fewf.assets.load([
 				"resources/config.json",
 			]);
@@ -140,6 +138,7 @@ package
 					{ text:"tab_mouth", event:ITEM.MOUTH },
 					{ text:"tab_neck", event:ITEM.NECK },
 					{ text:"tab_tail", event:ITEM.TAIL },
+					{ text:"tab_contacts", event:ITEM.CONTACTS },
 					{ text:"tab_furs", event:ITEM.SKIN },
 					{ text:"tab_poses", event:ITEM.POSE },
 					{ text:"tab_other", event:"other" }
@@ -167,7 +166,7 @@ package
 			tPane.addEventListener(ColorPickerTabPane.EVENT_EXIT, _onColorPickerBackClicked);
 
 			// Create the panes
-			var tTypes = [ ITEM.HAT, ITEM.HAIR, ITEM.EARS, ITEM.EYES, ITEM.MOUTH, ITEM.NECK, ITEM.TAIL, ITEM.SKIN, ITEM.POSE ], tData:ItemData, tType:String;
+			var tTypes = [ ITEM.HAT, ITEM.HAIR, ITEM.EARS, ITEM.EYES, ITEM.MOUTH, ITEM.NECK, ITEM.TAIL, ITEM.CONTACTS, ITEM.SKIN, ITEM.POSE ], tData:ItemData, tType:String;
 			for(var i:int = 0; i < tTypes.length; i++) { tType = tTypes[i];
 				tPane = _paneManager.addPane(tType, _setupPane(tType));
 				// Based on what the character is wearing at start, toggle on the appropriate buttons.

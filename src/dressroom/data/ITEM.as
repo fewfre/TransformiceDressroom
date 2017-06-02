@@ -12,12 +12,13 @@ package dressroom.data
 		public static const MOUTH				: String = "mouth";
 		public static const NECK				: String = "neck";
 		public static const TAIL				: String = "tail";
+		public static const CONTACTS			: String = "contacts";
 		// Specials
 		public static const PAW					: String = "paw";
 		public static const BACK				: String = "back";
 		public static const PAW_BACK			: String = "back-paw";
 		
 		// Order of item layering when occupying the same spot.
-		public static const LAYERING			: Array = [ SKIN, SKIN_COLOR, NECK, HAIR, HAT, EARS, MOUTH, EYES, TAIL, PAW, BACK, PAW_BACK ];
+		public static const LAYERING			: Array = [ SKIN, SKIN_COLOR, NECK, HAIR, HAT, EARS, MOUTH, EYES, CONTACTS, TAIL, PAW, BACK, PAW_BACK ];
 	}
 }

@@ -1,3 +1,11 @@
+== V1.2 - 1 June 2017 ==
+- Added contact lenses support
+
+
+== V1.1 - 14 January 2017 ==
+- Updated BrowserMouseWheelPrevention to fix bug in Chrome
+
+
 == V1.0 - 7 January 2017 ==
 - Using version numbers
 - Added localization support.
@@ -7,3 +15,7 @@
 	- TextBase now requires use of localization.
 - Added TextBase to everywhere that was using hardcoded text.
 - Added Fewf class that holds instances of AssetManager and I18n for easy accessing across classes.
+
+
+== Pre V1 ==
+- had all the basic features in

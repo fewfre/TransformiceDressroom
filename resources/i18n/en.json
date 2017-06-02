@@ -20,6 +20,7 @@
 		"tab_mouth":			{ "text":"Mouth" },
 		"tab_neck":				{ "text":"Neck" },
 		"tab_tail":				{ "text":"Tail" },
+		"tab_contacts":			{ "text":"Contacts", "scale":0.85 },
 		"tab_furs":				{ "text":"Furs" },
 		"tab_poses":			{ "text":"Pose" },
 		"tab_other":			{ "text":"Other" },
@@ -30,6 +31,10 @@
 		"share_link_copied":	{ "text":"Link copied to clipboard! Paste to use." },
 		"share_copy":			{ "text":"copy" },
 		
-		"infobar_id":			{ "text":"ID: {0}" }
+		"infobar_id":			{ "text":"ID: {0}" },
+		
+		"loading":				{ "text":"Items left to load: {0}" },
+		"loading_finished":		{ "text":"Loading complete. Initializing..." },
+		"loading_progress":		{ "text":"{0}" }
 	}
 }

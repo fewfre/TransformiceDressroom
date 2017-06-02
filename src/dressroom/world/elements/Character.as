@@ -44,6 +44,7 @@ package dressroom.world.elements
 			_itemDataMap[ITEM.MOUTH] = pData.mouth;
 			_itemDataMap[ITEM.NECK] = pData.neck;
 			_itemDataMap[ITEM.TAIL] = pData.tail;
+			_itemDataMap[ITEM.CONTACTS] = pData.contacts;
 			_itemDataMap[ITEM.POSE] = pData.pose;
 
 			_itemDataMap[ITEM.PAW] = pData.neck;
@@ -71,6 +72,7 @@ package dressroom.world.elements
 					getItemData(ITEM.MOUTH),
 					getItemData(ITEM.NECK),
 					getItemData(ITEM.TAIL),
+					getItemData(ITEM.CONTACTS),
 
 					getItemData(ITEM.PAW),
 					getItemData(ITEM.BACK),
@@ -91,6 +93,7 @@ package dressroom.world.elements
 			_setParamToType(pParams, ITEM.MOUTH, "m");
 			_setParamToType(pParams, ITEM.NECK, "n");
 			_setParamToType(pParams, ITEM.TAIL, "t");
+			_setParamToType(pParams, ITEM.CONTACTS, "c");
 			_setParamToType(pParams, ITEM.POSE, "p", false);
 		}
 		private function _setParamToType(pParams:URLVariables, pType:String, pParam:String, pAllowNull:Boolean=true) {
@@ -117,6 +120,7 @@ package dressroom.world.elements
 			tParms.m = (tData = getItemData(ITEM.MOUTH)) ? tData.id : '';
 			tParms.n = (tData = getItemData(ITEM.NECK)) ? tData.id : '';
 			tParms.t = (tData = getItemData(ITEM.TAIL)) ? tData.id : '';
+			tParms.c = (tData = getItemData(ITEM.CONTACTS)) ? tData.id : '';
 			tParms.p = (tData = getItemData(ITEM.POSE)) ? tData.id : '';
 
 			return tParms;

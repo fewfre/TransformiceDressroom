@@ -47,7 +47,7 @@ package dressroom.ui
 			this.colorWheel.y = 24;
 			// Add event listener in Main
 			
-			this.Text = addChild(new TextBase({ text:"infobar_id", x:115, y:13, size:18, origin:0, align:"left", alpha:0 }));
+			this.Text = addChild(new TextBase({ text:"infobar_id", x:115, y:13, size:18, origin:0, alpha:0 }));
 			
 			showColorWheel(pData.showBackButton);
 			
@@ -125,7 +125,6 @@ package dressroom.ui
 			ChangeImage(new $NoItem());
 			
 			Text.alpha = 0;
-			this.Text.text = "ID: ";
 			showColorWheel(false);
 			downloadButton.disable().alpha = 0;
 		}

@@ -21,6 +21,7 @@ package dressroom.data
 		public var mouth:Array;
 		public var neck:Array;
 		public var tail:Array;
+		public var contacts:Array;
 
 		public var skins:Array;
 		public var poses:Array;
@@ -49,10 +50,11 @@ package dressroom.data
 			this.neck = _setupCostumeArray({ base:"$Costume_4_", type:ITEM.NECK, itemClassToClassMap:"Tete_1" });
 			this.hair = _setupCostumeArray({ base:"$Costume_5_", type:ITEM.HAIR, itemClassToClassMap:"Tete_1" });
 			this.tail = _setupCostumeArray({ base:"$Costume_6_", type:ITEM.TAIL, itemClassToClassMap:"Boule_1" });
+			this.contacts = _setupCostumeArray({ base:"$Costume_7_", type:ITEM.CONTACTS, itemClassToClassMap:["Oeil_1", "OeilVide_1"] });
 
-			this.hand = new ItemData({ type:ITEM.PAW, itemClass:Fewf.assets.getLoadedClass("$Costume_7_1") });
+			this.hand = new ItemData({ type:ITEM.PAW, itemClass:Fewf.assets.getLoadedClass("$Costume_8_1") });
 			this.hand.classMap = { Arme_1:this.hand.itemClass };
-			this.backHand = new ItemData({ type:ITEM.PAW_BACK, itemClass:Fewf.assets.getLoadedClass("$Costume_8_1") });
+			this.backHand = new ItemData({ type:ITEM.PAW_BACK, itemClass:Fewf.assets.getLoadedClass("$Costume_9_1") });
 			this.backHand.classMap = { PatteG_1:this.backHand.itemClass };
 			this.fromage = new ItemData({ type:ITEM.BACK, itemClass:Fewf.assets.getLoadedClass("FromageSouris") });
 			this.fromage.classMap = { ClipGrosse:this.fromage.itemClass };
@@ -163,6 +165,7 @@ package dressroom.data
 				case ITEM.MOUTH:	return mouth;
 				case ITEM.NECK:		return neck;
 				case ITEM.TAIL:		return tail;
+				case ITEM.CONTACTS:	return contacts;
 				case ITEM.SKIN_COLOR:
 				case ITEM.SKIN:		return skins;
 				case ITEM.POSE:		return poses;

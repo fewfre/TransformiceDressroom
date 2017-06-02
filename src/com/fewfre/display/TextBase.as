@@ -23,7 +23,6 @@ package com.fewfre.display
 		protected var _color		: int;
 		protected var _size			: Number;
 		protected var _font			: String;
-		protected var _align		: String;
 		protected var _scale		: Number;
 
 		// Properties
@@ -35,11 +34,10 @@ package com.fewfre.display
 		public function set color(pVal:int) : void { _color = pVal; _render(); }
 		public function set size(pVal:Number) : void { _size = pVal; _render(); }
 		public function set font(pVal:String) : void { _font = pVal; _render(); }
-		public function set align(pVal:String) : void { _align = pVal; _render(); }
 
 		// Constructor
 		// pArgs = { x:Number, y:Number, ?text:String, ?font:String, ?size:Number, ?color:int, ?origin:Number=0.5,
-		//			?originX:Number=0.5, ?originY:Number=0.5, ?alpha:Number=1, ?align:String(left, right, center)=center, ?values:*|Array }
+		//			?originX:Number=0.5, ?originY:Number=0.5, ?alpha:Number=1, ?values:*|Array }
 		public function TextBase(pArgs:Object) {
 			super();
 			this.x = pArgs.x != null ? pArgs.x : 0;
@@ -48,7 +46,6 @@ package com.fewfre.display
 			_color = pArgs.color != null ? pArgs.color : DEFAULT_COLOR;
 			_size = pArgs.size != null ? pArgs.size : DEFAULT_SIZE;
 			_font = pArgs.font != null ? pArgs.font : Fewf.i18n.defaultFont;
-			_align = pArgs.align != null ? pArgs.align : "center";
 			_scale = 1;
 			
 			_i18n = "";
@@ -77,7 +74,7 @@ package com.fewfre.display
 		*****************************/
 		protected function _render() : void {
 			_field.defaultTextFormat = new TextFormat(_font, _size * _scale, _color);
-			_field.autoSize = _convertAlignToAutoSize();
+			_field.autoSize = TextFieldAutoSize.CENTER;
 			_field.text = _values != null ? FewfUtils.stringSubstitute(_text, _values) : _text;
 			_field.x = -_field.textWidth * _originX - 2;
 			_field.y = -_field.textHeight * _originY - 2;
@@ -110,15 +107,6 @@ package com.fewfre.display
 			} else {
 				_text = "<"+pKey+">";
 			}
-		}
-		
-		private function _convertAlignToAutoSize() : String {
-			switch(_align) {
-				case "left": return TextFieldAutoSize.LEFT;
-				case "right": return TextFieldAutoSize.RIGHT;
-				case "center": return TextFieldAutoSize.CENTER;
-			}
-			return TextFieldAutoSize.CENTER;
 		}
 	}
 }

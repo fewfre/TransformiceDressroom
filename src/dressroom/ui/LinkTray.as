@@ -78,7 +78,7 @@ package dressroom.ui
 			var tCopyButton:SpriteButton = addChild(new SpriteButton({ x:tWidth*0.5-75+25, y:52, text:"share_copy", width:50, height:25, origin:0.5 }));
 			tCopyButton.addEventListener(ButtonBase.CLICK, function(){ _copyToClipboard(); });
 			
-			_textCopiedMessage = addChild(new TextBase({ text:"share_link_copied", size:17, align:"right", originX:1, x:tCopyButton.x - 40, y:tCopyButton.y, alpha:0 }));
+			_textCopiedMessage = addChild(new TextBase({ text:"share_link_copied", size:17, originX:1, x:tCopyButton.x - 40, y:tCopyButton.y, alpha:0 }));
 			
 			/****************************
 			* Close Button
