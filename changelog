@@ -1,3 +1,10 @@
+== V1.3 - 4 June 2017 ==
+- Renaming "dressroom" folder to "app"
+- Moving Main from ./src to ./src/app
+- Made Costumes a singleton, made Main.costumes non-static and private, and replace all instances of it to Costumes.instance.
+- Renamed some root level files to more common naming; changelog -> CHANGELOG and todo.txt -> TODO
+
+
 == V1.2 - 1 June 2017 ==
 - Added contact lenses support
 

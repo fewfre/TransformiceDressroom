@@ -1,0 +1,11 @@
+-share link working
+-upload to imgur
+-UI redesign
+	-added tfm wood border to UI
+	-move github button to bototm left + current version #
+	-make download button larger; have it be outside toolbox
+	- make infotab download button smaller; move somewhere else / pair with another button?
+-specify flag-waving image?
+-custom colorable (default) fur
+-language select
+	-http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/system/Capabilities.html#language
