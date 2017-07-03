@@ -19,6 +19,6 @@ package app.data
 		public static const PAW_BACK			: String = "back-paw";
 		
 		// Order of item layering when occupying the same spot.
-		public static const LAYERING			: Array = [ SKIN, SKIN_COLOR, NECK, HAIR, HAT, EARS, MOUTH, EYES, CONTACTS, TAIL, PAW, BACK, PAW_BACK ];
+		public static const LAYERING			: Array = [ SKIN, SKIN_COLOR, NECK, HAIR, HAT, EARS, MOUTH, CONTACTS, EYES, TAIL, PAW, BACK, PAW_BACK ];
 	}
 }

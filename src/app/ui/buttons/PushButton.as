@@ -1,6 +1,7 @@
 package app.ui.buttons
 {
 	import com.fewfre.display.*;
+	import com.fewfre.utils.*;
 	import app.data.*;
 	import app.ui.*;
 	import flash.display.*;
@@ -38,6 +39,7 @@ package app.ui.buttons
 				
 				var tScale:Number = pArgs.obj_scale ? pArgs.obj_scale : 1;
 				this.Image = pArgs.obj;
+				FewfDisplayUtils.fitWithinBounds(this.Image, pArgs.width * 0.9, pArgs.height * 0.9, pArgs.width * 0.5, pArgs.height * 0.5);
 				this.Image.x = pArgs.width / 2 - (tBounds.width / 2 + tOffset.x)*tScale * this.Image.scaleX;
 				this.Image.y = pArgs.height / 2 - (tBounds.height / 2 + tOffset.y)*tScale * this.Image.scaleY;
 				this.Image.scaleX *= tScale;

@@ -14,7 +14,7 @@ package app.data
 	{
 		private static var _instance:Costumes;
 		public static function get instance() : Costumes {
-			if(!_instance) { _instance = new Costumes(); _instance.init(); }
+			if(!_instance) { new Costumes(); }
 			return _instance;
 		}
 		
@@ -44,9 +44,8 @@ package app.data
 
 		public function Costumes() {
 			if(_instance){ throw new Error("Singleton class; Call using Costumes.instance"); }
-		}
-
-		public function init() : Costumes {
+			_instance = this;
+			
 			var i:int;
 
 			this.head = _setupCostumeArray({ base:"$Costume_0_", type:ITEM.HAT, itemClassToClassMap:"Tete_1" });
@@ -104,8 +103,6 @@ package app.data
 				this.poses.push(new ItemData({ id:tPoseClasses[i], type:ITEM.POSE, itemClass:Fewf.assets.getLoadedClass( "Anim"+tPoseClasses[i] ) }));
 			}
 			this.defaultPoseIndex = 0;//FewfUtils.getIndexFromArrayWithKeyVal(this.poses, "id", ConstantsApp.DEFAULT_POSE_ID);
-
-			return this;
 		}
 
 		// pData = { base:String, type:String, after:String, pad:int, map:Array, sex:Boolean, itemClassToClassMap:String OR Array }
@@ -333,20 +330,5 @@ package app.data
 
 				return tPose;
 			}
-
-		// Converts the image to a PNG bitmap and prompts the user to save.
-		public function saveMovieClipAsBitmap(pObj:DisplayObject, pName:String="character", pScale:Number=1) : void
-		{
-			if(!pObj){ return; }
-
-			var tRect:flash.geom.Rectangle = pObj.getBounds(pObj);
-			var tBitmap:flash.display.BitmapData = new flash.display.BitmapData(tRect.width*pScale, tRect.height*pScale, true, 0xFFFFFF);
-
-			var tMatrix:flash.geom.Matrix = new flash.geom.Matrix(1, 0, 0, 1, -tRect.left, -tRect.top);
-			tMatrix.scale(pScale, pScale);
-
-			tBitmap.draw(pObj, tMatrix);
-			( new flash.net.FileReference() ).save( com.adobe.images.PNGEncoder.encode(tBitmap), pName+".png" );
-		}
 	}
 }

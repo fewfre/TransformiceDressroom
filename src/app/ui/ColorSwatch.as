@@ -18,7 +18,7 @@ package app.ui
 		
 		// Properties
 		public function get textValue():String { return _text.text; }
-		public function set value(pColor:uint):*
+		public function set value(pColor:uint) : void
 		{
 			_swatch.graphics.clear();
 			_swatch.graphics.beginFill(pColor);
@@ -43,6 +43,7 @@ package app.ui
 			_text.maxChars = 6;
 			_text.restrict = "0-9a-f";
 			_text.addEventListener(flash.events.KeyboardEvent.KEY_UP, _onTextInputKeyUp);
+			_text.addEventListener(flash.events.MouseEvent.CLICK, _onSwatchClicked);
 			
 			_swatch = addChild(new Sprite());
 			_swatch.buttonMode = true;
@@ -57,7 +58,7 @@ package app.ui
 		}
 
 		private function _onTextInputKeyUp(pEvent:KeyboardEvent) : void {
-			if (pEvent.charCode == 13) {
+			if(_text.text != "" || pEvent.charCode == 13) {
 				dispatchEvent(new Event(ENTER_PRESSED));
 			}
 		}

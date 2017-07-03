@@ -1,6 +1,7 @@
 package app.ui
 {
 	import com.fewfre.display.*;
+	import com.fewfre.utils.*;
 	import com.adobe.images.*;
 	import app.data.*;
 	import app.ui.*;
@@ -85,6 +86,7 @@ package app.ui
 			var tOffset:Point = tBounds.topLeft;
 			
 			this.Image = pMC;
+			FewfDisplayUtils.fitWithinBounds(this.Image, imageCont.Width, imageCont.Height, imageCont.Width * 0.5, imageCont.Height * 0.5);
 			this.Image.mouseEnabled = false;
 			this.Image.x = 50 / 2 - (tBounds.width / 2 + tOffset.x)* 0.75 * this.Image.scaleX;
 			this.Image.y = 50 / 2 - (tBounds.height / 2 + tOffset.y)* 0.75 * this.Image.scaleY;
@@ -133,7 +135,7 @@ package app.ui
 		{
 			if(!data) { return; }
 			var tName = "shop-"+data.type+data.id;
-			Costumes.instance.saveMovieClipAsBitmap(Costumes.instance.getItemImage(data), tName, ConstantsApp.ITEM_SAVE_SCALE);
+			FewfDisplayUtils.saveAsPNG(Costumes.instance.getItemImage(data), tName, ConstantsApp.ITEM_SAVE_SCALE);
 		}
 	}
 }

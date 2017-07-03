@@ -1,3 +1,13 @@
+== V1.4 - 3 July 2017 ==
+- Forcing items to fit within their containers, and smaller items are now scaled up.
+- Moved DisplayObject image saving code to FewfDisplayUtils (was in "Costumes").
+- Moved most of the contents of "Main" into new class "World" to separate loading and app logic.
+- Fixed "contacts" layering bug (they where appearing over "eye" items).
+- Updated ColorSwatch to be a little more user friendly (as per feedback by RichàrdIDK on Disqus)
+	- Clicking a textbox now counts as selecting the swatch.
+	- Typing in a hex code will update the value without the need to press enter first.
+
+
 == V1.3 - 4 June 2017 ==
 - Renaming "dressroom" folder to "app"
 - Moving Main from ./src to ./src/app

@@ -2,9 +2,10 @@
 -upload to imgur
 -UI redesign
 	-added tfm wood border to UI
-	-move github button to bototm left + current version #
+	-move github button to bottom left + current version #
 	-make download button larger; have it be outside toolbox
-	- make infotab download button smaller; move somewhere else / pair with another button?
+	-make infotab download button smaller; move somewhere else / pair with another button?
+	-scale all images to fit in thier button (to match Shop update)
 -specify flag-waving image?
 -custom colorable (default) fur
 -language select
