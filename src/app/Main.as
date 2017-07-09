@@ -8,6 +8,7 @@ package app
 
 	import flash.display.*;
 	import flash.events.*;
+	import flash.system.Capabilities;
 
 	public class Main extends MovieClip
 	{
@@ -15,11 +16,12 @@ package app
 		private const _LOAD_LOCAL:Boolean = true;
 		private var _loaderDisplay	: LoaderDisplay;
 		private var _world			: World;
+		private var _defaultLang	: String;
 		
 		// Constructor
 		public function Main() {
 			super();
-			Fewf.init();
+			Fewf.init(stage);
 
 			stage.align = StageAlign.TOP;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
@@ -38,29 +40,47 @@ package app
 		
 		internal function _onPreloadComplete(event:Event) : void {
 			Fewf.assets.removeEventListener(AssetManager.LOADING_FINISHED, _onPreloadComplete);
-			ConstantsApp.lang = Fewf.assets.getData("config").language;
+			_defaultLang = _getDefaultLang(Fewf.assets.getData("config").languages.default);
 			
 			// Start main load
 			Fewf.assets.load([
+				["resources/interface.swf", { useCurrentDomain:true }],
 				_LOAD_LOCAL ? "resources/x_meli_costumes.swf" : "http://www.transformice.com/images/x_bibliotheques/x_meli_costumes.swf",
 				_LOAD_LOCAL ? "resources/x_fourrures.swf" : "http://www.transformice.com/images/x_bibliotheques/x_fourrures.swf",
 				_LOAD_LOCAL ? "resources/x_fourrures2.swf" : "http://www.transformice.com/images/x_bibliotheques/x_fourrures2.swf",
 				_LOAD_LOCAL ? "resources/x_fourrures3.swf" : "http://www.transformice.com/images/x_bibliotheques/x_fourrures3.swf",
 				"resources/poses.swf",
-				"resources/i18n/"+ConstantsApp.lang+".json",
+				"resources/flags.swf",
+				"resources/i18n/"+_defaultLang+".json",
 			]);
 			Fewf.assets.addEventListener(AssetManager.LOADING_FINISHED, _onLoadComplete);
 		}
-
+		
 		internal function _onLoadComplete(event:Event) : void {
 			Fewf.assets.removeEventListener(AssetManager.LOADING_FINISHED, _onLoadComplete);
 			_loaderDisplay.destroy();
 			removeChild( _loaderDisplay );
 			_loaderDisplay = null;
 			
-			Fewf.i18n.parseFile(Fewf.assets.getData(ConstantsApp.lang));
+			Fewf.i18n.parseFile(_defaultLang, Fewf.assets.getData(_defaultLang));
 			
 			_world = addChild(new World(stage));
+		}
+		
+		private function _getDefaultLang(pConfigLang:String) : String {
+			var tFlagDefaultLangExists = false;
+			if(Capabilities.lang) {
+				var tLanguages = Fewf.assets.getData("config").languages.list;
+				for(var tLang in tLanguages) {
+					if(Capabilities.lang == tLang.code || Capabilities.lang == tLang.code.split("-")[0]) {
+						return tLang.code;
+					}
+					if(pConfigLang == tLang.code) {
+						tFlagDefaultLangExists = true;
+					}
+				}
+			}
+			return tFlagDefaultLangExists ? pConfigLang : "en";
 		}
 	}
 }

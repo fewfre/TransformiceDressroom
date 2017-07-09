@@ -1,5 +1,6 @@
 package com.fewfre.utils
 {
+	import com.fewfre.events.*;
 	import flash.utils.Dictionary;
 	
 	public class I18n
@@ -8,13 +9,19 @@ package com.fewfre.utils
 		private var _data			: Dictionary;
 		private var _defaultFont	: String = "Veranda";
 		private var _defaultScale	: Number = 1;
+		private var _lang			: String;
 		
 		// Properties
 		public function get defaultFont() : String { return _defaultFont; }
 		public function get defaultScale() : Number { return _defaultScale; }
+		public function get lang() : String { return _lang; }
+		
+		// Constants
+		public static const FILE_UPDATED : String = "i18n_file_updated";
 		
 		// Constructor
 		public function I18n() {
+			_lang = "en";
 			_data = new Dictionary();
 			// Allows clearing of text by passing an empty string.
 			_data[""] = { text:"" };
@@ -24,13 +31,15 @@ package com.fewfre.utils
 			_data["loading_progress"] = { text:"{0}" };
 		}
 		
-		public function parseFile(pJson:Object) : void {
+		public function parseFile(pLang:String, pJson:Object) : void {
+			_lang = pLang;
 			_defaultFont = pJson.defaultFont;
 			_defaultScale = pJson.defaultScale;
 			for(var key:String in pJson.strings) {
 				/*_data[key] = new I18nData(pJson[key]);*/
 				_data[key] = pJson.strings[key];
 			}
+			Fewf.dispatcher.dispatchEvent(new FewfEvent(FILE_UPDATED));
 		}
 		
 		public function getData(pKey:String) : Object {
@@ -49,6 +58,17 @@ package com.fewfre.utils
 				trace("[I18n](getText) No key '"+pKey+"' exists.");
 				return null;
 			}
+		}
+		
+		public function getConfigLangData(pLangCode:String=null) : Object {
+			if(!pLangCode) { pLangCode = _lang; }
+			var tLanguages = Fewf.assets.getData("config").languages.list;
+			for(var i = 0; i < tLanguages.length; i++) {
+				if(tLanguages[i].code == pLangCode) {
+					return tLanguages[i];
+				}
+			}
+			return null;
 		}
 	}
 }

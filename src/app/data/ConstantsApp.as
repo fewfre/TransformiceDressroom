@@ -12,8 +12,8 @@ package app.data
 		/****************************
 		* General
 		*****************************/
-		public static const VERSION					: int = 1.4;
-		public static var LANG						: String= "en";
+		public static const VERSION					: String = "1.5";
+		public static var LANG						: String = "en";
 		public static const SOURCE_URL				: String = "https://github.com/fewfre/TransformiceDressroom";
 		
 		public static const DEFAULT_SKIN_ID			: int = 0;

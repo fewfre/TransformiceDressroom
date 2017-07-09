@@ -9,6 +9,8 @@ package com.fewfre.utils
 	import flash.events.ProgressEvent;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
+	import flash.system.ApplicationDomain;
+	import flash.system.LoaderContext;
 	import flash.utils.Dictionary;
 	import flash.utils.setTimeout;
 	
@@ -20,7 +22,7 @@ package com.fewfre.utils
 		
 		// Storage
 		internal var _urlsToLoad:Array;
-		internal var _loadedAssetData:Array;
+		internal var _applicationDomains:Array;
 		internal var _loadedData:Dictionary;
 		
 		// Properties
@@ -28,7 +30,7 @@ package com.fewfre.utils
 		
 		public function AssetManager() {
 			super();
-			_loadedAssetData = [];
+			_applicationDomains = [];
 			_loadedData = new Dictionary();
 		}
 		
@@ -37,10 +39,19 @@ package com.fewfre.utils
 		*****************************/
 			public function load(pURLs:Array) : void {
 				_urlsToLoad = pURLs;
-				_newLoader( _urlsToLoad.shift() );
+				_loadNextItem();
 			}
 			
-			private function _newLoader(pUrl:String) : void {
+			private function _loadNextItem() {
+				var tItem = _urlsToLoad.shift();
+				if(!(tItem is Array)) {
+					_newLoader( tItem );
+				} else {
+					_newLoader( tItem[0], tItem[1] );
+				}
+			}
+			
+			private function _newLoader(pUrl:String, pOptions:Object=null) : void {
 				var tUrlParts = pUrl.split("/").pop().split("."), tName = tUrlParts[0], tType = tUrlParts[1];
 				switch(tType) {
 					case "swf":
@@ -49,7 +60,12 @@ package com.fewfre.utils
 						tLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, _onAssetsLoaded);
 						tLoader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, _onLoadError);
 						tLoader.contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS, _onProgress);
-						tLoader.load(new URLRequest(pUrl));
+						if(pOptions && pOptions.useCurrentDomain) {
+							var tLoaderContext:LoaderContext = new LoaderContext(false, ApplicationDomain.currentDomain);
+							tLoader.load(new URLRequest(pUrl), tLoaderContext);
+						} else {
+							tLoader.load(new URLRequest(pUrl));
+						}
 						break;
 					case "json":
 						var tUrlLoader:URLLoader = new URLLoader();
@@ -77,7 +93,7 @@ package com.fewfre.utils
 			}
 			
 			private function _onAssetsLoaded(e:Event) : void {
-				_loadedAssetData.push( MovieClip(e.target.content) );
+				_applicationDomains.push( MovieClip(e.target.content).loaderInfo.applicationDomain );
 				_destroyAssetLoader(e.target.loader);
 				_checkIfLoadingDone();
 			}
@@ -108,7 +124,7 @@ package com.fewfre.utils
 			private function _checkIfLoadingDone() : void {
 				dispatchEvent(new FewfEvent(PACK_LOADED, { itemsLeftToLoad:itemsLeftToLoad }));
 				if(_urlsToLoad.length > 0) {
-					_newLoader( _urlsToLoad.shift() );
+					_loadNextItem();
 				} else {
 					trace("[AssetManager](_checkIfLoadingDone) All resources loaded.");
 					setTimeout(function(){ dispatchEvent(new Event(AssetManager.LOADING_FINISHED)); }, 0);
@@ -123,9 +139,9 @@ package com.fewfre.utils
 			}
 			
 			public function getLoadedClass(pName:String, pTrace:Boolean=false) : Class {
-				for(var i = 0; i < _loadedAssetData.length; i++) {
-					if(_loadedAssetData[i].loaderInfo.applicationDomain.hasDefinition(pName)) {
-						return _loadedAssetData[i].loaderInfo.applicationDomain.getDefinition( pName ) as Class;
+				for(var i = 0; i < _applicationDomains.length; i++) {
+					if(_applicationDomains[i].hasDefinition(pName)) {
+						return _applicationDomains[i].getDefinition( pName ) as Class;
 					}
 				}
 				if(pTrace) { trace("[AssetManager](getLoadedClass) ERROR: No Linkage by name: "+pName); }

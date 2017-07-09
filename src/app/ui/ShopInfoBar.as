@@ -25,10 +25,12 @@ package app.ui
 		public var Text				: TextBase;
 		public var colorWheel		: ScaleButton;
 		public var downloadButton	: SpriteButton;
-		public var refreshButton	: ScaleButton;
+		public var refreshButton	: SpriteButton;
+		public var refreshLockButton: PushButton;
 		
 		// Properties
 		public function get hasData() : Boolean { return data != null; }
+		public function get isRefreshLocked() : Boolean { return refreshLockButton.pushed; }
 		
 		// Constructor
 		// pData = { ?showBackButton:Boolean = false, ?showRefreshButton:Boolean = true }
@@ -52,14 +54,21 @@ package app.ui
 			
 			showColorWheel(pData.showBackButton);
 			
-			downloadButton = addChild(new SpriteButton({ x:this.Width - 50, y:0, width:50, height:50, obj:new $SimpleDownload() }));
+			/********************
+			* Right Side Buttons
+			*********************/
+			var tX = this.Width;
+			if(pData.showRefreshButton == null || pData.showRefreshButton) {
+				refreshButton = addChild(new SpriteButton({ x:tX - 24, y:0, width:24, height:24, obj_scale:0.5, obj:new $Refresh() }));
+				refreshLockButton = addChild(new PushButton({ x:tX - 24, y:26, width:24, height:24, obj_scale:0.8, obj:new $Lock() }));
+				tX -= refreshButton.Width + 2;
+			}
+			
+			downloadButton = addChild(new SpriteButton({ x:tX - 25, y:0, width:25, height:25, obj_scale:0.45, obj:new $SimpleDownload() }));
 			downloadButton.addEventListener(ButtonBase.CLICK, saveSprite);
 			downloadButton.disable().alpha = 0;
 			
-			if(pData.showRefreshButton == null || pData.showRefreshButton) {
-				refreshButton = addChild(new ScaleButton({ x:this.Width - 85, y:24, obj:new $Refresh() }));
-			}
-			
+			// Line seperating infobar and contents below it.
 			_drawLine(5, 53, this.Width);
 		}
 		

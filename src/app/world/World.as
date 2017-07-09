@@ -8,6 +8,7 @@ package app.world
 	import com.fewfre.utils.*;
 
 	import app.ui.*;
+	import app.ui.lang.*;
 	import app.ui.panes.*;
 	import app.ui.buttons.*;
 	import app.data.*;
@@ -35,6 +36,7 @@ package app.world
 		internal var shopTabs		: ShopTabContainer;
 		internal var _toolbox		: Toolbox;
 		internal var linkTray		: LinkTray;
+		internal var _langScreen	: LangScreen;
 
 		internal var button_hand	: PushButton;
 		internal var button_back	: PushButton;
@@ -84,7 +86,7 @@ package app.world
 			tShop.drawSimpleGradient(ConstantsApp.COLOR_TRAY_GRADIENT, 15, ConstantsApp.COLOR_TRAY_B_1, ConstantsApp.COLOR_TRAY_B_2, ConstantsApp.COLOR_TRAY_B_3);
 			_paneManager = tShop.addChild(new PaneManager());
 			
-			this.shopTabs = addChild(new ShopTabContainer({ x:380, y:10, width:60, height:ConstantsApp.APP_HEIGHT,
+			this.shopTabs = addChild(new ShopTabContainer({ x:375, y:10, width:70, height:ConstantsApp.APP_HEIGHT,
 				tabs:[
 					{ text:"tab_head", event:ITEM.HAT },
 					{ text:"tab_hair", event:ITEM.HAIR },
@@ -107,8 +109,20 @@ package app.world
 				onSave:_onSaveClicked, onAnimate:_onPlayerAnimationToggle, onRandomize:_onRandomizeDesignClicked,
 				onShare:_onShareButtonClicked, onScale:_onScaleSliderChange
 			}));
+			
+			var tLangButton = addChild(new LangButton({ x:22, y:pStage.stageHeight-17, width:30, height:25, origin:0.5 }));
+			tLangButton.addEventListener(ButtonBase.CLICK, _onLangButtonClicked);
+			
+			addChild(new AppInfoBox({ x:tLangButton.x+(tLangButton.Width*0.5)+(25*0.5)+2, y:pStage.stageHeight-17 }));
+			
+			/****************************
+			* Screens
+			*****************************/
 			linkTray = new LinkTray({ x:pStage.stageWidth * 0.5, y:pStage.stageHeight * 0.5 });
 			linkTray.addEventListener(LinkTray.CLOSE, _onShareTrayClosed);
+			
+			_langScreen = new LangScreen({  });
+			_langScreen.addEventListener(LangScreen.CLOSE, _onLangScreenClosed);
 
 			/****************************
 			* Create tabs and panes
@@ -292,6 +306,7 @@ package app.world
 		}
 
 		private function _randomItemOfType(pType:String) : void {
+			if(getInfoBarByType(pType).isRefreshLocked) { return; }
 			var tButtons = getButtonArrayByType(pType);
 			var tLength = tButtons.length;
 			tButtons[ Math.floor(Math.random() * tLength) ].toggleOn();
@@ -312,6 +327,15 @@ package app.world
 
 		private function _onShareTrayClosed(pEvent:Event) : void {
 			removeChild(linkTray);
+		}
+
+		private function _onLangButtonClicked(pEvent:Event) : void {
+			_langScreen.open();
+			addChild(_langScreen);
+		}
+
+		private function _onLangScreenClosed(pEvent:Event) : void {
+			removeChild(_langScreen);
 		}
 
 		//{REGION Get TabPane data
