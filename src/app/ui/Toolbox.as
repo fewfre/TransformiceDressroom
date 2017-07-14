@@ -10,7 +10,7 @@ package app.ui
 	public class Toolbox extends MovieClip
 	{
 		// Storage
-		private var _downloadTray	: RoundedRectangle;
+		private var _downloadTray	: FrameBase;
 		private var _bg				: RoundedRectangle;
 		public var scaleSlider		: FancySlider;
 		public var animateButton	: SpriteButton;
@@ -29,10 +29,10 @@ package app.ui
 			/********************
 			* Download Button
 			*********************/
-			_downloadTray = addChild(new RoundedRectangle({ x:-_bg.Width*0.5 + 30, y:6, width:60, height:60, origin:0.5 }));
-			_downloadTray.drawSimpleGradient(ConstantsApp.COLOR_TRAY_GRADIENT, 15, ConstantsApp.COLOR_TRAY_B_1, ConstantsApp.COLOR_TRAY_B_2, ConstantsApp.COLOR_TRAY_B_3);
+			_downloadTray = addChild(new FrameBase({ x:-_bg.Width*0.5 + 33, y:9, width:66, height:66, origin:0.5 }));
+			/*_downloadTray.drawSimpleGradient(ConstantsApp.COLOR_TRAY_GRADIENT, 15, ConstantsApp.COLOR_TRAY_B_1, ConstantsApp.COLOR_TRAY_B_2, ConstantsApp.COLOR_TRAY_B_3);*/
 			
-			btn = _downloadTray.addChild(new SpriteButton({ x:1, y:1, width:47, height:47, obj_scale:0.8, obj:new $LargeDownload(), origin:0.5 }));
+			btn = _downloadTray.addChild(new SpriteButton({ width:46, height:46, obj_scale:0.8, obj:new $LargeDownload(), origin:0.5 }));
 			btn.addEventListener(ButtonBase.CLICK, pData.onSave);
 			
 			/********************
@@ -51,9 +51,9 @@ package app.ui
 			// ### Left Side Buttons ###
 			tX = -tTrayWidth*0.5 + tButtonSize*0.5 + tButtonSizeSpace;
 			
-			/*btn = tTray.addChild(new SpriteButton({ x:tX+tButtonXInc*tButtonsOnLeft, y:tY, width:tButtonSize, height:tButtonSize, obj_scale:0.45, obj:new $Link(), origin:0.5 }));
+			btn = tTray.addChild(new SpriteButton({ x:tX+tButtonXInc*tButtonsOnLeft, y:tY, width:tButtonSize, height:tButtonSize, obj_scale:0.45, obj:new $Link(), origin:0.5 }));
 			btn.addEventListener(ButtonBase.CLICK, pData.onShare);
-			tButtonsOnLeft++;*/
+			tButtonsOnLeft++;
 			
 			// ### Right Side Buttons ###
 			tX = tTrayWidth*0.5-(tButtonSize*0.5 + tButtonSizeSpace);

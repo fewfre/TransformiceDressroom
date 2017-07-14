@@ -47,9 +47,9 @@ package app.world.elements
 			_itemDataMap[ITEM.CONTACTS] = pData.contacts;
 			_itemDataMap[ITEM.POSE] = pData.pose;
 
-			_itemDataMap[ITEM.PAW] = pData.neck;
-			_itemDataMap[ITEM.BACK] = pData.tail;
-			_itemDataMap[ITEM.PAW_BACK] = pData.pose;
+			_itemDataMap[ITEM.PAW] = pData.paw;
+			_itemDataMap[ITEM.BACK] = pData.back;
+			_itemDataMap[ITEM.PAW_BACK] = pData.pawback;
 			
 			if(pData.params) _parseParams(pData.params);
 
@@ -95,35 +95,86 @@ package app.world.elements
 			_setParamToType(pParams, ITEM.TAIL, "t");
 			_setParamToType(pParams, ITEM.CONTACTS, "c");
 			_setParamToType(pParams, ITEM.POSE, "p", false);
-		}
-		private function _setParamToType(pParams:URLVariables, pType:String, pParam:String, pAllowNull:Boolean=true) {
-			var tData:ItemData = null;
-			if(pParams[pParam] != null) {
-				if(pParams[pParam] == '') {
-					tData = null;
-				} else {
-					tData = Costumes.instance.getItemFromTypeID(pType, pParams[pParam]);
+			
+			if(pParams.paw == "y") { _itemDataMap[ITEM.PAW] = Costumes.instance.hand; }
+			if(pParams.back == "y") { _itemDataMap[ITEM.BACK] = Costumes.instance.fromage; }
+			if(pParams.pawb == "y") { _itemDataMap[ITEM.PAW_BACK] = Costumes.instance.backHand; }
+			
+			if(pParams["sh"] && pParams["sh"] != "") {
+				var tColor = pParams["sh"].split(",");
+				Costumes.instance.shamanMode = parseInt(tColor.splice(0, 1)[0]);
+				if(tColor.length > 0) {
+					Costumes.instance.shamanColor = _hexToInt(tColor[0]);
 				}
 			}
-			_itemDataMap[pType] = pAllowNull ? tData : ( tData == null ? _itemDataMap[pType] : tData );
+		}
+		private function _setParamToType(pParams:URLVariables, pType:String, pParam:String, pAllowNull:Boolean=true) {
+			try {
+				var tData:ItemData = null, tID = pParams[pParam], tColors;
+				if(tID != null && tID != "") {
+					tColors = tID.split(","); // Get a list of all the colors (ID is first); ex: 5,ffffff,abcdef,169742
+					tID = tColors.splice(0, 1)[0]; // Remove first item and store it as the ID.
+					tData = Costumes.instance.getItemFromTypeID(pType, tID);
+					if(tColors.length > 0) { tData.colors = _hexArrayToIntArray(tColors, tData.defaultColors); }
+				}
+				_itemDataMap[pType] = pAllowNull ? tData : ( tData == null ? _itemDataMap[pType] : tData );
+			} catch (error:Error) { };
+		}
+		private function _hexArrayToIntArray(pColors:Array, pDefaults:Array) : Array {
+			pColors = pColors.concat(); // Shallow Copy
+			for(var i = 0; i < pDefaults.length; i++) {
+				pColors[i] = pColors[i] ? _hexToInt(pColors[i]) : pDefaults[i];
+			}
+			return pColors;
+		}
+		private function _hexToInt(pVal:String) : int {
+			return parseInt(pVal, 16);
 		}
 
-		public function getParams() : URLVariables {
+		public function getParams() : String {
 			var tParms = new URLVariables();
 
-			var tData:ItemData;
-			tParms.s = (tData = getItemData(ITEM.SKIN)) ? tData.id : '';
-			tParms.d = (tData = getItemData(ITEM.HAIR)) ? tData.id : '';
-			tParms.h = (tData = getItemData(ITEM.HAT)) ? tData.id : '';
-			tParms.e = (tData = getItemData(ITEM.EARS)) ? tData.id : '';
-			tParms.y = (tData = getItemData(ITEM.EYES)) ? tData.id : '';
-			tParms.m = (tData = getItemData(ITEM.MOUTH)) ? tData.id : '';
-			tParms.n = (tData = getItemData(ITEM.NECK)) ? tData.id : '';
-			tParms.t = (tData = getItemData(ITEM.TAIL)) ? tData.id : '';
-			tParms.c = (tData = getItemData(ITEM.CONTACTS)) ? tData.id : '';
-			tParms.p = (tData = getItemData(ITEM.POSE)) ? tData.id : '';
+			_addParamToVariables(tParms, "s", ITEM.SKIN);
+			_addParamToVariables(tParms, "d", ITEM.HAIR);
+			_addParamToVariables(tParms, "h", ITEM.HAT);
+			_addParamToVariables(tParms, "e", ITEM.EARS);
+			_addParamToVariables(tParms, "y", ITEM.EYES);
+			_addParamToVariables(tParms, "m", ITEM.MOUTH);
+			_addParamToVariables(tParms, "n", ITEM.NECK);
+			_addParamToVariables(tParms, "t", ITEM.TAIL);
+			_addParamToVariables(tParms, "c", ITEM.CONTACTS);
+			_addParamToVariables(tParms, "p", ITEM.POSE);
+			
+			if(getItemData(ITEM.PAW)) { tParms.paw = "y"; }
+			if(getItemData(ITEM.BACK)) { tParms.back = "y"; }
+			if(getItemData(ITEM.PAW_BACK)) { tParms.pawb = "y"; }
+			
+			if(Costumes.instance.shamanMode != SHAMAN_MODE.OFF) {
+				tParms["sh"] = Costumes.instance.shamanMode+","+_intToHex(Costumes.instance.shamanColor);
+			}
 
-			return tParms;
+			return tParms.toString().replace(/%2C/g, ",");
+		}
+		private function _addParamToVariables(pParams:URLVariables, pParam:String, pType:String) {
+			var tData:ItemData = getItemData(pType);
+			if(tData) {
+				pParams[pParam] = tData.id;
+				var tColors = getColors(pType);
+				if(String(tColors) != String(tData.defaultColors)) { // Quick way to compare two arrays with primitive types
+					pParams[pParam] += ","+_intArrayToHexArray(tColors).join(",");
+				}
+			}
+			/*else { pParams[pParam] = ''; }*/
+		}
+		private function _intArrayToHexArray(pColors:Array) : Array {
+			pColors = pColors.concat(); // Shallow Copy
+			for(var i = 0; i < pColors.length; i++) {
+				pColors[i] = _intToHex(pColors[i]);
+			}
+			return pColors;
+		}
+		private function _intToHex(pVal:int) : String {
+			return pVal.toString(16).toUpperCase();
 		}
 
 		/****************************

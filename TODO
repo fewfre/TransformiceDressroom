@@ -1,7 +1,4 @@
--[bug] If you select and item + color it, select something else, and then select it again, the infobar image is no longer colored.
--share link working
--upload to imgur
--specify flag-waving image?
--custom colorable (default) fur
--language select
-	-http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/system/Capabilities.html#language
+- upload to imgur
+- specify flag-waving image?
+- [Code Rewrite Idea] Screen manager (Share, Lang, Loading)
+	- open / close using event dispatcher

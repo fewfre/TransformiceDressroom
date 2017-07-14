@@ -12,7 +12,7 @@ package app.data
 		/****************************
 		* General
 		*****************************/
-		public static const VERSION					: String = "1.5";
+		public static const VERSION					: String = "1.6";
 		public static var LANG						: String = "en";
 		public static const SOURCE_URL				: String = "https://github.com/fewfre/TransformiceDressroom";
 		

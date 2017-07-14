@@ -24,5 +24,12 @@ package com.fewfre.utils
 			}
 			return pVal;
 		}
+		
+		public static function lpad(str:String, width:int, pad:String="0") : String {
+			var ret:String = ""+str;
+			while( ret.length < width )
+				ret = pad + ret;
+			return ret;
+		}
 	}
 }

@@ -27,6 +27,7 @@ package app.ui
 		public var downloadButton	: SpriteButton;
 		public var refreshButton	: SpriteButton;
 		public var refreshLockButton: PushButton;
+		public var eyeDropButton	: SpriteButton;
 		
 		// Properties
 		public function get hasData() : Boolean { return data != null; }
@@ -64,9 +65,14 @@ package app.ui
 				tX -= refreshButton.Width + 2;
 			}
 			
-			downloadButton = addChild(new SpriteButton({ x:tX - 25, y:0, width:25, height:25, obj_scale:0.45, obj:new $SimpleDownload() }));
+			downloadButton = addChild(new SpriteButton({ x:tX - 25, y:0, width:24, height:24, obj_scale:0.45, obj:new $SimpleDownload() }));
 			downloadButton.addEventListener(ButtonBase.CLICK, saveSprite);
 			downloadButton.disable().alpha = 0;
+			
+			if(pData.showEyeDropButton) {
+				eyeDropButton = addChild(new SpriteButton({ x:tX - 25, y:26, width:25, height:25, obj_scale:0.45, obj:new $EyeDropper() }));
+				eyeDropButton.disable().alpha = 0;
+			}
 			
 			// Line seperating infobar and contents below it.
 			_drawLine(5, 53, this.Width);
@@ -129,6 +135,7 @@ package app.ui
 			
 			Text.alpha = 1;
 			downloadButton.enable().alpha = 1;
+			if(eyeDropButton) eyeDropButton.enable().alpha = 1;
 		}
 		
 		public function removeInfo() : void {
@@ -138,13 +145,14 @@ package app.ui
 			Text.alpha = 0;
 			showColorWheel(false);
 			downloadButton.disable().alpha = 0;
+			if(eyeDropButton) eyeDropButton.disable().alpha = 0;
 		}
 		
 		internal function saveSprite(pEvent:Event) : void
 		{
 			if(!data) { return; }
 			var tName = "shop-"+data.type+data.id;
-			FewfDisplayUtils.saveAsPNG(Costumes.instance.getItemImage(data), tName, ConstantsApp.ITEM_SAVE_SCALE);
+			FewfDisplayUtils.saveAsPNG(Costumes.instance.getColoredItemImage(data), tName, ConstantsApp.ITEM_SAVE_SCALE);
 		}
 	}
 }

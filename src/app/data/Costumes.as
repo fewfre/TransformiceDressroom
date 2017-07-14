@@ -184,151 +184,155 @@ package app.data
 		/****************************
 		* Color
 		*****************************/
-			public function copyColor(copyFromMC:MovieClip, copyToMC:MovieClip) : MovieClip {
-				if (copyFromMC == null || copyToMC == null) { return; }
-				var tChild1:*=null;
-				var tChild2:*=null;
-				var i:int = 0;
-				while (i < copyFromMC.numChildren) {
-					tChild1 = copyFromMC.getChildAt(i);
-					tChild2 = copyToMC.getChildAt(i);
-					if (tChild1.name.indexOf("Couleur") == 0 && tChild1.name.length > 7) {
-						tChild2.transform.colorTransform = tChild1.transform.colorTransform;
-					}
-					i++;
+		public function copyColor(copyFromMC:MovieClip, copyToMC:MovieClip) : MovieClip {
+			if (copyFromMC == null || copyToMC == null) { return; }
+			var tChild1:*=null;
+			var tChild2:*=null;
+			var i:int = 0;
+			while (i < copyFromMC.numChildren) {
+				tChild1 = copyFromMC.getChildAt(i);
+				tChild2 = copyToMC.getChildAt(i);
+				if (tChild1.name.indexOf("Couleur") == 0 && tChild1.name.length > 7) {
+					tChild2.transform.colorTransform = tChild1.transform.colorTransform;
 				}
-				return copyToMC;
+				i++;
 			}
+			return copyToMC;
+		}
 
-			public function colorDefault(pMC:MovieClip) : MovieClip {
-				if (pMC == null) { return; }
+		public function colorDefault(pMC:MovieClip) : MovieClip {
+			if (pMC == null) { return; }
 
-				var tChild:*=null;
-				var tHex:int=0;
-				var loc1:*=0;
-				while (loc1 < pMC.numChildren)
+			var tChild:*=null;
+			var tHex:int=0;
+			var loc1:*=0;
+			while (loc1 < pMC.numChildren)
+			{
+				tChild = pMC.getChildAt(loc1);
+				if (tChild.name.indexOf("Couleur") == 0 && tChild.name.length > 7)
 				{
-					tChild = pMC.getChildAt(loc1);
-					if (tChild.name.indexOf("Couleur") == 0 && tChild.name.length > 7)
-					{
-						tHex = int("0x" + tChild.name.substr(tChild.name.indexOf("_") + 1, 6));
+					tHex = int("0x" + tChild.name.substr(tChild.name.indexOf("_") + 1, 6));
+					applyColorToObject(tChild, tHex);
+				}
+				++loc1;
+			}
+			return pMC;
+		}
+
+		// pData = { obj:DisplayObject, color:String OR int, ?swatch:int, ?name:String, ?colors:Array<int> }
+		public function colorItem(pData:Object) : DisplayObject {
+			if (pData.obj == null) { return; }
+
+			var tHex:int = convertColorToNumber(pData.color);
+
+			var tChild:DisplayObject;
+			var i:int=0;
+			while (i < pData.obj.numChildren) {
+				tChild = pData.obj.getChildAt(i);
+				if (tChild.name == pData.name || (tChild.name.indexOf("Couleur") == 0 && tChild.name.length > 7)) {
+					if(pData.colors != null && pData.colors[tChild.name.charAt(7)] != null) {
+						applyColorToObject(tChild, convertColorToNumber(pData.colors[tChild.name.charAt(7)]));
+					}
+					else if (!pData.swatch || pData.swatch == tChild.name.charAt(7)) {
 						applyColorToObject(tChild, tHex);
 					}
-					++loc1;
 				}
-				return pMC;
+				i++;
 			}
+			return pData.obj;
+		}
+		public function convertColorToNumber(pColor) : int {
+			return pColor is Number || pColor == null ? pColor : int("0x" + pColor);
+		}
+		
+		// pColor is an int hex value. ex: 0x000000
+		public function applyColorToObject(pItem:DisplayObject, pColor:int) : void {
+			if(pColor < 0) { return; }
+			var tR:*=pColor >> 16 & 255;
+			var tG:*=pColor >> 8 & 255;
+			var tB:*=pColor & 255;
+			pItem.transform.colorTransform = new flash.geom.ColorTransform(tR / 128, tG / 128, tB / 128);
+		}
 
-			// pData = { obj:DisplayObject, color:String OR int, ?swatch:int, ?name:String, ?colors:Array<int> }
-			public function colorItem(pData:Object) : DisplayObject {
-				if (pData.obj == null) { return; }
+		public function getColors(pMC:MovieClip) : Array {
+			var tChild:*=null;
+			var tTransform:*=null;
+			var tArray:Array=new Array();
 
-				var tHex:int = convertColorToNumber(pData.color);
-
-				var tChild:DisplayObject;
-				var i:int=0;
-				while (i < pData.obj.numChildren) {
-					tChild = pData.obj.getChildAt(i);
-					if (tChild.name == pData.name || (tChild.name.indexOf("Couleur") == 0 && tChild.name.length > 7)) {
-						if(pData.colors != null && pData.colors[tChild.name.charAt(7)] != null) {
-							applyColorToObject(tChild, convertColorToNumber(pData.colors[tChild.name.charAt(7)]));
-						}
-						else if (!pData.swatch || pData.swatch == tChild.name.charAt(7)) {
-							applyColorToObject(tChild, tHex);
-						}
-					}
-					i++;
+			var i:int=0;
+			while (i < pMC.numChildren) {
+				tChild = pMC.getChildAt(i);
+				if (tChild.name.indexOf("Couleur") == 0 && tChild.name.length > 7) {
+					tTransform = tChild.transform.colorTransform;
+					tArray[tChild.name.charAt(7)] = ColorMathUtil.RGBToHex(tTransform.redMultiplier * 128, tTransform.greenMultiplier * 128, tTransform.blueMultiplier * 128);
 				}
-				return pData.obj;
+				i++;
 			}
-			public function convertColorToNumber(pColor) : int {
-				return pColor is Number || pColor == null ? pColor : int("0x" + pColor);
-			}
-			
-			// pColor is an int hex value. ex: 0x000000
-			public function applyColorToObject(pItem:DisplayObject, pColor:int) : void {
-				if(pColor < 0) { return; }
-				var tR:*=pColor >> 16 & 255;
-				var tG:*=pColor >> 8 & 255;
-				var tB:*=pColor & 255;
-				pItem.transform.colorTransform = new flash.geom.ColorTransform(tR / 128, tG / 128, tB / 128);
-			}
+			return tArray;
+		}
 
-			public function getColors(pMC:MovieClip) : Array {
-				var tChild:*=null;
-				var tTransform:*=null;
-				var tArray:Array=new Array();
-
-				var i:int=0;
-				while (i < pMC.numChildren) {
-					tChild = pMC.getChildAt(i);
-					if (tChild.name.indexOf("Couleur") == 0 && tChild.name.length > 7) {
-						tTransform = tChild.transform.colorTransform;
-						tArray[tChild.name.charAt(7)] = ColorMathUtil.RGBToHex(tTransform.redMultiplier * 128, tTransform.greenMultiplier * 128, tTransform.blueMultiplier * 128);
-					}
-					i++;
+		public function getNumOfCustomColors(pMC:MovieClip) : int {
+			var tChild:*=null;
+			var num:int = 0;
+			var i:int = 0;
+			while (i < pMC.numChildren) {
+				tChild = pMC.getChildAt(i);
+				if (tChild.name.indexOf("Couleur") == 0 && tChild.name.length > 7) {
+					num++;
 				}
-				return tArray;
+				i++;
 			}
-
-			public function getNumOfCustomColors(pMC:MovieClip) : int {
-				var tChild:*=null;
-				var num:int = 0;
-				var i:int = 0;
-				while (i < pMC.numChildren) {
-					tChild = pMC.getChildAt(i);
-					if (tChild.name.indexOf("Couleur") == 0 && tChild.name.length > 7) {
-						num++;
-					}
-					i++;
-				}
-				return num;
-			}
+			return num;
+		}
+		
+		public function getColoredItemImage(pData:ItemData) : MovieClip {
+			return colorItem({ obj:getItemImage(pData), colors:pData.colors });
+		}
 
 		/****************************
 		* Asset Creation
 		*****************************/
-			public function getItemImage(pData:ItemData) : MovieClip {
-				var tItem:MovieClip;
-				switch(pData.type) {
-					case ITEM.SKIN:
-					case ITEM.SKIN_COLOR:
-						tItem = getDefaultPoseSetup({ skin:pData });
-						break;
-					case ITEM.POSE:
-						tItem = getDefaultPoseSetup({ pose:pData });
-						break;
-					/*case ITEM.SHIRT:
-					case ITEM.PANTS:
-					case ITEM.SHOES:
-						tItem = new Pose(poses[defaultPoseIndex]).apply({ items:[ pData ], removeBlanks:true });
-						break;*/
-					default:
-						tItem = new pData.itemClass();
-						colorDefault(tItem);
-						break;
-				}
-				return tItem;
+		public function getItemImage(pData:ItemData) : MovieClip {
+			var tItem:MovieClip;
+			switch(pData.type) {
+				case ITEM.SKIN:
+				case ITEM.SKIN_COLOR:
+					tItem = getDefaultPoseSetup({ skin:pData });
+					break;
+				case ITEM.POSE:
+					tItem = getDefaultPoseSetup({ pose:pData });
+					break;
+				/*case ITEM.SHIRT:
+				case ITEM.PANTS:
+				case ITEM.SHOES:
+					tItem = new Pose(poses[defaultPoseIndex]).apply({ items:[ pData ], removeBlanks:true });
+					break;*/
+				default:
+					tItem = new pData.itemClass();
+					colorDefault(tItem);
+					break;
 			}
+			return tItem;
+		}
 
-			// pData = { ?pose:ItemData, ?skin:SkinData }
-			public function getDefaultPoseSetup(pData:Object) : Pose {
-				var tPoseData = pData.pose ? pData.pose : poses[defaultPoseIndex];
-				var tSkinData = pData.skin ? pData.skin : skins[defaultSkinIndex];
+		// pData = { ?pose:ItemData, ?skin:SkinData }
+		public function getDefaultPoseSetup(pData:Object) : Pose {
+			var tPoseData = pData.pose ? pData.pose : poses[defaultPoseIndex];
+			var tSkinData = pData.skin ? pData.skin : skins[defaultSkinIndex];
 
-				tPose = new Pose(tPoseData);
-				if(tSkinData.gender == GENDER.MALE) {
-					tPose.apply({ items:[
-						tSkinData
-					], shamanMode:SHAMAN_MODE.OFF });
-				} else {
-					tPose.apply({ items:[
-						tSkinData
-					], shamanMode:SHAMAN_MODE.OFF });
-				}
-				tPose.stopAtLastFrame();
-
-				return tPose;
+			tPose = new Pose(tPoseData);
+			if(tSkinData.gender == GENDER.MALE) {
+				tPose.apply({ items:[
+					tSkinData
+				], shamanMode:SHAMAN_MODE.OFF });
+			} else {
+				tPose.apply({ items:[
+					tSkinData
+				], shamanMode:SHAMAN_MODE.OFF });
 			}
+			tPose.stopAtLastFrame();
+
+			return tPose;
+		}
 	}
 }

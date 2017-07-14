@@ -38,6 +38,9 @@ package app.ui.panes
 			shamanButtons.push(tButton = addItem(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextBase({ text:"btn_normal_mode", text:"Normal" }), id:SHAMAN_MODE.NORMAL })));
 			shamanButtons.push(tButton = addItem(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextBase({ text:"btn_hard_mode", text:"Hard" }), id:SHAMAN_MODE.HARD })));
 			shamanButtons.push(tButton = addItem(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextBase({ text:"btn_divine_mode", text:"Divine" }), id:SHAMAN_MODE.DIVINE })));
+			if(Costumes.instance.shamanMode != SHAMAN_MODE.OFF) {
+				shamanButtons[Costumes.instance.shamanMode-2].toggleOn();
+			}
 			_registerClickHandler(shamanButtons, _onShamanButtonClicked);
 			
 			addItem( shamanColorPickerButton = new ScaleButton({ x:xx += spacingx + sizex*0.5, y:yy + sizey*0.5, obj:new $ColorWheel() }) );
@@ -52,12 +55,15 @@ package app.ui.panes
 
 			this.button_hand = new PushButton({ width:grid.radius, height:grid.radius, obj:new Costumes.instance.hand.itemClass(), obj_scale:1.5, id:i++ });
 			grid.add(this.button_hand);
+			if(character.getItemData(ITEM.PAW)) { this.button_hand.toggleOn(); }
 			
 			this.button_back = new PushButton({ width:grid.radius, height:grid.radius, obj:new Costumes.instance.fromage.itemClass(), obj_scale:1.5, id:i++ });
 			grid.add(this.button_back);
+			if(character.getItemData(ITEM.BACK)) { this.button_back.toggleOn(); }
 			
 			this.button_backHand = new PushButton({ width:grid.radius, height:grid.radius, obj:new Costumes.instance.backHand.itemClass(), obj_scale:1.5, id:i++ });
 			grid.add(this.button_backHand);
+			if(character.getItemData(ITEM.PAW_BACK)) { this.button_backHand.toggleOn(); }
 			
 			yy += grid.Height + 10;
 			

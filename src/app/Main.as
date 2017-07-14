@@ -69,6 +69,7 @@ package app
 		
 		private function _getDefaultLang(pConfigLang:String) : String {
 			var tFlagDefaultLangExists = false;
+			// http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/system/Capabilities.html#language
 			if(Capabilities.lang) {
 				var tLanguages = Fewf.assets.getData("config").languages.list;
 				for(var tLang in tLanguages) {

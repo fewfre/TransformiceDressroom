@@ -1,3 +1,11 @@
+== V1.6 - 13 July 2017 ==
+- Share link feature added / finished.
+- Color finder feature added for items.
+- [bug] If you selected an item + colored it, selected something else, and then selected it again, the infobar image showed the default image.
+- [bug] Downloading a colored image (vs whole mouse) didn't save it colored.
+- Default fur now has a coloring wheel option (to simulate Funcorp ability)
+
+
 == V1.5 - 8 July 2017 ==
 - Added app info on bottom left
 	- Moved github button from Toolbox
