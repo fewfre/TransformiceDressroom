@@ -1,6 +1,7 @@
 package app.ui
 {
 	import com.fewfre.display.ButtonBase;
+	import com.fewfre.utils.Fewf;
 	import app.data.*;
 	import app.ui.*;
 	import app.ui.buttons.*;
@@ -14,6 +15,7 @@ package app.ui
 		private var _bg				: RoundedRectangle;
 		public var scaleSlider		: FancySlider;
 		public var animateButton	: SpriteButton;
+		public var imgurButton		: SpriteButton;
 		
 		// Constructor
 		// pData = { x:Number, y:Number, character:Character, onSave:Function, onAnimate:Function, onRandomize:Function, onShare:Function, onScale:Function }
@@ -55,6 +57,14 @@ package app.ui
 			btn.addEventListener(ButtonBase.CLICK, pData.onShare);
 			tButtonsOnLeft++;
 			
+			imgurButton = btn = tTray.addChild(new SpriteButton({ x:tX+tButtonXInc*tButtonsOnLeft, y:tY, width:tButtonSize, height:tButtonSize, obj_scale:0.45, obj:new $ImgurIcon(), origin:0.5 }));
+			var tCharacter = pData.character;
+			btn.addEventListener(ButtonBase.CLICK, function(e:*){
+				ImgurApi.uploadImage(tCharacter);
+				imgurButton.disable();
+			});
+			tButtonsOnLeft++;
+			
 			// ### Right Side Buttons ###
 			tX = tTrayWidth*0.5-(tButtonSize*0.5 + tButtonSizeSpace);
 
@@ -79,10 +89,16 @@ package app.ui
 			scaleSlider.addEventListener(FancySlider.CHANGE, pData.onScale);
 			
 			pData = null;
+			
+			Fewf.dispatcher.addEventListener(ImgurApi.EVENT_DONE, _onImgurDone);
 		}
 		
 		public function toggleAnimateButtonAsset(pOn:Boolean) : void {
 			animateButton.ChangeImage(pOn ? new $PauseButton() : new $PlayButton());
+		}
+		
+		private function _onImgurDone(e:*) : void {
+			imgurButton.enable();
 		}
 	}
 }

@@ -1,4 +1,3 @@
-- upload to imgur
 - specify flag-waving image?
 - [Code Rewrite Idea] Screen manager (Share, Lang, Loading)
 	- open / close using event dispatcher

@@ -3,6 +3,7 @@ package com.fewfre.utils
 	import flash.display.MovieClip;
 	import flash.display.Stage;
 	
+	// Global access class
 	public class Fewf
 	{
 		// Storage

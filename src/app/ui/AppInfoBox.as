@@ -31,7 +31,7 @@ package app.ui
 		
 		private function _setupTextTray() : void {
 			_textTray = addChild(new MovieClip());
-			_textTray.x = 25*0.5 + 3;
+			_textTray.x = 25*0.5 + 4;
 			if(Fewf.i18n.lang == "en" || !Fewf.i18n.getText("translated_by")) {
 				_textTray.addChild(new TextBase({ text:"version", originX:0, values:ConstantsApp.VERSION }));
 			} else {
