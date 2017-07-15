@@ -9,6 +9,7 @@ package com.fewfre.utils
 	import flash.events.ProgressEvent;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
+	import flash.net.URLRequestHeader;
 	import flash.system.ApplicationDomain;
 	import flash.system.LoaderContext;
 	import flash.utils.Dictionary;
@@ -60,11 +61,13 @@ package com.fewfre.utils
 						tLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, _onAssetsLoaded);
 						tLoader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, _onLoadError);
 						tLoader.contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS, _onProgress);
+						var tRequest:URLRequest = new URLRequest(pUrl);
+						tRequest.requestHeaders.push(new URLRequestHeader("pragma", "no-cache"));
 						if(pOptions && pOptions.useCurrentDomain) {
 							var tLoaderContext:LoaderContext = new LoaderContext(false, ApplicationDomain.currentDomain);
-							tLoader.load(new URLRequest(pUrl), tLoaderContext);
+							tLoader.load(tRequest, tLoaderContext);
 						} else {
-							tLoader.load(new URLRequest(pUrl));
+							tLoader.load(tRequest);
 						}
 						break;
 					case "json":
