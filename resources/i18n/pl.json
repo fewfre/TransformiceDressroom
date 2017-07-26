@@ -1,0 +1,32 @@
+{
+	"defaultFont": "Verdana",
+	"defaultScale": 1,
+	"strings": {
+		"loading_progress":		{ "text":"{0}" },
+		"infobar_id":			{ "text":"ID: {0}" },
+		
+		"loading":				{ "text":"Rzeczy pozostałe do załadowania {0}" },
+		"loading_finished":		{ "text":"Ładowanie zakończone. Inicjowanie..." },
+		"btn_color_defaults":	{ "text":"Domyślny" },
+		"share_header":			{ "text":"Podziel się swoją kreacją!" },
+		"share_link_copied":	{ "text":"Link skopiowany! Wklej by go użyć." },
+		"share_copy":			{ "text":"Kopiuj" },
+		"version":				{ "text":"Wersja: {0}" },
+		"translated_by":		{ "text":"Przetłumaczone przez: Akanaria" },
+		
+		"btn_normal_mode":		{ "text":"Normalny" },
+		"btn_hard_mode":		{ "text":"Trudny" },
+		"btn_divine_mode":		{ "text":"Boski" },
+		"tab_head":				{ "text":"Głowa" },
+		"tab_hair":				{ "text":"Włosy" },
+		"tab_ears":				{ "text":"Uszy" },
+		"tab_eyes":				{ "text":"Oczy" },
+		"tab_mouth":			{ "text":"Usta" },
+		"tab_neck":				{ "text":"Szyja" },
+		"tab_tail":				{ "text":"Ogon" },
+		"tab_contacts":			{ "text":"Szkła\nkontaktowe", "scale":0.75 },
+		"tab_furs":				{ "text":"Futerka" },
+		"tab_poses":			{ "text":"Poza" },
+		"tab_other":			{ "text":"Inne" }
+	}
+}

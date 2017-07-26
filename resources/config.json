@@ -1,10 +1,20 @@
 {
 	"languages": {
-		"default": "fr",
+		"default": "pl",
 		"list": [
 			{ "code":"en", "name":"English", "flags_swf_linkage":"$EN" },
 			{ "code":"fr", "name":"Français", "flags_swf_linkage":"$FR" },
-			{ "code":"pt", "name":"Português", "flags_swf_linkage":"$PT" }
+			{ "code":"pt", "name":"Português", "flags_swf_linkage":"$BR" },
+			{ "code":"tr", "name":"Türkçe", "flags_swf_linkage":"$TR" },
+			{ "code":"pl", "name":"polski", "flags_swf_linkage":"$PL" },
+			{ "code":"ru", "name":"Русский", "flags_swf_linkage":"$RU" },
+			{ "code":"se", "name":"svenska", "flags_swf_linkage":"$SE" },
+			{ "code":"hu", "name":"magyar", "flags_swf_linkage":"$HU" },
+			{ "code":"ro", "name":"română", "flags_swf_linkage":"$RO" },
+			{ "code":"de", "name":"Deutsch", "flags_swf_linkage":"$DE" },
+			{ "code":"ar", "name":"العَرَبِيَّة", "flags_swf_linkage":"$AR" },
+			{ "code":"hr", "name":"Hrvatski", "flags_swf_linkage":"$HR" },
+			{ "code":"lv", "name":"latviešu valoda", "flags_swf_linkage":"$LV" }
 		]
 	}
 }

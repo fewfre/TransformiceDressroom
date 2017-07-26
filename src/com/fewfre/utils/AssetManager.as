@@ -75,7 +75,9 @@ package com.fewfre.utils
 						tUrlLoader.addEventListener(Event.COMPLETE, function(e:Event){ _onJsonLoaded(e, tName, arguments.callee); });
 						tUrlLoader.addEventListener(IOErrorEvent.IO_ERROR, function(e:Event){ _onURLLoadError(e, pUrl, arguments.callee); });
 						tUrlLoader.addEventListener(ProgressEvent.PROGRESS, _onProgress);
-						tUrlLoader.load(new URLRequest(pUrl));
+						var tRequest:URLRequest = new URLRequest(pUrl);
+						tRequest.requestHeaders.push(new URLRequestHeader("pragma", "no-cache"));
+						tUrlLoader.load(tRequest);
 						break;
 					default:
 						trace("[AssetManager](_newLoader) Unknown file type: "+tType);

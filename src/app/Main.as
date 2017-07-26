@@ -42,16 +42,28 @@ package app
 			Fewf.assets.removeEventListener(AssetManager.LOADING_FINISHED, _onPreloadComplete);
 			_defaultLang = _getDefaultLang(Fewf.assets.getData("config").languages.default);
 			
+			Fewf.assets.load([
+				"resources/i18n/"+_defaultLang+".json",
+			]);
+			Fewf.assets.addEventListener(AssetManager.LOADING_FINISHED, _onInitialLoadComplete);
+		}
+		
+		internal function _onInitialLoadComplete(event:Event) : void {
+			Fewf.assets.removeEventListener(AssetManager.LOADING_FINISHED, _onInitialLoadComplete);
+			
+			Fewf.i18n.parseFile(_defaultLang, Fewf.assets.getData(_defaultLang));
+			
 			// Start main load
 			Fewf.assets.load([
 				["resources/interface.swf", { useCurrentDomain:true }],
+				"resources/flags.swf",
+				// Game Assets
 				_LOAD_LOCAL ? "resources/x_meli_costumes.swf" : "http://www.transformice.com/images/x_bibliotheques/x_meli_costumes.swf",
 				_LOAD_LOCAL ? "resources/x_fourrures.swf" : "http://www.transformice.com/images/x_bibliotheques/x_fourrures.swf",
 				_LOAD_LOCAL ? "resources/x_fourrures2.swf" : "http://www.transformice.com/images/x_bibliotheques/x_fourrures2.swf",
 				_LOAD_LOCAL ? "resources/x_fourrures3.swf" : "http://www.transformice.com/images/x_bibliotheques/x_fourrures3.swf",
+				// Game assets - manual update
 				"resources/poses.swf",
-				"resources/flags.swf",
-				"resources/i18n/"+_defaultLang+".json",
 			]);
 			Fewf.assets.addEventListener(AssetManager.LOADING_FINISHED, _onLoadComplete);
 		}
@@ -62,18 +74,16 @@ package app
 			removeChild( _loaderDisplay );
 			_loaderDisplay = null;
 			
-			Fewf.i18n.parseFile(_defaultLang, Fewf.assets.getData(_defaultLang));
-			
 			_world = addChild(new World(stage));
 		}
 		
 		private function _getDefaultLang(pConfigLang:String) : String {
 			var tFlagDefaultLangExists = false;
 			// http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/system/Capabilities.html#language
-			if(Capabilities.lang) {
+			if(Capabilities.language) {
 				var tLanguages = Fewf.assets.getData("config").languages.list;
-				for(var tLang in tLanguages) {
-					if(Capabilities.lang == tLang.code || Capabilities.lang == tLang.code.split("-")[0]) {
+				for each(tLang in tLanguages) {
+					if(Capabilities.language == tLang.code || Capabilities.language == tLang.code.split("-")[0]) {
 						return tLang.code;
 					}
 					if(pConfigLang == tLang.code) {

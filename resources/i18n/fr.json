@@ -2,42 +2,31 @@
 	"defaultFont": "Verdana",
 	"defaultScale": 1,
 	"strings": {
-		"example":				{
-			"text":"Only text field is required. Scale is 1 by default. Any {0}s will be replaced by a value. Comma placement is important.",
-			"scale":0.7,
-			"font":"Wingdings"
-		},
-		"example2":				{ "text":"Example", "scale":0.9, "font":"Monospace" },
+		"loading_progress":		{ "text":"{0}" },
+		"infobar_id":			{ "text":"ID: {0}" },
+		
+		"loading":				{ "text":"Items qui restent à charger: {0}" },
+		"loading_finished":		{ "text":"Chargement complet. Initialisation..." },
+		"btn_color_defaults":	{ "text":"Défauts" },
+		"share_header":			{ "text":"Partage ta Création!" },
+		"share_link_copied":	{ "text":"Lien copié au presse-papiers! Coller pour utiliser.", "scale":0.9 },
+		"share_copy":			{ "text":"Copier" },
+		"version":				{ "text":"Version: {0}" },
+		"translated_by":		{ "text":"Traduit par: Virus_code" },
 		
 		"btn_normal_mode":		{ "text":"Normal" },
 		"btn_hard_mode":		{ "text":"Difficile" },
-		"btn_divine_mode":		{ "text":"Divin" },
-		
+		"btn_divine_mode":		{ "text":"Divine" },
 		"tab_head":				{ "text":"Tête" },
-		"tab_hair":				{ "text":"Coiffures", "scale":0.85 },
+		"tab_hair":				{ "text":"Cheveux" },
 		"tab_ears":				{ "text":"Oreilles" },
 		"tab_eyes":				{ "text":"Yeux" },
 		"tab_mouth":			{ "text":"Bouche" },
 		"tab_neck":				{ "text":"Cou" },
 		"tab_tail":				{ "text":"Queue" },
-		"tab_contacts":			{ "text":"Lentilles" },
-		"tab_furs":				{ "text":"Fourrures", "scale":0.8 },
+		"tab_contacts":			{ "text":"Contacts" },
+		"tab_furs":				{ "text":"Fourrures", "scale":0.95 },
 		"tab_poses":			{ "text":"Pose" },
-		"tab_other":			{ "text":"Autres" },
-		
-		"btn_color_defaults":	{ "text":"Défauts" },
-		
-		"share_header":			{ "text":"Share your Creation!" },
-		"share_link_copied":	{ "text":"Link copied to clipboard! Paste to use." },
-		"share_copy":			{ "text":"copier " },
-		
-		"infobar_id":			{ "text":"ID: {0}" },
-		
-		"version":				{ "text":"Version: {0}" },
-		"translated_by":		{ "text":"" },
-		
-		"loading":				{ "text":"Items left to load: {0}" },
-		"loading_finished":		{ "text":"Loading complete. Initializing..." },
-		"loading_progress":		{ "text":"{0}" }
+		"tab_other":			{ "text":"Autres" }
 	}
 }

@@ -1,0 +1,32 @@
+{
+	"defaultFont": "Verdana",
+	"defaultScale": 1,
+	"strings": {
+		"loading_progress":		{ "text":"{0}" },
+		"infobar_id":			{ "text":"ID: {0}" },
+		
+		"loading":				{ "text":"Saker kvar att ladda {0}" },
+		"loading_finished":		{ "text":"Laddning avslutad" },
+		"btn_color_defaults":	{ "text":"Uteblivna färger" },
+		"share_header":			{ "text":"Visa ditt mästervärk" },
+		"share_link_copied":	{ "text":"Länk kopierad! den finns nu i din clipboard" },
+		"share_copy":			{ "text":"Kopiera" },
+		"version":				{ "text":"Version {0}" },
+		"translated_by":		{ "text":"Översätt av: Elinormus" },
+		
+		"btn_normal_mode":		{ "text":"Normal mode", "scale":0.9 },
+		"btn_hard_mode":		{ "text":"Svår mode" },
+		"btn_divine_mode":		{ "text":"Divine" },
+		"tab_head":				{ "text":"Huvud" },
+		"tab_hair":				{ "text":"Hår" },
+		"tab_ears":				{ "text":"Öron" },
+		"tab_eyes":				{ "text":"Ögon" },
+		"tab_mouth":			{ "text":"Mun" },
+		"tab_neck":				{ "text":"Nacke" },
+		"tab_tail":				{ "text":"Svans" },
+		"tab_contacts":			{ "text":"Linser" },
+		"tab_furs":				{ "text":"Pälsar" },
+		"tab_poses":			{ "text":"Positioner", "scale":0.9 },
+		"tab_other":			{ "text":"Annat" }
+	}
+}

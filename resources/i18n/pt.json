@@ -2,42 +2,31 @@
 	"defaultFont": "Verdana",
 	"defaultScale": 1,
 	"strings": {
-		"example":				{
-			"text":"Only text field is required. Scale is 1 by default. Any {0}s will be replaced by a value. Comma placement is important.",
-			"scale":0.7,
-			"font":"Wingdings"
-		},
-		"example2":				{ "text":"Example", "scale":0.9, "font":"Monospace" },
+		"loading_progress":		{ "text":"{0}" },
+		"infobar_id":			{ "text":"ID: {0}" },
+		
+		"loading":				{ "text":"Itens que faltam carregar: {0}" },
+		"loading_finished":		{ "text":"Carregamento completo. Inicializando..." },
+		"btn_color_defaults":	{ "text":"Padrões" },
+		"share_header":			{ "text":"Compartilhe sua criação!" },
+		"share_link_copied":	{ "text":"Link copiado. Cole para usá-lo." },
+		"share_copy":			{ "text":"Copiar" },
+		"version":				{ "text":"Versão: {0}" },
+		"translated_by":		{ "text":"Traduzido por: Buwho" },
 		
 		"btn_normal_mode":		{ "text":"Normal" },
 		"btn_hard_mode":		{ "text":"Difícil" },
 		"btn_divine_mode":		{ "text":"Divino" },
-		
 		"tab_head":				{ "text":"Cabeça" },
-		"tab_hair":				{ "text":"Penteados", "scale":0.75 },
-		"tab_ears":				{ "text":"Orelha" },
+		"tab_hair":				{ "text":"Penteado", "scale":0.95 },
+		"tab_ears":				{ "text":"Orelhas" },
 		"tab_eyes":				{ "text":"Olhos" },
 		"tab_mouth":			{ "text":"Boca" },
 		"tab_neck":				{ "text":"Pescoço" },
 		"tab_tail":				{ "text":"Rabo" },
-		"tab_contacts":			{ "text":"Contatos", "scale":0.85 },
+		"tab_contacts":			{ "text":"Lentes" },
 		"tab_furs":				{ "text":"Pelos" },
-		"tab_poses":			{ "text":"Postura" },
-		"tab_other":			{ "text":"Outros" },
-		
-		"btn_color_defaults":	{ "text":"Padrões" },
-		
-		"share_header":			{ "text":"Share your Creation!" },
-		"share_link_copied":	{ "text":"Link copied to clipboard! Paste to use." },
-		"share_copy":			{ "text":"copiar" },
-		
-		"infobar_id":			{ "text":"ID: {0}" },
-		
-		"version":				{ "text":"Versão: {0}" },
-		"translated_by":		{ "text":"" },
-		
-		"loading":				{ "text":"Items left to load: {0}" },
-		"loading_finished":		{ "text":"Loading complete. Initializing..." },
-		"loading_progress":		{ "text":"{0}" }
+		"tab_poses":			{ "text":"Pose" },
+		"tab_other":			{ "text":"Outros" }
 	}
 }

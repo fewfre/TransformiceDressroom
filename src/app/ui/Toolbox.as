@@ -38,15 +38,12 @@ package app.ui
 			btn.addEventListener(ButtonBase.CLICK, pData.onSave);
 			
 			/********************
-			* Download Button
+			* Toolbar Buttons
 			*********************/
 			var tTray = _bg.addChild(new MovieClip());
 			var tTrayWidth = _bg.Width - _downloadTray.Width;
 			tTray.x = -(_bg.Width*0.5) + (tTrayWidth*0.5) + (_bg.Width - tTrayWidth);
 			
-			/********************
-			* Toolbar Button
-			*********************/
 			var tButtonSize = 28, tButtonSizeSpace=5, tButtonXInc=tButtonSize+tButtonSizeSpace;
 			var tX = 0, tY = 0, tButtonsOnLeft = 0, tButtonOnRight = 0;
 			
@@ -90,6 +87,9 @@ package app.ui
 			
 			pData = null;
 			
+			/********************
+			* Events
+			*********************/
 			Fewf.dispatcher.addEventListener(ImgurApi.EVENT_DONE, _onImgurDone);
 		}
 		

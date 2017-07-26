@@ -1,8 +1,8 @@
 <?php
-file_put_contents("x_meli_costumes.swf", fopen("http://www.transformice.com/images/x_bibliotheques/x_meli_costumes.swf", 'r'));
-file_put_contents("x_fourrures.swf", fopen("http://www.transformice.com/images/x_bibliotheques/x_fourrures.swf", 'r'));
-file_put_contents("x_fourrures2.swf", fopen("http://www.transformice.com/images/x_bibliotheques/x_fourrures2.swf", 'r'));
-file_put_contents("x_fourrures3.swf", fopen("http://www.transformice.com/images/x_bibliotheques/x_fourrures3.swf", 'r'));
+$resources = array("x_meli_costumes.swf", "x_fourrures.swf", "x_fourrures2.swf", "x_fourrures3.swf");
+foreach ($resources as $filename) {
+	file_put_contents($filename, fopen("http://www.transformice.com/images/x_bibliotheques/$filename", 'r'));
+}
 echo "Update Successful! Redirecting...";
-echo '<script>window.setTimeout(function(){ window.location = "../"; },1000);</script>'
+echo '<script>window.setTimeout(function(){ window.location = "../"; },1000);</script>';
 ?>

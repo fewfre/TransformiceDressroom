@@ -76,7 +76,7 @@ package com.fewfre.display
 		* Render
 		*****************************/
 		protected function _render() : void {
-			_field.defaultTextFormat = new TextFormat(_font, _size * _scale, _color);
+			_field.defaultTextFormat = new TextFormat(_font, _size * _scale, _color, null, null, null, null, null, TextFormatAlign.CENTER);
 			_field.autoSize = TextFieldAutoSize.CENTER;
 			_field.text = _values != null ? FewfUtils.stringSubstitute(_text, _values) : _text;
 			_field.x = -_field.textWidth * _originX - 2;

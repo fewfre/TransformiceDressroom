@@ -1,0 +1,32 @@
+{
+	"defaultFont": "Verdana",
+	"defaultScale": 1,
+	"strings": {
+		"loading_progress":		{ "text":"{0}" },
+		"infobar_id":			{ "text":"ID: {0}" },
+		
+		"loading":				{ "text":"Elementele rămase pentru încărcare: {0}" },
+		"loading_finished":		{ "text":"Încărcare completă. Inițializează ..." },
+		"btn_color_defaults":	{ "text":"Valori prestabilite", "scale":0.9 },
+		"share_header":			{ "text":"Împărtășește-ți creația!" },
+		"share_link_copied":	{ "text":"Link copiat in clipboard! Lipiți-l pentru utilizare.", "scale":0.95 },
+		"share_copy":			{ "text":"Copiează" },
+		"version":				{ "text":"Versiune: {0}" },
+		"translated_by":		{ "text":"Translated by: Sky_dreams" },
+		
+		"btn_normal_mode":		{ "text":"Normal" },
+		"btn_hard_mode":		{ "text":"Dificil" },
+		"btn_divine_mode":		{ "text":"Divin" },
+		"tab_head":				{ "text":"Cap" },
+		"tab_hair":				{ "text":"Coafură" },
+		"tab_ears":				{ "text":"Urechi" },
+		"tab_eyes":				{ "text":"Ochi" },
+		"tab_mouth":			{ "text":"Gură" },
+		"tab_neck":				{ "text":"Cap" },
+		"tab_tail":				{ "text":"Tail" },
+		"tab_contacts":			{ "text":"Contacts" },
+		"tab_furs":				{ "text":"Blană" },
+		"tab_poses":			{ "text":"Poziție" },
+		"tab_other":			{ "text":"Altele" }
+	}
+}

@@ -1,3 +1,10 @@
+== V1.8 - 25 July 2017 ==
+- Added various translations from http://atelier801.com/topic?f=6&t=853111
+	-ar, de, fr, hr, hu, lv, pl, pt, ro, ru, se, tr
+- Tweaked TextBase to center multiline text
+- update.php now loops through the swf names rather than hardcoding each link
+
+
 == V1.7 - 15 July 2017 ==
 - Imgur upload option added.
 - Resources are no longer cached.

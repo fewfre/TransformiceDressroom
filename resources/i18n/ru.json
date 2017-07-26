@@ -1,0 +1,32 @@
+{
+	"defaultFont": "Verdana",
+	"defaultScale": 1,
+	"strings": {
+		"loading_progress":		{ "text":"{0}" },
+		"infobar_id":			{ "text":"ID: {0}" },
+		
+		"loading":				{ "text":"Предметов осталось для загрузки: {0}" },
+		"loading_finished":		{ "text":"Загрузка завершена. Инициализация..." },
+		"btn_color_defaults":	{ "text":"По умолчанию" },
+		"share_header":			{ "text":"По делиться своей работой!" },
+		"share_link_copied":	{ "text":"Ссылка скопирована в буфер обмена! Вставьте для использования.", "scale":0.6 },
+		"share_copy":			{ "text":"Копия" },
+		"version":				{ "text":"Версия: {0}" },
+		"translated_by":		{ "text":"Переведено: Cakeslices" },
+		
+		"btn_normal_mode":		{ "text":"Нормальный", "scale":0.75 },
+		"btn_hard_mode":		{ "text":"Сложный", "scale":0.9 },
+		"btn_divine_mode":		{ "text":"Сожественный", "scale":0.75 },
+		"tab_head":				{ "text":"Голова" },
+		"tab_hair":				{ "text":"Причёска", "scale":0.9 },
+		"tab_ears":				{ "text":"Уши" },
+		"tab_eyes":				{ "text":"Глаза" },
+		"tab_mouth":			{ "text":"Уста" },
+		"tab_neck":				{ "text":"Шея" },
+		"tab_tail":				{ "text":"Xвост" },
+		"tab_contacts":			{ "text":"Линзы" },
+		"tab_furs":				{ "text":"Мех" },
+		"tab_poses":			{ "text":"Поза" },
+		"tab_other":			{ "text":"Другие" }
+	}
+}

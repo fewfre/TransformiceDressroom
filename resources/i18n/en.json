@@ -9,6 +9,21 @@
 		},
 		"example2":				{ "text":"Example", "scale":0.9, "font":"Monospace" },
 		
+		"loading":				{ "text":"Items left to load: {0}" },
+		"loading_finished":		{ "text":"Loading complete. Initializing..." },
+		"loading_progress":		{ "text":"{0}" },
+		
+		"version":				{ "text":"Version: {0}" },
+		"translated_by":		{ "text":"Translated by: Your Name here (or remove/blank this line to not show)" },
+		
+		"share_header":			{ "text":"Share your Creation!" },
+		"share_link_copied":	{ "text":"Link copied to clipboard! Paste to use." },
+		"share_copy":			{ "text":"copy" },
+		
+		"btn_color_defaults":	{ "text":"Defaults" },
+		
+		"infobar_id":			{ "text":"ID: {0}" },
+		
 		"btn_normal_mode":		{ "text":"Normal" },
 		"btn_hard_mode":		{ "text":"Hard" },
 		"btn_divine_mode":		{ "text":"Divine" },
@@ -23,21 +38,6 @@
 		"tab_contacts":			{ "text":"Contacts" },
 		"tab_furs":				{ "text":"Furs" },
 		"tab_poses":			{ "text":"Pose" },
-		"tab_other":			{ "text":"Other" },
-		
-		"btn_color_defaults":	{ "text":"Defaults" },
-		
-		"share_header":			{ "text":"Share your Creation!" },
-		"share_link_copied":	{ "text":"Link copied to clipboard! Paste to use." },
-		"share_copy":			{ "text":"copy" },
-		
-		"infobar_id":			{ "text":"ID: {0}" },
-		
-		"version":				{ "text":"Version: {0}" },
-		"translated_by":		{ "text":"Translated by: Your Name here (or remove/blank this line to not show)" },
-		
-		"loading":				{ "text":"Items left to load: {0}" },
-		"loading_finished":		{ "text":"Loading complete. Initializing..." },
-		"loading_progress":		{ "text":"{0}" }
+		"tab_other":			{ "text":"Other" }
 	}
 }

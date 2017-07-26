@@ -30,11 +30,12 @@ package app.ui.panes
 			var i:int = 0, xx:Number = 15, yy:Number = 15, tButton:GameButton, sizex:Number, sizey:Number, spacingx:Number;
 			
 			// Shaman options
-			sizex = 65; sizey = 50; spacingx = sizex + 10; xx = 15 - spacingx;
+			sizex = 80; sizey = 50; spacingx = sizex + 10; xx = 5 - spacingx;
 			
 			shamanButtons = [];
 			var icon = addItem(new $ShamFeather()); icon.x = (xx += spacingx) + sizex*0.5; icon.y = yy + sizey*0.5; icon.scaleX = icon.scaleY = 2;
 			icon.addEventListener(MouseEvent.CLICK, _onNoShamanButtonClicked);
+			xx -= 5;
 			shamanButtons.push(tButton = addItem(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextBase({ text:"btn_normal_mode", text:"Normal" }), id:SHAMAN_MODE.NORMAL })));
 			shamanButtons.push(tButton = addItem(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextBase({ text:"btn_hard_mode", text:"Hard" }), id:SHAMAN_MODE.HARD })));
 			shamanButtons.push(tButton = addItem(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextBase({ text:"btn_divine_mode", text:"Divine" }), id:SHAMAN_MODE.DIVINE })));
@@ -43,7 +44,7 @@ package app.ui.panes
 			}
 			_registerClickHandler(shamanButtons, _onShamanButtonClicked);
 			
-			addItem( shamanColorPickerButton = new ScaleButton({ x:xx += spacingx + sizex*0.5, y:yy + sizey*0.5, obj:new $ColorWheel() }) );
+			addItem( shamanColorPickerButton = new ScaleButton({ x:xx += spacingx + 25, y:yy + sizey*0.5, obj:new $ColorWheel() }) );
 			
 			// Line
 			yy += sizey + 10;

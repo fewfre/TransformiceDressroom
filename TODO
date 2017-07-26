@@ -1,3 +1,7 @@
 - specify flag-waving image?
 - [Code Rewrite Idea] Screen manager (Share, Lang, Loading)
 	- open / close using event dispatcher
+- Make resource loading use a resources.json
+- Rename "Costumes" something like "GameAssets"
+- Use floppy disk for save image
+	- https://duckduckgo.com/?q=save+icon&t=ffab&iax=1&ia=images

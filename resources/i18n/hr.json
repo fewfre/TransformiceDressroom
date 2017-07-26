@@ -1,0 +1,32 @@
+{
+	"defaultFont": "Verdana",
+	"defaultScale": 1,
+	"strings": {
+		"loading_progress":		{ "text":"{0}" },
+		"infobar_id":			{ "text":"ID: {0}" },
+		
+		"loading":				{ "text":"Stvari za učitavanje" },
+		"loading_finished":		{ "text":"Učitavanje je dovršeno. Pokreće se ..." },
+		"btn_color_defaults":	{ "text":"Zadano" },
+		"share_header":			{ "text":"Podijeli svoju kreaciju!" },
+		"share_link_copied":	{ "text":"Link kopiran u međuspremnik! Zalijepi za upotrebu.", "scale":0.9 },
+		"share_copy":			{ "text":"Kopija" },
+		"version":				{ "text":"Verzija: {0}" },
+		"translated_by":		{ "text":"Preveo: Brunocarfd" },
+		
+		"btn_normal_mode":		{ "text":"Lagani" },
+		"btn_hard_mode":		{ "text":"Teški" },
+		"btn_divine_mode":		{ "text":"Božanski" },
+		"tab_head":				{ "text":"Glava" },
+		"tab_hair":				{ "text":"Kosa" },
+		"tab_ears":				{ "text":"Uši" },
+		"tab_eyes":				{ "text":"Oći" },
+		"tab_mouth":			{ "text":"Usta" },
+		"tab_neck":				{ "text":"Vrat" },
+		"tab_tail":				{ "text":"Rep" },
+		"tab_contacts":			{ "text":"Kontaktne", "scale":0.9 },
+		"tab_furs":				{ "text":"Krzna" },
+		"tab_poses":			{ "text":"Poza" },
+		"tab_other":			{ "text":"Ostalo" }
+	}
+}
