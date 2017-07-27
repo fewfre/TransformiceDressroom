@@ -3,7 +3,7 @@
 	"defaultScale": 1,
 	"strings": {
 		"loading_progress":		{ "text":"{0}" },
-		"infobar_id":			{ "text":"ID: {0}" },
+		"infobar_id":			{ "text":"هوية: {0}" },
 		
 		"loading":				{ "text":"العناصر المتبقية للتحميل: {0}" },
 		"loading_finished":		{ "text":"اكتمل التحميل. جار التهيئة..." },
@@ -12,7 +12,7 @@
 		"share_link_copied":	{ "text":"تم نسخ الرابط إلى الحافظة! الصق للاستخدام." },
 		"share_copy":			{ "text":"نسخ" },
 		"version":				{ "text":"الإصدار: {0}" },
-		"translated_by":		{ "text":"تمت الترجمة من طرف: Hmiida" },
+		"translated_by":		{ "text":"الترجمة من طرف: Hmiida" },
 		
 		"btn_normal_mode":		{ "text":"العادي" },
 		"btn_hard_mode":		{ "text":"الصعب" },
@@ -24,7 +24,7 @@
 		"tab_mouth":			{ "text":"الفم" },
 		"tab_neck":				{ "text":"العنق" },
 		"tab_tail":				{ "text":"الذيل" },
-		"tab_contacts":			{ "text":"الاتصال" },
+		"tab_contacts":			{ "text":"العدسات" },
 		"tab_furs":				{ "text":"الفراء" },
 		"tab_poses":			{ "text":"الوضعية" },
 		"tab_other":			{ "text":"آخر" }

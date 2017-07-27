@@ -3,7 +3,7 @@
 	"defaultScale": 1,
 	"strings": {
 		"loading_progress":		{ "text":"{0}" },
-		"infobar_id":			{ "text":"ID: {0}" },
+		"infobar_id":			{ "text":"Kimlik: {0}" },
 		
 		"loading":				{ "text":"Yüklenmesi için geriye kalan ögeler: {0}" },
 		"loading_finished":		{ "text":"Yükleme tamamlandı. Başlatılıyor..." },
