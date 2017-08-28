@@ -5,6 +5,7 @@
 			{ "code":"en", "name":"English", "flags_swf_linkage":"$EN" },
 			{ "code":"fr", "name":"Français", "flags_swf_linkage":"$FR" },
 			{ "code":"pt", "name":"Português", "flags_swf_linkage":"$BR" },
+			{ "code":"es", "name":"Português", "flags_swf_linkage":"$ES" },
 			{ "code":"tr", "name":"Türkçe", "flags_swf_linkage":"$TR" },
 			{ "code":"pl", "name":"polski", "flags_swf_linkage":"$PL" },
 			{ "code":"ru", "name":"Русский", "flags_swf_linkage":"$RU" },

@@ -24,7 +24,7 @@
 		"tab_mouth":			{ "text":"Bouche" },
 		"tab_neck":				{ "text":"Cou" },
 		"tab_tail":				{ "text":"Queue" },
-		"tab_contacts":			{ "text":"Contacts" },
+		"tab_contacts":			{ "text":"Lentilles" },
 		"tab_furs":				{ "text":"Fourrures", "scale":0.95 },
 		"tab_poses":			{ "text":"Pose" },
 		"tab_other":			{ "text":"Autres" }

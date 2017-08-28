@@ -1,0 +1,32 @@
+{
+	"defaultFont": "Verdana",
+	"defaultScale": 1,
+	"strings": {
+		"loading_progress":		{ "text":"{0}" },
+		"infobar_id":			{ "text":"ID: {0}" },
+		
+		"loading":				{ "text":"Elementos a cargar : {0}" },
+		"loading_finished":		{ "text":"Carga completa. Iniciando..." },
+		"btn_color_defaults":	{ "text":"Por defecto" },
+		"share_header":			{ "text":"¡Comparte tu creación!" },
+		"share_link_copied":	{ "text":"¡Enlace copiado al portapapeles! Pega para usar.", "scale":0.9 },
+		"share_copy":			{ "text":"copiar" },
+		"version":				{ "text":"Versión: {0}" },
+		"translated_by":		{ "text":"Traducido por: Chamelinct" },
+		
+		"btn_normal_mode":				{ "text":"Normal" },
+		"btn_hard_mode":				{ "text":"Difícil" },
+		"btn_divine_mode":				{ "text":"Divino" },
+		"tab_head":				{ "text":"Cabeza" },
+		"tab_hair":				{ "text":"Pelo" },
+		"tab_ears":				{ "text":"Orejas" },
+		"tab_eyes":				{ "text":"Ojos" },
+		"tab_mouth":				{ "text":"Boca" },
+		"tab_neck":				{ "text":"Cuello" },
+		"tab_tail":				{ "text":"Cola" },
+		"tab_contacts":				{ "text":"Lentillas" },
+		"tab_furs":				{ "text":"Pieles" },
+		"tab_poses":				{ "text":"Pose" },
+		"tab_other":				{ "text":"Otro" }
+	}
+}
