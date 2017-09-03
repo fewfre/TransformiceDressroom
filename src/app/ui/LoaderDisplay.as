@@ -32,7 +32,7 @@ package app.ui
 			_loadingSpinner.scaleX = 2;
 			_loadingSpinner.scaleY = 2;
 			
-			_leftToLoadText = addChild(new TextBase({ text:"loading", values:Fewf.assets.itemsLeftToLoad+1, size:18, x:0, y:10 }));
+			_leftToLoadText = addChild(new TextBase({ text:"loading", values:"", size:18, x:0, y:10 }));
 			_loadProgressText = addChild(new TextBase({ text:"loading_progress", values:"", size:18, x:0, y:35 }));
 			
 			addEventListener(Event.ENTER_FRAME, update);

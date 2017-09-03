@@ -381,36 +381,36 @@ package app.world
 			{
 				var tVal:uint = uint(pEvent.data);
 				this.character.getItemData(this.currentlyColoringType).colors[_paneManager.getPane(COLOR_PANE_ID).selectedSwatch] = tVal;
-				_refreshSelectedItemColor();
+				_refreshSelectedItemColor(this.currentlyColoringType);
 			}
 
 			private function _onDefaultsButtonClicked(pEvent:Event) : void
 			{
 				this.character.getItemData(this.currentlyColoringType).setColorsToDefault();
-				_refreshSelectedItemColor();
+				_refreshSelectedItemColor(this.currentlyColoringType);
 				_paneManager.getPane(COLOR_PANE_ID).setupSwatches( this.character.getColors(this.currentlyColoringType) );
 			}
 			
-			private function _refreshSelectedItemColor() : void {
+			private function _refreshSelectedItemColor(pType:String) : void {
 				character.updatePose();
 				
-				var tItemData = this.character.getItemData(this.currentlyColoringType);
-				if(this.currentlyColoringType != ITEM.SKIN) {
+				var tItemData = this.character.getItemData(pType);
+				if(pType != ITEM.SKIN) {
 					var tItem:MovieClip = costumes.getColoredItemImage(tItemData);
-					costumes.copyColor(tItem, getButtonArrayByType(this.currentlyColoringType)[ getCurItemID(this.currentlyColoringType) ].Image );
-					costumes.copyColor(tItem, getInfoBarByType( this.currentlyColoringType ).Image );
+					costumes.copyColor(tItem, getButtonArrayByType(pType)[ getCurItemID(pType) ].Image );
+					costumes.copyColor(tItem, getInfoBarByType( pType ).Image );
 					costumes.copyColor(tItem, _paneManager.getPane(COLOR_PANE_ID).infoBar.Image);
 				} else {
-					_replaceImageWithNewImage(getButtonArrayByType(this.currentlyColoringType)[ getCurItemID(this.currentlyColoringType) ], costumes.getColoredItemImage(tItemData));
-					_replaceImageWithNewImage(getInfoBarByType( this.currentlyColoringType ), costumes.getColoredItemImage(tItemData));
+					_replaceImageWithNewImage(getButtonArrayByType(pType)[ getCurItemID(pType) ], costumes.getColoredItemImage(tItemData));
+					_replaceImageWithNewImage(getInfoBarByType( pType ), costumes.getColoredItemImage(tItemData));
 					_replaceImageWithNewImage(_paneManager.getPane(COLOR_PANE_ID).infoBar, costumes.getColoredItemImage(tItemData));
 				}
-				/*var tMC:MovieClip = this.character.getItemFromIndex(this.currentlyColoringType);
+				/*var tMC:MovieClip = this.character.getItemFromIndex(pType);
 				if (tMC != null)
 				{
 					costumes.colorDefault(tMC);
-					costumes.copyColor( tMC, getButtonArrayByType(this.currentlyColoringType)[ getCurItemID(this.currentlyColoringType) ].Image );
-					costumes.copyColor(tMC, getInfoBarByType(this.currentlyColoringType).Image);
+					costumes.copyColor( tMC, getButtonArrayByType(pType)[ getCurItemID(pType) ].Image );
+					costumes.copyColor(tMC, getInfoBarByType(pType).Image);
 					costumes.copyColor(tMC, _paneManager.getPane(COLOR_PANE_ID).infoBar.Image);
 					
 				}*/

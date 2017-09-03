@@ -16,6 +16,7 @@ package app
 		private const _LOAD_LOCAL:Boolean = true;
 		private var _loaderDisplay	: LoaderDisplay;
 		private var _world			: World;
+		private var _config			: Object;
 		private var _defaultLang	: String;
 		
 		// Constructor
@@ -28,32 +29,43 @@ package app
 			stage.frameRate = 16;
 
 			BrowserMouseWheelPrevention.init(stage);
+
+			_loaderDisplay = addChild( new LoaderDisplay({ x:stage.stageWidth * 0.5, y:stage.stageHeight * 0.5 }) );
 			
-			// Start preload
+			_startPreload();
+		}
+		
+		private function _startPreload() : void {
 			Fewf.assets.load([
 				"resources/config.json",
 			]);
 			Fewf.assets.addEventListener(AssetManager.LOADING_FINISHED, _onPreloadComplete);
-
-			_loaderDisplay = addChild( new LoaderDisplay({ x:stage.stageWidth * 0.5, y:stage.stageHeight * 0.5 }) );
 		}
 		
-		internal function _onPreloadComplete(event:Event) : void {
+		private function _onPreloadComplete(event:Event) : void {
 			Fewf.assets.removeEventListener(AssetManager.LOADING_FINISHED, _onPreloadComplete);
-			_defaultLang = _getDefaultLang(Fewf.assets.getData("config").languages.default);
+			_config = Fewf.assets.getData("config");
+			_defaultLang = _getDefaultLang(_config.languages.default);
 			
+			_startInitialLoad();
+		}
+		
+		private function _startInitialLoad() : void {
 			Fewf.assets.load([
 				"resources/i18n/"+_defaultLang+".json",
 			]);
 			Fewf.assets.addEventListener(AssetManager.LOADING_FINISHED, _onInitialLoadComplete);
 		}
 		
-		internal function _onInitialLoadComplete(event:Event) : void {
+		private function _onInitialLoadComplete(event:Event) : void {
 			Fewf.assets.removeEventListener(AssetManager.LOADING_FINISHED, _onInitialLoadComplete);
-			
 			Fewf.i18n.parseFile(_defaultLang, Fewf.assets.getData(_defaultLang));
 			
-			// Start main load
+			_startLoad();
+		}
+		
+		// Start main load
+		private function _startLoad() : void {
 			Fewf.assets.load([
 				["resources/interface.swf", { useCurrentDomain:true }],
 				"resources/flags.swf",
@@ -68,7 +80,7 @@ package app
 			Fewf.assets.addEventListener(AssetManager.LOADING_FINISHED, _onLoadComplete);
 		}
 		
-		internal function _onLoadComplete(event:Event) : void {
+		private function _onLoadComplete(event:Event) : void {
 			Fewf.assets.removeEventListener(AssetManager.LOADING_FINISHED, _onLoadComplete);
 			_loaderDisplay.destroy();
 			removeChild( _loaderDisplay );
@@ -81,7 +93,7 @@ package app
 			var tFlagDefaultLangExists = false;
 			// http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/system/Capabilities.html#language
 			if(Capabilities.language) {
-				var tLanguages = Fewf.assets.getData("config").languages.list;
+				var tLanguages = _config.languages.list;
 				for each(tLang in tLanguages) {
 					if(Capabilities.language == tLang.code || Capabilities.language == tLang.code.split("-")[0]) {
 						return tLang.code;
