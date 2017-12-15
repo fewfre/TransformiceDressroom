@@ -13,7 +13,6 @@ package app
 	public class Main extends MovieClip
 	{
 		// Storage
-		private const _LOAD_LOCAL:Boolean = true;
 		private var _loaderDisplay	: LoaderDisplay;
 		private var _world			: World;
 		private var _config			: Object;
@@ -66,17 +65,15 @@ package app
 		
 		// Start main load
 		private function _startLoad() : void {
-			Fewf.assets.load([
+			var tPacks = [
 				["resources/interface.swf", { useCurrentDomain:true }],
-				"resources/flags.swf",
-				// Game Assets
-				_LOAD_LOCAL ? "resources/x_meli_costumes.swf" : "http://www.transformice.com/images/x_bibliotheques/x_meli_costumes.swf",
-				_LOAD_LOCAL ? "resources/x_fourrures.swf" : "http://www.transformice.com/images/x_bibliotheques/x_fourrures.swf",
-				_LOAD_LOCAL ? "resources/x_fourrures2.swf" : "http://www.transformice.com/images/x_bibliotheques/x_fourrures2.swf",
-				_LOAD_LOCAL ? "resources/x_fourrures3.swf" : "http://www.transformice.com/images/x_bibliotheques/x_fourrures3.swf",
-				// Game assets - manual update
-				"resources/poses.swf",
-			]);
+				"resources/flags.swf"
+			];
+			
+			var tPack = _config.packs.items.concat(_config.packs.parts);
+			for(var i:int = 0; i < tPack.length; i++) { tPacks.push("resources/"+tPack[i]); }
+			
+			Fewf.assets.load(tPacks);
 			Fewf.assets.addEventListener(AssetManager.LOADING_FINISHED, _onLoadComplete);
 		}
 		

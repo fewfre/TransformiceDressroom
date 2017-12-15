@@ -96,15 +96,15 @@ package app.world.elements
 			_setParamToType(pParams, ITEM.CONTACTS, "c");
 			_setParamToType(pParams, ITEM.POSE, "p", false);
 			
-			if(pParams.paw == "y") { _itemDataMap[ITEM.PAW] = Costumes.instance.hand; }
-			if(pParams.back == "y") { _itemDataMap[ITEM.BACK] = Costumes.instance.fromage; }
-			if(pParams.pawb == "y") { _itemDataMap[ITEM.PAW_BACK] = Costumes.instance.backHand; }
+			if(pParams.paw == "y") { _itemDataMap[ITEM.PAW] = GameAssets.hand; }
+			if(pParams.back == "y") { _itemDataMap[ITEM.BACK] = GameAssets.fromage; }
+			if(pParams.pawb == "y") { _itemDataMap[ITEM.PAW_BACK] = GameAssets.backHand; }
 			
 			if(pParams["sh"] && pParams["sh"] != "") {
 				var tColor = pParams["sh"].split(",");
-				Costumes.instance.shamanMode = parseInt(tColor.splice(0, 1)[0]);
+				GameAssets.shamanMode = parseInt(tColor.splice(0, 1)[0]);
 				if(tColor.length > 0) {
-					Costumes.instance.shamanColor = _hexToInt(tColor[0]);
+					GameAssets.shamanColor = _hexToInt(tColor[0]);
 				}
 			}
 		}
@@ -114,7 +114,7 @@ package app.world.elements
 				if(tID != null && tID != "") {
 					tColors = tID.split(","); // Get a list of all the colors (ID is first); ex: 5,ffffff,abcdef,169742
 					tID = tColors.splice(0, 1)[0]; // Remove first item and store it as the ID.
-					tData = Costumes.instance.getItemFromTypeID(pType, tID);
+					tData = GameAssets.getItemFromTypeID(pType, tID);
 					if(tColors.length > 0) { tData.colors = _hexArrayToIntArray(tColors, tData.defaultColors); }
 				}
 				_itemDataMap[pType] = pAllowNull ? tData : ( tData == null ? _itemDataMap[pType] : tData );
@@ -149,8 +149,8 @@ package app.world.elements
 			if(getItemData(ITEM.BACK)) { tParms.back = "y"; }
 			if(getItemData(ITEM.PAW_BACK)) { tParms.pawb = "y"; }
 			
-			if(Costumes.instance.shamanMode != SHAMAN_MODE.OFF) {
-				tParms["sh"] = Costumes.instance.shamanMode+","+_intToHex(Costumes.instance.shamanColor);
+			if(GameAssets.shamanMode != SHAMAN_MODE.OFF) {
+				tParms["sh"] = GameAssets.shamanMode+","+_intToHex(GameAssets.shamanColor);
 			}
 
 			return tParms.toString().replace(/%2C/g, ",");
@@ -185,7 +185,7 @@ package app.world.elements
 		}
 
 		public function colorItem(pType:String, arg2:int, pColor:String) : Array {
-			_itemDataMap[pType].colors[arg2] = Costumes.instance.convertColorToNumber(pColor);
+			_itemDataMap[pType].colors[arg2] = GameAssets.convertColorToNumber(pColor);
 			updatePose();
 		}
 

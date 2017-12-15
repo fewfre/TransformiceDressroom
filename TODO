@@ -1,7 +1,13 @@
 - specify flag-waving image?
 - [Code Rewrite Idea] Screen manager (Share, Lang, Loading)
 	- open / close using event dispatcher
-- Make resource loading use a resources.json
-- Rename "Costumes" something like "GameAssets"
-- Use floppy disk for save image
-	- https://duckduckgo.com/?q=save+icon&t=ffab&iax=1&ia=images
+- Indicate which tabs have a selected item (show item on hover?)
+
+-Idea (given in comments): Show item cost, as well as total - Issue: No real way to get costs without updating manually.
+	- If done, a new "result" type tab could be made, where it shows costs / current items, and clicking an item would bring you to that tab.
+
+-api to get images
+	- https://github.com/fewfre/TransformiceDressroom/issues/4#issuecomment-333601316
+	- https://forums.adobe.com/search.jspa?q=png*&facet=content&place=%2Fplaces%2F1394835
+	- https://forums.adobe.com/message/9789070#9789070
+	- https://stackoverflow.com/questions/838085/how-to-run-swf-without-a-browser-on-a-linux-server

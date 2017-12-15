@@ -17,5 +17,17 @@
 			{ "code":"hr", "name":"Hrvatski", "flags_swf_linkage":"$HR" },
 			{ "code":"lv", "name":"latviešu valoda", "flags_swf_linkage":"$LV" }
 		]
+	},
+	
+	"packs": {
+		"items": [
+			"x_meli_costumes.swf",
+			"x_fourrures.swf",
+			"x_fourrures2.swf",
+			"x_fourrures3.swf"
+		],
+		"parts": [
+			"poses.swf"
+		]
 	}
 }

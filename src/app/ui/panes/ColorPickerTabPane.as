@@ -17,6 +17,8 @@ package app.ui.panes
 		public static const EVENT_COLOR_PICKED		: String = "event_color_picked";
 		public static const EVENT_EXIT				: String = "event_exit";
 		
+		public static const _MAX_SWATCHES			: int = 11;
+		
 		// Storage
 		private var _colorSwatches	: Array;
 		private var _selectedSwatch	: int=0;
@@ -50,8 +52,8 @@ package app.ui.panes
 					}
 				}
 			}
-			if (tLength > 9) {
-				trace("!!! more than 9 colors !!!");
+			if (tLength > _MAX_SWATCHES) {
+				trace("!!! more than "+_MAX_SWATCHES+" colors !!!");
 			}
 			
 			_selectSwatch(0, false)
@@ -72,8 +74,8 @@ package app.ui.panes
 			
 			_colorSwatches = new Array();
 			var swatch:ColorSwatch;
-			for(var i:int = 0; i < 9; i++) {
-				swatch = _createColorSwatch(i, 5, 45 + (i * 30));
+			for(var i:int = 0; i < _MAX_SWATCHES; i++) {
+				swatch = _createColorSwatch(i, 5, 45 + (i * 27));
 				_colorSwatches.push(swatch);
 				this.addItem(_colorSwatches[i]);
 			}

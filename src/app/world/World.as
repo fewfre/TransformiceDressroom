@@ -28,8 +28,6 @@ package app.world
 	public class World extends MovieClip
 	{
 		// Storage
-		private var costumes		: Costumes;
-
 		internal var character		: Character;
 		internal var _paneManager	: PaneManager;
 
@@ -59,8 +57,8 @@ package app.world
 		}
 		
 		private function _buildWorld(pStage:Stage) {
-			costumes = Costumes.instance;
-
+			GameAssets.init();
+			
 			/****************************
 			* Create Character
 			*****************************/
@@ -75,8 +73,8 @@ package app.world
 			} catch (error:Error) { };
 
 			this.character = addChild(new Character({ x:180, y:275,
-				skin:costumes.skins[costumes.defaultSkinIndex],
-				pose:costumes.poses[costumes.defaultPoseIndex],
+				skin:GameAssets.skins[GameAssets.defaultSkinIndex],
+				pose:GameAssets.poses[GameAssets.defaultPoseIndex],
 				params:parms
 			}));
 
@@ -142,7 +140,7 @@ package app.world
 				// Based on what the character is wearing at start, toggle on the appropriate buttons.
 				tData = character.getItemData(tType);
 				if(tData) {
-					var tIndex:int = FewfUtils.getIndexFromArrayWithKeyVal(costumes.getArrayByType(tType), "id", tData.id);
+					var tIndex:int = FewfUtils.getIndexFromArrayWithKeyVal(GameAssets.getArrayByType(tType), "id", tData.id);
 					tPane.buttons[ tIndex ].toggleOn();
 				}
 			}
@@ -175,7 +173,7 @@ package app.world
 		private function _setupPane(pType:String) : TabPane {
 			var tPane:TabPane = new TabPane();
 			tPane.addInfoBar( new ShopInfoBar({ showEyeDropButton:pType!=ITEM.POSE }) );
-			_setupPaneButtons(pType, tPane, costumes.getArrayByType(pType));
+			_setupPaneButtons(pType, tPane, GameAssets.getArrayByType(pType));
 			tPane.infoBar.colorWheel.addEventListener(ButtonBase.CLICK, function(){ _colorButtonClicked(pType); });
 			tPane.infoBar.imageCont.addEventListener(MouseEvent.CLICK, function(){ _removeItem(pType); });
 			tPane.infoBar.refreshButton.addEventListener(ButtonBase.CLICK, function(){ _randomItemOfType(pType); });
@@ -201,7 +199,7 @@ package app.world
 			var shopItemButton : PushButton;
 			var i = -1;
 			while (i < pItemArray.length-1) { i++;
-				shopItem = costumes.getItemImage(pItemArray[i]);
+				shopItem = GameAssets.getItemImage(pItemArray[i]);
 				shopItem.scaleX = shopItem.scaleY = scale;
 
 				shopItemButton = new PushButton({ width:grid.radius, height:grid.radius, obj:shopItem, id:i, data:{ type:pType, id:i } });
@@ -211,7 +209,7 @@ package app.world
 			}
 			// Customizeable fur color button
 			if(pType == ITEM.SKIN) {
-				var tSkinButton = pPane.buttons[costumes.defaultSkinIndex];
+				var tSkinButton = pPane.buttons[GameAssets.defaultSkinIndex];
 				var tColorWheel = tSkinButton.parent.addChild(new ScaleButton({ x:tSkinButton.x + 60, y:tSkinButton.y + 12, obj:new $ColorWheel(), obj_scale:0.5 }));
 				tColorWheel.addEventListener(ButtonBase.CLICK, function(){
 					tSkinButton.toggleOn();
@@ -248,7 +246,7 @@ package app.world
 
 		private function _onItemToggled(pEvent:FewfEvent) : void {
 			var tType = pEvent.data.type;
-			var tItemArray:Array = costumes.getArrayByType(tType);
+			var tItemArray:Array = GameAssets.getArrayByType(tType);
 			var tInfoBar:ShopInfoBar = getInfoBarByType(tType);
 
 			// De-select all buttons that aren't the clicked one.
@@ -267,23 +265,23 @@ package app.world
 				setCurItemID(tType, tButton.id);
 				this.character.setItemData(tData);
 
-				tInfoBar.addInfo( tData, costumes.getColoredItemImage(tData) );
-				tInfoBar.showColorWheel(costumes.getNumOfCustomColors(tButton.Image) > 0);
+				tInfoBar.addInfo( tData, GameAssets.getColoredItemImage(tData) );
+				tInfoBar.showColorWheel(GameAssets.getNumOfCustomColors(tButton.Image) > 0);
 			} else {
 				_removeItem(tType);
 			}
 		}
 
 		public function buttonHandClickAfter(pEvent:Event):void {
-			toggleItemSelectionOneOff(ITEM.PAW, pEvent.target, costumes.hand);
+			toggleItemSelectionOneOff(ITEM.PAW, pEvent.target, GameAssets.hand);
 		}
 
 		public function buttonBackClickAfter(pEvent:Event):void {
-			toggleItemSelectionOneOff(ITEM.BACK, pEvent.target, costumes.fromage);
+			toggleItemSelectionOneOff(ITEM.BACK, pEvent.target, GameAssets.fromage);
 		}
 
 		public function buttonBackHandClickAfter(pEvent:Event):void {
-			toggleItemSelectionOneOff(ITEM.PAW_BACK, pEvent.target, costumes.backHand);
+			toggleItemSelectionOneOff(ITEM.PAW_BACK, pEvent.target, GameAssets.backHand);
 		}
 
 		private function toggleItemSelectionOneOff(pType:String, pButton:PushButton, pItemData:ItemData) : void {
@@ -300,7 +298,7 @@ package app.world
 
 			// If item has a default value, toggle it on. otherwise remove item.
 			if(pType == ITEM.SKIN || pType == ITEM.POSE) {
-				var tDefaultIndex = (pType == ITEM.POSE ? costumes.defaultPoseIndex : costumes.defaultSkinIndex);
+				var tDefaultIndex = (pType == ITEM.POSE ? GameAssets.defaultPoseIndex : GameAssets.defaultSkinIndex);
 				tTabPane.buttons[tDefaultIndex].toggleOn();
 			} else {
 				this.character.removeItem(pType);
@@ -396,22 +394,22 @@ package app.world
 				
 				var tItemData = this.character.getItemData(pType);
 				if(pType != ITEM.SKIN) {
-					var tItem:MovieClip = costumes.getColoredItemImage(tItemData);
-					costumes.copyColor(tItem, getButtonArrayByType(pType)[ getCurItemID(pType) ].Image );
-					costumes.copyColor(tItem, getInfoBarByType( pType ).Image );
-					costumes.copyColor(tItem, _paneManager.getPane(COLOR_PANE_ID).infoBar.Image);
+					var tItem:MovieClip = GameAssets.getColoredItemImage(tItemData);
+					GameAssets.copyColor(tItem, getButtonArrayByType(pType)[ getCurItemID(pType) ].Image );
+					GameAssets.copyColor(tItem, getInfoBarByType( pType ).Image );
+					GameAssets.copyColor(tItem, _paneManager.getPane(COLOR_PANE_ID).infoBar.Image);
 				} else {
-					_replaceImageWithNewImage(getButtonArrayByType(pType)[ getCurItemID(pType) ], costumes.getColoredItemImage(tItemData));
-					_replaceImageWithNewImage(getInfoBarByType( pType ), costumes.getColoredItemImage(tItemData));
-					_replaceImageWithNewImage(_paneManager.getPane(COLOR_PANE_ID).infoBar, costumes.getColoredItemImage(tItemData));
+					_replaceImageWithNewImage(getButtonArrayByType(pType)[ getCurItemID(pType) ], GameAssets.getColoredItemImage(tItemData));
+					_replaceImageWithNewImage(getInfoBarByType( pType ), GameAssets.getColoredItemImage(tItemData));
+					_replaceImageWithNewImage(_paneManager.getPane(COLOR_PANE_ID).infoBar, GameAssets.getColoredItemImage(tItemData));
 				}
 				/*var tMC:MovieClip = this.character.getItemFromIndex(pType);
 				if (tMC != null)
 				{
-					costumes.colorDefault(tMC);
-					costumes.copyColor( tMC, getButtonArrayByType(pType)[ getCurItemID(pType) ].Image );
-					costumes.copyColor(tMC, getInfoBarByType(pType).Image);
-					costumes.copyColor(tMC, _paneManager.getPane(COLOR_PANE_ID).infoBar.Image);
+					GameAssets.colorDefault(tMC);
+					GameAssets.copyColor( tMC, getButtonArrayByType(pType)[ getCurItemID(pType) ].Image );
+					GameAssets.copyColor(tMC, getInfoBarByType(pType).Image);
+					GameAssets.copyColor(tMC, _paneManager.getPane(COLOR_PANE_ID).infoBar.Image);
 					
 				}*/
 			}
@@ -430,7 +428,7 @@ package app.world
 				if(this.character.getItemData(pType) == null) { return; }
 
 				var tData:ItemData = getInfoBarByType(pType).data;
-				_paneManager.getPane(COLOR_PANE_ID).infoBar.addInfo( tData, costumes.getItemImage(tData) );
+				_paneManager.getPane(COLOR_PANE_ID).infoBar.addInfo( tData, GameAssets.getItemImage(tData) );
 				this.currentlyColoringType = pType;
 				_paneManager.getPane(COLOR_PANE_ID).setupSwatches( this.character.getColors(pType) );
 				_paneManager.openPane(COLOR_PANE_ID);
@@ -444,8 +442,8 @@ package app.world
 				if(this.character.getItemData(pType) == null) { return; }
 
 				var tData:ItemData = getInfoBarByType(pType).data;
-				var tItem:MovieClip = costumes.getColoredItemImage(tData);
-				var tItem2:MovieClip = costumes.getColoredItemImage(tData);
+				var tItem:MovieClip = GameAssets.getColoredItemImage(tData);
+				var tItem2:MovieClip = GameAssets.getColoredItemImage(tData);
 				_paneManager.getPane(COLOR_FINDER_PANE_ID).infoBar.addInfo( tData, tItem );
 				this.currentlyColoringType = pType;
 				_paneManager.getPane(COLOR_FINDER_PANE_ID).setItem(tItem2);
@@ -460,13 +458,13 @@ package app.world
 			{
 				var tVal:uint = uint(pEvent.data);
 				/*_paneManager.getPane(TAB_OTHER).updateCustomColor(configCurrentlyColoringType, tVal);*/
-				costumes.shamanColor = tVal;
+				GameAssets.shamanColor = tVal;
 				character.updatePose();
 			}
 
 			private function _shamanColorButtonClicked(/*pType:String, pColor:int*/) : void {
 				/*this.configCurrentlyColoringType = pType;*/
-				_paneManager.getPane(CONFIG_COLOR_PANE_ID).setupSwatches( [ costumes.shamanColor ] );
+				_paneManager.getPane(CONFIG_COLOR_PANE_ID).setupSwatches( [ GameAssets.shamanColor ] );
 				_paneManager.openPane(CONFIG_COLOR_PANE_ID);
 			}
 		//}END Color Tab

@@ -1,3 +1,9 @@
+== V1.10 - 15 December 2017 ==
+- Increased color swatches to 10 so there are enough for all items.
+- Item resource swfs now loaded based on config.json
+- Renamed "Costumes" to "GameAssets" and changed it from a singleton to a static class.
+
+
 == V1.9 - 30 July 2017 ==
 - Download image button changed to floppy disk
 

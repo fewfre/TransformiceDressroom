@@ -51,7 +51,7 @@ package app.world.elements
 			var tChild:DisplayObject = null;
 			var tSlotName:String;
 			
-			pData.shamanMode = pData.shamanMode != null ? pData.shamanMode : Costumes.instance.shamanMode;
+			pData.shamanMode = pData.shamanMode != null ? pData.shamanMode : GameAssets.shamanMode;
 			
 			// This works because poses, skins, and items have a group of letters/numbers that let each other know they should be grouped together.
 			// For example; the "head" of a pose is T, as is the skin's head, hats, and hair. Thus they all go onto same area of the skin.
@@ -102,15 +102,15 @@ package app.world.elements
 			if(!part) { return; }
 			if(part is MovieClip) {
 				if(pData.colors != null && !pData.isSkin()) {
-					Costumes.instance.colorItem({ obj:part, colors:pData.colors });
+					GameAssets.colorItem({ obj:part, colors:pData.colors });
 				}
-				else { Costumes.instance.colorDefault(part); }
+				else { GameAssets.colorDefault(part); }
 				
 				if(pData.isSkin() && isFurPartColorable(pSlotName)) {
 					colorFur(part, pData.colors ? pData.colors[0] : -1);
 				}
-				//Costumes.instance.colorItem({ obj:part, color: tSkinColor, name:"$0" });
-				//Costumes.instance.colorItem({ obj:part, color: tSecondaryColor, name:"$2" });
+				//GameAssets.colorItem({ obj:part, color: tSkinColor, name:"$0" });
+				//GameAssets.colorItem({ obj:part, color: tSecondaryColor, name:"$2" });
 			}
 		}
 		
@@ -136,15 +136,15 @@ package app.world.elements
 				while (i < pSkinPart.numChildren) {
 					tChild = pSkinPart.getChildAt(i);
 					if (tChild.name == "c0") {
-						Costumes.instance.applyColorToObject(tChild, pColor);
+						GameAssets.applyColorToObject(tChild, pColor);
 					}
 					else if (tChild.name == "c1") {
-						Costumes.instance.applyColorToObject(tChild, Costumes.instance.shamanColor);
+						GameAssets.applyColorToObject(tChild, GameAssets.shamanColor);
 					}
 					i++;
 				}
 			} else {
-				Costumes.instance.applyColorToObject(pSkinPart, pColor);
+				GameAssets.applyColorToObject(pSkinPart, pColor);
 			}
 			return pSkinPart;
 		}

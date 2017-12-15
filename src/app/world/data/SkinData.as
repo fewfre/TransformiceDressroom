@@ -54,7 +54,7 @@ package app.world.data
 		
 		// pOptions = { shamanMode:int(SHAMAN_MODE) }
 		public override function getPart(pID:String, pOptions:Object=null) : Class {
-			var shamanMode = Costumes.instance.shamanMode;
+			var shamanMode = GameAssets.shamanMode;
 			if(pOptions != null) {
 				if(pOptions.shamanMode) { shamanMode = pOptions.shamanMode; }
 			}

@@ -26,7 +26,7 @@ package app.world.data
 			_initDefaultColors();
 		}
 		protected function _initDefaultColors() : void {
-			defaultColors = Costumes.instance.getColors(Costumes.instance.colorDefault(new itemClass()));
+			defaultColors = GameAssets.getColors(GameAssets.colorDefault(new itemClass()));
 			setColorsToDefault();
 		}
 		public function setColorsToDefault() : void {
