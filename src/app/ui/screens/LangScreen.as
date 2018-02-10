@@ -1,4 +1,4 @@
-package app.ui.lang
+package app.ui.screens
 {
 	import app.data.*;
 	import app.ui.*;

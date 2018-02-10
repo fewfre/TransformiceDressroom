@@ -8,8 +8,8 @@ package app.world
 	import com.fewfre.utils.*;
 
 	import app.ui.*;
-	import app.ui.lang.*;
 	import app.ui.panes.*;
+	import app.ui.screens.*;
 	import app.ui.buttons.*;
 	import app.data.*;
 	import app.world.data.*;
@@ -34,6 +34,7 @@ package app.world
 		internal var shopTabs		: ShopTabContainer;
 		internal var _toolbox		: Toolbox;
 		internal var linkTray		: LinkTray;
+		internal var trashConfirmScreen	: TrashConfirmScreen;
 		internal var _langScreen	: LangScreen;
 
 		internal var button_hand	: PushButton;
@@ -106,7 +107,7 @@ package app.world
 			_toolbox = addChild(new Toolbox({
 				x:188, y:28, character:character,
 				onSave:_onSaveClicked, onAnimate:_onPlayerAnimationToggle, onRandomize:_onRandomizeDesignClicked,
-				onShare:_onShareButtonClicked, onScale:_onScaleSliderChange
+				onTrash:_onTrashButtonClicked, onShare:_onShareButtonClicked, onScale:_onScaleSliderChange
 			}));
 			
 			var tLangButton = addChild(new LangButton({ x:22, y:pStage.stageHeight-17, width:30, height:25, origin:0.5 }));
@@ -119,6 +120,10 @@ package app.world
 			*****************************/
 			linkTray = new LinkTray({ x:pStage.stageWidth * 0.5, y:pStage.stageHeight * 0.5 });
 			linkTray.addEventListener(LinkTray.CLOSE, _onShareTrayClosed);
+			
+			trashConfirmScreen = new TrashConfirmScreen({ x:337, y:65 });
+			trashConfirmScreen.addEventListener(TrashConfirmScreen.CONFIRM, _onTrashConfirmScreenConfirm);
+			trashConfirmScreen.addEventListener(TrashConfirmScreen.CLOSE, _onTrashConfirmScreenClosed);
 			
 			_langScreen = new LangScreen({  });
 			_langScreen.addEventListener(LangScreen.CLOSE, _onLangScreenClosed);
@@ -294,7 +299,7 @@ package app.world
 
 		private function _removeItem(pType:String) : void {
 			var tTabPane = getTabByType(pType);
-			if(tTabPane.infoBar.hasData == false) { return; }
+			if(!tTabPane || tTabPane.infoBar.hasData == false) { return; }
 
 			// If item has a default value, toggle it on. otherwise remove item.
 			if(pType == ITEM.SKIN || pType == ITEM.POSE) {
@@ -312,20 +317,24 @@ package app.world
 		}
 
 		private function _onRandomizeDesignClicked(pEvent:Event) : void {
-			for(var i:int = 0; i < ITEM.LAYERING.length; i++) {
-				if(ITEM.LAYERING[i] == ITEM.PAW || ITEM.LAYERING[i] == ITEM.BACK || ITEM.LAYERING[i] == ITEM.PAW_BACK || ITEM.LAYERING[i] == ITEM.SKIN_COLOR) continue;
-				_randomItemOfType(ITEM.LAYERING[i]);
+			for each(var tItem in ITEM.LAYERING) {
+				if(tItem == ITEM.PAW || tItem == ITEM.BACK || tItem == ITEM.PAW_BACK || tItem == ITEM.SKIN_COLOR) continue;
+				_randomItemOfType(tItem, Math.random() <= 0.65);
 			}
-			_randomItemOfType(ITEM.POSE);
+			_randomItemOfType(ITEM.POSE, Math.random() <= 0.5);
 		}
 
-		private function _randomItemOfType(pType:String) : void {
+		private function _randomItemOfType(pType:String, pSetToDefault:Boolean=false) : void {
 			if(getInfoBarByType(pType).isRefreshLocked) { return; }
-			var tButtons = getButtonArrayByType(pType);
-			var tLength = tButtons.length;
-			tButtons[ Math.floor(Math.random() * tLength) ].toggleOn();
+			if(!pSetToDefault) {
+				var tButtons = getButtonArrayByType(pType);
+				var tLength = tButtons.length;
+				tButtons[ Math.floor(Math.random() * tLength) ].toggleOn();
+			} else {
+				_removeItem(pType);
+			}
 		}
-
+		
 		private function _onShareButtonClicked(pEvent:Event) : void {
 			var tURL = "";
 			try {
@@ -341,6 +350,20 @@ package app.world
 
 		private function _onShareTrayClosed(pEvent:Event) : void {
 			removeChild(linkTray);
+		}
+
+		private function _onTrashButtonClicked(pEvent:Event) : void {
+			addChild(trashConfirmScreen);
+		}
+
+		private function _onTrashConfirmScreenConfirm(pEvent:Event) : void {
+			removeChild(trashConfirmScreen);
+			for each(var tItem in ITEM.LAYERING) { _removeItem(tItem); }
+			_removeItem(ITEM.POSE);
+		}
+
+		private function _onTrashConfirmScreenClosed(pEvent:Event) : void {
+			removeChild(trashConfirmScreen);
 		}
 
 		private function _onLangButtonClicked(pEvent:Event) : void {

@@ -7,9 +7,8 @@ package com.fewfre.utils
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
 	import flash.events.ProgressEvent;
-	import flash.net.URLLoader;
-	import flash.net.URLRequest;
-	import flash.net.URLRequestHeader;
+	import flash.external.ExternalInterface;
+	import flash.net.*;
 	import flash.system.ApplicationDomain;
 	import flash.system.LoaderContext;
 	import flash.utils.Dictionary;
@@ -25,6 +24,7 @@ package com.fewfre.utils
 		internal var _urlsToLoad:Array;
 		internal var _applicationDomains:Array;
 		internal var _loadedData:Dictionary;
+		internal var _cacheBreaker:String;
 		
 		// Properties
 		public function get itemsLeftToLoad():int { return _urlsToLoad.length; }
@@ -33,13 +33,15 @@ package com.fewfre.utils
 			super();
 			_applicationDomains = [];
 			_loadedData = new Dictionary();
+			_cacheBreaker = null;
 		}
 		
 		/****************************
 		* Loading
 		*****************************/
-			public function load(pURLs:Array) : void {
+			public function load(pURLs:Array, pCacheBreaker:String=null) : void {
 				_urlsToLoad = pURLs;
+				_cacheBreaker = pCacheBreaker;
 				_loadNextItem();
 			}
 			
@@ -54,6 +56,9 @@ package com.fewfre.utils
 			
 			private function _newLoader(pUrl:String, pOptions:Object=null) : void {
 				var tUrlParts = pUrl.split("/").pop().split("."), tName = tUrlParts[0], tType = tUrlParts[1];
+				if(_cacheBreaker && ExternalInterface.call("eval", "window.location.href")) {
+					pUrl += "?cb="+_cacheBreaker;
+				}
 				switch(tType) {
 					case "swf":
 					case "swc":

@@ -1,9 +1,10 @@
-package app.ui
+package app.ui.screens
 {
 	import com.fewfre.display.*;
 	import com.fewfre.utils.*;
 	import com.fewfre.events.FewfEvent;
 	import app.data.*;
+	import app.ui.*;
 	import flash.display.*;
 	import flash.events.*
 	import flash.text.*;

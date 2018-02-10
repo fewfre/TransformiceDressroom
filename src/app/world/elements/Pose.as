@@ -49,19 +49,23 @@ package app.world.elements
 			var tShopData:Array = _orderType(pData.items);
 			var part:DisplayObject = null;
 			var tChild:DisplayObject = null;
+			var tItemsOnChild:int = 0;
 			var tSlotName:String;
 			
 			pData.shamanMode = pData.shamanMode != null ? pData.shamanMode : GameAssets.shamanMode;
 			
 			// This works because poses, skins, and items have a group of letters/numbers that let each other know they should be grouped together.
 			// For example; the "head" of a pose is T, as is the skin's head, hats, and hair. Thus they all go onto same area of the skin.
-			for(var i:int = 0; i < _pose.numChildren; i++) {
+			// Loop in reverse so unused parts can be removed if required
+			for(var i:int = _pose.numChildren-1; i >= 0; i--) {
 				tChild = _pose.getChildAt(i);
+				tItemsOnChild = 0;
 				tSlotName = tChild.name;
 				for(var j:int = 0; j < tShopData.length; j++) {
 					if(tTailData != null && tShopData[j].isSkin() && tSlotName.indexOf("Boule_") > -1) { continue; }
 					part = _addToPoseIfCan(tChild, tShopData[j], tSlotName, pData);
 					_colorPart(part, tShopData[j], tSlotName);
+					if(part) { tItemsOnChild++; }
 				}
 				// A complete hack to get shaman wings. Can't figure out the "proper" way to do it.
 				if(tSlotName.indexOf("CuisseD_") > -1 && tSkinData != null && pData.shamanMode == SHAMAN_MODE.DIVINE
@@ -71,21 +75,13 @@ package app.world.elements
 					_colorPart(part, tSkinData, "shamanwings");
 					part.x += 15; part.y -= 10; part.rotation-=9;
 				}
+				if(pData.removeBlanks && tItemsOnChild == 0) {
+					_pose.removeChildAt(i);
+				}
 				part = null;
-			}
-			if(pData.removeBlanks) {
-				_removeUnusedParts();
 			}
 			
 			return this;
-		}
-		
-		private function _removeUnusedParts() {
-			i = _pose.numChildren;
-			while(i > 0) { i--;
-				tChild = _pose.getChildAt(i);
-				if(!tChild.enabled) { _pose.removeChildAt(i); }// else { var ttt = new $ColorWheel(); ttt.scaleX = ttt.scaleY = 0.1; tChild.addChild(ttt); }
-			}
 		}
 		
 		private function _addToPoseIfCan(pSkinPart:DisplayObject, pData:ItemData, pID:String, pOptions:Object=null) : DisplayObject {

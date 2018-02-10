@@ -1,7 +1,7 @@
 package app
 {
 	import app.data.*;
-	import app.ui.LoaderDisplay;
+	import app.ui.screens.LoaderDisplay;
 	import app.world.World;
 	
 	import com.fewfre.utils.*;
@@ -37,7 +37,7 @@ package app
 		private function _startPreload() : void {
 			Fewf.assets.load([
 				"resources/config.json",
-			]);
+			], new Date().getTime() );
 			Fewf.assets.addEventListener(AssetManager.LOADING_FINISHED, _onPreloadComplete);
 		}
 		
@@ -52,7 +52,7 @@ package app
 		private function _startInitialLoad() : void {
 			Fewf.assets.load([
 				"resources/i18n/"+_defaultLang+".json",
-			]);
+			], Fewf.assets.getData("config").cachebreaker);
 			Fewf.assets.addEventListener(AssetManager.LOADING_FINISHED, _onInitialLoadComplete);
 		}
 		
@@ -73,7 +73,7 @@ package app
 			var tPack = _config.packs.items.concat(_config.packs.parts);
 			for(var i:int = 0; i < tPack.length; i++) { tPacks.push("resources/"+tPack[i]); }
 			
-			Fewf.assets.load(tPacks);
+			Fewf.assets.load(tPacks, Fewf.assets.getData("config").cachebreaker);
 			Fewf.assets.addEventListener(AssetManager.LOADING_FINISHED, _onLoadComplete);
 		}
 		

@@ -1,4 +1,4 @@
-package app.ui
+package app.ui.screens
 {
 	import com.fewfre.display.*;
 	import com.adobe.images.*;

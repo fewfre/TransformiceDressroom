@@ -1,4 +1,4 @@
-package app.ui.lang
+package app.ui
 {
 	import com.fewfre.display.*;
 	import com.fewfre.events.*;

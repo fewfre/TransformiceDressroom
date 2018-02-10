@@ -17,7 +17,7 @@ package app.ui.panes
 		public static const EVENT_COLOR_PICKED		: String = "event_color_picked";
 		public static const EVENT_EXIT				: String = "event_exit";
 		
-		public static const _MAX_SWATCHES			: int = 11;
+		public static const _MAX_SWATCHES			: int = 10;
 		
 		// Storage
 		private var _colorSwatches	: Array;

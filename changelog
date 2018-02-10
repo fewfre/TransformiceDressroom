@@ -1,3 +1,10 @@
+== V1.11 - 10 February 2018 ==
+- Added a "trash" button to reset look back to default
+- Randomized look button now has a chance to not use an item for each category (fairly high: 35%; pose: 50%)
+- Increased max zoom size: https://github.com/fewfre/TransformiceDressroom/issues/5
+- Added some cache breaking
+
+
 == V1.10 - 15 December 2017 ==
 - Increased color swatches to 10 so there are enough for all items.
 - Item resource swfs now loaded based on config.json

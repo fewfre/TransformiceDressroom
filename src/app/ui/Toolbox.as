@@ -18,7 +18,7 @@ package app.ui
 		public var imgurButton		: SpriteButton;
 		
 		// Constructor
-		// pData = { x:Number, y:Number, character:Character, onSave:Function, onAnimate:Function, onRandomize:Function, onShare:Function, onScale:Function }
+		// pData = { x:Number, y:Number, character:Character, onSave:Function, onAnimate:Function, onRandomize:Function, onTrash:Function, onShare:Function, onScale:Function }
 		public function Toolbox(pData:Object) {
 			this.x = pData.x;
 			this.y = pData.y;
@@ -65,6 +65,10 @@ package app.ui
 			// ### Right Side Buttons ###
 			tX = tTrayWidth*0.5-(tButtonSize*0.5 + tButtonSizeSpace);
 
+			btn = tTray.addChild(new SpriteButton({ x:tX-tButtonXInc*tButtonOnRight, y:tY, width:tButtonSize, height:tButtonSize, obj_scale:0.42, obj:new $Trash(), origin:0.5 }));
+			btn.addEventListener(ButtonBase.CLICK, pData.onTrash);
+			tButtonOnRight++;
+
 			btn = tTray.addChild(new SpriteButton({ x:tX-tButtonXInc*tButtonOnRight, y:tY, width:tButtonSize, height:tButtonSize, obj_scale:0.5, obj:new $Refresh(), origin:0.5 }));
 			btn.addEventListener(ButtonBase.CLICK, pData.onRandomize);
 			tButtonOnRight++;
@@ -81,7 +85,7 @@ package app.ui
 			var tSliderWidth = tTrayWidth - tButtonXInc*(tTotalButtons) - 20;
 			scaleSlider = tTray.addChild(new FancySlider({
 				x:-tSliderWidth*0.5+(tButtonXInc*((tButtonsOnLeft-tButtonOnRight)*0.5))-1, y:tY,
-				value: pData.character.outfit.scaleX*10, min:10, max:40, width:tSliderWidth
+				value: pData.character.outfit.scaleX*10, min:10, max:80, width:tSliderWidth
 			}));
 			scaleSlider.addEventListener(FancySlider.CHANGE, pData.onScale);
 			
