@@ -1,19 +1,11 @@
 package app.ui.screens
 {
 	import com.fewfre.display.*;
-	import com.adobe.images.*;
 	import app.data.*;
 	import app.ui.*;
 	import app.ui.buttons.*;
-	import app.world.data.*;
 	import flash.display.*;
 	import flash.events.*;
-	import flash.geom.*;
-	import flash.net.*;
-	import flash.text.*;
-	import flash.system.System;
-	import fl.transitions.Tween;
-	import fl.transitions.easing.*;
 	
 	public class TrashConfirmScreen extends MovieClip
 	{
@@ -23,9 +15,6 @@ package app.ui.screens
 		
 		// Storage
 		private var _bg				: RoundedRectangle;
-		public var _text			: TextField;
-		public var _textCopiedMessage: TextBase;
-		public var _textCopyTween	: Tween;
 		
 		// Constructor
 		// pData = { x:Number, y:Number }

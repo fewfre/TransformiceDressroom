@@ -3,7 +3,7 @@
 	"defaultScale": 1,
 	"strings": {
 		"loading_progress":		{ "text":"{0}" },
-		"infobar_id":			{ "text":"هوية: {0}" },
+		"infobar_id":			{ "text":"ID: {0}" },
 		
 		"loading":				{ "text":"العناصر المتبقية للتحميل: {0}" },
 		"loading_finished":		{ "text":"اكتمل التحميل. جار التهيئة..." },

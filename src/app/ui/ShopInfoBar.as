@@ -121,7 +121,12 @@ package app.ui
 		}
 		
 		private function _updateID() : void {
-			this.Text.setValues(data.id);
+			var tText = data.id;
+			if(data.type == ITEM.POSE) {
+				tText = Fewf.i18n.getText(("pose_"+data.id).toLowerCase());
+				if(tText == null) { tText = data.id; }
+			}
+			this.Text.setValues(tText);
 		}
 		
 		public function addInfo(pData:ItemData, pMC:MovieClip) : void {

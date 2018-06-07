@@ -1,3 +1,8 @@
+== V1.12 - 6 June 2018 ==
+- Async loading added, that preserves load order.
+- Ability to translate pose names as per a request (added prior to this version, but never comitted)
+
+
 == V1.11 - 10 February 2018 ==
 - Added a "trash" button to reset look back to default
 - Randomized look button now has a chance to not use an item for each category (fairly high: 35%; pose: 50%)
