@@ -45,9 +45,10 @@ package app.world.elements
 			_itemDataMap[ITEM.NECK] = pData.neck;
 			_itemDataMap[ITEM.TAIL] = pData.tail;
 			_itemDataMap[ITEM.CONTACTS] = pData.contacts;
+			_itemDataMap[ITEM.HAND] = pData.hand;
 			_itemDataMap[ITEM.POSE] = pData.pose;
 
-			_itemDataMap[ITEM.PAW] = pData.paw;
+			_itemDataMap[ITEM.OBJECT] = pData.object;
 			_itemDataMap[ITEM.BACK] = pData.back;
 			_itemDataMap[ITEM.PAW_BACK] = pData.pawback;
 			
@@ -59,7 +60,7 @@ package app.world.elements
 		public function updatePose() {
 			var tScale = 3;
 			if(outfit != null) { tScale = outfit.scaleX; removeChild(outfit); }
-			outfit = addChild(new Pose(getItemData(ITEM.POSE)));
+			outfit = addChild(new Pose(getItemData(ITEM.POSE))) as Pose;
 			outfit.scaleX = outfit.scaleY = tScale;
 
 			outfit.apply({
@@ -73,8 +74,9 @@ package app.world.elements
 					getItemData(ITEM.NECK),
 					getItemData(ITEM.TAIL),
 					getItemData(ITEM.CONTACTS),
+					getItemData(ITEM.HAND),
 
-					getItemData(ITEM.PAW),
+					getItemData(ITEM.OBJECT),
 					getItemData(ITEM.BACK),
 					getItemData(ITEM.PAW_BACK)
 				]
@@ -94,11 +96,12 @@ package app.world.elements
 			_setParamToType(pParams, ITEM.NECK, "n");
 			_setParamToType(pParams, ITEM.TAIL, "t");
 			_setParamToType(pParams, ITEM.CONTACTS, "c");
+			_setParamToType(pParams, ITEM.HAND, "hd");
 			_setParamToType(pParams, ITEM.POSE, "p", false);
 			
-			if(pParams.paw == "y") { _itemDataMap[ITEM.PAW] = GameAssets.hand; }
-			if(pParams.back == "y") { _itemDataMap[ITEM.BACK] = GameAssets.fromage; }
-			if(pParams.pawb == "y") { _itemDataMap[ITEM.PAW_BACK] = GameAssets.backHand; }
+			if(pParams.paw == "y") { _itemDataMap[ITEM.OBJECT] = GameAssets.extraObjectWand; }
+			if(pParams.back == "y") { _itemDataMap[ITEM.BACK] = GameAssets.extraFromage; }
+			if(pParams.pawb == "y") { _itemDataMap[ITEM.PAW_BACK] = GameAssets.extraBackHand; }
 			
 			if(pParams["sh"] && pParams["sh"] != "") {
 				var tColor = pParams["sh"].split(",");
@@ -143,9 +146,10 @@ package app.world.elements
 			_addParamToVariables(tParms, "n", ITEM.NECK);
 			_addParamToVariables(tParms, "t", ITEM.TAIL);
 			_addParamToVariables(tParms, "c", ITEM.CONTACTS);
+			_addParamToVariables(tParms, "hd", ITEM.HAND);
 			_addParamToVariables(tParms, "p", ITEM.POSE);
 			
-			if(getItemData(ITEM.PAW)) { tParms.paw = "y"; }
+			if(getItemData(ITEM.OBJECT)) { tParms.paw = "y"; }
 			if(getItemData(ITEM.BACK)) { tParms.back = "y"; }
 			if(getItemData(ITEM.PAW_BACK)) { tParms.pawb = "y"; }
 			
@@ -184,7 +188,7 @@ package app.world.elements
 			return _itemDataMap[pType].colors;
 		}
 
-		public function colorItem(pType:String, arg2:int, pColor:String) : Array {
+		public function colorItem(pType:String, arg2:int, pColor:String) : void {
 			_itemDataMap[pType].colors[arg2] = GameAssets.convertColorToNumber(pColor);
 			updatePose();
 		}

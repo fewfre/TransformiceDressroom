@@ -14,19 +14,20 @@
 		"version":				{ "text":"Versión: {0}" },
 		"translated_by":		{ "text":"Traducido por: Chamelinct" },
 		
-		"btn_normal_mode":				{ "text":"Normal" },
-		"btn_hard_mode":				{ "text":"Difícil" },
-		"btn_divine_mode":				{ "text":"Divino" },
+		"btn_normal_mode":		{ "text":"Normal" },
+		"btn_hard_mode":		{ "text":"Difícil" },
+		"btn_divine_mode":		{ "text":"Divino" },
 		"tab_head":				{ "text":"Cabeza" },
 		"tab_hair":				{ "text":"Pelo" },
 		"tab_ears":				{ "text":"Orejas" },
 		"tab_eyes":				{ "text":"Ojos" },
-		"tab_mouth":				{ "text":"Boca" },
+		"tab_mouth":			{ "text":"Boca" },
 		"tab_neck":				{ "text":"Cuello" },
 		"tab_tail":				{ "text":"Cola" },
-		"tab_contacts":				{ "text":"Lentillas" },
+		"tab_contacts":			{ "text":"Lentillas" },
+		"tab_hand":				{ "text":"Manos" },
 		"tab_furs":				{ "text":"Pieles" },
-		"tab_poses":				{ "text":"Pose" },
-		"tab_other":				{ "text":"Otro" }
+		"tab_poses":			{ "text":"Pose" },
+		"tab_other":			{ "text":"Otro" }
 	}
 }

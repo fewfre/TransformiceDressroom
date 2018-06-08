@@ -8,6 +8,7 @@ package app.ui.screens
 	import flash.display.*;
 	import flash.events.*
 	import flash.text.*;
+	import flash.display.MovieClip;
 	
 	public class LoaderDisplay extends RoundedRectangle
 	{
@@ -28,18 +29,18 @@ package app.ui.screens
 			Fewf.assets.addEventListener(ProgressEvent.PROGRESS, _onLoadProgress);
 			Fewf.assets.addEventListener(AssetManager.PACK_LOADED, _onPackLoaded);
 			
-			_loadingSpinner = addChild( new $Loader() );
+			_loadingSpinner = addChild( new $Loader() ) as MovieClip;
 			_loadingSpinner.y -= 45;
 			_loadingSpinner.scaleX = 2;
 			_loadingSpinner.scaleY = 2;
 			
-			_leftToLoadText = addChild(new TextBase({ text:"loading", values:"", size:18, x:0, y:10 }));
-			_loadProgressText = addChild(new TextBase({ text:"loading_progress", values:"", size:18, x:0, y:35 }));
+			_leftToLoadText = addChild(new TextBase({ text:"loading", values:"", size:18, x:0, y:10 })) as TextBase;
+			_loadProgressText = addChild(new TextBase({ text:"loading_progress", values:"", size:18, x:0, y:35 })) as TextBase;
 			
 			addEventListener(Event.ENTER_FRAME, update);
 		}
 		
-		public function destroy() {
+		public function destroy():void {
 			Fewf.assets.removeEventListener(ProgressEvent.PROGRESS, _onLoadProgress);
 			removeEventListener(Event.ENTER_FRAME, update);
 			
@@ -48,13 +49,13 @@ package app.ui.screens
 		
 		public function update(pEvent:Event):void
 		{
-			dt = 0.1;
+			var dt:Number = 0.1;
 			if(_loadingSpinner != null) {
 				_loadingSpinner.rotation += 360 * dt;
 			}
 		}
 		
-		function _onPackLoaded(e:FewfEvent) : void {
+		private function _onPackLoaded(e:FewfEvent) : void {
 			_leftToLoadText.setText("loading", e.data.itemsLeftToLoad);
 			if(e.data.itemsLeftToLoad <= 0) {
 				_leftToLoadText.text = "loading_finished";
@@ -62,7 +63,7 @@ package app.ui.screens
 			}
 		}
 		
-		function _onLoadProgress(e:ProgressEvent) : void {
+		private function _onLoadProgress(e:ProgressEvent) : void {
 			//_loadingSpinner.rotation += 10;
 			//trace("Loading: "+String(Math.floor(e.bytesLoaded/1024))+" KB of "+String(Math.floor(e.bytesTotal/1024))+" KB.");
 			_loadProgressText.setValues(String(Math.floor(e.bytesLoaded/1024))+" KB / "+String(Math.floor(e.bytesTotal/1024))+" KB");

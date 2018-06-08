@@ -47,7 +47,7 @@ package app.ui.screens
 			* Background
 			*****************************/
 			var tWidth:Number = 500, tHeight:Number = 200;
-			_bg = addChild(new RoundedRectangle({ x:0, y:0, width:tWidth, height:tHeight, origin:0.5 }));
+			_bg = addChild(new RoundedRectangle({ x:0, y:0, width:tWidth, height:tHeight, origin:0.5 })) as RoundedRectangle;
 			_bg.drawSimpleGradient(ConstantsApp.COLOR_TRAY_GRADIENT, 15, ConstantsApp.COLOR_TRAY_B_1, ConstantsApp.COLOR_TRAY_B_2, ConstantsApp.COLOR_TRAY_B_3);
 			
 			/****************************
@@ -60,10 +60,10 @@ package app.ui.screens
 			*****************************/
 			var tTFWidth:Number = tWidth-50, tTFHeight:Number = 18, tTFPaddingX:Number = 5, tTFPaddingY:Number = 5;
 			// So much easier than doing it with those darn native text field options which have no padding.
-			var tTextBackground:RoundedRectangle = addChild(new RoundedRectangle({ x:0, y:0, width:tTFWidth+tTFPaddingX*2, height:tTFHeight+tTFPaddingY*2, origin:0.5 }));
+			var tTextBackground:RoundedRectangle = addChild(new RoundedRectangle({ x:0, y:0, width:tTFWidth+tTFPaddingX*2, height:tTFHeight+tTFPaddingY*2, origin:0.5 })) as RoundedRectangle;
 			tTextBackground.draw(0xFFFFFF, 7, 0x444444, 0x444444, 0x444444);
 			
-			_text = tTextBackground.addChild(new TextField());
+			_text = tTextBackground.addChild(new TextField()) as TextField;
 			_text.type = TextFieldType.DYNAMIC;
 			_text.multiline = false;
 			_text.width = tTFWidth;
@@ -75,15 +75,15 @@ package app.ui.screens
 			/****************************
 			* Copy Button and message
 			*****************************/
-			var tCopyButton:SpriteButton = addChild(new SpriteButton({ x:tWidth*0.5-75+25, y:52, text:"share_copy", width:50, height:25, origin:0.5 }));
+			var tCopyButton:SpriteButton = addChild(new SpriteButton({ x:tWidth*0.5-75+25, y:52, text:"share_copy", width:50, height:25, origin:0.5 })) as SpriteButton;
 			tCopyButton.addEventListener(ButtonBase.CLICK, function(){ _copyToClipboard(); });
 			
-			_textCopiedMessage = addChild(new TextBase({ text:"share_link_copied", size:17, originX:1, x:tCopyButton.x - 40, y:tCopyButton.y, alpha:0 }));
+			_textCopiedMessage = addChild(new TextBase({ text:"share_link_copied", size:17, originX:1, x:tCopyButton.x - 40, y:tCopyButton.y, alpha:0 })) as TextBase;
 			
 			/****************************
 			* Close Button
 			*****************************/
-			var tCloseButton:ScaleButton = addChild(new ScaleButton({ x:tWidth*0.5 - 5, y:-tHeight*0.5 + 5, obj:new MovieClip() }));
+			var tCloseButton:ScaleButton = addChild(new ScaleButton({ x:tWidth*0.5 - 5, y:-tHeight*0.5 + 5, obj:new MovieClip() })) as ScaleButton;
 			tCloseButton.addEventListener(ButtonBase.CLICK, _onCloseClicked);
 			
 			var tSize:Number = 10;

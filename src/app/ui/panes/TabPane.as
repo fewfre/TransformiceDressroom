@@ -3,7 +3,7 @@ package app.ui.panes
 	import app.data.*;
 	import app.ui.*;
 	import app.ui.buttons.*;
-	import fl.containers.*;
+	import fl.containers.ScrollPane;
 	import flash.display.*;
 
 	public class TabPane extends MovieClip
@@ -18,12 +18,12 @@ package app.ui.panes
 		public var populateFunction : Function;
 
 		protected var _scrollPane : ScrollPane;
-		var content:MovieClip;
-		var contentBack:MovieClip;//For scrollwheel to work, it has to hit a child element of the ScrollPane source.
+		private var content:MovieClip;
+		private var contentBack:MovieClip;//For scrollwheel to work, it has to hit a child element of the ScrollPane source.
 		
 		// Properties
 		public function get flagOpen() : Boolean { return _flagOpen; }
-
+		
 		// Constructor
 		public function TabPane() {
 			super();
@@ -33,7 +33,7 @@ package app.ui.panes
 			buttons = [];
 			selectedButtonIndex = -1;
 			this.content = new MovieClip();
-			this.contentBack = addItem(new MovieClip());
+			this.contentBack = addItem(new MovieClip()) as MovieClip;
 		}
 		
 		public function open() : void {
@@ -53,15 +53,15 @@ package app.ui.panes
 		}
 
 		public function addItem(pItem:Sprite) : Sprite {
-			return this.content.addChild(pItem);
+			return this.content.addChild(pItem) as Sprite;
 		}
 
 		public function addInfoBar(pBar:ShopInfoBar) : void {
-			this.infoBar = this.addChild(pBar);
+			this.infoBar = this.addChild(pBar) as ShopInfoBar;
 		}
 
 		public function addGrid(pGrid:Grid) : Grid {
-			return this.grid = addItem(pGrid);
+			return this.grid = addItem(pGrid) as Grid;
 		}
 
 		public function UpdatePane(pItemPane:Boolean=true) : void {
@@ -77,7 +77,7 @@ package app.ui.panes
 			var tStyle:*=new MovieClip();
 			tStyle.graphics.clear();
 			if(!_scrollPane) {
-				_scrollPane = new fl.containers.ScrollPane();
+				_scrollPane = new ScrollPane();
 				_scrollPane.setStyle("upSkin", tStyle);
 				_scrollPane.setSize(ConstantsApp.PANE_WIDTH, 325);//350);
 				_scrollPane.move(0, this.infoBar==null ? 0 : 60);

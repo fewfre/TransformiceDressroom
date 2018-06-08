@@ -13,12 +13,13 @@ package app.data
 		public static const NECK				: String = "neck";
 		public static const TAIL				: String = "tail";
 		public static const CONTACTS			: String = "contacts";
+		public static const HAND				: String = "hand";
 		// Specials
-		public static const PAW					: String = "paw";
+		public static const OBJECT				: String = "object";
 		public static const BACK				: String = "back";
 		public static const PAW_BACK			: String = "back-paw";
 		
 		// Order of item layering when occupying the same spot.
-		public static const LAYERING			: Array = [ SKIN, SKIN_COLOR, NECK, HAIR, HAT, EARS, MOUTH, CONTACTS, EYES, TAIL, PAW, BACK, PAW_BACK ];
+		public static const LAYERING			: Array = [ SKIN, SKIN_COLOR, NECK, HAIR, HAT, EARS, MOUTH, CONTACTS, EYES, TAIL, HAND, OBJECT, BACK, PAW_BACK ];
 	}
 }

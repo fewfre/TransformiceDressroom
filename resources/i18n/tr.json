@@ -25,6 +25,7 @@
 		"tab_neck":				{ "text":"Boyun" },
 		"tab_tail":				{ "text":"Kuyruk" },
 		"tab_contacts":			{ "text":"Kontakt\nLensler", "scale":0.9 },
+		"tab_hand":				{ "text":"Hands" },
 		"tab_furs":				{ "text":"Kürkler" },
 		"tab_poses":			{ "text":"Duruş" },
 		"tab_other":			{ "text":"Diğer" }

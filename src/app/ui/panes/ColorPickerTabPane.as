@@ -82,7 +82,7 @@ package app.ui.panes
 			
 			if(!pData.hide_default) {
 				var defaults_btn:SpriteButton;
-				defaults_btn = this.addItem( new SpriteButton({ text:"btn_color_defaults", x:6, y:10, width:100, height:22, obj:new MovieClip() }) );
+				defaults_btn = this.addItem( new SpriteButton({ text:"btn_color_defaults", x:6, y:10, width:100, height:22, obj:new MovieClip() }) ) as SpriteButton;
 				defaults_btn.addEventListener(ButtonBase.CLICK, _onDefaultButtonClicked);
 			}
 			

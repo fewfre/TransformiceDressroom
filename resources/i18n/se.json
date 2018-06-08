@@ -25,6 +25,7 @@
 		"tab_neck":				{ "text":"Nacke" },
 		"tab_tail":				{ "text":"Svans" },
 		"tab_contacts":			{ "text":"Linser" },
+		"tab_hand":				{ "text":"Hands" },
 		"tab_furs":				{ "text":"Pälsar" },
 		"tab_poses":			{ "text":"Positioner", "scale":0.9 },
 		"tab_other":			{ "text":"Annat" }

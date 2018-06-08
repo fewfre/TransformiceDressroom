@@ -25,6 +25,7 @@
 		"tab_neck":				{ "text":"Hals" },
 		"tab_tail":				{ "text":"Schwanz" },
 		"tab_contacts":			{ "text":"Kontaktlinsen", "scale":0.7 },
+		"tab_hand":				{ "text":"Pfoten" },
 		"tab_furs":				{ "text":"Fell" },
 		"tab_poses":			{ "text":"Haltung" },
 		"tab_other":			{ "text":"Anderes" }

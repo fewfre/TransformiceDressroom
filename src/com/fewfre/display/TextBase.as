@@ -14,7 +14,7 @@ package com.fewfre.display
 		// Storage
 		protected var _text			: String;
 		protected var _i18n			: String;
-		protected var _values		: String; // Values used in i18n if {0} variables exist.
+		protected var _values		: Array; // Values used in i18n if {0} variables exist.
 		
 		protected var _field		: TextField;
 		
@@ -61,12 +61,12 @@ package com.fewfre.display
 			if(pArgs.origin != null) { _originX = _originY = pArgs.origin; }
 			if(pArgs.originX != null) { _originX = pArgs.originX; }
 			if(pArgs.originY != null) { _originY = pArgs.originY; }
-			originX = _originX;
-			originY = _originY;
+			// originX = _originX;
+			// originY = _originY;
 			
 			alpha = pArgs.alpha != null ? pArgs.alpha : 1;
 			
-			_field = addChild(new TextField());
+			_field = addChild(new TextField()) as TextField;
 			_render();
 			
 			_addEventListeners();

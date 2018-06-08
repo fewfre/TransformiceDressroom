@@ -30,7 +30,7 @@ package app.ui.buttons
 			if(pArgs.id) { id = pArgs.id; }
 			
 			if(pArgs.text) {
-				this.Text = addChild(new TextBase({ text:pArgs.text, x:pArgs.width*(0.5 - _bg.originX), y:pArgs.height*(0.5 - _bg.originY) }));
+				this.Text = addChild(new TextBase({ text:pArgs.text, x:pArgs.width*(0.5 - _bg.originX), y:pArgs.height*(0.5 - _bg.originY) })) as TextBase;
 			}
 			
 			if(pArgs.obj) {

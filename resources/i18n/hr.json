@@ -25,6 +25,7 @@
 		"tab_neck":				{ "text":"Vrat" },
 		"tab_tail":				{ "text":"Rep" },
 		"tab_contacts":			{ "text":"Kontaktne", "scale":0.9 },
+		"tab_hand":				{ "text":"Hands" },
 		"tab_furs":				{ "text":"Krzna" },
 		"tab_poses":			{ "text":"Poza" },
 		"tab_other":			{ "text":"Ostalo" }

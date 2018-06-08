@@ -25,6 +25,7 @@
 		"tab_neck":				{ "text":"العنق" },
 		"tab_tail":				{ "text":"الذيل" },
 		"tab_contacts":			{ "text":"العدسات" },
+		"tab_hand":				{ "text":"Hands" },
 		"tab_furs":				{ "text":"الفراء" },
 		"tab_poses":			{ "text":"الوضعية" },
 		"tab_other":			{ "text":"آخر" }

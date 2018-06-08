@@ -19,7 +19,7 @@ package app.world.elements
 			super();
 			_poseData = pPoseData;
 			
-			_pose = addChild( new pPoseData.itemClass() );
+			_pose = addChild( new pPoseData.itemClass() ) as MovieClip;
 			stop();
 		}
 		
@@ -47,7 +47,7 @@ package app.world.elements
 			var tTailData = FewfUtils.getFromArrayWithKeyVal(pData.items, "type", ITEM.TAIL);
 			
 			var tShopData:Array = _orderType(pData.items);
-			var part:DisplayObject = null;
+			var part:MovieClip = null;
 			var tChild:DisplayObject = null;
 			var tItemsOnChild:int = 0;
 			var tSlotName:String;
@@ -63,7 +63,7 @@ package app.world.elements
 				tSlotName = tChild.name;
 				for(var j:int = 0; j < tShopData.length; j++) {
 					if(tTailData != null && tShopData[j].isSkin() && tSlotName.indexOf("Boule_") > -1) { continue; }
-					part = _addToPoseIfCan(tChild, tShopData[j], tSlotName, pData);
+					part = _addToPoseIfCan(tChild as MovieClip, tShopData[j], tSlotName, pData) as MovieClip;
 					_colorPart(part, tShopData[j], tSlotName);
 					if(part) { tItemsOnChild++; }
 				}
@@ -71,7 +71,7 @@ package app.world.elements
 				if(tSlotName.indexOf("CuisseD_") > -1 && tSkinData != null && pData.shamanMode == SHAMAN_MODE.DIVINE
 					&& (_poseData.id == "Statique" || _poseData.id == "Course" || _poseData.id == "Duck") // Wings only show for these animations in-game
 				) {
-					part = tChild.addChild(new (Fewf.assets.getLoadedClass("$AileChamane"))());
+					part = (tChild as MovieClip).addChild(new $AileChamane()) as MovieClip;
 					_colorPart(part, tSkinData, "shamanwings");
 					part.x += 15; part.y -= 10; part.rotation-=9;
 				}
@@ -84,7 +84,7 @@ package app.world.elements
 			return this;
 		}
 		
-		private function _addToPoseIfCan(pSkinPart:DisplayObject, pData:ItemData, pID:String, pOptions:Object=null) : DisplayObject {
+		private function _addToPoseIfCan(pSkinPart:MovieClip, pData:ItemData, pID:String, pOptions:Object=null) : DisplayObject {
 			if(pData) {
 				var tClass = pData.getPart(pID, pOptions);
 				if(tClass) {
@@ -94,7 +94,7 @@ package app.world.elements
 			return null;
 		}
 		
-		private function _colorPart(part:DisplayObject, pData:ItemData, pSlotName:String) : void {
+		private function _colorPart(part:MovieClip, pData:ItemData, pSlotName:String) : void {
 			if(!part) { return; }
 			if(part is MovieClip) {
 				if(pData.colors != null && !pData.isSkin()) {
@@ -125,7 +125,7 @@ package app.world.elements
 			return pItems;
 		}
 		
-		public function colorFur(pSkinPart:DisplayObject, pColor:int):DisplayObject {
+		public function colorFur(pSkinPart:MovieClip, pColor:int):DisplayObject {
 			var i:int=0;
 			var tChild:DisplayObject;
 			if (pSkinPart.numChildren > 1) {

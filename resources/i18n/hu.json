@@ -25,6 +25,7 @@
 		"tab_neck":				{ "text":"Nyak" },
 		"tab_tail":				{ "text":"Farok" },
 		"tab_contacts":			{ "text":"Lencse" },
+		"tab_hand":				{ "text":"Kéz" },
 		"tab_furs":				{ "text":"Bunda" },
 		"tab_poses":			{ "text":"Póz" },
 		"tab_other":			{ "text":"Egyéb" }

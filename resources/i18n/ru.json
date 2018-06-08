@@ -25,6 +25,7 @@
 		"tab_neck":				{ "text":"Шея" },
 		"tab_tail":				{ "text":"Xвост" },
 		"tab_contacts":			{ "text":"Линзы" },
+		"tab_hand":				{ "text":"Лапки" },
 		"tab_furs":				{ "text":"Мех" },
 		"tab_poses":			{ "text":"Поза" },
 		"tab_other":			{ "text":"Другие" }

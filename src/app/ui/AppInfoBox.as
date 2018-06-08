@@ -21,7 +21,7 @@ package app.ui
 			
 			var btn:ButtonBase, tButtonSize = 25;
 			
-			btn = addChild(new SpriteButton({ width:tButtonSize, height:tButtonSize, obj_scale:0.35, obj:new $GitHubIcon(), origin:0.5 }));
+			btn = addChild(new SpriteButton({ width:tButtonSize, height:tButtonSize, obj_scale:0.35, obj:new $GitHubIcon(), origin:0.5 })) as SpriteButton;
 			btn.addEventListener(ButtonBase.CLICK, _onSourceClicked);
 			
 			_setupTextTray();

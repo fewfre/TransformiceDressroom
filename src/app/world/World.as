@@ -24,6 +24,9 @@ package app.world
 	import flash.geom.*;
 	import flash.net.*;
 	import flash.utils.*;
+	import app.ui.panes.ColorFinderPane;
+	import app.ui.panes.ConfigTabPane;
+	import flash.display.MovieClip;
 	
 	public class World extends MovieClip
 	{
@@ -77,14 +80,14 @@ package app.world
 				skin:GameAssets.skins[GameAssets.defaultSkinIndex],
 				pose:GameAssets.poses[GameAssets.defaultPoseIndex],
 				params:parms
-			}));
+			})) as Character;
 
 			/****************************
 			* Setup UI
 			*****************************/
-			var tShop:RoundedRectangle = addChild(new RoundedRectangle({ x:450, y:10, width:ConstantsApp.SHOP_WIDTH, height:ConstantsApp.APP_HEIGHT }));
+			var tShop:RoundedRectangle = addChild(new RoundedRectangle({ x:450, y:10, width:ConstantsApp.SHOP_WIDTH, height:ConstantsApp.APP_HEIGHT })) as RoundedRectangle;
 			tShop.drawSimpleGradient(ConstantsApp.COLOR_TRAY_GRADIENT, 15, ConstantsApp.COLOR_TRAY_B_1, ConstantsApp.COLOR_TRAY_B_2, ConstantsApp.COLOR_TRAY_B_3);
-			_paneManager = tShop.addChild(new PaneManager());
+			_paneManager = tShop.addChild(new PaneManager()) as PaneManager;
 			
 			this.shopTabs = addChild(new ShopTabContainer({ x:375, y:10, width:70, height:ConstantsApp.APP_HEIGHT,
 				tabs:[
@@ -95,12 +98,13 @@ package app.world
 					{ text:"tab_mouth", event:ITEM.MOUTH },
 					{ text:"tab_neck", event:ITEM.NECK },
 					{ text:"tab_tail", event:ITEM.TAIL },
+					{ text:"tab_hand", event:ITEM.HAND },
 					{ text:"tab_contacts", event:ITEM.CONTACTS },
 					{ text:"tab_furs", event:ITEM.SKIN },
 					{ text:"tab_poses", event:ITEM.POSE },
 					{ text:"tab_other", event:"other" }
 				]
-			}));
+			})) as ShopTabContainer;
 			this.shopTabs.addEventListener(ShopTabContainer.EVENT_SHOP_TAB_CLICKED, _onTabClicked);
 
 			// Toolbox
@@ -108,7 +112,7 @@ package app.world
 				x:188, y:28, character:character,
 				onSave:_onSaveClicked, onAnimate:_onPlayerAnimationToggle, onRandomize:_onRandomizeDesignClicked,
 				onTrash:_onTrashButtonClicked, onShare:_onShareButtonClicked, onScale:_onScaleSliderChange
-			}));
+			})) as Toolbox;
 			
 			var tLangButton = addChild(new LangButton({ x:22, y:pStage.stageHeight-17, width:30, height:25, origin:0.5 }));
 			tLangButton.addEventListener(ButtonBase.CLICK, _onLangButtonClicked);
@@ -139,7 +143,7 @@ package app.world
 			tPane.addEventListener(ColorPickerTabPane.EVENT_EXIT, _onColorPickerBackClicked);
 
 			// Create the panes
-			var tTypes = [ ITEM.HAT, ITEM.HAIR, ITEM.EARS, ITEM.EYES, ITEM.MOUTH, ITEM.NECK, ITEM.TAIL, ITEM.CONTACTS, ITEM.SKIN, ITEM.POSE ], tData:ItemData, tType:String;
+			var tTypes = [ ITEM.HAT, ITEM.HAIR, ITEM.EARS, ITEM.EYES, ITEM.MOUTH, ITEM.NECK, ITEM.TAIL, ITEM.HAND, ITEM.CONTACTS, ITEM.SKIN, ITEM.POSE ], tData:ItemData, tType:String;
 			for(var i:int = 0; i < tTypes.length; i++) { tType = tTypes[i];
 				tPane = _paneManager.addPane(tType, _setupPane(tType));
 				// Based on what the character is wearing at start, toggle on the appropriate buttons.
@@ -271,22 +275,22 @@ package app.world
 				this.character.setItemData(tData);
 
 				tInfoBar.addInfo( tData, GameAssets.getColoredItemImage(tData) );
-				tInfoBar.showColorWheel(GameAssets.getNumOfCustomColors(tButton.Image) > 0);
+				tInfoBar.showColorWheel(GameAssets.getNumOfCustomColors(tButton.Image as MovieClip) > 0);
 			} else {
 				_removeItem(tType);
 			}
 		}
 
 		public function buttonHandClickAfter(pEvent:Event):void {
-			toggleItemSelectionOneOff(ITEM.PAW, pEvent.target, GameAssets.hand);
+			toggleItemSelectionOneOff(ITEM.OBJECT, pEvent.target as PushButton, GameAssets.extraObjectWand);
 		}
 
 		public function buttonBackClickAfter(pEvent:Event):void {
-			toggleItemSelectionOneOff(ITEM.BACK, pEvent.target, GameAssets.fromage);
+			toggleItemSelectionOneOff(ITEM.BACK, pEvent.target as PushButton, GameAssets.extraFromage);
 		}
 
 		public function buttonBackHandClickAfter(pEvent:Event):void {
-			toggleItemSelectionOneOff(ITEM.PAW_BACK, pEvent.target, GameAssets.backHand);
+			toggleItemSelectionOneOff(ITEM.PAW_BACK, pEvent.target as PushButton, GameAssets.extraBackHand);
 		}
 
 		private function toggleItemSelectionOneOff(pType:String, pButton:PushButton, pItemData:ItemData) : void {
@@ -318,7 +322,7 @@ package app.world
 
 		private function _onRandomizeDesignClicked(pEvent:Event) : void {
 			for each(var tItem in ITEM.LAYERING) {
-				if(tItem == ITEM.PAW || tItem == ITEM.BACK || tItem == ITEM.PAW_BACK || tItem == ITEM.SKIN_COLOR) continue;
+				if(tItem == ITEM.OBJECT || tItem == ITEM.BACK || tItem == ITEM.PAW_BACK || tItem == ITEM.SKIN_COLOR) continue;
 				_randomItemOfType(tItem, Math.random() <= 0.65);
 			}
 			_randomItemOfType(ITEM.POSE, Math.random() <= 0.5);
@@ -401,7 +405,7 @@ package app.world
 			private function _onColorPickChanged(pEvent:flash.events.DataEvent):void
 			{
 				var tVal:uint = uint(pEvent.data);
-				this.character.getItemData(this.currentlyColoringType).colors[_paneManager.getPane(COLOR_PANE_ID).selectedSwatch] = tVal;
+				this.character.getItemData(this.currentlyColoringType).colors[(_paneManager.getPane(COLOR_PANE_ID) as ColorPickerTabPane).selectedSwatch] = tVal;
 				_refreshSelectedItemColor(this.currentlyColoringType);
 			}
 
@@ -409,7 +413,7 @@ package app.world
 			{
 				this.character.getItemData(this.currentlyColoringType).setColorsToDefault();
 				_refreshSelectedItemColor(this.currentlyColoringType);
-				_paneManager.getPane(COLOR_PANE_ID).setupSwatches( this.character.getColors(this.currentlyColoringType) );
+				(_paneManager.getPane(COLOR_PANE_ID) as ColorPickerTabPane).setupSwatches( this.character.getColors(this.currentlyColoringType) );
 			}
 			
 			private function _refreshSelectedItemColor(pType:String) : void {
@@ -453,7 +457,7 @@ package app.world
 				var tData:ItemData = getInfoBarByType(pType).data;
 				_paneManager.getPane(COLOR_PANE_ID).infoBar.addInfo( tData, GameAssets.getItemImage(tData) );
 				this.currentlyColoringType = pType;
-				_paneManager.getPane(COLOR_PANE_ID).setupSwatches( this.character.getColors(pType) );
+				(_paneManager.getPane(COLOR_PANE_ID) as ColorPickerTabPane).setupSwatches( this.character.getColors(pType) );
 				_paneManager.openPane(COLOR_PANE_ID);
 			}
 
@@ -469,7 +473,7 @@ package app.world
 				var tItem2:MovieClip = GameAssets.getColoredItemImage(tData);
 				_paneManager.getPane(COLOR_FINDER_PANE_ID).infoBar.addInfo( tData, tItem );
 				this.currentlyColoringType = pType;
-				_paneManager.getPane(COLOR_FINDER_PANE_ID).setItem(tItem2);
+				(_paneManager.getPane(COLOR_FINDER_PANE_ID) as ColorFinderPane).setItem(tItem2);
 				_paneManager.openPane(COLOR_FINDER_PANE_ID);
 			}
 
@@ -487,7 +491,7 @@ package app.world
 
 			private function _shamanColorButtonClicked(/*pType:String, pColor:int*/) : void {
 				/*this.configCurrentlyColoringType = pType;*/
-				_paneManager.getPane(CONFIG_COLOR_PANE_ID).setupSwatches( [ GameAssets.shamanColor ] );
+				(_paneManager.getPane(CONFIG_COLOR_PANE_ID) as ColorPickerTabPane).setupSwatches( [ GameAssets.shamanColor ] );
 				_paneManager.openPane(CONFIG_COLOR_PANE_ID);
 			}
 		//}END Color Tab

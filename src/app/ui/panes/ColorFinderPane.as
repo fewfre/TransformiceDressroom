@@ -33,7 +33,7 @@ package app.ui.panes
 		private const _clipRect:Rectangle = new Rectangle(0, 0, 1, 1);
 		
 		// Properties
-		public function get selectedSwatch():int { return _selectedSwatch; }
+		// public function get selectedSwatch():int { return _selectedSwatch; }
 		
 		// Constructor
 		public function ColorFinderPane(pData:Object)
@@ -43,14 +43,14 @@ package app.ui.panes
 			this.infoBar.colorWheel.addEventListener(MouseEvent.MOUSE_UP, _onBackClicked);
 			this.UpdatePane(false);
 			
-			_tray = addChild(new MovieClip());
+			_tray = addChild(new MovieClip()) as MovieClip;
 			_tray.x = ConstantsApp.PANE_WIDTH * 0.5;
 			_tray.y = 50 + (275 * 0.5);
 			
 			// https://stackoverflow.com/questions/78849/best-way-to-get-the-color-where-a-mouse-was-clicked-in-as3
 			_stageBitmap = new BitmapData(Fewf.stage.stageWidth, Fewf.stage.stageHeight);
 			
-			_itemCont = _tray.addChild(new MovieClip());
+			_itemCont = _tray.addChild(new MovieClip()) as MovieClip;
 			_itemCont.y = 10;
 			_itemCont.addEventListener(MouseEvent.CLICK, _onItemClicked);
 			_itemCont.addEventListener(MouseEvent.MOUSE_MOVE, _onItemHoveredOver);
@@ -62,10 +62,10 @@ package app.ui.panes
 			*****************************/
 			var tTFWidth:Number = 65, tTFHeight:Number = 18, tTFPaddingX:Number = 5, tTFPaddingY:Number = 5;
 			// So much easier than doing it with those darn native text field options which have no padding.
-			var tTextBackground:RoundedRectangle = _tray.addChild(new RoundedRectangle({ x:15, y:170, width:tTFWidth+tTFPaddingX*2, height:tTFHeight+tTFPaddingY*2, origin:0.5 }));
+			var tTextBackground:RoundedRectangle = _tray.addChild(new RoundedRectangle({ x:15, y:170, width:tTFWidth+tTFPaddingX*2, height:tTFHeight+tTFPaddingY*2, origin:0.5 })) as RoundedRectangle;
 			tTextBackground.draw(0xFFFFFF, 7, 0x444444, 0x444444, 0x444444);
 			
-			_text = tTextBackground.addChild(new TextField());
+			_text = tTextBackground.addChild(new TextField()) as TextField;
 			_text.type = TextFieldType.DYNAMIC;
 			_text.multiline = false;
 			_text.width = tTFWidth;
@@ -78,11 +78,11 @@ package app.ui.panes
 			_textColorBox = _tray.addChild(new RoundedRectangle({
 				x:tTextBackground.x - (tTextBackground.Width*0.5) - (tSize*0.5) - 5,
 				y:tTextBackground.y, width: tSize, height: tSize, origin:0.5
-			}));
+			})) as RoundedRectangle;
 			
 			_hoverColorBox = _tray.addChild(new RoundedRectangle({
 				/*x:ConstantsApp.PANE_WIDTH*0.5-5, y:-122,*/ width:35, height:35, originX:0, originY:1
-			}));
+			})) as RoundedRectangle;
 			_hoverColorBox.visible = false;
 			/*var tHoverTextBackground = _hoverColorBox.addChild(new RoundedRectangle({ x:-_hoverColorBox.Width*0.5, y:_hoverColorBox.Height+20,
 				width:_hoverColorBox.Width+8, height:20, originX:0.5, originY:1 }));

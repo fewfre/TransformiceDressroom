@@ -22,6 +22,7 @@ package app.data
 		public static var neck:Array;
 		public static var tail:Array;
 		public static var contacts:Array;
+		public static var hands:Array;
 
 		public static var skins:Array;
 		public static var poses:Array;
@@ -29,9 +30,9 @@ package app.data
 		public static var defaultSkinIndex:int;
 		public static var defaultPoseIndex:int;
 
-		public static var hand:ItemData;
-		public static var backHand:ItemData;
-		public static var fromage:ItemData;
+		public static var extraObjectWand:ItemData;
+		public static var extraBackHand:ItemData;
+		public static var extraFromage:ItemData;
 		
 		public static var shamanMode:int = SHAMAN_MODE.OFF;
 		public static var shamanColor:int = 0x95D9D6;
@@ -47,13 +48,14 @@ package app.data
 			hair = _setupCostumeArray({ base:"$Costume_5_", type:ITEM.HAIR, itemClassToClassMap:"Tete_1" });
 			tail = _setupCostumeArray({ base:"$Costume_6_", type:ITEM.TAIL, itemClassToClassMap:"Boule_1" });
 			contacts = _setupCostumeArray({ base:"$Costume_7_", type:ITEM.CONTACTS, itemClassToClassMap:["Oeil_1", "OeilVide_1"] });
+			hands = _setupCostumeArray({ base:"$Costume_8_", type:ITEM.HAND, itemClassToClassMap:"PatteD_1" });
 
-			hand = new ItemData({ type:ITEM.PAW, itemClass:Fewf.assets.getLoadedClass("$Costume_8_1") });
-			hand.classMap = { Arme_1:hand.itemClass };
-			backHand = new ItemData({ type:ITEM.PAW_BACK, itemClass:Fewf.assets.getLoadedClass("$Costume_9_1") });
-			backHand.classMap = { PatteG_1:backHand.itemClass };
-			fromage = new ItemData({ type:ITEM.BACK, itemClass:Fewf.assets.getLoadedClass("FromageSouris") });
-			fromage.classMap = { ClipGrosse:fromage.itemClass };
+			extraObjectWand = new ItemData({ type:ITEM.OBJECT, itemClass:Fewf.assets.getLoadedClass("$Costume_9_1") });
+			extraObjectWand.classMap = { Arme_1:extraObjectWand.itemClass };
+			extraBackHand = new ItemData({ type:ITEM.PAW_BACK, itemClass:$HandButtonShield });
+			extraBackHand.classMap = { PatteG_1:extraBackHand.itemClass };
+			extraFromage = new ItemData({ type:ITEM.BACK, itemClass:Fewf.assets.getLoadedClass("FromageSouris") });
+			extraFromage.classMap = { ClipGrosse:extraFromage.itemClass };
 
 			skins = new Array();
 			
@@ -160,6 +162,7 @@ package app.data
 				case ITEM.NECK:		return neck;
 				case ITEM.TAIL:		return tail;
 				case ITEM.CONTACTS:	return contacts;
+				case ITEM.HAND:		return hands;
 				case ITEM.SKIN_COLOR:
 				case ITEM.SKIN:		return skins;
 				case ITEM.POSE:		return poses;
@@ -176,7 +179,7 @@ package app.data
 		* Color
 		*****************************/
 		public static function copyColor(copyFromMC:MovieClip, copyToMC:MovieClip) : MovieClip {
-			if (copyFromMC == null || copyToMC == null) { return; }
+			if (copyFromMC == null || copyToMC == null) { return null; }
 			var tChild1:*=null;
 			var tChild2:*=null;
 			var i:int = 0;
@@ -192,7 +195,7 @@ package app.data
 		}
 
 		public static function colorDefault(pMC:MovieClip) : MovieClip {
-			if (pMC == null) { return; }
+			if (pMC == null) { return null; }
 
 			var tChild:*=null;
 			var tHex:int=0;
@@ -212,7 +215,7 @@ package app.data
 
 		// pData = { obj:DisplayObject, color:String OR int, ?swatch:int, ?name:String, ?colors:Array<int> }
 		public static function colorItem(pData:Object) : DisplayObject {
-			if (pData.obj == null) { return; }
+			if (pData.obj == null) { return null; }
 
 			var tHex:int = convertColorToNumber(pData.color);
 
@@ -277,7 +280,7 @@ package app.data
 		}
 		
 		public static function getColoredItemImage(pData:ItemData) : MovieClip {
-			return colorItem({ obj:getItemImage(pData), colors:pData.colors });
+			return colorItem({ obj:getItemImage(pData), colors:pData.colors }) as MovieClip;
 		}
 
 		/****************************
@@ -311,7 +314,7 @@ package app.data
 			var tPoseData = pData.pose ? pData.pose : poses[defaultPoseIndex];
 			var tSkinData = pData.skin ? pData.skin : skins[defaultSkinIndex];
 
-			tPose = new Pose(tPoseData);
+			var tPose = new Pose(tPoseData);
 			if(tSkinData.gender == GENDER.MALE) {
 				tPose.apply({ items:[
 					tSkinData

@@ -30,7 +30,7 @@ package app.ui.buttons
 			}
 			
 			if(pData.text) {
-				this.Text = addChild(new TextBase({ text:pData.text, size:11, x:this.Width * (0.5 - _bg.originX) - 2, y:this.Height * (0.5 - _bg.originY) - 2 }));
+				this.Text = addChild(new TextBase({ text:pData.text, size:11, x:this.Width * (0.5 - _bg.originX) - 2, y:this.Height * (0.5 - _bg.originY) - 2 })) as TextBase;
 			}
 		}
 

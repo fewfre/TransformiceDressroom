@@ -31,7 +31,7 @@ package app.ui
 		public function ColorSwatch()
 		{
 			super();
-			_text = addChild(new TextField());
+			_text = addChild(new TextField()) as TextField;
 			_text.defaultTextFormat = new TextFormat("Verdana", 11, 12763866);
 			_text.x = 30;
 			_text.y = 0;
@@ -45,14 +45,14 @@ package app.ui
 			_text.addEventListener(flash.events.KeyboardEvent.KEY_UP, _onTextInputKeyUp);
 			_text.addEventListener(flash.events.MouseEvent.CLICK, _onSwatchClicked);
 			
-			_swatch = addChild(new Sprite());
+			_swatch = addChild(new Sprite()) as Sprite;
 			_swatch.buttonMode = true;
 			_swatch.graphics.beginFill(0);
 			_swatch.graphics.drawRoundRect(1, 1, 18, 18, 5);
 			_swatch.graphics.endFill();
 			_swatch.addEventListener(flash.events.MouseEvent.CLICK, _onSwatchClicked);
 			
-			_border = addChild(new Sprite());
+			_border = addChild(new Sprite()) as Sprite;
 			_border.graphics.lineStyle(1.5, 0);
 			_border.graphics.drawRoundRect(0, 0, 20, 20, 5);
 		}

@@ -10,6 +10,7 @@ package app
 	import flash.events.*;
 	import flash.system.Capabilities;
 
+	[SWF(backgroundColor="0x6A7495" , width="900" , height="425")]
 	public class Main extends MovieClip
 	{
 		// Storage
@@ -29,7 +30,7 @@ package app
 
 			BrowserMouseWheelPrevention.init(stage);
 
-			_loaderDisplay = addChild( new LoaderDisplay({ x:stage.stageWidth * 0.5, y:stage.stageHeight * 0.5 }) );
+			_loaderDisplay = addChild( new LoaderDisplay({ x:stage.stageWidth * 0.5, y:stage.stageHeight * 0.5 }) ) as LoaderDisplay;
 			
 			_startPreload();
 		}
@@ -37,7 +38,7 @@ package app
 		private function _startPreload() : void {
 			_load([
 				"resources/config.json",
-			], new Date().getTime(), _onPreloadComplete);
+			], String( new Date().getTime() ), _onPreloadComplete);
 		}
 		
 		private function _onPreloadComplete() : void {
@@ -77,7 +78,7 @@ package app
 			removeChild( _loaderDisplay );
 			_loaderDisplay = null;
 			
-			_world = addChild(new World(stage));
+			_world = addChild(new World(stage)) as World;
 		}
 		
 		/***************************
@@ -88,21 +89,21 @@ package app
 			var tFunc = function(event:Event){
 				Fewf.assets.removeEventListener(AssetManager.LOADING_FINISHED, tFunc);
 				pCallback();
-				tFunc = null; pList = null; pCallback = null;
+				tFunc = null; pCallback = null;
 			};
 			Fewf.assets.addEventListener(AssetManager.LOADING_FINISHED, tFunc);
 		}
 		
 		private function _getDefaultLang(pConfigLang:String) : String {
-			var tFlagDefaultLangExists = false;
+			var tFlagDefaultLangExists:Boolean = false;
 			// http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/system/Capabilities.html#language
 			if(Capabilities.language) {
-				var tLanguages = _config.languages.list;
-				for each(tLang in tLanguages) {
-					if(Capabilities.language == tLang.code || Capabilities.language == tLang.code.split("-")[0]) {
-						return tLang.code;
+				var tLanguages:Array = _config.languages.list;
+				for(var i:Object in tLanguages) {
+					if(Capabilities.language == tLanguages[i].code || Capabilities.language == tLanguages[i].code.split("-")[0]) {
+						return tLanguages[i].code;
 					}
-					if(pConfigLang == tLang.code) {
+					if(pConfigLang == tLanguages[i].code) {
 						tFlagDefaultLangExists = true;
 					}
 				}

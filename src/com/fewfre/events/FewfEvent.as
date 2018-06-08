@@ -17,7 +17,7 @@ package com.fewfre.events
 		
 		public override function clone():Event
 		{
-			return new FewfEvent( type, this.params, bubbles, cancelable );
+			return new FewfEvent( type, this.data, bubbles, cancelable );
 		}
 		
 		public override function toString():String

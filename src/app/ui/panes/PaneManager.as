@@ -24,7 +24,7 @@ package app.ui.panes
 		
 		public function openPane(pID:String) : void {
 			closeAllPanes();
-			addChild(_panes[pID]).open();
+			(addChild(_panes[pID]) as TabPane).open();
 		}
 		
 		public function closePane(pID:String) : void {
@@ -33,7 +33,7 @@ package app.ui.panes
 		
 		protected function _closePane(pPane:TabPane) : void {
 			if(!pPane.flagOpen) { return; }
-			removeChild(pPane).close();
+			(removeChild(pPane) as TabPane).close();
 		}
 		
 		public function getPane(pID:String) : TabPane {

@@ -37,13 +37,13 @@ package app.ui.screens
 			* Background
 			*****************************/
 			var tWidth:Number = 66, tHeight:Number = 34;
-			_bg = addChild(new RoundedRectangle({ x:0, y:0, width:tWidth, height:tHeight, origin:0.5 }));
+			_bg = addChild(new RoundedRectangle({ x:0, y:0, width:tWidth, height:tHeight, origin:0.5 })) as RoundedRectangle;
 			_bg.drawSimpleGradient(ConstantsApp.COLOR_TRAY_GRADIENT, 15, ConstantsApp.COLOR_TRAY_B_1, ConstantsApp.COLOR_TRAY_B_2, ConstantsApp.COLOR_TRAY_B_3);
 			
 			/****************************
 			* Buttons
 			*****************************/
-			var tButtonSize = 28, tButtonSpacing=tButtonSize*0.5+2;
+			var btn, tButtonSize = 28, tButtonSpacing=tButtonSize*0.5+2;
 			
 			btn = this.addChild(new SpriteButton({ x:-tButtonSpacing, width:tButtonSize, height:tButtonSize, obj_scale:0.6, obj:new $Yes(), origin:0.5 }));
 			btn.addEventListener(ButtonBase.CLICK, _onConfirmClicked);
