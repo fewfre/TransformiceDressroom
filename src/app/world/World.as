@@ -302,6 +302,9 @@ package app.world
 		}
 
 		private function _removeItem(pType:String) : void {
+			if(pType == ITEM.BACK || pType == ITEM.PAW_BACK || pType == ITEM.OBJECT) {
+				this.character.removeItem(pType);
+			}
 			var tTabPane = getTabByType(pType);
 			if(!tTabPane || tTabPane.infoBar.hasData == false) { return; }
 
@@ -362,6 +365,7 @@ package app.world
 
 		private function _onTrashConfirmScreenConfirm(pEvent:Event) : void {
 			removeChild(trashConfirmScreen);
+			GameAssets.shamanMode = SHAMAN_MODE.OFF;
 			for each(var tItem in ITEM.LAYERING) { _removeItem(tItem); }
 			_removeItem(ITEM.POSE);
 		}

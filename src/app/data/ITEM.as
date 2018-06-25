@@ -13,7 +13,7 @@ package app.data
 		public static const NECK				: String = "neck";
 		public static const TAIL				: String = "tail";
 		public static const CONTACTS			: String = "contacts";
-		public static const HAND				: String = "hand";
+		public static const HAND				: String = "hands";
 		// Specials
 		public static const OBJECT				: String = "object";
 		public static const BACK				: String = "back";
