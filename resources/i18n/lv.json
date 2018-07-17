@@ -25,7 +25,7 @@
 		"tab_neck":				{ "text":"Kakls" },
 		"tab_tail":				{ "text":"Aste" },
 		"tab_contacts":			{ "text":"Kontaktlēcas", "scale":0.7 },
-		"tab_hand":				{ "text":"Hands" },
+		"tab_hand":				{ "text":"Ķepas" },
 		"tab_furs":				{ "text":"Kažoks" },
 		"tab_poses":			{ "text":"Poza" },
 		"tab_other":			{ "text":"Citi" }
