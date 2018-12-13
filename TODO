@@ -1,9 +1,11 @@
+- get look by username
+- get IMAGE (png) of look by username
+
 - specify flag-waving image?
 - [Code Rewrite Idea] Screen manager (Share, Lang, Loading)
 	- open / close using event dispatcher
 - Indicate which tabs have a selected item (show item on hover?)
 - Add cache breaking (change index into php and use last swf file change as timestamp; for resource swfs, update the config json with an update index)
-- get look by username
 - make IDs translatable
 
 -Idea (given in comments): Show item cost, as well as total - Issue: No real way to get costs without updating manually.
@@ -14,6 +16,12 @@
 	- https://forums.adobe.com/search.jspa?q=png*&facet=content&place=%2Fplaces%2F1394835
 	- https://forums.adobe.com/message/9789070#9789070
 	- https://stackoverflow.com/questions/838085/how-to-run-swf-without-a-browser-on-a-linux-server
+	
+- Allow loading of custom items (probably not, but...)
+	- Add a button somewhere ("other" tab?) to load custom outfits
+	- Each item own swf file
+	- Credit author of item
+	- show items with custom outline around button (to make it obvious custom)
 
 == Not Possible? ==
 - Force downloaded file to be png when renamed

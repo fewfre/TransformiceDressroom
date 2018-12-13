@@ -1,6 +1,6 @@
 {
 	"languages": {
-		"default": "pl",
+		"default": "en",
 		"list": [
 			{ "code":"en", "name":"English", "flags_swf_linkage":"$EN" },
 			{ "code":"fr", "name":"Français", "flags_swf_linkage":"$FR" },

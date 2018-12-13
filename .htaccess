@@ -1,3 +1,9 @@
+RewriteEngine On
+
+#Rewrite to HTTPS:
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
 #Disables cache for index - https://stackoverflow.com/q/31316240/1411473
 <Files index.html>
 FileETag None
