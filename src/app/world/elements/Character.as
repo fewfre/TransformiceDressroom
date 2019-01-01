@@ -104,7 +104,7 @@ package app.world.elements
 			if(pParams.pawb == "y") { _itemDataMap[ITEM.PAW_BACK] = GameAssets.extraBackHand; }
 			
 			if(pParams["sh"] && pParams["sh"] != "") {
-				var tColor = pParams["sh"].split(",");
+				var tColor = _splitOnUrlColorSeperator(pParams["sh"]);
 				GameAssets.shamanMode = parseInt(tColor.splice(0, 1)[0]);
 				if(tColor.length > 0) {
 					GameAssets.shamanColor = _hexToInt(tColor[0]);
@@ -115,7 +115,7 @@ package app.world.elements
 			try {
 				var tData:ItemData = null, tID = pParams[pParam], tColors;
 				if(tID != null && tID != "") {
-					tColors = tID.split(","); // Get a list of all the colors (ID is first); ex: 5,ffffff,abcdef,169742
+					tColors = _splitOnUrlColorSeperator(tID); // Get a list of all the colors (ID is first); ex: 5;ffffff;abcdef;169742
 					tID = tColors.splice(0, 1)[0]; // Remove first item and store it as the ID.
 					tData = GameAssets.getItemFromTypeID(pType, tID);
 					if(tColors.length > 0) { tData.colors = _hexArrayToIntArray(tColors, tData.defaultColors); }
@@ -132,6 +132,10 @@ package app.world.elements
 		}
 		private function _hexToInt(pVal:String) : int {
 			return parseInt(pVal, 16);
+		}
+		private function _splitOnUrlColorSeperator(pVal:String) : Array {
+			// Used to be , but changed to ; (for atelier801 forum support)
+			return pVal.indexOf(";") > -1 ? pVal.split(";") : pVal.split(",");
 		}
 
 		public function getParams() : String {
@@ -154,10 +158,10 @@ package app.world.elements
 			if(getItemData(ITEM.PAW_BACK)) { tParms.pawb = "y"; }
 			
 			if(GameAssets.shamanMode != SHAMAN_MODE.OFF) {
-				tParms["sh"] = GameAssets.shamanMode+","+_intToHex(GameAssets.shamanColor);
+				tParms["sh"] = GameAssets.shamanMode+";"+_intToHex(GameAssets.shamanColor);
 			}
 
-			return tParms.toString().replace(/%2C/g, ",");
+			return tParms.toString().replace(/%3B/g, ";");
 		}
 		private function _addParamToVariables(pParams:URLVariables, pParam:String, pType:String) {
 			var tData:ItemData = getItemData(pType);
@@ -165,7 +169,7 @@ package app.world.elements
 				pParams[pParam] = tData.id;
 				var tColors = getColors(pType);
 				if(String(tColors) != String(tData.defaultColors)) { // Quick way to compare two arrays with primitive types
-					pParams[pParam] += ","+_intArrayToHexArray(tColors).join(",");
+					pParams[pParam] += ";"+_intArrayToHexArray(tColors).join(";");
 				}
 			}
 			/*else { pParams[pParam] = ''; }*/
