@@ -1,3 +1,9 @@
+== V1.16 - 7 September 2019 ==
+- Added ability to play animation frame-by-frame for exporting (NOT included in live build, only meant for special circumstances) - must be turned on in code via ConstantsApp.ANIMATION_FRAME_BY_FRAME
+- Fixed bug with default fur paw coloring while sitting
+- Fixed bug with sit animation having foot disappear (WARNING: fixing involved editing the poses.swf for simplicity; updating that file may cause issues)
+
+
 == V1.15 - 1 January 2019 ==
 - Updating share links to use ";" instead of "," to better support atelier801 forum
 

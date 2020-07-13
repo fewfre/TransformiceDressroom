@@ -37,6 +37,7 @@ package app.world.data
 			// Back Paws
 			classMap.PiedG_1		= Fewf.assets.getLoadedClass( "_PiedG_1_"+_assetID+"_1" );
 			classMap.PiedD_1		= Fewf.assets.getLoadedClass( "_PiedD_1_"+_assetID+"_1" );
+			classMap.PiedD2_1		= Fewf.assets.getLoadedClass( "_PiedD2_1_"+_assetID+"_1" );
 			// Front Paws
 			classMap.PatteG_1		= Fewf.assets.getLoadedClass( "_PatteG_1_"+_assetID+"_1" );
 			classMap.PatteD_1		= Fewf.assets.getLoadedClass( "_PatteD_1_"+_assetID+"_1" );
@@ -62,6 +63,7 @@ package app.world.data
 				shamanMode--; // saves each piece having to decrement one recursevly.
 			}
 			var tClass = Fewf.assets.getLoadedClass( "_"+pID+"_"+_assetID+"_"+shamanMode );
+			trace("_"+pID+"_"+_assetID+"_"+shamanMode+" - "+tClass);
 			return tClass == null && shamanMode > SHAMAN_MODE.NORMAL ? getPart(pID, { shamanMode:shamanMode-1 }) : tClass;
 		}
 	}

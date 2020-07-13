@@ -12,7 +12,7 @@ package app.data
 		/****************************
 		* General
 		*****************************/
-		public static const VERSION					: String = "1.15";
+		public static const VERSION					: String = "1.16";
 		public static const SOURCE_URL				: String = "https://github.com/fewfre/TransformiceDressroom";
 		
 		public static const DEFAULT_SKIN_ID			: int = 0;
@@ -21,6 +21,8 @@ package app.data
 		public static const NUM_ITEMS_PER_ROW		: int = 7;
 		
 		public static const ITEM_SAVE_SCALE			: int = 8; // Power of two is probably best
+		
+		public static const ANIMATION_FRAME_BY_FRAME: Boolean = false;
 		
 		/****************************
 		* Colors

@@ -328,5 +328,27 @@ package app.data
 
 			return tPose;
 		}
+		
+		/****************************
+		* Misc
+		*****************************/
+		// Converts the image to a PNG bitmap and prompts the user to save.
+		public static function saveAsPNGFrameByFrameVersion(pObj:app.world.elements.Character, pName:String) : void {
+			if(!pObj){ return; }
+
+			var tOrigScale = pObj.outfit.scaleX;
+			pObj.scale = 1;
+			var tWidth = 80, tHeight = 65;
+			var tRect:flash.geom.Rectangle = pObj.getBounds(pObj);
+			var tBitmap:flash.display.BitmapData = new flash.display.BitmapData(tWidth, tHeight, true, 0xFFFFFF);
+
+			var tMatrix:flash.geom.Matrix = new flash.geom.Matrix(1, 0, 0, 1, -tRect.left + (tWidth-tRect.width)/2, -tRect.top + (tHeight-tRect.height)/2);
+			tMatrix.scale(1, 1);
+
+			tBitmap.draw(pObj, tMatrix);
+			( new flash.net.FileReference() ).save( com.adobe.images.PNGEncoder.encode(tBitmap), pName+".png" );
+			
+			pObj.scale = tOrigScale;
+		}
 	}
 }

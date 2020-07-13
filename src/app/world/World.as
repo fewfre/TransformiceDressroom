@@ -240,6 +240,11 @@ package app.world
 		}
 
 		private function _onPlayerAnimationToggle(pEvent:Event):void {
+			if(ConstantsApp.ANIMATION_FRAME_BY_FRAME) {
+				character.outfit.poseNextFrame();
+				_toolbox.curanimationFrameText.setValues( character.outfit.poseCurrentFrame + "/" + character.outfit.poseTotalFrames );
+				return;
+			}
 			character.animatePose = !character.animatePose;
 			if(character.animatePose) {
 				character.outfit.play();
@@ -250,7 +255,11 @@ package app.world
 		}
 
 		private function _onSaveClicked(pEvent:Event) : void {
-			FewfDisplayUtils.saveAsPNG(this.character, "character");
+			if(!ConstantsApp.ANIMATION_FRAME_BY_FRAME) {
+				FewfDisplayUtils.saveAsPNG(this.character, "character");
+			} else {
+				GameAssets.saveAsPNGFrameByFrameVersion(this.character, "frame_"+character.getItemData(ITEM.POSE).id+"_"+character.outfit.poseCurrentFrame);
+			}
 		}
 
 		private function _onItemToggled(pEvent:FewfEvent) : void {

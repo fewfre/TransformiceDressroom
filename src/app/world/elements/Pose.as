@@ -13,6 +13,8 @@ package app.world.elements
 		private var _pose : MovieClip;
 		
 		public function get pose():MovieClip { return _pose; }
+		public function get poseCurrentFrame():Number { return _pose.currentFrame; }
+		public function get poseTotalFrames():Number { return _pose.totalFrames; }
 		
 		// Constructor
 		public function Pose(pPoseData:ItemData) {
@@ -35,6 +37,15 @@ package app.world.elements
 		
 		public function stopAtLastFrame() : void {
 			_pose.gotoAndPlay(10000);
+			stop();
+		}
+		
+		public function poseNextFrame() : void {
+			if(poseCurrentFrame == poseTotalFrames) {
+				_pose.gotoAndPlay(0);
+			} else {
+				_pose.nextFrame();
+			}
 			stop();
 		}
 		
@@ -156,6 +167,7 @@ package app.world.elements
 				|| pSkinPart.indexOf("Queue_") > -1
 				|| pSkinPart.indexOf("PiedG_") > -1
 				|| pSkinPart.indexOf("PiedD_") > -1
+				|| pSkinPart.indexOf("PiedD2_") > -1
 			);
 		}
 	}

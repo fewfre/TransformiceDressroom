@@ -1,6 +1,7 @@
 package app.ui
 {
 	import com.fewfre.display.ButtonBase;
+	import com.fewfre.display.TextBase;
 	import com.fewfre.utils.Fewf;
 	import app.data.*;
 	import app.ui.*;
@@ -16,6 +17,7 @@ package app.ui
 		public var scaleSlider		: FancySlider;
 		public var animateButton	: SpriteButton;
 		public var imgurButton		: SpriteButton;
+		public var curanimationFrameText: TextBase;
 		
 		// Constructor
 		// pData = { x:Number, y:Number, character:Character, onSave:Function, onAnimate:Function, onRandomize:Function, onTrash:Function, onShare:Function, onScale:Function }
@@ -77,6 +79,11 @@ package app.ui
 			animateButton.addEventListener(ButtonBase.CLICK, pData.onAnimate);
 			toggleAnimateButtonAsset(pData.character.animatePose);
 			tButtonOnRight++;
+			
+			if(ConstantsApp.ANIMATION_FRAME_BY_FRAME) {
+				curanimationFrameText = tTray.addChild(new TextBase({ text:"loading_progress", originX:1, x:_bg.Width/2-50, y:35 }));
+				curanimationFrameText.setValues( tCharacter.outfit.poseCurrentFrame + "/" + tCharacter.outfit.poseTotalFrames );
+			}
 			
 			/********************
 			* Scale slider
