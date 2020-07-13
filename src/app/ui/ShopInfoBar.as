@@ -12,6 +12,8 @@ package app.ui
 	import flash.geom.*;
 	import flash.net.*;
 	import flash.text.*;
+	import app.data.ConstantsApp;
+	import app.data.ITEM;
 	
 	public class ShopInfoBar extends MovieClip
 	{
@@ -153,11 +155,12 @@ package app.ui
 			if(eyeDropButton) eyeDropButton.disable().alpha = 0;
 		}
 		
-		internal function saveSprite(pEvent:Event) : void
-		{
+		internal function saveSprite(pEvent:Event) : void {
 			if(!data) { return; }
 			var tName = "shop-"+data.type+data.id;
-			FewfDisplayUtils.saveAsPNG(GameAssets.getColoredItemImage(data), tName, ConstantsApp.ITEM_SAVE_SCALE);
+			var tScale = ConstantsApp.ITEM_SAVE_SCALE;
+			if(data.type == ITEM.CONTACTS) { tScale *= 2; }
+			FewfDisplayUtils.saveAsPNG(GameAssets.getColoredItemImage(data), tName, tScale);
 		}
 	}
 }
