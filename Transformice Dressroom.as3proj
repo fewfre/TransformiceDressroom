@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<project version="2">
+  <!-- Output SWF options -->
+  <output>
+    <movie outputType="Application" />
+    <movie input="" />
+    <movie path="bin\TransformiceDressroom.swf" />
+    <movie fps="30" />
+    <movie width="800" />
+    <movie height="600" />
+    <movie version="3" />
+    <movie minorVersion="0" />
+    <movie platform="AIR" />
+    <movie background="#FFFFFF" />
+  </output>
+  <!-- Other classes to be compiled into your SWF -->
+  <classpaths>
+    <class path="src" />
+    <class path="E:\programs\Adobe\Adobe Flash CS6\Common\Configuration\ActionScript 3.0\libs" />
+    <class path="E:\programs\Adobe\Adobe Flash CS6\Common\Configuration\Component Source\ActionScript 3.0\User Interface" />
+    <class path="E:\programs\Adobe\Adobe Flash CS6\Common\Configuration\Component Source\ActionScript 3.0\FLVPlayback" />
+    <class path="E:\programs\Adobe\Adobe Flash CS6\Common\Configuration\Component Source\ActionScript 3.0\FLVPlaybackCaptioning" />
+    <class path="E:\programs\Adobe\Adobe Flash CS6\Common\Configuration\Components" />
+  </classpaths>
+  <!-- Build options -->
+  <build>
+    <option accessible="False" />
+    <option advancedTelemetry="False" />
+    <option allowSourcePathOverlap="False" />
+    <option benchmark="False" />
+    <option es="False" />
+    <option inline="False" />
+    <option locale="" />
+    <option loadConfig="" />
+    <option optimize="True" />
+    <option omitTraces="True" />
+    <option showActionScriptWarnings="True" />
+    <option showBindingWarnings="True" />
+    <option showInvalidCSS="True" />
+    <option showDeprecationWarnings="True" />
+    <option showUnusedTypeSelectorWarnings="True" />
+    <option strict="True" />
+    <option useNetwork="True" />
+    <option useResourceBundleMetadata="True" />
+    <option warnings="True" />
+    <option verboseStackTraces="False" />
+    <option linkReport="" />
+    <option loadExterns="" />
+    <option staticLinkRSL="True" />
+    <option additional="" />
+    <option compilerConstants="" />
+    <option minorVersion="" />
+  </build>
+  <!-- SWC Include Libraries -->
+  <includeLibraries>
+    <element path=".\fla\interface.swc" />
+    <element path=".\fla\assets.swc" />
+    <element path="E:\programs\Adobe\Adobe Flash CS6\Common\Configuration\ActionScript 3.0\libs\11.0\textLAyout.swc" />
+    <element path="E:\programs\Adobe\Adobe Flash CS6\Common\Configuration\ActionScript 3.0\libs\flash.swc" />
+  </includeLibraries>
+  <!-- SWC Libraries -->
+  <libraryPaths>
+    <element path=".\fla\interface.swc" />
+    <element path=".\fla\assets.swc" />
+    <element path="E:\programs\Adobe\Adobe Flash CS6\Common\Configuration\ActionScript 3.0\libs\11.0\textLAyout.swc" />
+    <element path="E:\programs\Adobe\Adobe Flash CS6\Common\Configuration\ActionScript 3.0\libs\flash.swc" />
+  </libraryPaths>
+  <!-- External Libraries -->
+  <externalLibraryPaths>
+    <!-- example: <element path="..." /> -->
+  </externalLibraryPaths>
+  <!-- Runtime Shared Libraries -->
+  <rslPaths>
+    <!-- example: <element path="..." /> -->
+  </rslPaths>
+  <!-- Intrinsic Libraries -->
+  <intrinsics>
+    <element path="Library\AS3\frameworks\Flex3" />
+  </intrinsics>
+  <!-- Assets to embed into the output SWF -->
+  <library>
+    <!-- example: <asset path="..." id="..." update="..." glyphs="..." mode="..." place="..." sharepoint="..." /> -->
+  </library>
+  <!-- Class files to compile (other referenced classes will automatically be included) -->
+  <compileTargets>
+    <compile path="src\app\Main.as" />
+  </compileTargets>
+  <!-- Paths to exclude from the Project Explorer tree -->
+  <hiddenPaths>
+    <hidden path="obj" />
+  </hiddenPaths>
+  <!-- Executed before build -->
+  <preBuildCommand />
+  <!-- Executed after build -->
+  <postBuildCommand alwaysRun="False" />
+  <!-- Other project options -->
+  <options>
+    <option showHiddenPaths="False" />
+    <option testMovie="Custom" />
+    <option testMovieCommand="bat\RunApp.bat" />
+  </options>
+  <!-- Plugin storage -->
+  <storage />
+</project>

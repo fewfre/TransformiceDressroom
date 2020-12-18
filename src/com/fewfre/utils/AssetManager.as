@@ -129,13 +129,13 @@ package com.fewfre.utils
 				_checkIfLoadingDone();
 			}
 			
-			private function _onLoadError(e:IOErrorEvent, pOnComplete) : void {
+			private function _onLoadError(e:IOErrorEvent, pOnComplete:Function) : void {
 				trace("[AssetManager](_onLoadError) ERROR("+e.errorID+"): Was not able to load url: "+e.target.url);
 				_destroyAssetLoader(e.target.loader, pOnComplete);
 				_checkIfLoadingDone();
 			}
 			
-			private function _onURLLoadError(e:IOErrorEvent, pUrl:String, pOnComplete) : void {
+			private function _onURLLoadError(e:IOErrorEvent, pUrl:String, pOnComplete:Function) : void {
 				trace("[AssetManager](_onLoadError) ERROR("+e.errorID+"): Was not able to load url: "+pUrl);
 				_destroyURLLoader(e.target as URLLoader, pOnComplete);
 				_checkIfLoadingDone();
