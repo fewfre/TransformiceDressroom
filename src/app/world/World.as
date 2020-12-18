@@ -66,20 +66,21 @@ package app.world
 			/****************************
 			* Create Character
 			*****************************/
-			var parms:flash.net.URLVariables = null;
-			try {
-				var urlPath:String = ExternalInterface.call("eval", "window.location.href");
-				if(urlPath && urlPath.indexOf("?") > 0) {
-					urlPath = urlPath.substr(urlPath.indexOf("?") + 1, urlPath.length);
-					parms = new flash.net.URLVariables();
-					parms.decode(urlPath);
-				}
-			} catch (error:Error) { };
+			// TODO
+			// var parms:flash.net.URLVariables = null;
+			// try {
+			// 	var urlPath:String = ExternalInterface.call("eval", "window.location.href");
+			// 	if(urlPath && urlPath.indexOf("?") > 0) {
+			// 		urlPath = urlPath.substr(urlPath.indexOf("?") + 1, urlPath.length);
+			// 		parms = new flash.net.URLVariables();
+			// 		parms.decode(urlPath);
+			// 	}
+			// } catch (error:Error) { };
 
 			this.character = addChild(new Character({ x:180, y:275,
 				skin:GameAssets.skins[GameAssets.defaultSkinIndex],
 				pose:GameAssets.poses[GameAssets.defaultPoseIndex],
-				params:parms
+				params:null//parms - TODO
 			})) as Character;
 
 			/****************************
@@ -352,15 +353,16 @@ package app.world
 		}
 		
 		private function _onShareButtonClicked(pEvent:Event) : void {
-			var tURL = "";
-			try {
-				tURL = ExternalInterface.call("eval", "window.location.origin+window.location.pathname");
-				tURL += "?"+this.character.getParams();
-			} catch (error:Error) {
-				tURL = "<error creating link>";
-			};
+			// TODO
+			// var tURL = "";
+			// try {
+			// 	tURL = ExternalInterface.call("eval", "window.location.origin+window.location.pathname");
+			// 	tURL += "?"+this.character.getParams();
+			// } catch (error:Error) {
+			// 	tURL = "<error creating link>";
+			// };
 
-			linkTray.open(tURL);
+			// linkTray.open(tURL);
 			addChild(linkTray);
 		}
 

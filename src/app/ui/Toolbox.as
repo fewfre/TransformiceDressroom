@@ -59,7 +59,8 @@ package app.ui
 			btn = imgurButton = tTray.addChild(new SpriteButton({ x:tX+tButtonXInc*tButtonsOnLeft, y:tY, width:tButtonSize, height:tButtonSize, obj_scale:0.45, obj:new $ImgurIcon(), origin:0.5 })) as SpriteButton;
 			var tCharacter = pData.character;
 			btn.addEventListener(ButtonBase.CLICK, function(e:*){
-				ImgurApi.uploadImage(tCharacter);
+				// TODO
+				// ImgurApi.uploadImage(tCharacter);
 				imgurButton.disable();
 			});
 			tButtonsOnLeft++;
@@ -101,7 +102,8 @@ package app.ui
 			/********************
 			* Events
 			*********************/
-			Fewf.dispatcher.addEventListener(ImgurApi.EVENT_DONE, _onImgurDone);
+			// TODO
+			// Fewf.dispatcher.addEventListener(ImgurApi.EVENT_DONE, _onImgurDone);
 		}
 		
 		public function toggleAnimateButtonAsset(pOn:Boolean) : void {

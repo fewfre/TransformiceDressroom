@@ -1,4 +1,6 @@
 {
+	"resourcesBaseUrl": "https://projects.fewfre.com/a801/transformice/dressroom/resources",
+	
 	"languages": {
 		"default": "en",
 		"list": [

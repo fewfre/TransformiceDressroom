@@ -7,7 +7,7 @@ package com.fewfre.utils
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
 	import flash.events.ProgressEvent;
-	import flash.external.ExternalInterface;
+	// import flash.external.ExternalInterface;
 	import flash.net.*;
 	import flash.system.ApplicationDomain;
 	import flash.system.LoaderContext;
@@ -67,9 +67,9 @@ package com.fewfre.utils
 			
 			private function _newLoader(pIndex:int, pUrl:String, pOptions:Object=null) : void {
 				var tUrlParts:Array = pUrl.split("/").pop().split("."), tName:String = tUrlParts[0], tType:String = tUrlParts[1];
-				if(_cacheBreaker && ExternalInterface.call("eval", "window.location.href")) {
-					pUrl += "?cb="+_cacheBreaker;
-				}
+				// if(_cacheBreaker && ExternalInterface.call("eval", "window.location.href")) {
+				// 	pUrl += "?cb="+_cacheBreaker;
+				// }
 				switch(tType) {
 					case "swf":
 					case "swc":

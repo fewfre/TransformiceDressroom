@@ -9,6 +9,7 @@ package app
 	import flash.display.*;
 	import flash.events.*;
 	import flash.system.Capabilities;
+	import app.data.ConstantsApp;
 
 	[SWF(backgroundColor="0x6A7495" , width="900" , height="425")]
 	public class Main extends MovieClip
@@ -28,7 +29,8 @@ package app
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.frameRate = 16;
 
-			BrowserMouseWheelPrevention.init(stage);
+			// TODO
+			// BrowserMouseWheelPrevention.init(stage);
 
 			_loaderDisplay = addChild( new LoaderDisplay({ x:stage.stageWidth * 0.5, y:stage.stageHeight * 0.5 }) ) as LoaderDisplay;
 			
@@ -43,14 +45,17 @@ package app
 		
 		private function _onPreloadComplete() : void {
 			_config = Fewf.assets.getData("config");
-			_defaultLang = _getDefaultLang(_config.languages.default);
+			_defaultLang = _getDefaultLang(_config.languages["default"]);
+			if(_config.resourcesBaseUrl) {
+				ConstantsApp.resourcesBaseUrl = _config.resourcesBaseUrl;
+			}
 			
 			_startInitialLoad();
 		}
 		
 		private function _startInitialLoad() : void {
 			_load([
-				"resources/i18n/"+_defaultLang+".json",
+				ConstantsApp.resourcesBaseUrl+"/i18n/"+_defaultLang+".json",
 			], Fewf.assets.getData("config").cachebreaker, _onInitialLoadComplete);
 		}
 		
@@ -68,7 +73,7 @@ package app
 			];
 			
 			var tPack = _config.packs.items.concat(_config.packs.parts);
-			for(var i:int = 0; i < tPack.length; i++) { tPacks.push("resources/"+tPack[i]); }
+			for(var i:int = 0; i < tPack.length; i++) { tPacks.push(ConstantsApp.resourcesBaseUrl+"/"+tPack[i]); }
 			
 			_load(tPacks, Fewf.assets.getData("config").cachebreaker, _onLoadComplete);
 		}
