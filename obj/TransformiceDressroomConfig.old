@@ -46,6 +46,12 @@
       <library>E:\programs\Adobe\Adobe Flash CS6\Common\Configuration\ActionScript 3.0\libs\11.0\textLAyout.swc</library>
       <library>E:\programs\Adobe\Adobe Flash CS6\Common\Configuration\ActionScript 3.0\libs\flash.swc</library>
     </include-libraries>
+    <library-path append="true">
+      <path-element>E:\projects\atelier801\TransformiceDressroom\fla\interface.swc</path-element>
+      <path-element>E:\projects\atelier801\TransformiceDressroom\fla\assets.swc</path-element>
+      <path-element>E:\programs\Adobe\Adobe Flash CS6\Common\Configuration\ActionScript 3.0\libs\11.0\textLAyout.swc</path-element>
+      <path-element>E:\programs\Adobe\Adobe Flash CS6\Common\Configuration\ActionScript 3.0\libs\flash.swc</path-element>
+    </library-path>
   </compiler>
   <file-specs>
     <path-element>E:\projects\atelier801\TransformiceDressroom\src\app\Main.as</path-element>
