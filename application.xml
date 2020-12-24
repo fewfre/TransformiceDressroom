@@ -19,7 +19,28 @@
 		<maximizable>true</maximizable> 
 		<resizable>true</resizable> 
 	</initialWindow>
-
+	
+	<android>
+		<manifestAdditions>
+			<![CDATA[
+				<manifest android:installLocation="auto">
+					<uses-permission android:name="android.permission.INTERNET"/>
+					<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+					<uses-configuration android:reqFiveWayNav="true"/>
+					<supports-screens android:normalScreens="true"/>
+					<uses-feature android:required="true" android:name="android.hardware.touchscreen.multitouch"/>
+					<application android:enabled="true">
+						<activity android:excludeFromRecents="false">
+							<intent-filter>
+						<action android:name="android.intent.action.MAIN"/>
+						<category android:name="android.intent.category.LAUNCHER"/>
+							</intent-filter>
+						</activity>
+					</application>
+				</manifest>
+			]]>
+		</manifestAdditions>
+	</android>
 	
 	<!-- 
 	More options:

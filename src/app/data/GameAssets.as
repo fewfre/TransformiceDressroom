@@ -48,7 +48,7 @@ package app.data
 			hair = _setupCostumeArray({ base:"$Costume_5_", type:ITEM.HAIR, itemClassToClassMap:"Tete_1" });
 			tail = _setupCostumeArray({ base:"$Costume_6_", type:ITEM.TAIL, itemClassToClassMap:"Boule_1" });
 			contacts = _setupCostumeArray({ base:"$Costume_7_", type:ITEM.CONTACTS, itemClassToClassMap:["Oeil_1", "OeilVide_1"] });
-			hands = _setupCostumeArray({ base:"$Costume_8_", type:ITEM.HAND, itemClassToClassMap:"PatteD_1" });
+			hands = _setupCostumeArray({ base:"$Costume_8_", type:ITEM.HAND, itemClassToClassMap:"Gant_1" });
 
 			extraObjectWand = new ItemData({ type:ITEM.OBJECT, itemClass:Fewf.assets.getLoadedClass("$Costume_9_1") });
 			extraObjectWand.classMap = { Arme_1:extraObjectWand.itemClass };
