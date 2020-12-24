@@ -260,8 +260,20 @@ package app.world
 			try {
 				var params = new flash.net.URLVariables();
 				params.decode(pCode);
+				
+				// First remove old stuff to prevent conflicts
+				GameAssets.shamanMode = SHAMAN_MODE.OFF;
+				for each(var tItem in ITEM.LAYERING) { _removeItem(tItem); }
+				_removeItem(ITEM.POSE);
+				
+				// Now update pose
 				character.parseParams(params);
 				character.updatePose();
+				
+				// now update the infobars
+				_updateUIBasedOnCharacter();
+				
+				// Now tell code box that we are done
 				pProgressCallback("success");
 			}
 			catch (error:Error) {
@@ -289,6 +301,23 @@ package app.world
 				FewfDisplayUtils.saveAsPNG(this.character, "character");
 			} else {
 				GameAssets.saveAsPNGFrameByFrameVersion(this.character, "frame_"+character.getItemData(ITEM.POSE).id+"_"+character.outfit.poseCurrentFrame);
+			}
+		}
+
+		// Note: does not automatically de-select previous buttons / infobars; do that before calling this
+		// This function is required when setting data via parseParams
+		private function _updateUIBasedOnCharacter() : void {
+			var tPane:TabPane, tData:ItemData, tType:String;
+			var tTypes = [ ITEM.HAT, ITEM.HAIR, ITEM.EARS, ITEM.EYES, ITEM.MOUTH, ITEM.NECK, ITEM.TAIL, ITEM.HAND, ITEM.CONTACTS, ITEM.SKIN, ITEM.POSE ], tData:ItemData, tType:String;
+			for(var i:int = 0; i < tTypes.length; i++) { tType = tTypes[i];
+				tPane = getTabByType(tType);
+				
+				// Based on what the character is wearing at start, toggle on the appropriate buttons.
+				tData = character.getItemData(tType);
+				if(tData) {
+					var tIndex:int = FewfUtils.getIndexFromArrayWithKeyVal(GameAssets.getArrayByType(tType), "id", tData.id);
+					tPane.buttons[ tIndex ].toggleOn();
+				}
 			}
 		}
 
