@@ -1,3 +1,10 @@
+== V1.17 -  ==
+- AIR version
+	-fetches external assets
+	-checks for updates
+	-disabled some features that don't seem to work for initial build
+
+
 == V1.16 - 7 September 2019 ==
 - Added ability to play animation frame-by-frame for exporting (NOT included in live build, only meant for special circumstances) - must be turned on in code via ConstantsApp.ANIMATION_FRAME_BY_FRAME
 - Fixed bug with default fur paw coloring while sitting

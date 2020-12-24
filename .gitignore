@@ -5,3 +5,6 @@ dressroom.app/
 dressroom.air
 dressroom.exe
 bin/
+bat/SetupApp.bat
+bat/SetupSDK.bat
+air/

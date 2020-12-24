@@ -72,7 +72,7 @@ package app
 		// Start main load
 		private function _startLoad() : void {
 			var tPacks = [
-				["resources/interface.swf"],//, { useCurrentDomain:true }],
+				["resources/interface.swf", { useCurrentDomain:true }],
 				"resources/flags.swf"
 			];
 			

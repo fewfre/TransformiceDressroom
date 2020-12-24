@@ -13,6 +13,9 @@ set OUTPUT=%AIR_PATH%\%AIR_NAME%%AIR_TARGET%.air
 echo.
 echo Packaging %AIR_NAME%%AIR_TARGET%.air using certificate %CERT_FILE%...
 call adt -package %OPTIONS% %SIGNING_OPTIONS% %OUTPUT% %APP_XML% %FILE_OR_DIR%
+:: Making native installer - https://help.adobe.com/en_US/air/build/WS789ea67d3e73a8b22388411123785d839c-8000.html
+call adt -package -target native %AIR_PATH%\%AIR_NAME%%AIR_TARGET% %OUTPUT%
+
 if errorlevel 1 goto failed
 goto end
 

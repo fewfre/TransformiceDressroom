@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?> 
-<application xmlns="http://ns.adobe.com/air/application/1.5"> 
+<application xmlns="http://ns.adobe.com/air/application/3.1"> 
 	
-	<id>TransformiceDressroom</id> 
-	<version>1.0</version> 
+	<id>com.fewfre.tfmdressroom</id>
+	<versionNumber>1.17</versionNumber> 
 	<filename>TransformiceDressroom</filename> 
 	
 	<name>Transformice Dressroom</name> 
@@ -18,7 +18,8 @@
 		<minimizable>true</minimizable> 
 		<maximizable>true</maximizable> 
 		<resizable>true</resizable> 
-	</initialWindow> 
+	</initialWindow>
+
 	
 	<!-- 
 	More options:
