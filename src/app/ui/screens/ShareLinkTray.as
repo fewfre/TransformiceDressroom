@@ -15,7 +15,7 @@ package app.ui.screens
 	import fl.transitions.Tween;
 	import fl.transitions.easing.*;
 	
-	public class LinkTray extends MovieClip
+	public class ShareLinkTray extends MovieClip
 	{
 		// Constants
 		public static const CLOSE : String= "close_link_tray";
@@ -28,7 +28,7 @@ package app.ui.screens
 		
 		// Constructor
 		// pData = { x:Number, y:Number }
-		public function LinkTray(pData:Object) {
+		public function ShareLinkTray(pData:Object) {
 			this.x = pData.x;
 			this.y = pData.y;
 			

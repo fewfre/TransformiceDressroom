@@ -1,5 +1,8 @@
 {
-	"resourcesBaseUrl": "https://projects.fewfre.com/a801/transformice/dressroom/resources",
+	"resourcesBaseUrl_cmnt": "https://projects.fewfre.com/a801/transformice/dressroom/resources",
+	
+	"manifestUrl": "https://projects.fewfre.com/a801/transformice/dressroom/app/manifest.json",
+	"updateUrl": "https://projects.fewfre.com/a801/transformice/dressroom/app/update.json",
 	
 	"languages": {
 		"default": "en",

@@ -20,6 +20,10 @@
 		"share_link_copied":	{ "text":"Link copied to clipboard! Paste to use." },
 		"share_copy":			{ "text":"copy" },
 		
+		"update_header":		{ "text":"Update!" },
+		"update_summary":		{ "text":"{0}" },
+		"update_btn":			{ "text":"Download Update" },
+		
 		"btn_color_defaults":	{ "text":"Defaults" },
 		
 		"infobar_id":			{ "text":"ID: {0}" },

@@ -52,6 +52,10 @@ package app.ui.screens
 			btn.addEventListener(ButtonBase.CLICK, _onCloseClicked);
 		}
 		
+		public function open() : void {
+			
+		}
+		
 		private function _onConfirmClicked(pEvent:Event) : void {
 			dispatchEvent(new Event(CONFIRM));
 		}

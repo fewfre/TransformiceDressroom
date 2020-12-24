@@ -27,6 +27,8 @@ package app.world
 	import app.ui.panes.ColorFinderPane;
 	import app.ui.panes.ConfigTabPane;
 	import flash.display.MovieClip;
+	import app.ui.screens.UpdateAppScreen;
+	import app.data.ConstantsApp;
 	
 	public class World extends MovieClip
 	{
@@ -36,9 +38,10 @@ package app.world
 
 		internal var shopTabs		: ShopTabContainer;
 		internal var _toolbox		: Toolbox;
-		internal var linkTray		: LinkTray;
+		internal var _shareLinkScreen : ShareLinkTray;
 		internal var trashConfirmScreen	: TrashConfirmScreen;
 		internal var _langScreen	: LangScreen;
+		internal var _updateScreen	: UpdateAppScreen;
 
 		internal var button_hand	: PushButton;
 		internal var button_back	: PushButton;
@@ -123,8 +126,8 @@ package app.world
 			/****************************
 			* Screens
 			*****************************/
-			linkTray = new LinkTray({ x:pStage.stageWidth * 0.5, y:pStage.stageHeight * 0.5 });
-			linkTray.addEventListener(LinkTray.CLOSE, _onShareTrayClosed);
+			_shareLinkScreen = new ShareLinkTray({ x:pStage.stageWidth * 0.5, y:pStage.stageHeight * 0.5 });
+			_shareLinkScreen.addEventListener(ShareLinkTray.CLOSE, _onShareTrayClosed);
 			
 			trashConfirmScreen = new TrashConfirmScreen({ x:337, y:65 });
 			trashConfirmScreen.addEventListener(TrashConfirmScreen.CONFIRM, _onTrashConfirmScreenConfirm);
@@ -132,6 +135,13 @@ package app.world
 			
 			_langScreen = new LangScreen({  });
 			_langScreen.addEventListener(LangScreen.CLOSE, _onLangScreenClosed);
+			
+			_updateScreen = new UpdateAppScreen({  });
+			_updateScreen.addEventListener(UpdateAppScreen.CLOSE, _onUpdateAppScreenClosed);
+			
+			if(ConstantsApp.VERSION != Fewf.assets.getData("update").version) {
+				_openScreen(_updateScreen);
+			}
 
 			/****************************
 			* Create tabs and panes
@@ -362,38 +372,53 @@ package app.world
 			// 	tURL = "<error creating link>";
 			// };
 
-			// linkTray.open(tURL);
-			addChild(linkTray);
+			// _shareLinkScreen.open(tURL);
+			_openScreen(_shareLinkScreen, this.character.getParams());
 		}
 
 		private function _onShareTrayClosed(pEvent:Event) : void {
-			removeChild(linkTray);
+			_closeScreen(_shareLinkScreen);
 		}
 
 		private function _onTrashButtonClicked(pEvent:Event) : void {
-			addChild(trashConfirmScreen);
+			_openScreen(trashConfirmScreen);
 		}
 
 		private function _onTrashConfirmScreenConfirm(pEvent:Event) : void {
-			removeChild(trashConfirmScreen);
+			_closeScreen(trashConfirmScreen);
 			GameAssets.shamanMode = SHAMAN_MODE.OFF;
 			for each(var tItem in ITEM.LAYERING) { _removeItem(tItem); }
 			_removeItem(ITEM.POSE);
 		}
 
 		private function _onTrashConfirmScreenClosed(pEvent:Event) : void {
-			removeChild(trashConfirmScreen);
+			_closeScreen(trashConfirmScreen);
 		}
+		
+		
+		//{REGION Screen Stuff
+			private function _openScreen(pScreen:MovieClip, ...openArgs) : void {
+				pScreen.open.apply(pScreen, openArgs);
+				addChild(pScreen);
+			}
+			private function _closeScreen(pScreen:MovieClip) : void {
+				removeChild(pScreen);
+			}
 
-		private function _onLangButtonClicked(pEvent:Event) : void {
-			_langScreen.open();
-			addChild(_langScreen);
-		}
+			private function _onLangButtonClicked(pEvent:Event) : void {
+				_openScreen(_langScreen);
+			}
 
-		private function _onLangScreenClosed(pEvent:Event) : void {
-			removeChild(_langScreen);
-		}
+			private function _onLangScreenClosed(pEvent:Event) : void {
+				_closeScreen(_langScreen);
+			}
 
+			private function _onUpdateAppScreenClosed(pEvent:Event) : void {
+				_closeScreen(_updateScreen);
+			}
+		//}END Screen Stuff
+		
+		
 		//{REGION Get TabPane data
 			private function getTabByType(pType:String) : TabPane {
 				return _paneManager.getPane(pType);
@@ -415,6 +440,7 @@ package app.world
 				getTabByType(pType).selectedButtonIndex = pID;
 			}
 		//}END Get TabPane data
+
 
 		//{REGION Color Tab
 			private function _onColorPickChanged(pEvent:flash.events.DataEvent):void

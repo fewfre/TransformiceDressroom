@@ -12,9 +12,9 @@ package app.data
 		/****************************
 		* General
 		*****************************/
-		public static const VERSION					: String = "1.16";
+		public static const VERSION					: String = "1.17";
 		public static const SOURCE_URL				: String = "https://github.com/fewfre/TransformiceDressroom";
-		public static var resourcesBaseUrl			: String = "https://projects.fewfre.com/a801/transformice/dressroom/resources/"; // Also set in the config file
+		public static var resourcesBaseUrl			: String = "resources/";//"https://projects.fewfre.com/a801/transformice/dressroom/resources/"; // Also set in the config file
 		
 		public static const DEFAULT_SKIN_ID			: int = 0;
 		public static const DEFAULT_POSE_ID			: int = 0;

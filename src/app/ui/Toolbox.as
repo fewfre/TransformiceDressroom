@@ -56,14 +56,14 @@ package app.ui
 			btn.addEventListener(ButtonBase.CLICK, pData.onShare);
 			tButtonsOnLeft++;
 			
-			btn = imgurButton = tTray.addChild(new SpriteButton({ x:tX+tButtonXInc*tButtonsOnLeft, y:tY, width:tButtonSize, height:tButtonSize, obj_scale:0.45, obj:new $ImgurIcon(), origin:0.5 })) as SpriteButton;
-			var tCharacter = pData.character;
-			btn.addEventListener(ButtonBase.CLICK, function(e:*){
-				// TODO
-				// ImgurApi.uploadImage(tCharacter);
-				imgurButton.disable();
-			});
-			tButtonsOnLeft++;
+			// btn = imgurButton = tTray.addChild(new SpriteButton({ x:tX+tButtonXInc*tButtonsOnLeft, y:tY, width:tButtonSize, height:tButtonSize, obj_scale:0.45, obj:new $ImgurIcon(), origin:0.5 })) as SpriteButton;
+			// var tCharacter = pData.character;
+			// btn.addEventListener(ButtonBase.CLICK, function(e:*){
+			// 	// TODO
+			// 	// ImgurApi.uploadImage(tCharacter);
+			// 	imgurButton.disable();
+			// });
+			// tButtonsOnLeft++;
 			
 			// ### Right Side Buttons ###
 			tX = tTrayWidth*0.5-(tButtonSize*0.5 + tButtonSizeSpace);
@@ -81,10 +81,10 @@ package app.ui
 			toggleAnimateButtonAsset(pData.character.animatePose);
 			tButtonOnRight++;
 			
-			if(ConstantsApp.ANIMATION_FRAME_BY_FRAME) {
-				curanimationFrameText = tTray.addChild(new TextBase({ text:"loading_progress", originX:1, x:_bg.Width/2-50, y:35 }));
-				curanimationFrameText.setValues( tCharacter.outfit.poseCurrentFrame + "/" + tCharacter.outfit.poseTotalFrames );
-			}
+			// if(ConstantsApp.ANIMATION_FRAME_BY_FRAME) {
+			// 	curanimationFrameText = tTray.addChild(new TextBase({ text:"loading_progress", originX:1, x:_bg.Width/2-50, y:35 }));
+			// 	curanimationFrameText.setValues( tCharacter.outfit.poseCurrentFrame + "/" + tCharacter.outfit.poseTotalFrames );
+			// }
 			
 			/********************
 			* Scale slider

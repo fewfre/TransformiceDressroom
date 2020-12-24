@@ -54,9 +54,13 @@ package app
 		}
 		
 		private function _startInitialLoad() : void {
+			var now:Date = new Date();
+			var cb = [now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes()].join("-");
 			_load([
 				ConstantsApp.resourcesBaseUrl+"/i18n/"+_defaultLang+".json",
-			], Fewf.assets.getData("config").cachebreaker, _onInitialLoadComplete);
+				_config.manifestUrl,
+				_config.updateUrl,
+			], cb, _onInitialLoadComplete);
 		}
 		
 		private function _onInitialLoadComplete() : void {
@@ -72,10 +76,15 @@ package app
 				"resources/flags.swf"
 			];
 			
-			var tPack = _config.packs.items.concat(_config.packs.parts);
-			for(var i:int = 0; i < tPack.length; i++) { tPacks.push(ConstantsApp.resourcesBaseUrl+"/"+tPack[i]); }
+			var manifest = Fewf.assets.getData("manifest");
+			var manifestData = _mergeArray(manifest.packs.items, manifest.packs.parts);
+			// tPacks = tPacks.concat(manifestData.map(function(fileName){ return ConstantsApp.resourcesBaseUrl+"/"+fileName; }));
+			tPacks = tPacks.concat(manifestData);
 			
-			_load(tPacks, Fewf.assets.getData("config").cachebreaker, _onLoadComplete);
+			var now:Date = new Date();
+			var cb = [now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes()].join("-");
+			// var cb = _config.cachebreaker;
+			_load(tPacks, cb, _onLoadComplete);
 		}
 		
 		private function _onLoadComplete() : void {
@@ -97,6 +106,14 @@ package app
 				tFunc = null; pCallback = null;
 			};
 			Fewf.assets.addEventListener(AssetManager.LOADING_FINISHED, tFunc);
+		}
+		
+		private function _mergeArray(...arrays):Array {
+			var result:Array = [];
+			for(var i:int=0;i<arrays.length;i++){
+				result = result.concat(arrays[i]);
+			}
+			return result;
 		}
 		
 		private function _getDefaultLang(pConfigLang:String) : String {

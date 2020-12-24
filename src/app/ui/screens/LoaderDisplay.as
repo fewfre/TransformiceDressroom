@@ -47,6 +47,10 @@ package app.ui.screens
 			_loadingSpinner = null;
 		}
 		
+		public function open() : void {
+			
+		}
+		
 		public function update(pEvent:Event):void
 		{
 			var dt:Number = 0.1;
