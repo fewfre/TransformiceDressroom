@@ -55,7 +55,7 @@ package app
 		
 		private function _startInitialLoad() : void {
 			var now:Date = new Date();
-			var cb = [now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes()].join("-");
+			var cb = [now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes(), now.getSeconds()].join("-");
 			_load([
 				"resources/i18n/"+_defaultLang+".json",//ConstantsApp.resourcesBaseUrl+"i18n/"+_defaultLang+".json",
 				_config.manifestUrl,
@@ -82,7 +82,7 @@ package app
 			tPacks = tPacks.concat(manifestData);
 			
 			var now:Date = new Date();
-			var cb = [now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes()].join("-");
+			var cb = [now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes(), now.getSeconds()].join("-");
 			// var cb = _config.cachebreaker;
 			_load(tPacks, cb, _onLoadComplete);
 		}

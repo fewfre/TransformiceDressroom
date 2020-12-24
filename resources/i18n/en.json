@@ -17,8 +17,12 @@
 		"translated_by":		{ "text":"Translated by: Your Name here (or remove/blank this line to not show)" },
 		
 		"share_header":			{ "text":"Share your Creation!" },
-		"share_link_copied":	{ "text":"Link copied to clipboard! Paste to use." },
+		"share_link_copied":	{ "text":"Copied to clipboard! Paste to use." },
 		"share_copy":			{ "text":"copy" },
+		
+		"share_paste":			{ "text":"Paste your share code / url" },
+		"share_paste_success":	{ "text":"Success!" },
+		"share_paste_invalid":	{ "text":"Invalid" },
 		
 		"update_header":		{ "text":"Update!" },
 		"update_summary":		{ "text":"{0}" },

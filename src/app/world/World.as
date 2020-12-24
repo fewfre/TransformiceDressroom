@@ -115,7 +115,8 @@ package app.world
 			_toolbox = addChild(new Toolbox({
 				x:188, y:28, character:character,
 				onSave:_onSaveClicked, onAnimate:_onPlayerAnimationToggle, onRandomize:_onRandomizeDesignClicked,
-				onTrash:_onTrashButtonClicked, onShare:_onShareButtonClicked, onScale:_onScaleSliderChange
+				onTrash:_onTrashButtonClicked, onShare:_onShareButtonClicked, onScale:_onScaleSliderChange,
+				onShareCodeEntered:_onShareCodeEntered
 			})) as Toolbox;
 			
 			var tLangButton = addChild(new LangButton({ x:22, y:pStage.stageHeight-17, width:30, height:25, origin:0.5 }));
@@ -248,6 +249,24 @@ package app.world
 
 		private function _onScaleSliderChange(pEvent:Event):void {
 			character.scale = _toolbox.scaleSlider.getValueAsScale();
+		}
+
+		private function _onShareCodeEntered(pCode:String, pProgressCallback:Function):void {
+			if(!pCode || pCode == "") { return; pProgressCallback("placeholder"); }
+			if(pCode.indexOf("?") > -1) {
+				pCode = pCode.substr(pCode.indexOf("?") + 1, pCode.length);
+			}
+			
+			try {
+				var params = new flash.net.URLVariables();
+				params.decode(pCode);
+				character.parseParams(params);
+				character.updatePose();
+				pProgressCallback("success");
+			}
+			catch (error:Error) {
+				pProgressCallback("invalid");
+			};
 		}
 
 		private function _onPlayerAnimationToggle(pEvent:Event):void {
