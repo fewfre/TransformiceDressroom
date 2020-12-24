@@ -75,10 +75,6 @@ package app.world.elements
 				tSlotName = tChild.name;
 				for(var j:int = 0; j < tShopData.length; j++) {
 					if(tTailData != null && tShopData[j].isSkin() && tSlotName.indexOf("Boule_") > -1) { continue; }
-					if(tShopData[j].type == ITEM.HAND && tSlotName == "PatteD_1") {
-						if(!tHandItemAdded) tHandItemAdded=true;
-						else continue;
-					}
 					part = _addToPoseIfCan(tChild as MovieClip, tShopData[j], tSlotName, pData) as MovieClip;
 					_colorPart(part, tShopData[j], tSlotName);
 					if(part) { tItemsOnChild++; }

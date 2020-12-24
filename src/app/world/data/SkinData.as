@@ -63,7 +63,7 @@ package app.world.data
 				shamanMode--; // saves each piece having to decrement one recursevly.
 			}
 			var tClass = Fewf.assets.getLoadedClass( "_"+pID+"_"+_assetID+"_"+shamanMode );
-			trace("_"+pID+"_"+_assetID+"_"+shamanMode+" - "+tClass);
+			// trace("_"+pID+"_"+_assetID+"_"+shamanMode+" - "+tClass);
 			return tClass == null && shamanMode > SHAMAN_MODE.NORMAL ? getPart(pID, { shamanMode:shamanMode-1 }) : tClass;
 		}
 	}
