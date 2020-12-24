@@ -57,7 +57,7 @@ package app
 			var now:Date = new Date();
 			var cb = [now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes()].join("-");
 			_load([
-				ConstantsApp.resourcesBaseUrl+"/i18n/"+_defaultLang+".json",
+				"resources/i18n/"+_defaultLang+".json",//ConstantsApp.resourcesBaseUrl+"i18n/"+_defaultLang+".json",
 				_config.manifestUrl,
 				_config.updateUrl,
 			], cb, _onInitialLoadComplete);
@@ -72,7 +72,7 @@ package app
 		// Start main load
 		private function _startLoad() : void {
 			var tPacks = [
-				["resources/interface.swf", { useCurrentDomain:true }],
+				["resources/interface.swf"],//, { useCurrentDomain:true }],
 				"resources/flags.swf"
 			];
 			
