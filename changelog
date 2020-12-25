@@ -4,6 +4,7 @@
 	-checks for updates
 	-disabled some features that don't seem to work for initial build
 -fixed layering for hand items - updated poses swf to accomplish this
+-app now scales to fit window
 
 
 == V1.16 - 7 September 2019 ==

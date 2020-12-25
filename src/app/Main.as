@@ -26,11 +26,8 @@ package app
 			Fewf.init(stage);
 
 			stage.align = StageAlign.TOP;
-			stage.scaleMode = StageScaleMode.NO_SCALE;
+			stage.scaleMode = StageScaleMode.SHOW_ALL;
 			stage.frameRate = 16;
-
-			// TODO
-			// BrowserMouseWheelPrevention.init(stage);
 
 			_loaderDisplay = addChild( new LoaderDisplay({ x:stage.stageWidth * 0.5, y:stage.stageHeight * 0.5 }) ) as LoaderDisplay;
 			
