@@ -72,9 +72,9 @@ package app.ui.panes
 			_text.height = tTFHeight;
 			_text.x = tTFPaddingX - tTextBackground.Width*0.5;
 			_text.y = tTFPaddingY - tTextBackground.Height*0.5;
-			_text.addEventListener(MouseEvent.CLICK, function(pEvent:Event){ _text.setSelection(0, _text.text.length); });
+			_text.addEventListener(MouseEvent.CLICK, function(pEvent:Event):void{ _text.setSelection(0, _text.text.length); });
 			
-			var tSize = tTextBackground.Height;
+			var tSize:Number = tTextBackground.Height;
 			_textColorBox = _tray.addChild(new RoundedRectangle({
 				x:tTextBackground.x - (tTextBackground.Width*0.5) - (tSize*0.5) - 5,
 				y:tTextBackground.y, width: tSize, height: tSize, origin:0.5
@@ -112,7 +112,7 @@ package app.ui.panes
 			_itemCont.removeChild(_item);
 			_item = _itemCont.addChild(pObj);
 			_item.scaleX = _item.scaleY = 5;
-			var tPadding = 15, tBoundsWidth = ConstantsApp.PANE_WIDTH-(tPadding*2), tBoundsHeight = 250-(tPadding*2);
+			var tPadding:Number = 15, tBoundsWidth:Number = ConstantsApp.PANE_WIDTH-(tPadding*2), tBoundsHeight:Number = 250-(tPadding*2);
 			FewfDisplayUtils.fitWithinBounds(_item, tBoundsWidth, tBoundsHeight, tBoundsWidth*0.7, tBoundsHeight*0.7);
 			_centerImageOrigin(_item);
 			_stageBitmap.draw(Fewf.stage); // Take a snapshot of current stage.

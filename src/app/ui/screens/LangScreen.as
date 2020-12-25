@@ -28,7 +28,7 @@ package app.ui.screens
 			/****************************
 			* Click Tray
 			*****************************/
-			var tClickTray = addChild(new Sprite());
+			var tClickTray:Sprite = addChild(new Sprite()) as Sprite;
 			tClickTray.x = -5000;
 			tClickTray.y = -5000;
 			tClickTray.graphics.beginFill(0x000000, 0.2);
@@ -46,14 +46,14 @@ package app.ui.screens
 			/****************************
 			* Languages
 			*****************************/
-			var tLanguages = Fewf.assets.getData("config").languages.list;
+			var tLanguages:Array = Fewf.assets.getData("config").languages.list;
 			
-			var tFlagTray = _tray.addChild(new MovieClip()), tFlagRowTray, tX;
-			var tBtn:SpriteButton, tLangData:Object, tColumns = 8, tRows = 1+Math.floor((tLanguages.length-1) / tColumns), tColumnsInRow = tColumns;
-			for(var i = 0; i < tLanguages.length; i++) { tLangData = tLanguages[i];
+			var tFlagTray:MovieClip = _tray.addChild(new MovieClip()) as MovieClip, tFlagRowTray:MovieClip, tX:Number;
+			var tBtn:SpriteButton, tLangData:Object, tColumns:int = 8, tRows:int = 1+Math.floor((tLanguages.length-1) / tColumns), tColumnsInRow:int = tColumns;
+			for(var i:int = 0; i < tLanguages.length; i++) { tLangData = tLanguages[i];
 				if(i%tColumns == 0) {
 					tColumnsInRow = i+tColumns > tLanguages.length ? tLanguages.length - i : tColumns;
-					tFlagRowTray = tFlagTray.addChild(new MovieClip());
+					tFlagRowTray = tFlagTray.addChild(new MovieClip()) as MovieClip;
 					tFlagRowTray.x += -(tColumnsInRow*55*0.5)+(55*0.5)+1;
 					tFlagRowTray.y += Math.floor(i/tColumns)*55;
 					tX = -55;

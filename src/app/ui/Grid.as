@@ -40,7 +40,7 @@ package app.ui
 		}
 
 		public function reset() : void {
-			var i = _array.length;
+			var i:int = _array.length;
 			while(i > 0) { i--;
 				removeChild(_array[i]);
 			}

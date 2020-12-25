@@ -10,10 +10,10 @@ package com.fewfre.utils
 		// Scale type: Contain
 		public static function fitWithinBounds(pObj:DisplayObject, pMaxWidth:Number, pMaxHeight:Number, pMinWidth:Number=0, pMinHeight:Number=0) : DisplayObject {
 			var tRect:flash.geom.Rectangle = pObj.getBounds(pObj);
-			var tWidth = tRect.width * pObj.scaleX;
-			var tHeight = tRect.height * pObj.scaleY;
-			var tMultiX = 1;
-			var tMultiY = 1;
+			var tWidth:Number = tRect.width * pObj.scaleX;
+			var tHeight:Number = tRect.height * pObj.scaleY;
+			var tMultiX:Number = 1;
+			var tMultiY:Number = 1;
 			if(tWidth > pMaxWidth) {
 				tMultiX = pMaxWidth / tWidth;
 			}
@@ -28,7 +28,7 @@ package com.fewfre.utils
 				tMultiY = pMinHeight / tHeight;
 			}
 			
-			var tMulti = 1;
+			var tMulti:Number = 1;
 			if(tMultiX > 0 && tMultiY > 0) {
 				tMulti = Math.min(tMultiX, tMultiY);
 			}

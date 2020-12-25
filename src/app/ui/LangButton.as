@@ -25,8 +25,8 @@ package app.ui
 			Fewf.dispatcher.addEventListener(I18n.FILE_UPDATED, _onFileUpdated);
 		}
 		
-		private function _changeImageToCurrentLanguage() {
-			var tLangData = Fewf.i18n.getConfigLangData();
+		private function _changeImageToCurrentLanguage():void {
+			var tLangData:Object = Fewf.i18n.getConfigLangData();
 			ChangeImage(new (Fewf.assets.getLoadedClass(tLangData.flags_swf_linkage))());
 			this.Image.x -= this.Image.width*0.5;
 			this.Image.y -= this.Image.height*0.5;

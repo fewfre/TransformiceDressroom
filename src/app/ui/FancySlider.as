@@ -48,7 +48,7 @@ package app.ui
 			dispatchEvent(new Event(FancySlider.CHANGE));
 		}
 		
-		public function updateViaMouseWheelDelta(pDelta) : void {
+		public function updateViaMouseWheelDelta(pDelta:Number) : void {
 			this.value += pDelta * 0.2;
 		}
 		

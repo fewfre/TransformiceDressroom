@@ -41,7 +41,7 @@ package app.ui.panes
 		{
 			var tLength:int = pSwatches.length;
 			
-			for(var i = 0; i < _colorSwatches.length; i++) {
+			for(var i:int = 0; i < _colorSwatches.length; i++) {
 				_colorSwatches[i].alpha = 0;
 				
 				if (tLength > i) {
@@ -91,15 +91,15 @@ package app.ui.panes
 		
 		private function _createColorSwatch(pNum:int, pX:int, pY:int) : ColorSwatch {
 			var swatch:ColorSwatch = new ColorSwatch();
-			swatch.addEventListener(ColorSwatch.ENTER_PRESSED, function(){ _selectSwatch(pNum); });
-			swatch.addEventListener(ColorSwatch.BUTTON_CLICK, function(){ _selectSwatch(pNum); });
+			swatch.addEventListener(ColorSwatch.ENTER_PRESSED, function():void{ _selectSwatch(pNum); });
+			swatch.addEventListener(ColorSwatch.BUTTON_CLICK, function():void{ _selectSwatch(pNum); });
 			swatch.x = pX;
 			swatch.y = pY;
 			return swatch;
 		}
 		
 		private function _selectSwatch(pNum:int, pSetCursor:Boolean=true) : void {
-			for(var i = 0; i < _colorSwatches.length; i++) {
+			for(var i:int = 0; i < _colorSwatches.length; i++) {
 				_colorSwatches[i].unselect();
 			}
 			_selectedSwatch = pNum;

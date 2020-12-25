@@ -41,13 +41,13 @@ package app.ui.panes
 		}
 		
 		public function closeAllPanes() : void {
-			for(var key in _panes) {
+			for(var key:String in _panes) {
 				_closePane(_panes[key]);
 			}
 		}
 		
 		public function dirtyAllPanes() : void {
-			for(var key in _panes) {
+			for(var key:String in _panes) {
 				_panes[key].makeDirty();
 			}
 		}

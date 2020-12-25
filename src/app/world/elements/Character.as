@@ -29,8 +29,8 @@ package app.world.elements
 			this.y = pData.y;
 
 			this.buttonMode = true;
-			this.addEventListener(MouseEvent.MOUSE_DOWN, function () { startDrag(); });
-			this.addEventListener(MouseEvent.MOUSE_UP, function () { stopDrag(); });
+			this.addEventListener(MouseEvent.MOUSE_DOWN, function():void { startDrag(); });
+			this.addEventListener(MouseEvent.MOUSE_UP, function():void { stopDrag(); });
 
 			/****************************
 			* Store Data
@@ -57,8 +57,8 @@ package app.world.elements
 			updatePose();
 		}
 
-		public function updatePose() {
-			var tScale = 3;
+		public function updatePose():void {
+			var tScale:Number = 3;
 			if(outfit != null) { tScale = outfit.scaleX; removeChild(outfit); }
 			outfit = addChild(new Pose(getItemData(ITEM.POSE))) as Pose;
 			outfit.scaleX = outfit.scaleY = tScale;
@@ -107,16 +107,16 @@ package app.world.elements
 			if(pParams.pawb == "y") { _itemDataMap[ITEM.PAW_BACK] = GameAssets.extraBackHand; }
 			
 			if(pParams["sh"] && pParams["sh"] != "") {
-				var tColor = _splitOnUrlColorSeperator(pParams["sh"]);
+				var tColor:Array = _splitOnUrlColorSeperator(pParams["sh"]);
 				GameAssets.shamanMode = parseInt(tColor.splice(0, 1)[0]);
 				if(tColor.length > 0) {
 					GameAssets.shamanColor = _hexToInt(tColor[0]);
 				}
 			}
 		}
-		private function _setParamToType(pParams:URLVariables, pType:String, pParam:String, pAllowNull:Boolean=true) {
+		private function _setParamToType(pParams:URLVariables, pType:String, pParam:String, pAllowNull:Boolean=true):void {
 			try {
-				var tData:ItemData = null, tID = pParams[pParam], tColors;
+				var tData:ItemData = null, tID:String = pParams[pParam], tColors:Array;
 				if(tID != null && tID != "") {
 					tColors = _splitOnUrlColorSeperator(tID); // Get a list of all the colors (ID is first); ex: 5;ffffff;abcdef;169742
 					tID = tColors.splice(0, 1)[0]; // Remove first item and store it as the ID.
@@ -128,7 +128,7 @@ package app.world.elements
 		}
 		private function _hexArrayToIntArray(pColors:Array, pDefaults:Array) : Array {
 			pColors = pColors.concat(); // Shallow Copy
-			for(var i = 0; i < pDefaults.length; i++) {
+			for(var i:int = 0; i < pDefaults.length; i++) {
 				pColors[i] = pColors[i] ? _hexToInt(pColors[i]) : pDefaults[i];
 			}
 			return pColors;
@@ -142,7 +142,7 @@ package app.world.elements
 		}
 
 		public function getParams() : String {
-			var tParms = new URLVariables();
+			var tParms:URLVariables = new URLVariables();
 
 			_addParamToVariables(tParms, "s", ITEM.SKIN);
 			_addParamToVariables(tParms, "d", ITEM.HAIR);
@@ -166,11 +166,11 @@ package app.world.elements
 
 			return tParms.toString().replace(/%3B/g, ";");
 		}
-		private function _addParamToVariables(pParams:URLVariables, pParam:String, pType:String) {
+		private function _addParamToVariables(pParams:URLVariables, pParam:String, pType:String):void {
 			var tData:ItemData = getItemData(pType);
 			if(tData) {
 				pParams[pParam] = tData.id;
-				var tColors = getColors(pType);
+				var tColors:Array = getColors(pType);
 				if(String(tColors) != String(tData.defaultColors)) { // Quick way to compare two arrays with primitive types
 					pParams[pParam] += ";"+_intArrayToHexArray(tColors).join(";");
 				}
@@ -179,7 +179,7 @@ package app.world.elements
 		}
 		private function _intArrayToHexArray(pColors:Array) : Array {
 			pColors = pColors.concat(); // Shallow Copy
-			for(var i = 0; i < pColors.length; i++) {
+			for(var i:int = 0; i < pColors.length; i++) {
 				pColors[i] = _intToHex(pColors[i]);
 			}
 			return pColors;
@@ -208,7 +208,7 @@ package app.world.elements
 		}
 
 		public function setItemData(pItem:ItemData) : void {
-			var tType = pItem.type == ITEM.SKIN_COLOR ? ITEM.SKIN : pItem.type;
+			var tType:String = pItem.type == ITEM.SKIN_COLOR ? ITEM.SKIN : pItem.type;
 			_itemDataMap[tType] = pItem;
 			updatePose();
 		}

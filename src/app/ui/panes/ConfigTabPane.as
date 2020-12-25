@@ -34,7 +34,7 @@ package app.ui.panes
 			sizex = 80; sizey = 50; spacingx = sizex + 10; xx = 5 - spacingx;
 			
 			shamanButtons = [];
-			var icon = addItem(new $ShamFeather()); icon.x = (xx += spacingx) + sizex*0.5; icon.y = yy + sizey*0.5; icon.scaleX = icon.scaleY = 2;
+			var icon:MovieClip = addItem(new $ShamFeather()) as MovieClip; icon.x = (xx += spacingx) + sizex*0.5; icon.y = yy + sizey*0.5; icon.scaleX = icon.scaleY = 2;
 			icon.addEventListener(MouseEvent.CLICK, _onNoShamanButtonClicked);
 			xx -= 5;
 			shamanButtons.push(tButton = addItem(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextBase({ text:"btn_normal_mode", text:"Normal" }), id:SHAMAN_MODE.NORMAL })) as PushButton);
@@ -106,7 +106,7 @@ package app.ui.panes
 			}
 		}
 		
-		private function _onShamanButtonClicked(pEvent:Event) {
+		private function _onShamanButtonClicked(pEvent:Event):void {
 			_untoggle(shamanButtons, pEvent.target as PushButton);
 			GameAssets.shamanMode = pEvent.target.id;
 			if(pEvent.target.pushed) {
@@ -115,7 +115,7 @@ package app.ui.panes
 			character.updatePose();
 		}
 		
-		private function _onNoShamanButtonClicked(pEvent:Event) {
+		private function _onNoShamanButtonClicked(pEvent:Event):void {
 			_untoggle(shamanButtons);
 			GameAssets.shamanMode = SHAMAN_MODE.OFF;
 			character.updatePose();

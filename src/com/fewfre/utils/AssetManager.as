@@ -49,7 +49,7 @@ package com.fewfre.utils
 				_itemsLeftToLoad = _urlsToLoad.length;
 				_loadedStuffCallbacks = [];
 				_cacheBreaker = pCacheBreaker;
-				var i = -1;
+				var i:int = -1;
 				while(_urlsToLoad.length > 0) { i++;
 					_loadedStuffCallbacks.push(null);
 					_loadNextItem(i);
@@ -101,28 +101,28 @@ package com.fewfre.utils
 				}
 			}
 			
-			private function _destroyAssetLoader(pLoader:Loader, pOnComplete) : void {
+			private function _destroyAssetLoader(pLoader:Loader, pOnComplete:Function) : void {
 				pLoader.contentLoaderInfo.removeEventListener(Event.COMPLETE, pOnComplete);//_onAssetsLoaded);
 				pLoader.contentLoaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, _onLoadError);
 				pLoader.contentLoaderInfo.removeEventListener(ProgressEvent.PROGRESS, _onProgress);
 			}
 			
-			private function _destroyURLLoader(pLoader:URLLoader, pOnComplete) : void {
+			private function _destroyURLLoader(pLoader:URLLoader, pOnComplete:Function) : void {
 				pLoader.removeEventListener(Event.COMPLETE, pOnComplete);
 				pLoader.removeEventListener(IOErrorEvent.IO_ERROR, _onURLLoadError);
 				pLoader.removeEventListener(ProgressEvent.PROGRESS, _onProgress);
 			}
 			
-			private function _onAssetsLoaded(pIndex:int, e:Event, pOnComplete) : void {
-				_loadedStuffCallbacks[pIndex] = function(){
+			private function _onAssetsLoaded(pIndex:int, e:Event, pOnComplete:Function) : void {
+				_loadedStuffCallbacks[pIndex] = function():void{
 					_applicationDomains.push( MovieClip(e.target.content).loaderInfo.applicationDomain );
 					_destroyAssetLoader(e.target.loader, pOnComplete);
 				};
 				_checkIfLoadingDone();
 			}
 			
-			private function _onJsonLoaded(pIndex:int, e:Event, pKey:String, pOnComplete) : void {
-				_loadedStuffCallbacks[pIndex] = function(){
+			private function _onJsonLoaded(pIndex:int, e:Event, pKey:String, pOnComplete:Function) : void {
+				_loadedStuffCallbacks[pIndex] = function():void{
 					_loadedData[pKey] = JSON.parse(e.target.data);
 					_destroyURLLoader(e.target as URLLoader, pOnComplete);
 				};
@@ -153,7 +153,7 @@ package com.fewfre.utils
 					// _loadNextItem();
 				} else {
 					trace("[AssetManager](_checkIfLoadingDone) All resources loaded.");
-					for each(var pCallback in _loadedStuffCallbacks) {
+					for each(var pCallback:Function in _loadedStuffCallbacks) {
 						if(pCallback != null) { pCallback(); }
 					}
 					_loadedStuffCallbacks = null;

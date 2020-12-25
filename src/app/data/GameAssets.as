@@ -59,7 +59,7 @@ package app.data
 
 			skins = new Array();
 			
-			var tFurColors = [ 0xBD9067, 0x593618, 0x8C887F, 0xDED7CE, 0x4E443A, 0xE3C07E, 0x272220 ];
+			var tFurColors:Array = [ 0xBD9067, 0x593618, 0x8C887F, 0xDED7CE, 0x4E443A, 0xE3C07E, 0x272220 ];
 			for(i = 0; i < tFurColors.length; i++) {
 				skins.push( new SkinData({ id:"color"+i, assetID:1, color:tFurColors[i], type:ITEM.SKIN_COLOR }) );
 			}
@@ -85,7 +85,7 @@ package app.data
 			}*/
 
 			poses = [];
-			var tPoseClasses = [
+			var tPoseClasses:Array = [
 				"Statique", "Course", "Duck", "Sleep", "Sit", "Mad", "Laugh", "Kiss", "Facepalm", "Danse", "Cry", "Confetti", "Clap",
 				"Rondoudou", "Selfie", "Zelda", "Plumes", "Langue", "Drapeau",
 				"StatiqueBalai", "CourseBalai", "Peche", "Neige", "Marshmallow", "PreInvoc", "Invoc", "Cadeau", "Attaque",
@@ -104,12 +104,12 @@ package app.data
 			var tClassName:String;
 			var tClass:Class;
 			var tSexSpecificParts:int;
-			for(var i = 0; i <= _MAX_COSTUMES_TO_CHECK_TO; i++) {
+			for(var i:int = 0; i <= _MAX_COSTUMES_TO_CHECK_TO; i++) {
 				if(pData.map) {
 					for(var g:int = 0; g < (pData.sex ? 2 : 1); g++) {
-						var tClassMap = {  }, tClassSuccess = null;
+						var tClassMap:Object = {  }, tClassSuccess:Class = null;
 						tSexSpecificParts = 0;
-						for(var j = 0; j <= pData.map.length; j++) {
+						for(var j:int = 0; j <= pData.map.length; j++) {
 							tClass = Fewf.assets.getLoadedClass( tClassName = pData.base+(pData.pad ? zeroPad(i, pData.pad) : i)+(pData.after ? pData.after : "")+pData.map[j] );
 							if(tClass) { tClassMap[pData.map[j]] = tClass; tClassSuccess = tClass; }
 							else if(pData.sex){
@@ -118,7 +118,7 @@ package app.data
 							}
 						}
 						if(tClassSuccess) {
-							var tIsSexSpecific = pData.sex && tSexSpecificParts > 0;
+							var tIsSexSpecific:Boolean = pData.sex && tSexSpecificParts > 0;
 							tArray.push( new ItemData({ id:i+(tIsSexSpecific ? (g==1 ? "M" : "F") : ""), type:pData.type, classMap:tClassMap, itemClass:tClassSuccess, gender:(tIsSexSpecific ? (g==1?GENDER.MALE:GENDER.FEMALE) : null) }) );
 						}
 						if(tSexSpecificParts == 0) {
@@ -311,10 +311,10 @@ package app.data
 
 		// pData = { ?pose:ItemData, ?skin:SkinData }
 		public static function getDefaultPoseSetup(pData:Object) : Pose {
-			var tPoseData = pData.pose ? pData.pose : poses[defaultPoseIndex];
-			var tSkinData = pData.skin ? pData.skin : skins[defaultSkinIndex];
+			var tPoseData:ItemData = pData.pose ? pData.pose : poses[defaultPoseIndex];
+			var tSkinData:SkinData = pData.skin ? pData.skin : skins[defaultSkinIndex];
 
-			var tPose = new Pose(tPoseData);
+			var tPose:Pose = new Pose(tPoseData);
 			if(tSkinData.gender == GENDER.MALE) {
 				tPose.apply({ items:[
 					tSkinData
@@ -336,9 +336,9 @@ package app.data
 		public static function saveAsPNGFrameByFrameVersion(pObj:app.world.elements.Character, pName:String) : void {
 			if(!pObj){ return; }
 
-			var tOrigScale = pObj.outfit.scaleX;
+			var tOrigScale:Number = pObj.outfit.scaleX;
 			pObj.scale = 1;
-			var tWidth = 80, tHeight = 65;
+			var tWidth:Number = 80, tHeight:Number = 65;
 			var tRect:flash.geom.Rectangle = pObj.getBounds(pObj);
 			var tBitmap:flash.display.BitmapData = new flash.display.BitmapData(tWidth, tHeight, true, 0xFFFFFF);
 

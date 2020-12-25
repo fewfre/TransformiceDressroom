@@ -33,7 +33,7 @@ package app.ui
 			if(pData.originX != null) { originX = pData.originX; }
 			if(pData.originY != null) { originY = pData.originY; }
 			_image = addChild( new $FenetreBase() ) as MovieClip;
-			var tCornerPadding = 28;
+			var tCornerPadding:Number = 28;
 			_image.scale9Grid = new Rectangle(tCornerPadding, tCornerPadding, 172-(tCornerPadding*2), 128-(tCornerPadding*2));
 			
 			_render();
