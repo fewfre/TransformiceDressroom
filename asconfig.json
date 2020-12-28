@@ -1,0 +1,49 @@
+{
+	"compilerOptions": {
+		"source-path": [
+			"src",
+			"E:/programs/Adobe/Adobe Flash CS6/Common/Configuration/ActionScript 3.0/libs",
+			"E:/programs/Adobe/Adobe Flash CS6/Common/Configuration/Component Source/ActionScript 3.0/User Interface",
+			"E:/programs/Adobe/Adobe Flash CS6/Common/Configuration/Component Source/ActionScript 3.0/FLVPlayback",
+			"E:/programs/Adobe/Adobe Flash CS6/Common/Configuration/Component Source/ActionScript 3.0/FLVPlaybackCaptioning",
+			"E:/programs/Adobe/Adobe Flash CS6/Common/Configuration/Components"
+		],
+		"output": "bin/TransformiceDressroom.swf",
+		"default-frame-rate": 30,
+		"default-background-color": "#FFFFFF",
+		"default-size": {
+			"width": 800,
+			"height": 600
+		},
+		"target-player": "3.0",
+		"accessible": false,
+		"advanced-telemetry": false,
+		"benchmark": false,
+		"optimize": true,
+		"omit-trace-statements": true,
+		"show-unused-type-selector-warnings": true,
+		"strict": true,
+		"use-network": true,
+		"use-resource-bundle-metadata": true,
+		"warnings": true,
+		"verbose-stacktraces": false,
+		"static-link-runtime-shared-libraries": true,
+		"library-path": [
+			"./fla/interface.swc",
+			"./fla/assets.swc",
+			"E:/programs/Adobe/Adobe Flash CS6/Common/Configuration/ActionScript 3.0/libs/11.0/textLAyout.swc",
+			"E:/programs/Adobe/Adobe Flash CS6/Common/Configuration/ActionScript 3.0/libs/flash.swc"
+		],
+		"include-libraries": [
+			"./fla/interface.swc",
+			"./fla/assets.swc",
+			"E:/programs/Adobe/Adobe Flash CS6/Common/Configuration/ActionScript 3.0/libs/11.0/textLAyout.swc",
+			"E:/programs/Adobe/Adobe Flash CS6/Common/Configuration/ActionScript 3.0/libs/flash.swc"
+		]
+	},
+	"files": [
+		"src/app/Main.as"
+	],
+	"config": "air",
+	"application": "application.xml"
+}

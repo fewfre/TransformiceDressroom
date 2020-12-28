@@ -1,13 +1,18 @@
 - android
-- standalone
+- standalone (impossible?)
+- short share code
 - export gif
 - imgur
 - color finder
-
+- analytics
+- offline support (probably via color finder fix?)
+- translate
+- skip update option (remember via save)
 
 
 - get look by username
 - get IMAGE (png) of look by username
+
 
 - specify flag-waving image?
 - [Code Rewrite Idea] Screen manager (Share, Lang, Loading)

@@ -20,12 +20,19 @@
 		<resizable>true</resizable> 
 	</initialWindow>
 	
+	<icon>
+		<image16x16>meta/icon_16.png</image16x16>
+		<image32x32>meta/icon_32.png</image32x32>
+		<image48x48>meta/icon_48.png</image48x48>
+		<image72x72>meta/icon_72.png</image72x72>
+		<image128x128>meta/icon_128.png</image128x128>
+	</icon>
+
 	<android>
 		<manifestAdditions>
 			<![CDATA[
 				<manifest android:installLocation="auto">
 					<uses-permission android:name="android.permission.INTERNET"/>
-					<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 					<uses-configuration android:reqFiveWayNav="true"/>
 					<supports-screens android:normalScreens="true"/>
 					<uses-feature android:required="true" android:name="android.hardware.touchscreen.multitouch"/>
