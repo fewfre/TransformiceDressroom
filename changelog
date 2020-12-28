@@ -1,3 +1,8 @@
+== V1.17c - 27 December 2020 ==
+- Color finder fixed
+- poses.swf now included in the install (to cut down on external loading)
+
+
 == V1.17 - 24 December 2020 ==
 - AIR version
 	-fetches external assets
