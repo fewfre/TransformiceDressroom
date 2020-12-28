@@ -43,9 +43,6 @@ package app
 		private function _onPreloadComplete() : void {
 			_config = Fewf.assets.getData("config");
 			_defaultLang = _getDefaultLang(_config.languages["default"]);
-			if(_config.resourcesBaseUrl) {
-				ConstantsApp.resourcesBaseUrl = _config.resourcesBaseUrl;
-			}
 			
 			_startInitialLoad();
 		}
@@ -53,11 +50,12 @@ package app
 		private function _startInitialLoad() : void {
 			var now:Date = new Date();
 			var cb = [now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes(), now.getSeconds()].join("-");
-			_load([
-				"resources/i18n/"+_defaultLang+".json",//ConstantsApp.resourcesBaseUrl+"i18n/"+_defaultLang+".json",
-				_config.manifestUrl,
-				_config.updateUrl,
-			], cb, _onInitialLoadComplete);
+			var tPacks = [
+				"resources/i18n/"+_defaultLang+".json",
+			];
+			tPacks = _mergeArray(tPacks, _config.configManifest);
+			
+			_load(tPacks, cb, _onInitialLoadComplete);
 		}
 		
 		private function _onInitialLoadComplete() : void {
@@ -74,8 +72,7 @@ package app
 			];
 			
 			var manifest = Fewf.assets.getData("manifest");
-			var manifestData = _mergeArray(manifest.packs.items, manifest.packs.parts);
-			// tPacks = tPacks.concat(manifestData.map(function(fileName){ return ConstantsApp.resourcesBaseUrl+"/"+fileName; }));
+			var manifestData = manifest.packs.items;//_mergeArray(manifest.packs.items, manifest.packs.parts);
 			tPacks = tPacks.concat(manifestData);
 			
 			var now:Date = new Date();

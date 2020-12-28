@@ -72,9 +72,8 @@ package app.ui
 			downloadButton.disable().alpha = 0;
 			
 			if(pData.showEyeDropButton) {
-				// TODO
-				// eyeDropButton = addChild(new SpriteButton({ x:tX - 25, y:26, width:25, height:25, obj_scale:0.45, obj:new $EyeDropper() })) as SpriteButton;
-				// eyeDropButton.disable().alpha = 0;
+				eyeDropButton = addChild(new SpriteButton({ x:tX - 25, y:26, width:25, height:25, obj_scale:0.45, obj:new $EyeDropper() })) as SpriteButton;
+				eyeDropButton.disable().alpha = 0;
 			}
 			
 			// Line seperating infobar and contents below it.

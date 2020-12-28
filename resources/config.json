@@ -1,8 +1,9 @@
 {
-	"resourcesBaseUrl_cmnt": "https://projects.fewfre.com/a801/transformice/dressroom/resources",
-	
-	"manifestUrl": "https://projects.fewfre.com/a801/transformice/dressroom/app/manifest.json",
-	"updateUrl": "https://projects.fewfre.com/a801/transformice/dressroom/app/update.json",
+	"configManifest" : [
+		"https://projects.fewfre.com/a801/transformice/dressroom/app/manifest.json",
+		"https://projects.fewfre.com/a801/transformice/dressroom/app/update.json",
+		"resources/poses.swf"
+	],
 	
 	"languages": {
 		"default": "en",
@@ -21,18 +22,6 @@
 			{ "code":"ar", "name":"العَرَبِيَّة", "flags_swf_linkage":"$AR" },
 			{ "code":"hr", "name":"Hrvatski", "flags_swf_linkage":"$HR" },
 			{ "code":"lv", "name":"latviešu valoda", "flags_swf_linkage":"$LV" }
-		]
-	},
-	
-	"packs": {
-		"items": [
-			"x_meli_costumes.swf",
-			"x_fourrures.swf",
-			"x_fourrures2.swf",
-			"x_fourrures3.swf"
-		],
-		"parts": [
-			"poses.swf"
 		]
 	}
 }
