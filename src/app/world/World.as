@@ -67,14 +67,16 @@ package app.world
 			* Create Character
 			*****************************/
 			var parms:flash.net.URLVariables = null;
-			try {
-				var urlPath:String = ExternalInterface.call("eval", "window.location.href");
-				if(urlPath && urlPath.indexOf("?") > 0) {
-					urlPath = urlPath.substr(urlPath.indexOf("?") + 1, urlPath.length);
-					parms = new flash.net.URLVariables();
-					parms.decode(urlPath);
-				}
-			} catch (error:Error) { };
+			if(!Fewf.isExternallyLoaded) {
+				try {
+					var urlPath:String = ExternalInterface.call("eval", "window.location.href");
+					if(urlPath && urlPath.indexOf("?") > 0) {
+						urlPath = urlPath.substr(urlPath.indexOf("?") + 1, urlPath.length);
+						parms = new flash.net.URLVariables();
+						parms.decode(urlPath);
+					}
+				} catch (error:Error) { };
+			}
 
 			this.character = addChild(new Character({ x:180, y:275,
 				skin:GameAssets.skins[GameAssets.defaultSkinIndex],
@@ -111,7 +113,8 @@ package app.world
 			_toolbox = addChild(new Toolbox({
 				x:188, y:28, character:character,
 				onSave:_onSaveClicked, onAnimate:_onPlayerAnimationToggle, onRandomize:_onRandomizeDesignClicked,
-				onTrash:_onTrashButtonClicked, onShare:_onShareButtonClicked, onScale:_onScaleSliderChange
+				onTrash:_onTrashButtonClicked, onShare:_onShareButtonClicked, onScale:_onScaleSliderChange,
+				onShareCodeEntered:_onShareCodeEntered
 			})) as Toolbox;
 			
 			var tLangButton = addChild(new LangButton({ x:22, y:pStage.stageHeight-17, width:30, height:25, origin:0.5 }));
@@ -239,6 +242,37 @@ package app.world
 			character.scale = _toolbox.scaleSlider.getValueAsScale();
 		}
 
+		private function _onShareCodeEntered(pCode:String, pProgressCallback:Function):void {
+			if(!pCode || pCode == "") { return; pProgressCallback("placeholder"); }
+			if(pCode.indexOf("?") > -1) {
+				pCode = pCode.substr(pCode.indexOf("?") + 1, pCode.length);
+			}
+			
+			try {
+				var params = new flash.net.URLVariables();
+				params.decode(pCode);
+				
+				// First remove old stuff to prevent conflicts
+				GameAssets.shamanMode = SHAMAN_MODE.OFF;
+				for each(var tItem in ITEM.LAYERING) { _removeItem(tItem); }
+				_removeItem(ITEM.POSE);
+				
+				// Now update pose
+				character.parseParams(params);
+				character.updatePose();
+				
+				// now update the infobars
+				_updateUIBasedOnCharacter();
+				(getTabByType(TAB_OTHER) as ConfigTabPane).updateButtonsBasedOnCurrentData();
+				
+				// Now tell code box that we are done
+				pProgressCallback("success");
+			}
+			catch (error:Error) {
+				pProgressCallback("invalid");
+			};
+		}
+
 		private function _onPlayerAnimationToggle(pEvent:Event):void {
 			if(ConstantsApp.ANIMATION_FRAME_BY_FRAME) {
 				character.outfit.poseNextFrame();
@@ -259,6 +293,23 @@ package app.world
 				FewfDisplayUtils.saveAsPNG(this.character, "character");
 			} else {
 				GameAssets.saveAsPNGFrameByFrameVersion(this.character, "frame_"+character.getItemData(ITEM.POSE).id+"_"+character.outfit.poseCurrentFrame);
+			}
+		}
+
+		// Note: does not automatically de-select previous buttons / infobars; do that before calling this
+		// This function is required when setting data via parseParams
+		private function _updateUIBasedOnCharacter() : void {
+			var tPane:TabPane, tData:ItemData, tType:String;
+			var tTypes = [ ITEM.HAT, ITEM.HAIR, ITEM.EARS, ITEM.EYES, ITEM.MOUTH, ITEM.NECK, ITEM.TAIL, ITEM.HAND, ITEM.CONTACTS, ITEM.SKIN, ITEM.POSE ], tData:ItemData, tType:String;
+			for(var i:int = 0; i < tTypes.length; i++) { tType = tTypes[i];
+				tPane = getTabByType(tType);
+				
+				// Based on what the character is wearing at start, toggle on the appropriate buttons.
+				tData = character.getItemData(tType);
+				if(tData) {
+					var tIndex:int = FewfUtils.getIndexFromArrayWithKeyVal(GameAssets.getArrayByType(tType), "id", tData.id);
+					tPane.buttons[ tIndex ].toggleOn();
+				}
 			}
 		}
 
@@ -354,8 +405,12 @@ package app.world
 		private function _onShareButtonClicked(pEvent:Event) : void {
 			var tURL = "";
 			try {
-				tURL = ExternalInterface.call("eval", "window.location.origin+window.location.pathname");
-				tURL += "?"+this.character.getParams();
+				if(Fewf.isExternallyLoaded) {
+					tURL = this.character.getParams();
+				} else {
+					tURL = ExternalInterface.call("eval", "window.location.origin+window.location.pathname");
+					tURL += "?"+this.character.getParams();
+				}
 			} catch (error:Error) {
 				tURL = "<error creating link>";
 			};
@@ -377,6 +432,7 @@ package app.world
 			GameAssets.shamanMode = SHAMAN_MODE.OFF;
 			for each(var tItem in ITEM.LAYERING) { _removeItem(tItem); }
 			_removeItem(ITEM.POSE);
+			(getTabByType(TAB_OTHER) as ConfigTabPane).updateButtonsBasedOnCurrentData();
 		}
 
 		private function _onTrashConfirmScreenClosed(pEvent:Event) : void {

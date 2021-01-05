@@ -67,7 +67,7 @@ package com.fewfre.utils
 			
 			private function _newLoader(pIndex:int, pUrl:String, pOptions:Object=null) : void {
 				var tUrlParts:Array = pUrl.split("/").pop().split("."), tName:String = tUrlParts[0], tType:String = tUrlParts[1];
-				if(_cacheBreaker && ExternalInterface.call("eval", "window.location.href")) {
+				if(_cacheBreaker && (Fewf.isExternallyLoaded ? true : ExternalInterface.call("eval", "window.location.href"))) {
 					pUrl += "?cb="+_cacheBreaker;
 				}
 				switch(tType) {

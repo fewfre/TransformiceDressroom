@@ -52,7 +52,7 @@ package app.world.elements
 			_itemDataMap[ITEM.BACK] = pData.back;
 			_itemDataMap[ITEM.PAW_BACK] = pData.pawback;
 			
-			if(pData.params) _parseParams(pData.params);
+			if(pData.params) parseParams(pData.params);
 
 			updatePose();
 		}
@@ -62,6 +62,9 @@ package app.world.elements
 			if(outfit != null) { tScale = outfit.scaleX; removeChild(outfit); }
 			outfit = addChild(new Pose(getItemData(ITEM.POSE))) as Pose;
 			outfit.scaleX = outfit.scaleY = tScale;
+			// Don't let the pose eat mouse input
+			outfit.mouseChildren = false;
+			outfit.mouseEnabled = false;
 
 			outfit.apply({
 				items:[
@@ -84,7 +87,7 @@ package app.world.elements
 			if(animatePose) outfit.play(); else outfit.stopAtLastFrame();
 		}
 
-		private function _parseParams(pParams:URLVariables) : void {
+		public function parseParams(pParams:URLVariables) : void {
 			trace(pParams.toString());
 
 			_setParamToType(pParams, ITEM.SKIN, "s", false);

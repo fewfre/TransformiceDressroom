@@ -130,5 +130,18 @@ package app.ui.panes
 				}
 			}
 		}
+		
+		public function updateButtonsBasedOnCurrentData() : void {
+			for(var i:int = 0; i < shamanButtons.length; i++) {
+				shamanButtons[i].toggleOff();
+			}
+			if(GameAssets.shamanMode >= 2) {
+				shamanButtons[GameAssets.shamanMode-2].toggleOn(false);
+			}
+			
+			button_hand.toggle(!!character.getItemData(ITEM.OBJECT), false);
+			button_back.toggle(!!character.getItemData(ITEM.BACK), false);
+			button_backHand.toggle(!!character.getItemData(ITEM.PAW_BACK), false);
+		}
 	}
 }

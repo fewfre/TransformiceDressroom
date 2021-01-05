@@ -22,7 +22,7 @@ package app.ui.panes
 		private var _tray : MovieClip;
 		private var _stageBitmap : BitmapData;
 		private var _itemCont : MovieClip;
-		private var _item : DisplayObject;
+		private var _item : MovieClip;
 		private var _text : TextField;
 		private var _textColorBox : RoundedRectangle;
 		private var _hoverText : TextField;
@@ -55,7 +55,7 @@ package app.ui.panes
 			_itemCont.addEventListener(MouseEvent.CLICK, _onItemClicked);
 			_itemCont.addEventListener(MouseEvent.MOUSE_MOVE, _onItemHoveredOver);
 			_itemCont.addEventListener(MouseEvent.MOUSE_OUT, _onItemMouseOut);
-			_item = _itemCont.addChild(new MovieClip());
+			_item = _itemCont.addChild(new MovieClip()) as MovieClip;
 			
 			/****************************
 			* Selectable text field
@@ -110,8 +110,12 @@ package app.ui.panes
 			_setColorText(-1);
 			_setHoverColor(-1);
 			_itemCont.removeChild(_item);
-			_item = _itemCont.addChild(pObj);
+			_item = _itemCont.addChild(pObj) as MovieClip;
 			_item.scaleX = _item.scaleY = 5;
+			// Don't let the pose eat mouse input
+			_item.mouseChildren = false;
+			_item.mouseEnabled = false;
+			
 			var tPadding = 15, tBoundsWidth = ConstantsApp.PANE_WIDTH-(tPadding*2), tBoundsHeight = 250-(tPadding*2);
 			FewfDisplayUtils.fitWithinBounds(_item, tBoundsWidth, tBoundsHeight, tBoundsWidth*0.7, tBoundsHeight*0.7);
 			_centerImageOrigin(_item);

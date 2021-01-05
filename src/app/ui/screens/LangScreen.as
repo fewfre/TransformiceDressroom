@@ -110,7 +110,7 @@ package app.ui.screens
 			var tLoaderDisplay = addChild( new LoaderDisplay({  }) );
 			
 			Fewf.assets.load([
-				"resources/i18n/"+tLangData.code+".json",
+				Fewf.swfUrlBase+"resources/i18n/"+tLangData.code+".json",
 			]);
 			Fewf.assets.addEventListener(AssetManager.LOADING_FINISHED, function(e:Event){
 				Fewf.assets.removeEventListener(AssetManager.LOADING_FINISHED, arguments.callee);

@@ -4,6 +4,7 @@ package app.world.data
 	import app.data.*;
 	import flash.display.*;
 	import flash.geom.*;
+	import flash.utils.getDefinitionByName;
 
 	public class SkinData extends ItemData
 	{
@@ -62,9 +63,19 @@ package app.world.data
 			if(shamanMode == SHAMAN_MODE.DIVINE) {
 				shamanMode--; // saves each piece having to decrement one recursevly.
 			}
-			var tClass = Fewf.assets.getLoadedClass( "_"+pID+"_"+_assetID+"_"+shamanMode );
+			var mcName = "_"+pID+"_"+_assetID+"_"+shamanMode;
+			var tClass = _assetID == 1 ? getDefaultSkinPart(mcName) : Fewf.assets.getLoadedClass(mcName);
 			// trace("_"+pID+"_"+_assetID+"_"+shamanMode+" - "+tClass);
 			return tClass == null && shamanMode > SHAMAN_MODE.NORMAL ? getPart(pID, { shamanMode:shamanMode-1 }) : tClass;
+		}
+		
+		private function getDefaultSkinPart(pName:String) : Class {
+			try {
+				return getDefinitionByName(pName);
+			}
+			catch(err:Error) {
+				return null;
+			}
 		}
 	}
 }
