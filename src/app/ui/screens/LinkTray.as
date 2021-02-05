@@ -63,7 +63,7 @@ package app.ui.screens
 			/****************************
 			* #1 - Selectable text field + Copy Button and message
 			*****************************/
-			var tY = -35;
+			var tY = 80;
 			
 			addChild(new TextBase({ text:"loading_progress", values:["Fewfre Syntax (full support)"], size:15, y:tY-30 }));
 			
@@ -77,7 +77,7 @@ package app.ui.screens
 			/****************************
 			* #2 - Selectable text field + Copy Button and message
 			*****************************/
-			tY = 80;
+			tY = -35;
 			
 			addChild(new TextBase({ text:"loading_progress", values:["TFM /dressing Syntax (Pose & Other not saved)"], size:15, y:tY-30 }));
 			
