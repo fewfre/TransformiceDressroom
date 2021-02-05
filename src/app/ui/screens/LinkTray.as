@@ -116,6 +116,8 @@ package app.ui.screens
 		}
 		
 		private function _clearCopiedMessages() : void {
+			if(_textCopyTween) _textCopyTween.stop();
+			if(_textCopyTween2) _textCopyTween2.stop();
 			_textCopiedMessage.alpha = 0;
 			_textCopiedMessage2.alpha = 0;
 		}
