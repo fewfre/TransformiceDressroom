@@ -66,15 +66,14 @@ package app.world
 			/****************************
 			* Create Character
 			*****************************/
-			var parms:flash.net.URLVariables = null;
+			var parms:String = null;
 			if(!Fewf.isExternallyLoaded) {
 				try {
 					var urlPath:String = ExternalInterface.call("eval", "window.location.href");
 					if(urlPath && urlPath.indexOf("?") > 0) {
 						urlPath = urlPath.substr(urlPath.indexOf("?") + 1, urlPath.length);
-						parms = new flash.net.URLVariables();
-						parms.decode(urlPath);
 					}
+					parms = urlPath;
 				} catch (error:Error) { };
 			}
 
@@ -249,16 +248,13 @@ package app.world
 			}
 			
 			try {
-				var params = new flash.net.URLVariables();
-				params.decode(pCode);
-				
 				// First remove old stuff to prevent conflicts
 				GameAssets.shamanMode = SHAMAN_MODE.OFF;
 				for each(var tItem in ITEM.LAYERING) { _removeItem(tItem); }
 				_removeItem(ITEM.POSE);
 				
 				// Now update pose
-				character.parseParams(params);
+				character.parseParams(pCode);
 				character.updatePose();
 				
 				// now update the infobars

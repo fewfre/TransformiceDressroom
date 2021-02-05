@@ -20,7 +20,7 @@ package app.world.elements
 		public function set scale(pVal:Number) : void { outfit.scaleX = outfit.scaleY = pVal; }
 
 		// Constructor
-		// pData = { x:Number, y:Number, [various "__Data"s], ?params:URLVariables }
+		// pData = { x:Number, y:Number, [various "__Data"s], ?params:String }
 		public function Character(pData:Object) {
 			super();
 			animatePose = false;
@@ -87,32 +87,71 @@ package app.world.elements
 			if(animatePose) outfit.play(); else outfit.stopAtLastFrame();
 		}
 
-		public function parseParams(pParams:URLVariables) : void {
-			trace(pParams.toString());
-
-			_setParamToType(pParams, ITEM.SKIN, "s", false);
-			_setParamToType(pParams, ITEM.HAIR, "d");
-			_setParamToType(pParams, ITEM.HAT, "h");
-			_setParamToType(pParams, ITEM.EARS, "e");
-			_setParamToType(pParams, ITEM.EYES, "y");
-			_setParamToType(pParams, ITEM.MOUTH, "m");
-			_setParamToType(pParams, ITEM.NECK, "n");
-			_setParamToType(pParams, ITEM.TAIL, "t");
-			_setParamToType(pParams, ITEM.CONTACTS, "c");
-			_setParamToType(pParams, ITEM.HAND, "hd");
-			_setParamToType(pParams, ITEM.POSE, "p", false);
+		public function parseParams(pCode:String) : Boolean {
+			trace("(parseParams) ", pCode);
 			
-			if(pParams.paw == "y") { _itemDataMap[ITEM.OBJECT] = GameAssets.extraObjectWand; }
-			if(pParams.back == "y") { _itemDataMap[ITEM.BACK] = GameAssets.extraFromage; }
-			if(pParams.pawb == "y") { _itemDataMap[ITEM.PAW_BACK] = GameAssets.extraBackHand; }
-			
-			if(pParams["sh"] && pParams["sh"] != "") {
-				var tColor = _splitOnUrlColorSeperator(pParams["sh"]);
-				GameAssets.shamanMode = parseInt(tColor.splice(0, 1)[0]);
-				if(tColor.length > 0) {
-					GameAssets.shamanColor = _hexToInt(tColor[0]);
-				}
+			// Url param code
+			if(pCode.indexOf("=") > -1) {
+				try {
+					var pParams = new flash.net.URLVariables();
+					pParams.decode(pCode);
+					
+					_setParamToType(pParams, ITEM.SKIN, "s", false);
+					_setParamToType(pParams, ITEM.HAIR, "d");
+					_setParamToType(pParams, ITEM.HAT, "h");
+					_setParamToType(pParams, ITEM.EARS, "e");
+					_setParamToType(pParams, ITEM.EYES, "y");
+					_setParamToType(pParams, ITEM.MOUTH, "m");
+					_setParamToType(pParams, ITEM.NECK, "n");
+					_setParamToType(pParams, ITEM.TAIL, "t");
+					_setParamToType(pParams, ITEM.CONTACTS, "c");
+					_setParamToType(pParams, ITEM.HAND, "hd");
+					_setParamToType(pParams, ITEM.POSE, "p", false);
+					
+					if(pParams.paw == "y") { _itemDataMap[ITEM.OBJECT] = GameAssets.extraObjectWand; }
+					if(pParams.back == "y") { _itemDataMap[ITEM.BACK] = GameAssets.extraFromage; }
+					if(pParams.pawb == "y") { _itemDataMap[ITEM.PAW_BACK] = GameAssets.extraBackHand; }
+					
+					if(pParams["sh"] && pParams["sh"] != "") {
+						var tColor = _splitOnUrlColorSeperator(pParams["sh"]);
+						GameAssets.shamanMode = parseInt(tColor.splice(0, 1)[0]);
+						if(tColor.length > 0) {
+							GameAssets.shamanColor = _hexToInt(tColor[0]);
+						}
+					}
+					
+				} catch (error:Error) { return false; };
+			} else {
+				// Official TFM /dressing params
+				try {
+					var arr = pCode.split(";");
+					_setParamToTypeTfmOfficialSyntax(ITEM.SKIN, arr[2] ? arr[0]+"_"+arr[2] : arr[0], false);
+					
+					arr = arr[1].split(",");
+					_setParamToTypeTfmOfficialSyntax(ITEM.HAT, arr[0]);
+					_setParamToTypeTfmOfficialSyntax(ITEM.EYES, arr[1]);
+					_setParamToTypeTfmOfficialSyntax(ITEM.EARS, arr[2]);
+					_setParamToTypeTfmOfficialSyntax(ITEM.MOUTH, arr[3]);
+					_setParamToTypeTfmOfficialSyntax(ITEM.NECK, arr[4]);
+					_setParamToTypeTfmOfficialSyntax(ITEM.HAIR, arr[5]);
+					_setParamToTypeTfmOfficialSyntax(ITEM.TAIL, arr[6]);
+					_setParamToTypeTfmOfficialSyntax(ITEM.CONTACTS, arr[7]);
+					_setParamToTypeTfmOfficialSyntax(ITEM.HAND, arr[8]);
+				} catch(error:Error) { return false; };
 			}
+			return true;
+		}
+		private function _setParamToTypeTfmOfficialSyntax(pType:String, pParamVal:String, pAllowNull:Boolean=true) {
+			try {
+				var tData:ItemData = null, tID = pParamVal, tColors;
+				if(tID != null && tID != "") {
+					tColors = tID.split(/\_|\+/); // Get a list of all the colors (ID is first); ex: 5_ffffff+abcdef+169742
+					tID = tColors.splice(0, 1)[0]; // Remove first item and store it as the ID.
+					tData = GameAssets.getItemFromTypeID(pType, tID);
+					if(tColors.length > 0) { tData.colors = _hexArrayToIntArray(tColors, tData.defaultColors); }
+				}
+				_itemDataMap[pType] = pAllowNull ? tData : ( tData == null ? _itemDataMap[pType] : tData );
+			} catch (error:Error) { };
 		}
 		private function _setParamToType(pParams:URLVariables, pType:String, pParam:String, pAllowNull:Boolean=true) {
 			try {

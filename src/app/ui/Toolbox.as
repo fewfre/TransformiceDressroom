@@ -108,9 +108,9 @@ package app.ui
 			/****************************
 			* Selectable text field
 			*****************************/
-			if(Fewf.isExternallyLoaded) {
+			// if(Fewf.isExternallyLoaded) {
 				addChild(new PasteShareCodeInput({ x:18, y:33, onChange:pData.onShareCodeEntered }));
-			}
+			// }
 			
 			/********************
 			* Events
