@@ -128,15 +128,10 @@ package app.world.elements
 					_setParamToTypeTfmOfficialSyntax(ITEM.SKIN, arr[2] ? arr[0]+"_"+arr[2] : arr[0], false);
 					
 					arr = arr[1].split(",");
-					_setParamToTypeTfmOfficialSyntax(ITEM.HAT, arr[0]);
-					_setParamToTypeTfmOfficialSyntax(ITEM.EYES, arr[1]);
-					_setParamToTypeTfmOfficialSyntax(ITEM.EARS, arr[2]);
-					_setParamToTypeTfmOfficialSyntax(ITEM.MOUTH, arr[3]);
-					_setParamToTypeTfmOfficialSyntax(ITEM.NECK, arr[4]);
-					_setParamToTypeTfmOfficialSyntax(ITEM.HAIR, arr[5]);
-					_setParamToTypeTfmOfficialSyntax(ITEM.TAIL, arr[6]);
-					_setParamToTypeTfmOfficialSyntax(ITEM.CONTACTS, arr[7]);
-					_setParamToTypeTfmOfficialSyntax(ITEM.HAND, arr[8]);
+					var tTypes = [ITEM.HAT, ITEM.EYES, ITEM.EARS, ITEM.MOUTH, ITEM.NECK, ITEM.HAIR, ITEM.TAIL, ITEM.CONTACTS, ITEM.HAND];
+					for(var i:int = 0; i < tTypes.length; i++) {
+						_setParamToTypeTfmOfficialSyntax(tTypes[i], arr[i]);
+					}
 				} catch(error:Error) { return false; };
 			}
 			return true;
@@ -204,6 +199,34 @@ package app.world.elements
 			}
 
 			return tParms.toString().replace(/%3B/g, ";");
+		}
+		public function getParamsTfmOfficialSyntax() : String {
+			var tSkinData = getItemData(ITEM.SKIN);
+			var code:String = tSkinData.id+";";
+			
+			// Apply various parts
+			var tTypes = [ITEM.HAT, ITEM.EYES, ITEM.EARS, ITEM.MOUTH, ITEM.NECK, ITEM.HAIR, ITEM.TAIL, ITEM.CONTACTS, ITEM.HAND];
+			var tIds = [];
+			for(var i:int = 0; i < tTypes.length; i++) {
+				var tData:ItemData = getItemData(tTypes[i]);
+				if(tData) {
+					var tColors = getColors(tTypes[i]);
+					if(String(tColors) != String(tData.defaultColors)) { // Quick way to compare two arrays with primitive types
+						tIds.push(tData.id+"_"+_intArrayToHexArray(tColors).join("+") );
+					} else {
+						tIds.push(tData.id);
+					}
+				} else {
+					tIds.push(0);
+				}
+			}
+			code += tIds.join(",");
+			
+			// Add fur color to end, if there is one
+			if(tSkinData.defaultColors && tSkinData.id != 1) {
+				code += ";"+_intArrayToHexArray(tSkinData.defaultColors)[0];
+			}
+			return code;
 		}
 		private function _addParamToVariables(pParams:URLVariables, pParam:String, pType:String) {
 			var tData:ItemData = getItemData(pType);

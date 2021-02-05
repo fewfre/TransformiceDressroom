@@ -399,7 +399,7 @@ package app.world
 		}
 		
 		private function _onShareButtonClicked(pEvent:Event) : void {
-			var tURL = "";
+			var tURL = "", tOfficialCode = "";
 			try {
 				if(Fewf.isExternallyLoaded) {
 					tURL = this.character.getParams();
@@ -410,8 +410,14 @@ package app.world
 			} catch (error:Error) {
 				tURL = "<error creating link>";
 			};
+			
+			try {
+				tOfficialCode = this.character.getParamsTfmOfficialSyntax();
+			} catch (error:Error) {
+				tOfficialCode = "<error creating link>";
+			};
 
-			linkTray.open(tURL);
+			linkTray.open(tURL, tOfficialCode);
 			addChild(linkTray);
 		}
 

@@ -21,10 +21,15 @@ package app.ui.screens
 		public static const CLOSE : String= "close_link_tray";
 		
 		// Storage
-		private var _bg				: RoundedRectangle;
-		public var _text			: TextField;
-		public var _textCopiedMessage: TextBase;
-		public var _textCopyTween	: Tween;
+		private var _bg					: RoundedRectangle;
+		
+		public var _text				: TextField;
+		public var _textCopiedMessage	: TextBase;
+		public var _textCopyTween		: Tween;
+		
+		public var _text2				: TextField;
+		public var _textCopiedMessage2	: TextBase;
+		public var _textCopyTween2		: Tween;
 		
 		// Constructor
 		// pData = { x:Number, y:Number }
@@ -46,39 +51,42 @@ package app.ui.screens
 			/****************************
 			* Background
 			*****************************/
-			var tWidth:Number = 500, tHeight:Number = 200;
+			var tWidth:Number = 500, tHeight:Number = 300;
 			_bg = addChild(new RoundedRectangle({ x:0, y:0, width:tWidth, height:tHeight, origin:0.5 })) as RoundedRectangle;
 			_bg.drawSimpleGradient(ConstantsApp.COLOR_TRAY_GRADIENT, 15, ConstantsApp.COLOR_TRAY_B_1, ConstantsApp.COLOR_TRAY_B_2, ConstantsApp.COLOR_TRAY_B_3);
 			
 			/****************************
 			* Header
 			*****************************/
-			addChild(new TextBase({ text:"share_header", size:25, y:-63 }));
+			addChild(new TextBase({ text:"share_header", size:25, y:-110 }));
 			
 			/****************************
-			* Selectable text field
+			* #1 - Selectable text field + Copy Button and message
 			*****************************/
-			var tTFWidth:Number = tWidth-50, tTFHeight:Number = 18, tTFPaddingX:Number = 5, tTFPaddingY:Number = 5;
-			// So much easier than doing it with those darn native text field options which have no padding.
-			var tTextBackground:RoundedRectangle = addChild(new RoundedRectangle({ x:0, y:0, width:tTFWidth+tTFPaddingX*2, height:tTFHeight+tTFPaddingY*2, origin:0.5 })) as RoundedRectangle;
-			tTextBackground.draw(0xFFFFFF, 7, 0x444444, 0x444444, 0x444444);
+			var tY = -35;
 			
-			_text = tTextBackground.addChild(new TextField()) as TextField;
-			_text.type = TextFieldType.DYNAMIC;
-			_text.multiline = false;
-			_text.width = tTFWidth;
-			_text.height = tTFHeight;
-			_text.x = tTFPaddingX - tTextBackground.Width*0.5;
-			_text.y = tTFPaddingY - tTextBackground.Height*0.5;
-			_text.addEventListener(MouseEvent.CLICK, function(pEvent:Event){ _text.setSelection(0, _text.text.length); });
+			addChild(new TextBase({ text:"loading_progress", values:["Fewfre Syntax (full support)"], size:15, y:tY-30 }));
 			
-			/****************************
-			* Copy Button and message
-			*****************************/
-			var tCopyButton:SpriteButton = addChild(new SpriteButton({ x:tWidth*0.5-75+25, y:52, text:"share_copy", width:50, height:25, origin:0.5 })) as SpriteButton;
+			_text = _newCopyInput({ x:0, y:tY }, this);
+			
+			var tCopyButton:SpriteButton = addChild(new SpriteButton({ x:tWidth*0.5-75+25, y:tY+39, text:"share_copy", width:50, height:25, origin:0.5 })) as SpriteButton;
 			tCopyButton.addEventListener(ButtonBase.CLICK, function(){ _copyToClipboard(); });
 			
 			_textCopiedMessage = addChild(new TextBase({ text:"share_link_copied", size:17, originX:1, x:tCopyButton.x - 40, y:tCopyButton.y, alpha:0 })) as TextBase;
+			
+			/****************************
+			* #2 - Selectable text field + Copy Button and message
+			*****************************/
+			tY = 80;
+			
+			addChild(new TextBase({ text:"loading_progress", values:["TFM /dressing Syntax (Pose & Other not saved)"], size:15, y:tY-30 }));
+			
+			_text2 = _newCopyInput({ x:0, y:tY }, this);
+			
+			var tCopyButton:SpriteButton = addChild(new SpriteButton({ x:tWidth*0.5-75+25, y:tY+39, text:"share_copy", width:50, height:25, origin:0.5 })) as SpriteButton;
+			tCopyButton.addEventListener(ButtonBase.CLICK, function(){ _copyToClipboard2(); });
+			
+			_textCopiedMessage2 = addChild(new TextBase({ text:"share_link_copied", size:17, originX:1, x:tCopyButton.x - 40, y:tCopyButton.y, alpha:0 })) as TextBase;
 			
 			/****************************
 			* Close Button
@@ -97,20 +105,55 @@ package app.ui.screens
 			tCloseButton.Image.graphics.lineTo(-tSize, tSize);
 		}
 		
-		public function open(pURL:String) : void {
+		public function open(pURL:String, pTfmOfficialDressingCode:String) : void {
 			_text.text = pURL;
-			_textCopiedMessage.alpha = 0;
+			_text2.text = pTfmOfficialDressingCode;
+			_clearCopiedMessages();
 		}
 		
 		private function _onCloseClicked(pEvent:Event) : void {
 			dispatchEvent(new Event(CLOSE));
 		}
 		
+		private function _clearCopiedMessages() : void {
+			_textCopiedMessage.alpha = 0;
+			_textCopiedMessage2.alpha = 0;
+		}
+		
 		private function _copyToClipboard() : void {
+			_clearCopiedMessages();
 			_text.setSelection(0, _text.text.length)
 			System.setClipboard(_text.text);
 			_textCopiedMessage.alpha = 0;
 			if(_textCopyTween) _textCopyTween.start(); else _textCopyTween = new Tween(_textCopiedMessage, "alpha", Elastic.easeOut, 0, 1, 1, true);
+		}
+		
+		private function _copyToClipboard2() : void {
+			_clearCopiedMessages();
+			_text2.setSelection(0, _text2.text.length)
+			System.setClipboard(_text2.text);
+			_textCopiedMessage2.alpha = 0;
+			if(_textCopyTween2) _textCopyTween2.start(); else _textCopyTween2 = new Tween(_textCopiedMessage2, "alpha", Elastic.easeOut, 0, 1, 1, true);
+		}
+		
+		
+		private function _newCopyInput(pData:Object, pParent:Sprite) : TextField {
+			var tTFWidth:Number = _bg.width-50, tTFHeight:Number = 18, tTFPaddingX:Number = 5, tTFPaddingY:Number = 5;
+			var tTextBackground:RoundedRectangle = pParent.addChild(new RoundedRectangle({ x:pData.x, y:pData.y, width:tTFWidth+tTFPaddingX*2, height:tTFHeight+tTFPaddingY*2, origin:0.5 })) as RoundedRectangle;
+			tTextBackground.draw(0xFFFFFF, 7, 0x444444, 0x444444, 0x444444);
+			
+			var tTextField:TextField = tTextBackground.addChild(new TextField()) as TextField;
+			tTextField.type = TextFieldType.DYNAMIC;
+			tTextField.multiline = false;
+			tTextField.width = tTFWidth;
+			tTextField.height = tTFHeight;
+			tTextField.x = tTFPaddingX - tTextBackground.Width*0.5;
+			tTextField.y = tTFPaddingY - tTextBackground.Height*0.5;
+			tTextField.addEventListener(MouseEvent.CLICK, function(pEvent:Event){
+				_clearCopiedMessages();
+				tTextField.setSelection(0, tTextField.text.length);
+			});
+			return tTextField;
 		}
 	}
 }
