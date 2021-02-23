@@ -3,7 +3,7 @@ $resources_base = array("x_meli_costumes", "x_fourrures");
 
 $resources = array();
 foreach ($resources_base as $filebase) {
-	for ($i = 1; $i <= 5; $i++) {
+	for ($i = 1; $i <= 6; $i++) {
 		$filename = $i==1 ? "{$filebase}.swf" : "{$filebase}{$i}.swf";
 		$url = "http://www.transformice.com/images/x_bibliotheques/$filename";
 		$code = checkExternalFile($url);
