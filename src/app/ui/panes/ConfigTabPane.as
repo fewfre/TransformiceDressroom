@@ -22,6 +22,8 @@ package app.ui.panes
 		
 		public var shamanButtons	: Array;
 		public var shamanColorPickerButton	: ScaleButton;
+		public var shamanColorBlueButton	: GameButton;
+		public var shamanColorPinkButton	: GameButton;
 		
 		// Constructor
 		public function ConfigTabPane(pCharacter:Character) {
@@ -45,10 +47,18 @@ package app.ui.panes
 			}
 			_registerClickHandler(shamanButtons, _onShamanButtonClicked);
 			
-			addItem( shamanColorPickerButton = new ScaleButton({ x:xx += spacingx + 25, y:yy + sizey*0.5, obj:new $ColorWheel() }) );
+			addItem( shamanColorPickerButton = new ScaleButton({ x:xx += spacingx + 30, y:yy + sizey*0.5 - 10, obj:new $ColorWheel() }) );
+			
+			sizex = 26; sizey = 18;
+			
+			addItem( shamanColorBlueButton = new GameButton({ x:xx - (sizex*0.5+3), y:yy + sizey*0.5 + 35, width:sizex, height:sizey, origin:0.5 }) );
+			shamanColorBlueButton.addChild(_colorSpriteBox({ color:0x95D9D6, size:12, x:-12*0.5, y:-12*0.5 }));
+			
+			addItem( shamanColorPinkButton = new GameButton({ x:xx + (sizex*0.5+3), y:yy + sizey*0.5 + 35, width:sizex, height:sizey, origin:0.5 }) );
+			shamanColorPinkButton.addChild(_colorSpriteBox({ color:0xFCA6F1, size:12, x:-12*0.5, y:-12*0.5 }));
 			
 			// Line
-			yy += sizey + 10;
+			yy += 50 + 10;
 			_drawLine(this, 5, yy, ConstantsApp.PANE_WIDTH);
 			
 			// Grid
@@ -72,6 +82,14 @@ package app.ui.panes
 			UpdatePane();
 		}
 		
+		/****************************
+		* Public
+		*****************************/
+		
+		
+		/****************************
+		* Private
+		*****************************/
 		private function _drawLine(pParent:MovieClip, pX:Number, pY:Number, pWidth:Number) : void {
 			var tLine:Shape = new Shape();
 			tLine.x = pX;
@@ -87,15 +105,17 @@ package app.ui.panes
 			tLine.graphics.lineTo(pWidth - 10, 1);
 		}
 		
-		/****************************
-		* Public
-		*****************************/
-		
-		
-		/****************************
-		* Private
-		*****************************/
-		
+		// pData = { color:int, box:Sprite[optional], size:Number=20, x:Number[optional], y:Number[optional] }
+		private function _colorSpriteBox(pData:Object) : Sprite {
+			var tBox:Sprite = pData.box ? pData.box : new Sprite();
+			var tSize:Number = pData.size ? pData.size : 20;
+			tBox.graphics.beginFill(pData.color, 1);
+			tBox.graphics.drawRect(0, 0, tSize, tSize);
+			tBox.graphics.endFill();
+			if(pData.x) tBox.x = pData.x;
+			if(pData.y) tBox.y = pData.y;
+			return tBox;
+		}
 		
 		/****************************
 		* Events
