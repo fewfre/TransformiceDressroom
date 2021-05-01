@@ -1,7 +1,8 @@
-== V1.19 - ? ==
+== V1.19 - 1 May 2021 ==
 - Randomize button icon changed to dice
 - Lock icon on infobar now disables randomize button to make it's purpose clearer
 - Shaman color option on config pane now has quick options for the 2 default colors
+- Fixed bug with eye items not appearing on some poses
 
 
 == V1.18 - 4 February 2021 ==

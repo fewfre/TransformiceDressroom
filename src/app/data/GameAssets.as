@@ -41,7 +41,7 @@ package app.data
 			var i:int;
 
 			head = _setupCostumeArray({ base:"$Costume_0_", type:ITEM.HAT, itemClassToClassMap:"Tete_1" });
-			eyes = _setupCostumeArray({ base:"$Costume_1_", type:ITEM.EYES, itemClassToClassMap:["Oeil_1", "OeilVide_1"] });
+			eyes = _setupCostumeArray({ base:"$Costume_1_", type:ITEM.EYES, itemClassToClassMap:["Oeil_1", "OeilVide_1", "Oeil2_1", "Oeil3_1", "Oeil4_1"] });
 			ears = _setupCostumeArray({ base:"$Costume_2_", type:ITEM.EARS, itemClassToClassMap:"OreilleD_1" });
 			mouth = _setupCostumeArray({ base:"$Costume_3_", type:ITEM.MOUTH, itemClassToClassMap:"Tete_1" });
 			neck = _setupCostumeArray({ base:"$Costume_4_", type:ITEM.NECK, itemClassToClassMap:"Tete_1" });
