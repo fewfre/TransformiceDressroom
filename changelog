@@ -1,3 +1,8 @@
+== V1.19 - ? ==
+- Randomize button icon changed to dice
+- Lock icon on infobar now disables randomize button to make it's purpose clearer
+
+
 == V1.18 - 4 February 2021 ==
 - Adding support for official Transformice /dressing share codes
 	- App can accept either type of code

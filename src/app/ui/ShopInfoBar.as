@@ -62,8 +62,9 @@ package app.ui
 			*********************/
 			var tX = this.Width;
 			if(pData.showRefreshButton == null || pData.showRefreshButton) {
-				refreshButton = addChild(new SpriteButton({ x:tX - 24, y:0, width:24, height:24, obj_scale:0.5, obj:new $Refresh() })) as SpriteButton;
+				refreshButton = addChild(new SpriteButton({ x:tX - 24, y:0, width:24, height:24, obj_scale:0.8, obj:new $Dice() })) as SpriteButton;
 				refreshLockButton = addChild(new PushButton({ x:tX - 24, y:26, width:24, height:24, obj_scale:0.8, obj:new $Lock() })) as PushButton;
+				refreshLockButton.addEventListener(ButtonBase.CLICK, function(){ isRefreshLocked ? refreshButton.disable() : refreshButton.enable(); });
 				tX -= refreshButton.Width + 2;
 			}
 			
