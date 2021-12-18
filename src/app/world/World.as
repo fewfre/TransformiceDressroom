@@ -25,7 +25,7 @@ package app.world
 	import flash.net.*;
 	import flash.utils.*;
 	import app.ui.panes.ColorFinderPane;
-	import app.ui.panes.ConfigTabPane;
+	import app.ui.panes.OtherTabPane;
 	import flash.display.MovieClip;
 	
 	public class World extends MovieClip
@@ -160,7 +160,7 @@ package app.world
 			/****************************
 			* Other Pane
 			*****************************/
-			tPane = _paneManager.addPane(TAB_OTHER, new ConfigTabPane(character));
+			tPane = _paneManager.addPane(TAB_OTHER, new OtherTabPane(character));
 			tPane.button_hand.addEventListener(PushButton.STATE_CHANGED_AFTER, this.buttonHandClickAfter);
 			tPane.button_back.addEventListener(PushButton.STATE_CHANGED_AFTER, this.buttonBackClickAfter);
 			tPane.button_backHand.addEventListener(PushButton.STATE_CHANGED_AFTER, this.buttonBackHandClickAfter);
@@ -261,7 +261,7 @@ package app.world
 				
 				// now update the infobars
 				_updateUIBasedOnCharacter();
-				(getTabByType(TAB_OTHER) as ConfigTabPane).updateButtonsBasedOnCurrentData();
+				(getTabByType(TAB_OTHER) as OtherTabPane).updateButtonsBasedOnCurrentData();
 				
 				// Now tell code box that we are done
 				pProgressCallback("success");
@@ -436,7 +436,7 @@ package app.world
 			GameAssets.shamanMode = SHAMAN_MODE.OFF;
 			for each(var tItem in ITEM.LAYERING) { _removeItem(tItem); }
 			_removeItem(ITEM.POSE);
-			(getTabByType(TAB_OTHER) as ConfigTabPane).updateButtonsBasedOnCurrentData();
+			(getTabByType(TAB_OTHER) as OtherTabPane).updateButtonsBasedOnCurrentData();
 		}
 
 		private function _onTrashConfirmScreenClosed(pEvent:Event) : void {

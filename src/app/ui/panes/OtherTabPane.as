@@ -11,7 +11,7 @@ package app.ui.panes
 	import flash.events.*;
 	import flash.display.MovieClip;
 	
-	public class ConfigTabPane extends TabPane
+	public class OtherTabPane extends TabPane
 	{
 		// Storage
 		public var character:Character;
@@ -26,7 +26,7 @@ package app.ui.panes
 		public var shamanColorPinkButton	: GameButton;
 		
 		// Constructor
-		public function ConfigTabPane(pCharacter:Character) {
+		public function OtherTabPane(pCharacter:Character) {
 			super();
 			character = pCharacter;
 			
