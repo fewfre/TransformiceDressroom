@@ -1,10 +1,13 @@
 <?php
+set_time_limit(3*60);
+
 $resources = array();
 $external = array();
 
+// Normal resources
 $resources_base = array("x_meli_costumes", "costume", "x_fourrures");
 foreach ($resources_base as $filebase) {
-	for ($i = 1; $i <= 6; $i++) {
+	for ($i = 1; $i <= 8; $i++) {
 		$filename = $i==1 && $filebase != "costume" ? "{$filebase}.swf" : "{$filebase}{$i}.swf";
 		$url = "http://www.transformice.com/images/x_bibliotheques/$filename";
 		if(checkExternalFileExists($url)) {
@@ -14,6 +17,26 @@ foreach ($resources_base as $filebase) {
 		}
 	}
 }
+
+// Individual resources
+$breakCount = 0; // quit early if enough 404s in a row
+for ($i = 218; $i <= 500; $i++) {
+	$filename = "f{$i}.swf";
+	$url = "http://www.transformice.com/images/x_bibliotheques/fourrures/$filename";
+	if(checkExternalFileExists($url)) {
+		file_put_contents($filename, fopen($url, 'r'));
+		$resources[] = $filename;
+		$external[] = $url;
+		$breakCount = 0;
+	} else {
+		$breakCount++;
+		if($breakCount > 5) {
+			break;
+		}
+	}
+}
+
+// Finally include poses
 $external[] = "https://projects.fewfre.com/a801/transformice/dressroom/resources/poses.swf";
 
 $json = json_decode(file_get_contents("config.json"), true);
