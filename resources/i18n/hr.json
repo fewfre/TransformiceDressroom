@@ -14,9 +14,14 @@
 		"version":				{ "text":"Verzija: {0}" },
 		"translated_by":		{ "text":"Preveo: Brunocarfd" },
 		
+		"user_lookup_title":	{ "text":"Username Lookup" },
+		"user_lookup_placeholder":	{ "text":"Username#0000" },
+		"user_lookup_details":	{ "text":"Any in-game changes take awhile to show up.\nResults may be a few hours old." },
+		
 		"btn_normal_mode":		{ "text":"Lagani" },
 		"btn_hard_mode":		{ "text":"Teški" },
 		"btn_divine_mode":		{ "text":"Božanski" },
+		"tab_config":			{ "text":"Potvrdi" },
 		"tab_head":				{ "text":"Glava" },
 		"tab_hair":				{ "text":"Kosa" },
 		"tab_ears":				{ "text":"Uši" },

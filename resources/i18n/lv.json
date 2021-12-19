@@ -14,9 +14,14 @@
 		"version":				{ "text":"Versija: {0}" },
 		"translated_by":		{ "text":"Tulkoja: Marciskris" },
 		
+		"user_lookup_title":	{ "text":"Username Lookup" },
+		"user_lookup_placeholder":	{ "text":"Username#0000" },
+		"user_lookup_details":	{ "text":"Any in-game changes take awhile to show up.\nResults may be a few hours old." },
+		
 		"btn_normal_mode":		{ "text":"Normālais\nrežīms" },
 		"btn_hard_mode":		{ "text":"Grūtais\nrežīms" },
 		"btn_divine_mode":		{ "text":"Dievišķais\nrežīms" },
+		"tab_config":			{ "text":"Konfigurēt", "scale":0.8 },
 		"tab_head":				{ "text":"Galva" },
 		"tab_hair":				{ "text":"Mati" },
 		"tab_ears":				{ "text":"Ausis" },

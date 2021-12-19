@@ -12,7 +12,7 @@ package app.ui.screens
 	
 	public class LoaderDisplay extends RoundedRectangle
 	{
-		private var _loadingSpinner	: MovieClip;
+		private var _loadingSpinner	: LoadingSpinner;
 		private var _leftToLoadText	: TextBase;
 		private var _loadProgressText: TextBase;
 		
@@ -29,30 +29,15 @@ package app.ui.screens
 			Fewf.assets.addEventListener(ProgressEvent.PROGRESS, _onLoadProgress);
 			Fewf.assets.addEventListener(AssetManager.PACK_LOADED, _onPackLoaded);
 			
-			_loadingSpinner = addChild( new $Loader() ) as MovieClip;
-			_loadingSpinner.y -= 45;
-			_loadingSpinner.scaleX = 2;
-			_loadingSpinner.scaleY = 2;
+			_loadingSpinner = addChild(new LoadingSpinner({ y:-45, scale:2 })) as LoadingSpinner;
 			
 			_leftToLoadText = addChild(new TextBase({ text:"loading", values:"", size:18, x:0, y:10 })) as TextBase;
 			_loadProgressText = addChild(new TextBase({ text:"loading_progress", values:"", size:18, x:0, y:35 })) as TextBase;
-			
-			addEventListener(Event.ENTER_FRAME, update);
 		}
 		
 		public function destroy():void {
 			Fewf.assets.removeEventListener(ProgressEvent.PROGRESS, _onLoadProgress);
-			removeEventListener(Event.ENTER_FRAME, update);
-			
-			_loadingSpinner = null;
-		}
-		
-		public function update(pEvent:Event):void
-		{
-			var dt:Number = 0.1;
-			if(_loadingSpinner != null) {
-				_loadingSpinner.rotation += 360 * dt;
-			}
+			_loadingSpinner.destroy();
 		}
 		
 		private function _onPackLoaded(e:FewfEvent) : void {

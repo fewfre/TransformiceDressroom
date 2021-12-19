@@ -19,6 +19,8 @@
 		]
 	},
 	
+	"username_lookup_url": "https://projects.fewfre.com/a801/transformice/dressroom/resources/fetchlooknickname.php?nickname=$1",
+	
 	"packs": {
 		"items": [
 			"x_meli_costumes.swf",

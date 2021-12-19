@@ -26,6 +26,7 @@ package app.world
 	import flash.utils.*;
 	import app.ui.panes.ColorFinderPane;
 	import app.ui.panes.OtherTabPane;
+	import app.ui.panes.ConfigTabPane;
 	import flash.display.MovieClip;
 	
 	public class World extends MovieClip
@@ -50,6 +51,7 @@ package app.world
 		// Constants
 		public static const COLOR_PANE_ID = "colorPane";
 		public static const TAB_OTHER:String = "other";
+		public static const TAB_CONFIG:String = "config";
 		public static const CONFIG_COLOR_PANE_ID = "configColorPane";
 		public static const COLOR_FINDER_PANE_ID = "colorFinderPane";
 		
@@ -92,6 +94,7 @@ package app.world
 			
 			this.shopTabs = addChild(new ShopTabContainer({ x:375, y:10, width:70, height:ConstantsApp.APP_HEIGHT,
 				tabs:[
+					{ text:"tab_config", event:TAB_CONFIG },
 					{ text:"tab_head", event:ITEM.HAT },
 					{ text:"tab_hair", event:ITEM.HAIR },
 					{ text:"tab_ears", event:ITEM.EARS },
@@ -103,7 +106,7 @@ package app.world
 					{ text:"tab_contacts", event:ITEM.CONTACTS },
 					{ text:"tab_furs", event:ITEM.SKIN },
 					{ text:"tab_poses", event:ITEM.POSE },
-					{ text:"tab_other", event:"other" }
+					{ text:"tab_other", event:TAB_OTHER }
 				]
 			})) as ShopTabContainer;
 			this.shopTabs.addEventListener(ShopTabContainer.EVENT_SHOP_TAB_CLICKED, _onTabClicked);
@@ -112,8 +115,7 @@ package app.world
 			_toolbox = addChild(new Toolbox({
 				x:188, y:28, character:character,
 				onSave:_onSaveClicked, onAnimate:_onPlayerAnimationToggle, onRandomize:_onRandomizeDesignClicked,
-				onTrash:_onTrashButtonClicked, onShare:_onShareButtonClicked, onScale:_onScaleSliderChange,
-				onShareCodeEntered:_onShareCodeEntered
+				onTrash:_onTrashButtonClicked, onShare:_onShareButtonClicked, onScale:_onScaleSliderChange
 			})) as Toolbox;
 			
 			var tLangButton = addChild(new LangButton({ x:22, y:pStage.stageHeight-17, width:30, height:25, origin:0.5 }));
@@ -156,6 +158,14 @@ package app.world
 				}
 			}
 			_paneManager.addPane(ITEM.SKIN_COLOR, _paneManager.getPane(ITEM.SKIN));
+			
+			/****************************
+			* Config Pane
+			*****************************/
+			tPane = _paneManager.addPane(TAB_CONFIG, new ConfigTabPane({
+				onShareCodeEntered:_onShareCodeEntered,
+				onUserLookClicked:_useShareCode
+			}));
 			
 			/****************************
 			* Other Pane
@@ -245,23 +255,9 @@ package app.world
 
 		private function _onShareCodeEntered(pCode:String, pProgressCallback:Function):void {
 			if(!pCode || pCode == "") { return; pProgressCallback("placeholder"); }
-			if(pCode.indexOf("?") > -1) {
-				pCode = pCode.substr(pCode.indexOf("?") + 1, pCode.length);
-			}
 			
 			try {
-				// First remove old stuff to prevent conflicts
-				GameAssets.shamanMode = SHAMAN_MODE.OFF;
-				for each(var tItem in ITEM.LAYERING) { _removeItem(tItem); }
-				_removeItem(ITEM.POSE);
-				
-				// Now update pose
-				character.parseParams(pCode);
-				character.updatePose();
-				
-				// now update the infobars
-				_updateUIBasedOnCharacter();
-				(getTabByType(TAB_OTHER) as OtherTabPane).updateButtonsBasedOnCurrentData();
+				_useShareCode(pCode);
 				
 				// Now tell code box that we are done
 				pProgressCallback("success");
@@ -269,6 +265,25 @@ package app.world
 			catch (error:Error) {
 				pProgressCallback("invalid");
 			};
+		}
+		
+		private function _useShareCode(pCode:String):void {
+			if(pCode.indexOf("?") > -1) {
+				pCode = pCode.substr(pCode.indexOf("?") + 1, pCode.length);
+			}
+			
+			// First remove old stuff to prevent conflicts
+			GameAssets.shamanMode = SHAMAN_MODE.OFF;
+			for each(var tItem in ITEM.LAYERING) { _removeItem(tItem); }
+			_removeItem(ITEM.POSE);
+			
+			// Now update pose
+			character.parseParams(pCode);
+			character.updatePose();
+			
+			// now update the infobars
+			_updateUIBasedOnCharacter();
+			(getTabByType(TAB_OTHER) as OtherTabPane).updateButtonsBasedOnCurrentData();
 		}
 
 		private function _onPlayerAnimationToggle(pEvent:Event):void {

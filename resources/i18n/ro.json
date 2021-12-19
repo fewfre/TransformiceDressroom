@@ -14,9 +14,14 @@
 		"version":				{ "text":"Versiune: {0}" },
 		"translated_by":		{ "text":"Translated by: Sky_dreams" },
 		
+		"user_lookup_title":	{ "text":"Username Lookup" },
+		"user_lookup_placeholder":	{ "text":"Username#0000" },
+		"user_lookup_details":	{ "text":"Any in-game changes take awhile to show up.\nResults may be a few hours old." },
+		
 		"btn_normal_mode":		{ "text":"Normal" },
 		"btn_hard_mode":		{ "text":"Dificil" },
 		"btn_divine_mode":		{ "text":"Divin" },
+		"tab_config":			{ "text":"Config-\nurare", "scale":0.8 },
 		"tab_head":				{ "text":"Cap" },
 		"tab_hair":				{ "text":"Coafură" },
 		"tab_ears":				{ "text":"Urechi" },

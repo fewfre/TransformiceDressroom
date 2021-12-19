@@ -14,9 +14,14 @@
 		"version":				{ "text":"Version: {0}" },
 		"translated_by":		{ "text":"Übersetzt von: Virus_Code" },
 		
+		"user_lookup_title":	{ "text":"Username Lookup" },
+		"user_lookup_placeholder":	{ "text":"Username#0000" },
+		"user_lookup_details":	{ "text":"Any in-game changes take awhile to show up.\nResults may be a few hours old." },
+		
 		"btn_normal_mode":		{ "text":"Normal" },
 		"btn_hard_mode":		{ "text":"Schwer" },
 		"btn_divine_mode":		{ "text":"Göttlich" },
+		"tab_config":			{ "text":"Konfig-\nuration", "scale":0.8 },
 		"tab_head":				{ "text":"Kopf" },
 		"tab_hair":				{ "text":"Frisur" },
 		"tab_ears":				{ "text":"Ohren" },

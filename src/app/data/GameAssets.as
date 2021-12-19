@@ -13,6 +13,7 @@ package app.data
 	public class GameAssets
 	{
 		private static const _MAX_COSTUMES_TO_CHECK_TO:Number = 250;//999;
+		public static const FUR_COLORS:Array = [ 0xBD9067, 0x593618, 0x8C887F, 0xDED7CE, 0x4E443A, 0xE3C07E, 0x272220 ];
 
 		public static var hair:Array;
 		public static var head:Array;
@@ -59,9 +60,8 @@ package app.data
 
 			skins = new Array();
 			
-			var tFurColors = [ 0xBD9067, 0x593618, 0x8C887F, 0xDED7CE, 0x4E443A, 0xE3C07E, 0x272220 ];
-			for(i = 0; i < tFurColors.length; i++) {
-				skins.push( new SkinData({ id:"color"+i, assetID:1, color:tFurColors[i], type:ITEM.SKIN_COLOR }) );
+			for(i = 0; i < FUR_COLORS.length; i++) {
+				skins.push( new SkinData({ id:"color"+i, assetID:1, color:FUR_COLORS[i], type:ITEM.SKIN_COLOR }) );
 			}
 			
 			skins.push( new SkinData({ id:1, assetID:1, color:0x78583A, type:ITEM.SKIN }) );

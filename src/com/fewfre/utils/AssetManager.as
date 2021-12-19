@@ -70,6 +70,9 @@ package com.fewfre.utils
 				if(_cacheBreaker && (Fewf.isExternallyLoaded ? true : ExternalInterface.call("eval", "window.location.href"))) {
 					pUrl += "?cb="+_cacheBreaker;
 				}
+				if(pOptions && pOptions.type) {
+					tType = pOptions.type;
+				}
 				switch(tType) {
 					case "swf":
 					case "swc":

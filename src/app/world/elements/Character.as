@@ -125,7 +125,11 @@ package app.world.elements
 				// Official TFM /dressing params
 				try {
 					var arr = pCode.split(";");
-					_setParamToTypeTfmOfficialSyntax(ITEM.SKIN, arr[2] ? arr[0]+"_"+arr[2] : arr[0], false);
+					// Check for wierd syntax where fur id isn't included (old account, or maybe haven't bought one yet?)
+					if(arr[0].indexOf(",") >= 0) {
+						arr = [ "1", arr[0] ];
+					}
+					_setParamToTypeTfmOfficialSyntax(ITEM.SKIN, arr[2] && arr[0]==1 ? arr[0]+"_"+arr[2] : arr[0], false);
 					
 					arr = arr[1].split(",");
 					var tTypes = [ITEM.HAT, ITEM.EYES, ITEM.EARS, ITEM.MOUTH, ITEM.NECK, ITEM.HAIR, ITEM.TAIL, ITEM.CONTACTS, ITEM.HAND];
@@ -142,8 +146,14 @@ package app.world.elements
 				if(tID != null && tID != "") {
 					tColors = tID.split(/\_|\+/); // Get a list of all the colors (ID is first); ex: 5_ffffff+abcdef+169742
 					tID = tColors.splice(0, 1)[0]; // Remove first item and store it as the ID.
+					// Color skins in game syntax are stored differently than dressroom
+					if(pType == ITEM.SKIN && tID == "1" && tColors[0] && GameAssets.FUR_COLORS.indexOf(_hexToInt(tColors[0])) >= 0) {
+						tID = "color"+GameAssets.FUR_COLORS.indexOf(_hexToInt(tColors[0]));
+						tColors = [];
+					}
 					tData = GameAssets.getItemFromTypeID(pType, tID);
 					if(tColors.length > 0) { tData.colors = _hexArrayToIntArray(tColors, tData.defaultColors); }
+					else if(tID == 1 || tID == "1") { tData.setColorsToDefault(); }
 				}
 				_itemDataMap[pType] = pAllowNull ? tData : ( tData == null ? _itemDataMap[pType] : tData );
 			} catch (error:Error) { };
@@ -156,6 +166,7 @@ package app.world.elements
 					tID = tColors.splice(0, 1)[0]; // Remove first item and store it as the ID.
 					tData = GameAssets.getItemFromTypeID(pType, tID);
 					if(tColors.length > 0) { tData.colors = _hexArrayToIntArray(tColors, tData.defaultColors); }
+					else if(tID == 1 || tID == "1") { tData.setColorsToDefault(); }
 				}
 				_itemDataMap[pType] = pAllowNull ? tData : ( tData == null ? _itemDataMap[pType] : tData );
 			} catch (error:Error) { };
@@ -202,7 +213,11 @@ package app.world.elements
 		}
 		public function getParamsTfmOfficialSyntax() : String {
 			var tSkinData = getItemData(ITEM.SKIN);
-			var code:String = tSkinData.id+";";
+			var skinId = tSkinData.id;
+			if(tSkinData.type == ITEM.SKIN_COLOR) {
+				skinId = 1;
+			}
+			var code:String = skinId+";";
 			
 			// Apply various parts
 			var tTypes = [ITEM.HAT, ITEM.EYES, ITEM.EARS, ITEM.MOUTH, ITEM.NECK, ITEM.HAIR, ITEM.TAIL, ITEM.CONTACTS, ITEM.HAND];
@@ -223,8 +238,8 @@ package app.world.elements
 			code += tIds.join(",");
 			
 			// Add fur color to end, if there is one
-			if(tSkinData.defaultColors && tSkinData.id != 1) {
-				code += ";"+_intArrayToHexArray(tSkinData.defaultColors)[0];
+			if(tSkinData.defaultColors && skinId == 1 && tSkinData.colors[0] != 0x78583A) {
+				code += ";"+_intArrayToHexArray(tSkinData.colors)[0];
 			}
 			return code;
 		}

@@ -20,13 +20,13 @@ package app.ui
 		private var _placeholderTimeout	: Number;
 		
 		// Constructor
-		// pData = { x:Number, y:Number, onChange:Function }
+		// pData = { x:Number, y:Number, width?:Number, onChange:Function }
 		public function PasteShareCodeInput(pData:Object) {
 			this.x = pData.x;
 			this.y = pData.y;
 			var tOnShareCodeEntered = pData.onChange;
 			
-			var tTFWidth:Number = 250, tTFHeight:Number = 18, tTFPaddingX:Number = 5, tTFPaddingY:Number = 5;
+			var tTFWidth:Number = pData.width ? pData.width : 250, tTFHeight:Number = 18, tTFPaddingX:Number = 5, tTFPaddingY:Number = 5;
 			// So much easier than doing it with those darn native text field options which have no padding.
 			var tTextBackground:RoundedRectangle = addChild(new RoundedRectangle({ width:tTFWidth+tTFPaddingX*2, height:tTFHeight+tTFPaddingY*2, origin:0.5 })) as RoundedRectangle;
 			tTextBackground.draw(0xdcdfea, 7, 0x444444, 0x444444, 0x444444);

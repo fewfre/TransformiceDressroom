@@ -24,6 +24,10 @@
 		"share_paste_success":	{ "text":"Success!" },
 		"share_paste_invalid":	{ "text":"Invalid" },
 		
+		"user_lookup_title":	{ "text":"Username Lookup" },
+		"user_lookup_placeholder":	{ "text":"Username#0000" },
+		"user_lookup_details":	{ "text":"Any in-game changes take awhile to show up.\nResults may be a few hours old." },
+		
 		"btn_color_defaults":	{ "text":"Defaults" },
 		
 		"infobar_id":			{ "text":"ID: {0}" },
@@ -32,6 +36,7 @@
 		"btn_hard_mode":		{ "text":"Hard" },
 		"btn_divine_mode":		{ "text":"Divine" },
 		
+		"tab_config":			{ "text":"Config" },
 		"tab_head":				{ "text":"Head" },
 		"tab_hair":				{ "text":"Hair" },
 		"tab_ears":				{ "text":"Ears" },

@@ -25,6 +25,7 @@ package com.fewfre.display
 		protected var _size			: Number;
 		protected var _font			: String;
 		protected var _scale		: Number;
+		protected var _align		: String;
 
 		// Properties
 		public function get text() : String { return _field.text; }
@@ -48,6 +49,7 @@ package com.fewfre.display
 			_size = pArgs.size != null ? pArgs.size : DEFAULT_SIZE;
 			_font = pArgs.font != null ? pArgs.font : Fewf.i18n.defaultFont;
 			_scale = 1;
+			_align = pArgs.align != null ? pArgs.align : TextFormatAlign.CENTER;
 			
 			_i18n = "";
 			_text = "";
@@ -76,7 +78,7 @@ package com.fewfre.display
 		* Render
 		*****************************/
 		protected function _render() : void {
-			_field.defaultTextFormat = new TextFormat(_font, _size * _scale, _color, null, null, null, null, null, TextFormatAlign.CENTER);
+			_field.defaultTextFormat = new TextFormat(_font, _size * _scale, _color, null, null, null, null, null, _align);
 			_field.autoSize = TextFieldAutoSize.CENTER;
 			_field.text = _values != null ? FewfUtils.stringSubstitute(_text, _values) : _text;
 			_field.x = -_field.textWidth * _originX - 2;
@@ -102,6 +104,12 @@ package com.fewfre.display
 		public function setText(pKey:String, ...pValues) : void {
 			_setI18nData(pKey != null ? pKey : "");
 			_values = pValues[0] is Array ? pValues[0] : pValues;
+			_render();
+		}
+		
+		public function setUntranslatedText(pText:String) : void {
+			_i18n = "";
+			_text = pText;
 			_render();
 		}
 		
