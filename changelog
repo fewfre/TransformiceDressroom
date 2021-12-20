@@ -1,3 +1,10 @@
+== V.20 - 19 December 2021 ==
+- Added Config tab
+- Moved share cost posting input into config tab
+- Added username lookup to config tab
+- Color picker now remembers up to last 9 recent color changes and adds buttons to bottom of picker
+
+
 == V1.19 - 1 May 2021 ==
 - Randomize button icon changed to dice
 - Lock icon on infobar now disables randomize button to make it's purpose clearer
