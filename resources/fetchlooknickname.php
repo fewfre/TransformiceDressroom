@@ -2,7 +2,13 @@
 header('Content-Type: application/json; charset=utf-8');
 
 $nickname = $_GET["nickname"] ?? "";
-$nickname = str_replace("#", "%23", $nickname);
+$nickname = trim($nickname);
+// Blacklist
+$blacklist = json_decode(file_get_contents("fetchlooknickname_blacklist.json")["list"], true);
+if(in_array(strtolower($nickname), $blacklist)) {
+	die(json_encode([ 'error' => "User outfit lookup blocked by user request" ]));
+}
+$nickname = str_replace("#", "%23", $nickname); // Url encode
 $fetch = json_decode(get_content("https://cheese.formice.com/api/players/$nickname"), true);
 if($fetch==null || isset($fetch["error"]) || !isset($fetch["shop"])) {
 	die(json_encode([ 'error' => ($fetch["message"] ?? "##loading_error") ]));
