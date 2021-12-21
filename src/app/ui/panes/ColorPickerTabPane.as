@@ -61,13 +61,13 @@ package app.ui.panes
 			for(var i = 0; i < _colorSwatches.length; i++) {
 				_colorSwatches[i].alpha = 0;
 				
-				// if (tLength > i) {
+				if (tLength > i) {
 					_colorSwatches[i].alpha = 1;
 					_colorSwatches[i].value = pSwatches[i];
 					if (_selectedSwatch == i) {
 						_psColorPick.setCursor(_colorSwatches[i].textValue);
 					}
-				// }
+				}
 			}
 			if (tLength > _MAX_SWATCHES) {
 				trace("!!! more than "+_MAX_SWATCHES+" colors !!!");
