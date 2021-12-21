@@ -16,7 +16,7 @@ else if($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$username = strtolower($username);
 	$username = trim($username);
 	$goback = "<form method='GET'><button>Go Back</button></form>";
-	if($username && preg_match("/^([a-z\d#])+$/i", $username)) {
+	if($username && preg_match("/^([a-z\d#+_])+$/i", $username)) {
 		if(strpos($username, '#') === FALSE) { $username = "$username#0000"; }
 		
 		$blacklist = json_decode(file_get_contents("fetchlooknickname_blacklist.json"), true);
