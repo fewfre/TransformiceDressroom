@@ -12,11 +12,11 @@
 		"share_link_copied":	{ "text":"Link kopiran u međuspremnik! Zalijepi za upotrebu.", "scale":0.9 },
 		"share_copy":			{ "text":"Kopija" },
 		"version":				{ "text":"Verzija: {0}" },
-		"translated_by":		{ "text":"Preveo: Brunocarfd" },
+		"translated_by":		{ "text":"Preveo: Brunocarfd + Hanon#8955" },
 		
-		"user_lookup_title":	{ "text":"Username Lookup" },
-		"user_lookup_placeholder":	{ "text":"Username#0000" },
-		"user_lookup_details":	{ "text":"Any in-game changes take awhile to show up.\nResults may be a few hours old." },
+		"user_lookup_title":	{ "text":"Pogledaj nadimak" },
+		"user_lookup_placeholder":	{ "text":"Nadimak#0000" },
+		"user_lookup_details":	{ "text":"Svakoj promjeni u igri treba vremena da se prikaže.\nRezultati mogu biti stari par sati." },
 		
 		"btn_normal_mode":		{ "text":"Lagani" },
 		"btn_hard_mode":		{ "text":"Teški" },
