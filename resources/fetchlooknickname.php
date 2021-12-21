@@ -4,8 +4,8 @@ header('Content-Type: application/json; charset=utf-8');
 $nickname = $_GET["nickname"] ?? "";
 $nickname = trim($nickname);
 // Blacklist
-$blacklist = json_decode(file_get_contents("fetchlooknickname_blacklist.json")["list"], true);
-if(in_array(strtolower($nickname), $blacklist)) {
+$blacklist = json_decode(file_get_contents("fetchlooknickname_blacklist.json"), true);
+if(in_array(strtolower($nickname), $blacklist["list"])) {
 	die(json_encode([ 'error' => "User outfit lookup blocked by user request" ]));
 }
 $nickname = str_replace("#", "%23", $nickname); // Url encode

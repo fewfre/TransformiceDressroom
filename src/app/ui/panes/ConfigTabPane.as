@@ -25,12 +25,14 @@ package app.ui.panes
 		public var usernameInput		: FancyInput;
 		public var usernameErrorText	: TextBase;
 		public var onUserLookClicked	: Function;
+		public var _loadingUser			: Boolean;
 		
 		// Constructor
 		// pData = { onShareCodeEntered:Function, onUserLookClicked:Function }
 		public function ConfigTabPane(pData:Object) {
 			super();
 			onUserLookClicked = pData.onUserLookClicked;
+			_loadingUser = false;
 			
 			var i:int = 0, xx:Number = 0, yy:Number = 5, tButton:GameButton, sizex:Number, sizey:Number, spacingx:Number;
 			
@@ -133,7 +135,7 @@ package app.ui.panes
 		* Private
 		*****************************/
 		private function _onFetchUserLooks(pEvent) : void {
-			if(usernameInput.text == "") { return; }
+			if(usernameInput.text == "" || _loadingUser) { return; }
 			userOutfitsGrid.reset();
 			if(usernameErrorText) {
 				removeChild(usernameErrorText);
@@ -147,10 +149,12 @@ package app.ui.panes
 			var username:String = usernameInput.text.replace("#", "%23");
 			
 			var url = Fewf.assets.getData("config").username_lookup_url.replace("$1", username);
+			_loadingUser = true;
 			Fewf.assets.load([
 				[ url+"&cb="+String( new Date().getTime() ), { type:"json" } ],
 			]);
 			Fewf.assets.addEventListener(AssetManager.LOADING_FINISHED, function(e:Event){
+				_loadingUser = false;
 				Fewf.assets.removeEventListener(AssetManager.LOADING_FINISHED, arguments.callee);
 				tLoaderDisplay.destroy();
 				removeChild( tLoaderDisplay );
