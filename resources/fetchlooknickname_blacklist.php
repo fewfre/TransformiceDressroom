@@ -2,9 +2,9 @@
 if($_SERVER['REQUEST_METHOD'] === 'GET') {
 ?>
 
-<form method="POST" onsubmit="function(){ document.querySelector('button').disabled = true; }">
+<form method="POST" onsubmit="(function(){ document.querySelector('button').disabled = true; document.querySelector('input').readonly = true; })()">
 	<h2>Block people looking up my username!</h2>
-	<input name="username" />
+	<input name="username" placeholder="TFM username here" />
 	<button>Snooper no snooping!!</button>
 	<p>Is your name in here by accident, or you want it removed? PM/ping fewfre (anyone in TFM discord can PM me).</p>
 </form>
