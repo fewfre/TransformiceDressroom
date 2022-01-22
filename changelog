@@ -1,3 +1,12 @@
+== V.21 - ? January 2021 ==
+- Blacklist feature added for username lookup
+- Tweaked color picker
+	- 'Recent colors' can now be removed
+	- Pasted/typed colors are now detected
+	- Clicking on empty area below swatch or hitting 'enter' when typing in a swatch will now save the the last recent color as well
+	- Fixed various small bugs on color picker
+
+
 == V.20 - 19 December 2021 ==
 - Added Config tab
 - Moved share cost posting input into config tab

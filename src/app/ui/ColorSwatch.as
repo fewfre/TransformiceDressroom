@@ -9,6 +9,7 @@ package app.ui
 		// Constants
 		public static const BUTTON_CLICK:String="button_click";
 		public static const ENTER_PRESSED:String="enter_pressed";
+		public static const USER_MODIFIED_TEXT:String="user_modified_text";
 		
 		// Storage
 		public var selected:Boolean=false;
@@ -18,6 +19,7 @@ package app.ui
 		
 		// Properties
 		public function get textValue():String { return _text.text; }
+		public function get intValue():uint { return int("0x" + _text.text); }
 		public function set value(pColor:uint) : void
 		{
 			_swatch.graphics.clear();
@@ -58,7 +60,10 @@ package app.ui
 		}
 
 		private function _onTextInputKeyUp(pEvent:KeyboardEvent) : void {
-			if(_text.text != "" || pEvent.charCode == 13) {
+			if(_text.text != "") {
+				dispatchEvent(new Event(USER_MODIFIED_TEXT));
+			}
+			if(_text.text != "" && pEvent.charCode == 13) {
 				dispatchEvent(new Event(ENTER_PRESSED));
 			}
 		}

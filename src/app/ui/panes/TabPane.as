@@ -60,6 +60,10 @@ package app.ui.panes
 			return this.content.addChild(pItem) as DisplayObject;
 		}
 
+		public function removeItem(pItem:Sprite) : Sprite {
+			return this.content.removeChild(pItem) as Sprite;
+		}
+
 		public function addInfoBar(pBar:ShopInfoBar) : void {
 			this.infoBar = this.addChild(pBar) as ShopInfoBar;
 		}
