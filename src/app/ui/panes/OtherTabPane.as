@@ -1,6 +1,7 @@
 package app.ui.panes
 {
 	import com.fewfre.display.*;
+	import com.fewfre.utils.FewfDisplayUtils;
 	import com.fewfre.events.FewfEvent;
 	import app.data.*;
 	import app.ui.*;
@@ -24,6 +25,8 @@ package app.ui.panes
 		public var shamanColorPickerButton	: ScaleButton;
 		public var shamanColorBlueButton	: GameButton;
 		public var shamanColorPinkButton	: GameButton;
+		
+		public var characterHead	: Character;
 		
 		// Constructor
 		public function OtherTabPane(pCharacter:Character) {
@@ -79,6 +82,11 @@ package app.ui.panes
 			
 			yy += grid.Height + 10;
 			
+			characterHead = new Character({ skin:GameAssets.skins[GameAssets.defaultSkinIndex], pose:GameAssets.poses[GameAssets.defaultPoseIndex] });
+			var saveHeadButton = addItem(new GameButton({ x:348, y:310, width:70, height:70 }));
+			saveHeadButton.addChild(characterHead);
+			saveHeadButton.addEventListener(MouseEvent.CLICK, _onSaveMouseHeadClicked);
+			
 			UpdatePane();
 		}
 		
@@ -86,6 +94,11 @@ package app.ui.panes
 		* Public
 		*****************************/
 		
+		public override function open() : void {
+			super.open();
+			
+			_updateHead();
+		}
 		
 		/****************************
 		* Private
@@ -117,6 +130,37 @@ package app.ui.panes
 			return tBox;
 		}
 		
+		private function _updateHead() {
+			// copy character data onto our copy
+			for each(var tItemType in ITEM.LAYERING) {
+				if(tItemType == ITEM.SKIN_COLOR) continue;
+				var data = character.getItemData(tItemType);
+				if(data) characterHead.setItemData( data ); else characterHead.removeItem( tItemType );
+			}
+			characterHead.setItemData( character.getItemData(ITEM.POSE) );
+			characterHead.scale = 1;
+			
+			// Cut the head off the poor mouse ;_;
+			var pose = characterHead.outfit.pose;
+			var partsToKeep = ["Tete_", "Oeil_", "OeilVide_", "Oeil2_", "Oeil3_", "Oeil4_", "OreilleD_", "OreilleG_"];
+			var tChild:DisplayObject = null;
+			for(var i:int = pose.numChildren-1; i >= 0; i--) {
+				tChild = pose.getChildAt(i);
+				
+				if(tChild.name && !partsToKeep.some(function(partName){ return tChild.name.indexOf(partName) == 0 })) {
+					pose.removeChildAt(i);
+				}
+			}
+			
+			var btnSize = 70, size = 60;
+			var tBounds = characterHead.getBounds(characterHead);
+			var tOffset = tBounds.topLeft;
+			FewfDisplayUtils.fitWithinBounds(characterHead, size, size, size, size);
+			characterHead.x = btnSize / 2 - (tBounds.width / 2 + tOffset.x) * characterHead.scaleX;
+			characterHead.y = btnSize / 2 - (tBounds.height / 2 + tOffset.y) * characterHead.scaleY;
+		
+		}
+		
 		/****************************
 		* Events
 		*****************************/
@@ -133,12 +177,14 @@ package app.ui.panes
 				GameAssets.shamanMode = SHAMAN_MODE.OFF;
 			}
 			character.updatePose();
+			_updateHead();
 		}
 		
 		private function _onNoShamanButtonClicked(pEvent:Event) {
 			_untoggle(shamanButtons);
 			GameAssets.shamanMode = SHAMAN_MODE.OFF;
 			character.updatePose();
+			_updateHead();
 		}
 
 		private function _untoggle(pList:Array, pButton:PushButton=null) : void {
@@ -149,6 +195,7 @@ package app.ui.panes
 					pList[i].toggleOff();
 				}
 			}
+			_updateHead();
 		}
 		
 		public function updateButtonsBasedOnCurrentData() : void {
@@ -162,6 +209,11 @@ package app.ui.panes
 			button_hand.toggle(!!character.getItemData(ITEM.OBJECT), false);
 			button_back.toggle(!!character.getItemData(ITEM.BACK), false);
 			button_backHand.toggle(!!character.getItemData(ITEM.PAW_BACK), false);
+			_updateHead();
+		}
+		
+		private function _onSaveMouseHeadClicked(pEvent:Event) {
+			FewfDisplayUtils.saveAsPNG(characterHead, 'mouse_head', character.outfit.scaleX);
 		}
 	}
 }

@@ -402,6 +402,7 @@ package app.world
 				_randomItemOfType(tItem, Math.random() <= 0.65);
 			}
 			_randomItemOfType(ITEM.POSE, Math.random() <= 0.5);
+			(getTabByType(TAB_OTHER) as OtherTabPane).updateButtonsBasedOnCurrentData();
 		}
 
 		private function _randomItemOfType(pType:String, pSetToDefault:Boolean=false) : void {
