@@ -65,7 +65,7 @@ package app.ui.screens
 			*****************************/
 			var tY = 80;
 			
-			addChild(new TextBase({ text:"loading_progress", values:["Fewfre Syntax (full support)"], size:15, y:tY-30 }));
+			addChild(new TextBase({ text:"share_fewfre_syntax", size:15, y:tY-30 }));
 			
 			_text = _newCopyInput({ x:0, y:tY }, this);
 			
@@ -79,7 +79,7 @@ package app.ui.screens
 			*****************************/
 			tY = -35;
 			
-			addChild(new TextBase({ text:"loading_progress", values:["TFM /dressing Syntax (Pose & Other not saved)"], size:15, y:tY-30 }));
+			addChild(new TextBase({ text:"share_tfm_syntax", size:15, y:tY-30 }));
 			
 			_text2 = _newCopyInput({ x:0, y:tY }, this);
 			
