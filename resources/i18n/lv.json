@@ -11,6 +11,11 @@
 		"share_header":			{ "text":"Dalies ar savu meistardarbu!" },
 		"share_link_copied":	{ "text":"Saite kopēta uz starpliktuvi! Iekopē, lai lietotu.", "scale":0.95 },
 		"share_copy":			{ "text":"Kopēt" },
+		"share_tfm_syntax":		{ "text":"TFM /dressing Syntax (Pose & Other not saved)" },
+		"share_fewfre_syntax":	{ "text":"Fewfre Syntax (full support)" },
+		"share_paste":			{ "text":"Paste your share code / url here" },
+		"share_paste_success":	{ "text":"Success!" },
+		"share_paste_invalid":	{ "text":"Invalid" },
 		"version":				{ "text":"Versija: {0}" },
 		"translated_by":		{ "text":"Tulkoja: Marciskris" },
 		

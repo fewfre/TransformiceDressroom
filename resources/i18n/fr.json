@@ -11,6 +11,11 @@
 		"share_header":			{ "text":"Partage ta Création!" },
 		"share_link_copied":	{ "text":"Lien copié au presse-papiers! Coller pour utiliser.", "scale":0.9 },
 		"share_copy":			{ "text":"Copier" },
+		"share_tfm_syntax":		{ "text":"TFM /dressing Syntax (Pose & Other not saved)" },
+		"share_fewfre_syntax":	{ "text":"Fewfre Syntax (full support)" },
+		"share_paste":			{ "text":"Paste your share code / url here" },
+		"share_paste_success":	{ "text":"Success!" },
+		"share_paste_invalid":	{ "text":"Invalid" },
 		"version":				{ "text":"Version: {0}" },
 		"translated_by":		{ "text":"Traduit par: Virus_code" },
 		

@@ -11,6 +11,11 @@
 		"share_header":			{ "text":"Oszd meg a kinézeted!" },
 		"share_link_copied":	{ "text":"Link a vágólapra másolva! Illeszd be a használathoz.", "scale":0.9 },
 		"share_copy":			{ "text":"másolás" },
+		"share_tfm_syntax":		{ "text":"TFM /dressing Syntax (Pose & Other not saved)" },
+		"share_fewfre_syntax":	{ "text":"Fewfre Syntax (full support)" },
+		"share_paste":			{ "text":"Paste your share code / url here" },
+		"share_paste_success":	{ "text":"Success!" },
+		"share_paste_invalid":	{ "text":"Invalid" },
 		"version":				{ "text":"Verzió: {0}" },
 		"translated_by":		{ "text":"Fordította: Fire_tiger" },
 		

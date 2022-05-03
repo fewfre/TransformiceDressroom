@@ -11,6 +11,11 @@
 		"share_header":			{ "text":"Eserini paylaş!" },
 		"share_link_copied":	{ "text":"Bağlantı panoya kopyalandı! Kullanmak için yapıştırın.", "scale":0.9 },
 		"share_copy":			{ "text":"kopyala" },
+		"share_tfm_syntax":		{ "text":"TFM /dressing Syntax (Pose & Other not saved)" },
+		"share_fewfre_syntax":	{ "text":"Fewfre Syntax (full support)" },
+		"share_paste":			{ "text":"Paste your share code / url here" },
+		"share_paste_success":	{ "text":"Success!" },
+		"share_paste_invalid":	{ "text":"Invalid" },
 		"version":				{ "text":"Sürüm: {0}" },
 		"translated_by":		{ "text":"Çeviri: Honorabilis" },
 		

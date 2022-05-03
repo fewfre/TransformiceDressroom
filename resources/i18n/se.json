@@ -11,6 +11,11 @@
 		"share_header":			{ "text":"Visa ditt mästervärk" },
 		"share_link_copied":	{ "text":"Länk kopierad! den finns nu i din clipboard" },
 		"share_copy":			{ "text":"Kopiera" },
+		"share_tfm_syntax":		{ "text":"TFM /dressing Syntax (Pose & Other not saved)" },
+		"share_fewfre_syntax":	{ "text":"Fewfre Syntax (full support)" },
+		"share_paste":			{ "text":"Paste your share code / url here" },
+		"share_paste_success":	{ "text":"Success!" },
+		"share_paste_invalid":	{ "text":"Invalid" },
 		"version":				{ "text":"Version {0}" },
 		"translated_by":		{ "text":"Översätt av: Elinormus" },
 		

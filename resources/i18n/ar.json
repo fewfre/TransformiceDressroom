@@ -11,6 +11,11 @@
 		"share_header":			{ "text":"شارك معنا ابداعك !" },
 		"share_link_copied":	{ "text":"تم نسخ الرابط إلى الحافظة! الصق للاستخدام." },
 		"share_copy":			{ "text":"نسخ" },
+		"share_tfm_syntax":		{ "text":"TFM /dressing Syntax (Pose & Other not saved)" },
+		"share_fewfre_syntax":	{ "text":"Fewfre Syntax (full support)" },
+		"share_paste":			{ "text":"Paste your share code / url here" },
+		"share_paste_success":	{ "text":"Success!" },
+		"share_paste_invalid":	{ "text":"Invalid" },
 		"version":				{ "text":"الإصدار: {0}" },
 		"translated_by":		{ "text":"الترجمة من طرف: Hmiida" },
 		
