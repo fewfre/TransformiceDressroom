@@ -20,7 +20,7 @@
     "translated_by":           { "text":"Vertaald door: Brividi#7040" },
     "user_lookup_title":       { "text":"Gebruikersnaam opzoeken" },
     "user_lookup_placeholder": { "text":"Gebruikersnaam#0000" },
-    "user_lookup_details":     { "text":"Het duurt even voordat alle wijzigingen in de game worden weergegeven.\nDe resultaten kunnen een paar uur oud zijn.", "scale":0.9 },
+    "user_lookup_details":     { "text":"Het duurt even voordat alle wijzigingen in het spel worden weergegeven.\nDe resultaten kunnen een paar uur oud zijn.", "scale":0.9 },
   
     "btn_normal_mode":         { "text":"Normaal" },
     "btn_hard_mode":           { "text":"Moeilijk" },
