@@ -10,12 +10,13 @@
 			{ "code":"pl", "name":"polski", "flags_swf_linkage":"$PL" },
 			{ "code":"ru", "name":"Русский", "flags_swf_linkage":"$RU" },
 			{ "code":"se", "name":"svenska", "flags_swf_linkage":"$SE" },
-			{ "code":"hu", "name":"magyar", "flags_swf_linkage":"$HU" },
-			{ "code":"ro", "name":"română", "flags_swf_linkage":"$RO" },
+			{ "code":"hu", "name":"Magyar", "flags_swf_linkage":"$HU" },
+			{ "code":"ro", "name":"Română", "flags_swf_linkage":"$RO" },
 			{ "code":"de", "name":"Deutsch", "flags_swf_linkage":"$DE" },
 			{ "code":"ar", "name":"العَرَبِيَّة", "flags_swf_linkage":"$AR" },
 			{ "code":"hr", "name":"Hrvatski", "flags_swf_linkage":"$HR" },
-			{ "code":"lv", "name":"latviešu valoda", "flags_swf_linkage":"$LV" }
+			{ "code":"lv", "name":"Latviešu valoda", "flags_swf_linkage":"$LV" },
+			{ "code":"nl", "name":"Nederlands", "flags_swf_linkage":"$NL" }
 		]
 	},
 	
