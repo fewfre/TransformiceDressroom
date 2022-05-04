@@ -3,7 +3,7 @@
   "defaultScale": 1,
   "strings": {
     "loading_progress":        { "text":"{0}" },
-    "infobar_id":              { "text":"ID: {0}" },
+    "infobar_id":              { "text":"ID : {0}" },
     
     "loading":                 { "text":"Items en chargement : {0}" },
     "loading_finished":        { "text":"Chargement terminé. Initialisation..." },
