@@ -7,7 +7,7 @@
 
     "loading":                 { "text":"Items die nog moeten worden geladen: {0}" },
     "loading_finished":        { "text":"Laden voltooid. Initialiseren..." },
-    "btn_color_defaults":      { "text":"Defaults" },
+    "btn_color_defaults":      { "text":"Standaard" },
     "share_header":            { "text":"Deel je creatie!" },
     "share_link_copied":       { "text":"Link gekopieerd naar klembord! Plak om te gebruiken.", "scale":0.85 },
     "share_copy":              { "text":"Kopiëren" },

@@ -24,7 +24,7 @@
       
     "btn_normal_mode":         { "text":"Нормальный", "scale":0.75 },
     "btn_hard_mode":           { "text":"Сложный", "scale":0.9 },
-    "btn_divine_mode":         { "text":"Сожественный", "scale":0.75 },
+    "btn_divine_mode":         { "text":"Божественный", "scale":0.75 },
     "tab_config":              { "text":"Kонфигу\n-рации", "scale":0.8 },
     "tab_head":                { "text":"Голова" },
     "tab_hair":                { "text":"Причёски", "scale":0.9 },
