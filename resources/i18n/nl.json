@@ -1,0 +1,42 @@
+{
+  "defaultFont": "Verdana",
+  "defaultScale": 1,
+  "strings": {
+    "loading_progress":        { "text":"{0}" },
+    "infobar_id":              { "text":"ID: {0}" },
+
+    "loading":                 { "text":"Items die nog moeten worden geladen: {0}" },
+    "loading_finished":        { "text":"Laden voltooid. Initialiseren..." },
+    "loading_progress":        { "text":"{0}" },
+    "version":                 { "text":"Versie: {0}" },
+    "translated_by":           { "text":"Vertaald door: Brividi#7040" },
+    "share_header":            { "text":"Deel je creatie!" },
+    "share_link_copied":       { "text":"Link gekopieerd naar klembord! Plak om te gebruiken." },
+    "share_copy":              { "text":"Kopiëren" },
+    "share_tfm_syntax":        { "text":"TFM /dressing Syntax (Pose & Anders niet opgeslagen)" },
+    "share_fewfre_syntax":     { "text":"Fewfre Syntax (Volle ondersteuning)" },
+    "share_paste":             { "text":"Plak hier uw deelcode / url" },
+    "share_paste_success":     { "text":"Succes!" },
+    "share_paste_invalid":     { "text":"Ongeldig" },
+    "user_lookup_title":       { "text":"Gebruikersnaam opzoeken" },
+    "user_lookup_placeholder": { "text":"Gebruikersnaam#0000" },
+    "user_lookup_details":     { "text":"Het duurt even voordat alle wijzigingen in de game worden weergegeven.\nDe resultaten kunnen een paar uur oud zijn." },
+  
+    "btn_normal_mode":         { "text":"Normaal" },
+    "btn_hard_mode":           { "text":"Moeilijk" },
+    "btn_divine_mode":         { "text":"Goddelijk" },
+    "tab_config":              { "text":"Configuratie" },
+    "tab_head":                { "text":"Hoofd" },
+    "tab_hair":                { "text":"Haarstijl" },
+    "tab_ears":                { "text":"Oren" },
+    "tab_eyes":                { "text":"Ogen" },
+    "tab_mouth":               { "text":"Mond" },
+    "tab_neck":                { "text":"Nek" },
+    "tab_tail":                { "text":"Staart" },
+    "tab_contacts":            { "text":"Contactlenzen" },
+    "tab_hand":                { "text":"Handen" },
+    "tab_furs":                { "text":"Vacht" },
+    "tab_poses":               { "text":"Pose" },
+    "tab_other":               { "text":"Anders" }
+  }
+}
