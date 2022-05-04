@@ -20,7 +20,7 @@
     "translated_by":           { "text":"Übersetzt von: Virus_Code / Brividi#7040" },
     "user_lookup_title":       { "text":"Suche nach Nickname" },
     "user_lookup_placeholder": { "text":"Nickname#0000" },
-    "user_lookup_details":     { "text":"Es dauert eine Weile, bis alle Änderungen im Spiel angezeigt werden.\nErgebnisse können einige Stunden alt sein." },
+    "user_lookup_details":     { "text":"Es dauert eine Weile, bis alle Änderungen im Spiel angezeigt werden.\nErgebnisse können einige Stunden alt sein.", "scale":0.95 },
     
     "btn_normal_mode":         { "text":"Normal" },
     "btn_hard_mode":           { "text":"Schwer" },
