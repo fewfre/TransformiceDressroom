@@ -16,7 +16,8 @@
 			{ "code":"ar", "name":"العَرَبِيَّة", "flags_swf_linkage":"$AR" },
 			{ "code":"hr", "name":"Hrvatski", "flags_swf_linkage":"$HR" },
 			{ "code":"lv", "name":"Latviešu valoda", "flags_swf_linkage":"$LV" },
-			{ "code":"nl", "name":"Nederlands", "flags_swf_linkage":"$NL" }
+			{ "code":"nl", "name":"Nederlands", "flags_swf_linkage":"$NL" },
+			{ "code":"fi", "name":"Suomi", "flags_swf_linkage":"$FI" }
 		]
 	},
 	

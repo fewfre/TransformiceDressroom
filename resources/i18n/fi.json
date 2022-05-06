@@ -1,0 +1,42 @@
+{
+  "defaultFont": "Verdana",
+  "defaultScale": 1,
+  "strings": {
+    "loading_progress":        { "text":"{0}" },
+    "infobar_id":              { "text":"ID: {0}" },
+    
+    "loading":                 { "text":"Ladattavia kohteita jäljellä: {0}" },
+    "loading_finished":        { "text":"Lataus valmis. Alustetaan..." },
+    "btn_color_defaults":      { "text":"Oletusarvot" },
+    "share_header":            { "text":"Jaa luomuksesi!" },
+    "share_link_copied":       { "text":"Linkki kopioitu leikepöydälle!< Liitä käyttääksesi.", "scale":0.9 },
+    "share_copy":              { "text":"Kopio" },
+    "share_tfm_syntax":        { "text":"TFM /dressing Syntax (Poseeraus & Muu ei tallennettu)" },
+    "share_fewfre_syntax":     { "text":"Fewfre Syntax (täysi tuki)" },
+    "share_paste":             { "text":"Liitä jakokoodi / URL-osoite tähän" },
+    "share_paste_success":     { "text":"Valmista!" },
+    "share_paste_invalid":     { "text":"Virheellinen" },
+    "version":                 { "text":"Versio: {0}" },
+    "translated_by":           { "text":"Käännös: D_iva#6659" },
+    "user_lookup_title":       { "text":"Käyttäjänimen haku" },
+    "user_lookup_placeholder": { "text":"Käyttäjänimi#0000" },
+    "user_lookup_details":     { "text":"Pelin sisäisten muutosten ilmestyminen voi viedä jonkin aikaa.\nTulokset voivat olla muutaman tunnin vanhoja." },
+    
+    "btn_normal_mode":         { "text":"Normaali tila", "scale":0.95 },
+    "btn_hard_mode":           { "text":"Vaativa tila", "scale":0.95 },
+    "btn_divine_mode":         { "text":"Erittäin\nvaativa tila", "scale":0.95 },
+    "tab_config":              { "text":"Haku" },
+    "tab_head":                { "text":"Pää" },
+    "tab_hair":                { "text":"Hiustyyli" },
+    "tab_ears":                { "text":"Korvat" },
+    "tab_eyes":                { "text":"Silmät" },
+    "tab_mouth":               { "text":"Suu" },
+    "tab_neck":                { "text":"Kaula" },
+    "tab_tail":                { "text":"Häntä" },
+    "tab_contacts":            { "text":"Linssit" },
+    "tab_hand":                { "text":"Kädet" },
+    "tab_furs":                { "text":"Turkit" },
+    "tab_poses":               { "text":"Poseeraus", "scale":0.85 },
+    "tab_other":               { "text":"Muu" }
+  }
+}
