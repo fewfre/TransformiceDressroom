@@ -1,0 +1,42 @@
+{
+  "defaultFont": "Verdana",
+  "defaultScale": 1,
+  "strings": {
+    "loading_progress":        { "text":"{0}" },
+    "infobar_id":              { "text":"ID: {0}" },
+	
+    "loading":                 { "text":"Articoli rimanenti da caricare: {0}" },
+    "loading_finished":        { "text":"Caricamento completato. Inizializzazione..." },
+    "btn_color_defaults":      { "text":"Default" },
+    "share_header":            { "text":"Condividi la tua Creazione!" },
+    "share_link_copied":       { "text":"Link copiato! Incolla per utilizzare." },
+    "share_copy":              { "text":"copia" },
+    "share_tfm_syntax":        { "text":"TFM /dressing Syntax (Pose & Altro non sono salvati)" },
+    "share_fewfre_syntax":     { "text":"Fewfre Syntax (supporto completo)" },
+    "share_paste":             { "text":"Incolla il tuo codice / url condiviso qui" },
+    "share_paste_success":     { "text":"Successo!" },
+    "share_paste_invalid":     { "text":"Non valido" },
+    "version":                 { "text":"Versione: {0}" },
+    "translated_by":           { "text":"Tradotto da: Furianera#0015" },
+    "user_lookup_title":       { "text":"Ricerca Username" },
+    "user_lookup_placeholder": { "text":"Username#0000" },
+    "user_lookup_details":     { "text":"Eventuali modifiche in gioco richiedono un po' di tempo\nper essere visualizzate.\nI risultati potrebbero essere in ritardo di qualche ora." },
+    
+    "btn_normal_mode":         { "text":"Normale" },
+    "btn_hard_mode":           { "text":"Difficile" },
+    "btn_divine_mode":         { "text":"Divina" },
+    "tab_config":              { "text":"Configur\n-azione", "scale":0.9 },
+    "tab_head":                { "text":"Testa" },
+    "tab_hair":                { "text":"Capelli" },
+    "tab_ears":                { "text":"Orecchie" },
+    "tab_eyes":                { "text":"Occhi" },
+    "tab_mouth":               { "text":"Bocca" },
+    "tab_neck":                { "text":"Collo" },
+    "tab_tail":                { "text":"Coda" },
+    "tab_contacts":            { "text":"Lenti a\ncontatto", "scale":0.9 },
+    "tab_hand":                { "text":"Mani" },
+    "tab_furs":                { "text":"Pellicce" },
+    "tab_poses":               { "text":"Pose" },
+    "tab_other":               { "text":"Altro" }
+  }
+  }
