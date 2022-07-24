@@ -18,7 +18,9 @@
 			{ "code":"lv", "name":"Latviešu valoda", "flags_swf_linkage":"$LV" },
 			{ "code":"nl", "name":"Nederlands", "flags_swf_linkage":"$NL" },
 			{ "code":"fi", "name":"Suomi", "flags_swf_linkage":"$FI" },
-			{ "code":"it", "name":"italiano", "flags_swf_linkage":"$IT" }
+			{ "code":"it", "name":"italiano", "flags_swf_linkage":"$IT" },
+			{ "code":"sk", "name":"Slovak", "flags_swf_linkage":"$SK" },
+			{ "code":"cz", "name":"Czech", "flags_swf_linkage":"$CZ" }
 		]
 	},
 	

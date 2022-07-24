@@ -1,0 +1,48 @@
+{
+  "defaultFont": "Verdana",
+  "defaultScale": 1,
+  "strings": {
+    "loading":                 { "text":"Items left to load: {0}" },
+    "loading_finished":        { "text":"Loading complete. Initializing..." },
+    "loading_progress":        { "text":"{0}" },
+    
+    "version":                 { "text":"Verzia: {0}" },
+    "translated_by":           { "text":"Preklad podľa: Amaz_ing#9155" },
+    
+    "share_header":            { "text":"Zdieľajte svoj výtvor!" },
+    "share_link_copied":       { "text":"Odkaz bol skopírovaný! Vložte na použitie." },
+    "share_copy":              { "text":"Kopírovať" },
+    "share_tfm_syntax":        { "text":"TFM /dressing Syntax (Póza a iné neboli uložené)" },
+    "share_fewfre_syntax":     { "text":"Fewfre Syntax (Plná podpora)" },
+    
+    "share_paste":             { "text":"Tu zadaj kód zdieľania / url " },
+    "share_paste_success":     { "text":"Úspech!" },
+    "share_paste_invalid":     { "text":"Neplatné" },
+    
+    "user_lookup_title":       { "text":"Vyhľadanie používateľského mena" },
+    "user_lookup_placeholder": { "text":"Prezývka#0000" },
+    "user_lookup_details":     { "text":"Akékoľvek zmeny v hre chvíľu trvajú, kým sa prejavia.\nVýsledky môžu byť staré niekoľko hodín." },
+    
+    "btn_color_defaults":      { "text":"Predvolené" },
+    
+    "infobar_id":              { "text":"ID: {0}" },
+    
+    "btn_normal_mode":         { "text":"Normálny" },
+    "btn_hard_mode":           { "text":"Ťažký" },
+    "btn_divine_mode":         { "text":"Božský" },
+    
+    "tab_config":              { "text":"Config" },
+    "tab_head":                { "text":"Hlava" },
+    "tab_hair":                { "text":"Účes" },
+    "tab_ears":                { "text":"Uši" },
+    "tab_eyes":                { "text":"Oči" },
+    "tab_mouth":               { "text":"Ústa" },
+    "tab_neck":                { "text":"Krk" },
+    "tab_tail":                { "text":"Chvost" },
+    "tab_contacts":            { "text":"Šošovky" },
+    "tab_hand":                { "text":"Ruky" },
+    "tab_furs":                { "text":"Kožušiny" },
+    "tab_poses":               { "text":"Póza" },
+    "tab_other":               { "text":"Iné" }
+  }
+}
