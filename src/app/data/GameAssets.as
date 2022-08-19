@@ -12,7 +12,7 @@ package app.data
 
 	public class GameAssets
 	{
-		private static const _MAX_COSTUMES_TO_CHECK_TO:Number = 250;//999;
+		private static const _MAX_COSTUMES_TO_CHECK_TO:Number = 999;
 		public static const FUR_COLORS:Array = [ 0xBD9067, 0x593618, 0x8C887F, 0xDED7CE, 0x4E443A, 0xE3C07E, 0x272220 ];
 
 		public static var hair:Array;
@@ -104,6 +104,7 @@ package app.data
 			var tClassName:String;
 			var tClass:Class;
 			var tSexSpecificParts:int;
+			var breakCount = 0; // quit early if enough nulls in a row
 			for(var i = 0; i <= _MAX_COSTUMES_TO_CHECK_TO; i++) {
 				if(pData.map) {
 					for(var g:int = 0; g < (pData.sex ? 2 : 1); g++) {
@@ -118,8 +119,14 @@ package app.data
 							}
 						}
 						if(tClassSuccess) {
+							breakCount = 0;
 							var tIsSexSpecific = pData.sex && tSexSpecificParts > 0;
 							tArray.push( new ItemData({ id:i+(tIsSexSpecific ? (g==1 ? "M" : "F") : ""), type:pData.type, classMap:tClassMap, itemClass:tClassSuccess, gender:(tIsSexSpecific ? (g==1?GENDER.MALE:GENDER.FEMALE) : null) }) );
+						} else {
+							breakCount++;
+							if(breakCount > 5) {
+								break;
+							}
 						}
 						if(tSexSpecificParts == 0) {
 							break;
@@ -128,6 +135,7 @@ package app.data
 				} else {
 					tClass = Fewf.assets.getLoadedClass( pData.base+(pData.pad ? zeroPad(i, pData.pad) : i)+(pData.after ? pData.after : "") );
 					if(tClass != null) {
+						breakCount = 0;
 						tArray.push( new ItemData({ id:i, type:pData.type, itemClass:tClass}) );
 						if(pData.itemClassToClassMap) {
 							tArray[tArray.length-1].classMap = {};
@@ -138,6 +146,11 @@ package app.data
 							} else {
 								tArray[tArray.length-1].classMap[pData.itemClassToClassMap] = tClass;
 							}
+						}
+					} else {
+						breakCount++;
+						if(breakCount > 5) {
+							break;
 						}
 					}
 				}
