@@ -1,4 +1,9 @@
-== V.21 - 21 January 2021 ==
+== V1.21b - 1 October 2022 ==
+- Added support for now "slot_" behavior on items
+- Tweaked shaman wings to match exact in-game values
+
+
+== V1.21 - 21 January 2022 ==
 - Blacklist feature added for username lookup
 - Tweaked color picker
 	- 'Recent colors' can now be removed
@@ -8,7 +13,7 @@
 - Added a button for saving an image of just a mouse head
 
 
-== V.20 - 19 December 2021 ==
+== V1.20 - 19 December 2021 ==
 - Added Config tab
 - Moved share cost posting input into config tab
 - Added username lookup to config tab
