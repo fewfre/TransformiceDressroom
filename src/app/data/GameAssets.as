@@ -27,6 +27,8 @@ package app.data
 
 		public static var skins:Array;
 		public static var poses:Array;
+		
+		public static var accessorySlotBones:Array;
 
 		public static var defaultSkinIndex:int;
 		public static var defaultPoseIndex:int;
@@ -57,6 +59,19 @@ package app.data
 			extraBackHand.classMap = { PatteG_1:extraBackHand.itemClass };
 			extraFromage = new ItemData({ type:ITEM.BACK, itemClass:Fewf.assets.getLoadedClass("FromageSouris") });
 			extraFromage.classMap = { ClipGrosse:extraFromage.itemClass };
+			
+			accessorySlotBones = new Array();
+			accessorySlotBones[0] = new Array("Tete_1");
+			accessorySlotBones[1] = new Array("OeilVide_1","Oeil2_1","Oeil3_1","Oeil4_1");
+			accessorySlotBones[2] = new Array("OreilleD_1");
+			accessorySlotBones[3] = new Array("Tete_1");
+			accessorySlotBones[4] = new Array("Tete_1");
+			accessorySlotBones[5] = new Array("Tete_1");
+			accessorySlotBones[6] = new Array("Boule_1");
+			accessorySlotBones[7] = new Array("Oeil_1");
+			accessorySlotBones[8] = new Array("Gant_1");
+			accessorySlotBones[9] = new Array("Arme_1");
+			accessorySlotBones[10] = new Array("Bouclier_1");
 
 			skins = new Array();
 			
@@ -221,6 +236,9 @@ package app.data
 					tHex = int("0x" + tChild.name.substr(tChild.name.indexOf("_") + 1, 6));
 					applyColorToObject(tChild, tHex);
 				}
+				else if(tChild.name.indexOf("slot_") == 0) {
+					colorDefault(tChild)
+				}
 				++loc1;
 			}
 			return pMC;
@@ -244,6 +262,9 @@ package app.data
 						applyColorToObject(tChild, tHex);
 					}
 				}
+				else if(tChild.name.indexOf("slot_") == 0) {
+					colorItem({ obj:tChild, color:tHex, swatch:pData.swatch, colors:pData.colors })
+				}
 				i++;
 			}
 			return pData.obj;
@@ -261,10 +282,10 @@ package app.data
 			pItem.transform.colorTransform = new flash.geom.ColorTransform(tR / 128, tG / 128, tB / 128);
 		}
 
-		public static function getColors(pMC:MovieClip) : Array {
+		public static function getColors(pMC:MovieClip, tArray:Array=null) : Array {
 			var tChild:*=null;
 			var tTransform:*=null;
-			var tArray:Array=new Array();
+			var tArray:Array=tArray ? tArray : new Array();
 
 			var i:int=0;
 			while (i < pMC.numChildren) {
@@ -272,6 +293,9 @@ package app.data
 				if (tChild.name.indexOf("Couleur") == 0 && tChild.name.length > 7) {
 					tTransform = tChild.transform.colorTransform;
 					tArray[tChild.name.charAt(7)] = ColorMathUtil.RGBToHex(tTransform.redMultiplier * 128, tTransform.greenMultiplier * 128, tTransform.blueMultiplier * 128);
+				}
+				else if(tChild.name.indexOf("slot_") == 0) {
+					getColors(tChild, tArray);
 				}
 				i++;
 			}

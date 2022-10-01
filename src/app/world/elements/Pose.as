@@ -66,6 +66,8 @@ package app.world.elements
 			
 			pData.shamanMode = pData.shamanMode != null ? pData.shamanMode : GameAssets.shamanMode;
 			
+			var tAccessoires = [];
+			
 			// This works because poses, skins, and items have a group of letters/numbers that let each other know they should be grouped together.
 			// For example; the "head" of a pose is T, as is the skin's head, hats, and hair. Thus they all go onto same area of the skin.
 			// Loop in reverse so unused parts can be removed if required
@@ -76,26 +78,42 @@ package app.world.elements
 				for(var j:int = 0; j < tShopData.length; j++) {
 					if(tTailData != null && tShopData[j].isSkin() && tSlotName.indexOf("Boule_") > -1) { continue; }
 					part = _addToPoseIfCan(tChild as MovieClip, tShopData[j], tSlotName, pData) as MovieClip;
-					_colorPart(part, tShopData[j], tSlotName);
-					if(part) { tItemsOnChild++; }
+					if(part) {
+						_colorPart(part, tShopData[j], tSlotName);
+						tAccessoires = tAccessoires.concat(getMcItemSubAccessories(part));
+						tItemsOnChild++;
+					}
 				}
 				// A complete hack to get shaman wings. Can't figure out the "proper" way to do it.
 				if(tSlotName.indexOf("CuisseD_") > -1 && tSkinData != null && pData.shamanMode == SHAMAN_MODE.DIVINE
 					&& (_poseData.id == "Statique" || _poseData.id == "Course" || _poseData.id == "Duck") // Wings only show for these animations in-game
 				) {
-					part = (tChild as MovieClip).addChild(new $AileChamane()) as MovieClip;
-					_colorPart(part, tSkinData, "shamanwings");
-					// Official hardcoded stats - found in decompiled game code
-					part.x = 10;
-					part.y = -8;
-					part.scaleX = 0.9;
-					part.scaleY = 0.9;
-					part.rotation = -10;
+					part = _getWingsMC(tSkinData);
+					(tChild as MovieClip).addChild(part);
 				}
 				if(pData.removeBlanks && tItemsOnChild == 0) {
 					_pose.removeChildAt(i);
 				}
 				part = null;
+			}
+			
+			var tAccMC:MovieClip;
+			for(var aI:int = 0; aI < tAccessoires.length; aI++) {
+				tAccMC = tAccessoires[aI];
+				var tAccItemCat = int(tAccMC.name.substr(5)); // removes `slot_`
+				var validBoneNamesForItemCat:Array = GameAssets.accessorySlotBones[tAccItemCat];
+				if(validBoneNamesForItemCat) {
+					for(var bnaI:int = 0; bnaI < validBoneNamesForItemCat.length; bnaI++) {
+						var tBoneMC:MovieClip = _pose.getChildByName(validBoneNamesForItemCat[bnaI]);
+
+						if(tBoneMC) {
+							var tNewAccPos:Point = tBoneMC.globalToLocal(tAccMC.parent.localToGlobal(new Point(tAccMC.x,tAccMC.y)));
+							tAccMC.x = tNewAccPos.x;
+							tAccMC.y = tNewAccPos.y;
+							tBoneMC.addChild(tAccMC);
+						}
+					}
+				}
 			}
 			
 			return this;
@@ -125,6 +143,18 @@ package app.world.elements
 				//GameAssets.colorItem({ obj:part, color: tSkinColor, name:"$0" });
 				//GameAssets.colorItem({ obj:part, color: tSecondaryColor, name:"$2" });
 			}
+		}
+		
+		private function getMcItemSubAccessories(part:MovieClip) {
+			var tAccessoires = [];
+			var tChild:DisplayObject;
+			for(var i:int = 0; i < part.numChildren; i++) {
+				tChild = part.getChildAt(i);
+				if(tChild.name.indexOf("slot_") == 0) {
+					tAccessoires.push(tChild);
+				}
+			}
+			return tAccessoires;
 		}
 		
 		private function _orderType(pItems:Array) : Array {
@@ -170,6 +200,17 @@ package app.world.elements
 				|| pSkinPart.indexOf("PiedD_") > -1
 				|| pSkinPart.indexOf("PiedD2_") > -1
 			);
+		}
+		private function _getWingsMC(pSkinData:SkinData) : MovieClip {
+			var part = new $AileChamane();
+			// Official hardcoded stats - found in decompiled game code
+			part.x = 10;
+			part.y = -8;
+			part.scaleX = 0.9;
+			part.scaleY = 0.9;
+			part.rotation = -10;
+			_colorPart(part, pSkinData, "shamanwings");
+			return part;
 		}
 	}
 }
