@@ -85,7 +85,12 @@ package app.world.elements
 				) {
 					part = (tChild as MovieClip).addChild(new $AileChamane()) as MovieClip;
 					_colorPart(part, tSkinData, "shamanwings");
-					part.x += 15; part.y -= 10; part.rotation-=9;
+					// Official hardcoded stats - found in decompiled game code
+					part.x = 10;
+					part.y = -8;
+					part.scaleX = 0.9;
+					part.scaleY = 0.9;
+					part.rotation = -10;
 				}
 				if(pData.removeBlanks && tItemsOnChild == 0) {
 					_pose.removeChildAt(i);
