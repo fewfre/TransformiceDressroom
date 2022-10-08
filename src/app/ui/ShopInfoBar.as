@@ -30,6 +30,7 @@ package app.ui
 		public var refreshButton	: SpriteButton;
 		public var refreshLockButton: PushButton;
 		public var eyeDropButton	: SpriteButton;
+		public var reverseButton	: SpriteButton;
 		
 		// Properties
 		public function get hasData() : Boolean { return data != null; }
@@ -60,20 +61,26 @@ package app.ui
 			/********************
 			* Right Side Buttons
 			*********************/
-			var tX = this.Width;
+			var tX = this.Width, tSize = 24;
 			if(pData.showRefreshButton == null || pData.showRefreshButton) {
-				refreshButton = addChild(new SpriteButton({ x:tX - 24, y:0, width:24, height:24, obj_scale:0.8, obj:new $Dice() })) as SpriteButton;
-				refreshLockButton = addChild(new PushButton({ x:tX - 24, y:26, width:24, height:24, obj_scale:0.8, obj:new $Lock() })) as PushButton;
+				refreshButton = addChild(new SpriteButton({ x:tX - 24, y:0, width:tSize, height:tSize, obj_scale:0.8, obj:new $Dice() })) as SpriteButton;
+				refreshLockButton = addChild(new PushButton({ x:tX - 24, y:26, width:tSize, height:tSize, obj_scale:0.8, obj:new $Lock() })) as PushButton;
 				refreshLockButton.addEventListener(ButtonBase.CLICK, function(){ isRefreshLocked ? refreshButton.disable() : refreshButton.enable(); });
-				tX -= refreshButton.Width + 2;
+				tX -= tSize + 2;
 			}
 			
-			downloadButton = addChild(new SpriteButton({ x:tX - 25, y:0, width:24, height:24, obj_scale:0.45, obj:new $SimpleDownload() })) as SpriteButton;
+			downloadButton = addChild(new SpriteButton({ x:tX - 25, y:0, width:tSize, height:tSize, obj_scale:0.45, obj:new $SimpleDownload() })) as SpriteButton;
 			downloadButton.addEventListener(ButtonBase.CLICK, saveSprite);
 			downloadButton.disable().alpha = 0;
 			
+			if(pData.showReverseIcon) {
+				reverseButton = addChild(new SpriteButton({ x:tX - 25, y:26, width:tSize, height:tSize, obj_scale:0.7, obj:new $FlipIcon() })) as SpriteButton;
+				// reverseButton.disable().alpha = 0;
+			}
+			
+			tX -= tSize + 2;
 			if(pData.showEyeDropButton) {
-				eyeDropButton = addChild(new SpriteButton({ x:tX - 25, y:26, width:25, height:25, obj_scale:0.45, obj:new $EyeDropper() })) as SpriteButton;
+				eyeDropButton = addChild(new SpriteButton({ x:tX - 25, y:0, width:tSize, height:tSize, obj_scale:0.45, obj:new $EyeDropper() })) as SpriteButton;
 				eyeDropButton.disable().alpha = 0;
 			}
 			

@@ -12,8 +12,8 @@ package app.data
 		/****************************
 		* General
 		*****************************/
-		public static const VERSION					: String = "1.21";
-		public static const SOURCE_URL				: String = "https://github.com/fewfre/TransformiceDressroom";
+		public static const VERSION					: String = "1.22";
+		public static const SOURCE_URL				: String = "https://github.com/fewfre/TransformiceDressroom/blob/master/changelog";
 		
 		public static const DEFAULT_SKIN_ID			: int = 0;
 		public static const DEFAULT_POSE_ID			: int = 0;

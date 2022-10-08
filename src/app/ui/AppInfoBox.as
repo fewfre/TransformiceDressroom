@@ -7,6 +7,7 @@ package app.ui
 	import com.fewfre.utils.*;
 	import flash.display.*;
 	import flash.net.*;
+	import ext.ParentApp;
 
 	public class AppInfoBox extends MovieClip
 	{
@@ -25,6 +26,11 @@ package app.ui
 			btn.addEventListener(ButtonBase.CLICK, _onSourceClicked);
 			
 			_setupTextTray();
+			
+			if(ParentApp.reopenSelectionLauncher()) {
+				btn = addChild(new ScaleButton({ x:-30, y:-28, obj_scale:0.5, obj:new $BackArrow(), origin:0.5 })) as ScaleButton;
+				btn.addEventListener(ButtonBase.CLICK, function(){ ParentApp.reopenSelectionLauncher()(); });
+			}
 			
 			_addEventListeners();
 		}

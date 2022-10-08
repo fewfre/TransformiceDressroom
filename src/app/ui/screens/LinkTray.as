@@ -91,18 +91,19 @@ package app.ui.screens
 			/****************************
 			* Close Button
 			*****************************/
-			var tCloseButton:ScaleButton = addChild(new ScaleButton({ x:tWidth*0.5 - 5, y:-tHeight*0.5 + 5, obj:new MovieClip() })) as ScaleButton;
-			tCloseButton.addEventListener(ButtonBase.CLICK, _onCloseClicked);
-			
+			var tCloseIcon = new MovieClip();
 			var tSize:Number = 10;
-			tCloseButton.Image.graphics.beginFill(0x000000, 0);
-			tCloseButton.Image.graphics.drawRect(-tSize*2, -tSize*2, tSize*4, tSize*4);
-			tCloseButton.Image.graphics.endFill();
-			tCloseButton.Image.graphics.lineStyle(8, 0xFFFFFF, 1, true);
-			tCloseButton.Image.graphics.moveTo(-tSize, -tSize);
-			tCloseButton.Image.graphics.lineTo(tSize, tSize);
-			tCloseButton.Image.graphics.moveTo(tSize, -tSize);
-			tCloseButton.Image.graphics.lineTo(-tSize, tSize);
+			tCloseIcon.graphics.beginFill(0x000000, 0);
+			tCloseIcon.graphics.drawRect(-tSize*2, -tSize*2, tSize*4, tSize*4);
+			tCloseIcon.graphics.endFill();
+			tCloseIcon.graphics.lineStyle(8, 0xFFFFFF, 1, true);
+			tCloseIcon.graphics.moveTo(-tSize, -tSize);
+			tCloseIcon.graphics.lineTo(tSize, tSize);
+			tCloseIcon.graphics.moveTo(tSize, -tSize);
+			tCloseIcon.graphics.lineTo(-tSize, tSize);
+			
+			var tCloseButton:ScaleButton = addChild(new ScaleButton({ x:tWidth*0.5 - 5, y:-tHeight*0.5 + 5, obj:tCloseIcon })) as ScaleButton;
+			tCloseButton.addEventListener(ButtonBase.CLICK, _onCloseClicked);
 		}
 		
 		public function open(pURL:String, pTfmOfficialDressingCode:String) : void {

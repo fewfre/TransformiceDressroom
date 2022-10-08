@@ -72,5 +72,11 @@ package app.ui
 			}
 			return pItem;
 		}
+		
+		public function reverse() : void {
+			var list = _array;
+			reset();
+			addList(list.reverse());
+		}
 	}
 }

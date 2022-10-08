@@ -2,13 +2,13 @@ package app.ui.buttons
 {
 	import com.fewfre.display.ButtonBase;
 	import app.ui.*;
-	import flash.display.MovieClip;
+	import flash.display.DisplayObject;
 	import flash.events.MouseEvent;
 	
 	public class ScaleButton extends ButtonBase
 	{
 		// Storage
-		public var Image:MovieClip;
+		public var Image:DisplayObject;
 		protected var _buttonScale:Number = 1;
 		
 		// Constructor
@@ -21,7 +21,7 @@ package app.ui.buttons
 			ChangeImage(pData.obj);
 		}
 
-		public function ChangeImage(pMC:MovieClip) : void
+		public function ChangeImage(pMC:DisplayObject) : void
 		{
 			if(this.Image != null) { removeChild(this.Image); }
 			this.Image = pMC;

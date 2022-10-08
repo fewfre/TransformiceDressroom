@@ -195,11 +195,12 @@ package app.world
 
 		private function _setupPane(pType:String) : TabPane {
 			var tPane:TabPane = new TabPane();
-			tPane.addInfoBar( new ShopInfoBar({ showEyeDropButton:pType!=ITEM.POSE }) );
+			tPane.addInfoBar( new ShopInfoBar({ showEyeDropButton:pType!=ITEM.POSE, showReverseIcon:true }) );
 			_setupPaneButtons(pType, tPane, GameAssets.getArrayByType(pType));
 			tPane.infoBar.colorWheel.addEventListener(ButtonBase.CLICK, function(){ _colorButtonClicked(pType); });
 			tPane.infoBar.imageCont.addEventListener(MouseEvent.CLICK, function(){ _removeItem(pType); });
 			tPane.infoBar.refreshButton.addEventListener(ButtonBase.CLICK, function(){ _randomItemOfType(pType); });
+			tPane.infoBar.reverseButton.addEventListener(ButtonBase.CLICK, function(){ _reverseGrid(pType); });
 			if(tPane.infoBar.eyeDropButton) {
 				tPane.infoBar.eyeDropButton.addEventListener(ButtonBase.CLICK, function(){ _eyeDropButtonClicked(pType); });
 			}
@@ -230,7 +231,16 @@ package app.world
 				pPane.buttons.push(shopItemButton);
 				shopItemButton.addEventListener(PushButton.STATE_CHANGED_AFTER, _onItemToggled);
 			}
+			if(pType !== ITEM.POSE) {
+				grid.reverse();
+				_addDefaultSkinColorButtonIfSkinPane(pPane, pType);
+			}
+			pPane.UpdatePane();
+		}
+		
+		private function _addDefaultSkinColorButtonIfSkinPane(pPane:TabPane, pType:String) {
 			// Customizeable fur color button
+			// cannot attach to button due to main button eating mouse events
 			if(pType == ITEM.SKIN) {
 				var tSkinButton = pPane.buttons[GameAssets.defaultSkinIndex];
 				var tColorWheel = tSkinButton.parent.addChild(new ScaleButton({ x:tSkinButton.x + 60, y:tSkinButton.y + 12, obj:new $ColorWheel(), obj_scale:0.5 }));
@@ -239,7 +249,6 @@ package app.world
 					_colorButtonClicked(pType);
 				});
 			}
-			pPane.UpdatePane();
 		}
 
 		private function _onMouseWheel(pEvent:MouseEvent) : void {
@@ -416,6 +425,12 @@ package app.world
 			}
 		}
 		
+		private function _reverseGrid(pType:String) : void {
+			var tPane = getTabByType(pType);
+			tPane.grid.reverse();
+			_addDefaultSkinColorButtonIfSkinPane(tPane, pType);
+		}
+		
 		private function _onShareButtonClicked(pEvent:Event) : void {
 			var tURL = "", tOfficialCode = "";
 			try {
@@ -493,8 +508,14 @@ package app.world
 		//{REGION Color Tab
 			private function _onColorPickChanged(pEvent:flash.events.DataEvent):void
 			{
-				var tVal:uint = uint(pEvent.data);
-				this.character.getItemData(this.currentlyColoringType).colors[(_paneManager.getPane(COLOR_PANE_ID) as ColorPickerTabPane).selectedSwatch] = tVal;
+				var tVal:int = int(pEvent.data);
+				var pane = _paneManager.getPane(COLOR_PANE_ID) as ColorPickerTabPane;
+				// Negative number indicates that all colors were randomized
+				if(tVal < 0) {
+					this.character.getItemData(this.currentlyColoringType).colors = pane.getAllColors();
+				} else {
+					this.character.getItemData(this.currentlyColoringType).colors[pane.selectedSwatch] = tVal;
+				}
 				_refreshSelectedItemColor(this.currentlyColoringType);
 			}
 
@@ -502,7 +523,8 @@ package app.world
 			{
 				this.character.getItemData(this.currentlyColoringType).setColorsToDefault();
 				_refreshSelectedItemColor(this.currentlyColoringType);
-				(_paneManager.getPane(COLOR_PANE_ID) as ColorPickerTabPane).setupSwatches( this.character.getColors(this.currentlyColoringType) );
+				var pane = _paneManager.getPane(COLOR_PANE_ID) as ColorPickerTabPane;
+				pane.setupSwatches( this.character.getColors(this.currentlyColoringType) );
 			}
 			
 			private function _refreshSelectedItemColor(pType:String) : void {
@@ -572,7 +594,7 @@ package app.world
 
 			private function _onConfigColorPickChanged(pEvent:flash.events.DataEvent):void
 			{
-				var tVal:uint = uint(pEvent.data);
+				var tVal:uint = Math.abs(int(pEvent.data));
 				_setConfigShamanColor(tVal);
 			}
 			

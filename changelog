@@ -1,6 +1,20 @@
-== V1.21b - 1 October 2022 ==
-- Added support for now "slot_" behavior on items
+== V1.22 - 2 October 2022 ==
+- Added randomize color button to item color picker page
+- Undo button added on color picker - clicking it will show colors previously used on the specific color swatch for that specific item.
+- Updated color buttons to look nicer
+- Recent colors list design reworked and moved to it's own class
+- Recent colors now also shown on color finder
+- Color finder now supports scaling image & dragging it around
+- Files can now be uploaded from the user's computer into the color finder (request by Milinili)
+- Manually selecting a language will now cause the app to remember it the next time it is opened (request by Zelenpixel#9767)
+- Items now listed in reverse order by default, and a button has been added to reverse the order of the list
+- Big thanks to QTAngel & Barberserk for suggestions and testing out my changes!
+
+- Added support for new "slot_" behavior on items
 - Tweaked shaman wings to match exact in-game values
+- Back button added when in downloadable app
+- Recent colors now remembered across dressrooms in the app
+- Increased max costumes to check constant + made the checking more efficient
 
 
 == V1.21 - 21 January 2022 ==
