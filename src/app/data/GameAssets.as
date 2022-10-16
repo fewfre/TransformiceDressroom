@@ -370,7 +370,7 @@ package app.data
 		* Misc
 		*****************************/
 		// Converts the image to a PNG bitmap and prompts the user to save.
-		public static function saveAsPNGFrameByFrameVersion(pObj:app.world.elements.Character, pName:String) : void {
+		public static function saveAsPNGFrameByFrameVersion(pObj:app.world.elements.Character, pName:String) {
 			if(!pObj){ return; }
 
 			var tOrigScale = pObj.outfit.scaleX;
@@ -383,9 +383,11 @@ package app.data
 			tMatrix.scale(1, 1);
 
 			tBitmap.draw(pObj, tMatrix);
-			( new flash.net.FileReference() ).save( com.adobe.images.PNGEncoder.encode(tBitmap), pName+".png" );
+			var fileRef = new flash.net.FileReference();
+			fileRef.save( com.adobe.images.PNGEncoder.encode(tBitmap), pName+".png" );
 			
 			pObj.scale = tOrigScale;
+			return fileRef;
 		}
 	}
 }

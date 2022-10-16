@@ -314,7 +314,26 @@ package app.world
 			if(!ConstantsApp.ANIMATION_FRAME_BY_FRAME) {
 				FewfDisplayUtils.saveAsPNG(this.character, "character");
 			} else {
-				GameAssets.saveAsPNGFrameByFrameVersion(this.character, "frame_"+character.getItemData(ITEM.POSE).id+"_"+character.outfit.poseCurrentFrame);
+				
+				character.outfit.pose.gotoAndPlay(0);
+				character.outfit.pose.stop();
+				var downloadFrame = function(){
+					var fileRef = GameAssets.saveAsPNGFrameByFrameVersion(character, "frame_"+character.getItemData(ITEM.POSE).id+"_"+character.outfit.poseCurrentFrame);
+					fileRef.addEventListener("complete", function(e){
+						if(character.outfit.poseCurrentFrame >= character.outfit.poseTotalFrames) { return; }
+						character.outfit.poseNextFrame();
+						downloadFrame();
+					});
+					
+					// trace("downloadFrame", i, frames.length, pName+"_"+(i+1)+".png" );
+					// if(i >= frames.length) { return; }
+					// var bytes = PNGEncoder.encode(frames[i]);
+					// fileRef.save( bytes, pName+"_"+(i+1)+".png" );
+					// i++;
+				};
+				downloadFrame();
+					
+					
 			}
 		}
 
