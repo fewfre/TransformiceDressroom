@@ -18,6 +18,7 @@ package app.ui.panes
 		public static const EVENT_SWATCH_CHANGED	: String = "event_swatch_changed";
 		public static const EVENT_DEFAULT_CLICKED	: String = "event_default_clicked";
 		public static const EVENT_COLOR_PICKED		: String = "event_color_picked";
+		public static const EVENT_PREVIEW_COLOR		: String = "event_preview_color";
 		public static const EVENT_EXIT				: String = "event_exit";
 		
 		private static var HISTORY					: Dictionary = new Dictionary();
@@ -98,6 +99,7 @@ package app.ui.panes
 		public override function close() : void {
 			super.close();
 			_addRecentColor(); // Add here since we're exiting, and thus change is finalized
+			dispatchEvent(new FewfEvent(EVENT_PREVIEW_COLOR, null));
 		}
 		
 		/****************************
@@ -149,6 +151,22 @@ package app.ui.panes
 				_addRecentColor();
 				// don't track a change just from clicking a swatch, but do still set cursor/add a recent if needed
 				_selectSwatch(pNum, true, false);
+			});
+			swatch.swatch.addEventListener(MouseEvent.MOUSE_OVER, function(){
+				if(!!infoBar.data) {
+					dispatchEvent(new FewfEvent(EVENT_PREVIEW_COLOR, { type:infoBar.data.type, id:infoBar.data.id, colorI:pNum }));
+				}
+			});
+			swatch.swatch.addEventListener(MouseEvent.MOUSE_OUT, function(){
+				dispatchEvent(new FewfEvent(EVENT_PREVIEW_COLOR, null));
+			});
+			swatch.swatch.addEventListener(MouseEvent.MOUSE_DOWN, function(){
+				if(!!infoBar.data) {
+					dispatchEvent(new FewfEvent(EVENT_PREVIEW_COLOR, { type:infoBar.data.type, id:infoBar.data.id, colorI:pNum }));
+				}
+			});
+			swatch.swatch.addEventListener(MouseEvent.MOUSE_UP, function(){
+				dispatchEvent(new FewfEvent(EVENT_PREVIEW_COLOR, null));
 			});
 			swatch.x = pX;
 			swatch.y = pY;

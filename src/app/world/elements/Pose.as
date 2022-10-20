@@ -133,7 +133,7 @@ package app.world.elements
 			if(!part) { return; }
 			if(part is MovieClip) {
 				if(pData.colors != null && !pData.isSkin()) {
-					GameAssets.colorItem({ obj:part, colors:pData.colors });
+					GameAssets.colorItem({ obj:part, colors:GameAssets.getColorsWithPossibleHoverEffect(pData) });
 				}
 				else { GameAssets.colorDefault(part); }
 				

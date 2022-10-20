@@ -48,6 +48,7 @@ package app.ui
 			imageCont.draw(0x6A7495, 15, 0x5d7d90, 0x11171c, 0x3c5064);
 			
 			ChangeImage( new $NoItem() );
+			this.Image.scaleX = this.Image.scaleY = 0.75;
 			
 			this.colorWheel = addChild(new ScaleButton({ x:80, y:24, obj:pData.showBackButton ? new $BackArrow() : new $ColorWheel() })) as ScaleButton;
 			this.colorWheel.x = 80;
@@ -110,13 +111,15 @@ package app.ui
 			var tBounds:Rectangle = pMC.getBounds(pMC);
 			var tOffset:Point = tBounds.topLeft;
 			
+			// Make sure it's always big enough before being fit to have to be scaled down (to avoid extra whitespace)
+			pMC.scaleX *= 2; pMC.scaleY *= 2;
 			this.Image = pMC;
 			FewfDisplayUtils.fitWithinBounds(this.Image, imageCont.Width, imageCont.Height, imageCont.Width * 0.5, imageCont.Height * 0.5);
 			this.Image.mouseEnabled = false;
-			this.Image.x = 50 / 2 - (tBounds.width / 2 + tOffset.x)* 0.75 * this.Image.scaleX;
-			this.Image.y = 50 / 2 - (tBounds.height / 2 + tOffset.y)* 0.75 * this.Image.scaleY;
-			this.Image.scaleX *= 0.75;
-			this.Image.scaleY *= 0.75;
+			this.Image.scaleX *= 0.8;
+			this.Image.scaleY *= 0.8;
+			this.Image.x = imageCont.Width / 2 - (tBounds.width / 2 + tOffset.x) * this.Image.scaleX;
+			this.Image.y = imageCont.Height / 2 - (tBounds.height / 2 + tOffset.y) * this.Image.scaleY;
 			imageCont.addChild(this.Image);
 		}
 		
@@ -156,6 +159,7 @@ package app.ui
 		public function removeInfo() : void {
 			data = null;
 			ChangeImage(new $NoItem());
+			this.Image.scaleX = this.Image.scaleY = 0.75;
 			
 			Text.alpha = 0;
 			showColorWheel(false);

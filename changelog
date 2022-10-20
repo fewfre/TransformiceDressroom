@@ -1,3 +1,8 @@
+== V1.22b - 17 October 2022 ==
+- Hovering over color swatch square on color picker will temporarily invert the corresponding color on the target item until hovering is stopped
+- Tweaked top bar on shop tab panes to have a larger item preview size
+
+
 == V1.22 - 2 October 2022 ==
 - Added randomize color button to item color picker page
 - Undo button added on color picker - clicking it will show colors previously used on the specific color swatch for that specific item.

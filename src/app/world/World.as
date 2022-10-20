@@ -144,6 +144,7 @@ package app.world
 			tPane = _paneManager.addPane(COLOR_PANE_ID, new ColorPickerTabPane({}));
 			tPane.addEventListener(ColorPickerTabPane.EVENT_COLOR_PICKED, _onColorPickChanged);
 			tPane.addEventListener(ColorPickerTabPane.EVENT_DEFAULT_CLICKED, _onDefaultsButtonClicked);
+			tPane.addEventListener(ColorPickerTabPane.EVENT_PREVIEW_COLOR, _onColorPickHoverPreview);
 			tPane.addEventListener(ColorPickerTabPane.EVENT_EXIT, _onColorPickerBackClicked);
 
 			// Create the panes
@@ -544,6 +545,13 @@ package app.world
 				_refreshSelectedItemColor(this.currentlyColoringType);
 				var pane = _paneManager.getPane(COLOR_PANE_ID) as ColorPickerTabPane;
 				pane.setupSwatches( this.character.getColors(this.currentlyColoringType) );
+			}
+
+			private function _onColorPickHoverPreview(pEvent:FewfEvent) : void {
+				// Updated preview data
+				GameAssets.swatchHoverPreviewData = pEvent.data;
+				// refresh render for anything that uses it
+				_refreshSelectedItemColor(this.currentlyColoringType);
 			}
 			
 			private function _refreshSelectedItemColor(pType:String) : void {

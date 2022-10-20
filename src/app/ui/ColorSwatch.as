@@ -41,6 +41,8 @@ package app.ui
 		public function get lockIcon():ScaleButton { return _lockIcon; }
 		public function get locked():Boolean { return _locked; }
 		
+		public function get swatch():Sprite { return _swatch; }
+		
 		// Constructor
 		public function ColorSwatch() {
 			super();
