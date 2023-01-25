@@ -4,6 +4,7 @@
 	- Since this would leave config tab very empty, share code paste input moved to old location in the above case.
 - Removed duplicate mouth item (hardcoded)
 - Added ability to traverse through item buttons using left/right arrow key (suggestion by Barberserk)
+- Item type tabs now sorted in same order as in-game
 
 
 == V1.22b - 17 October 2022 ==

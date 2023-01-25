@@ -96,16 +96,16 @@ package app.world
 			_paneManager = tShop.addChild(new PaneManager()) as PaneManager;
 			
 			var tabs:Array = [
+				{ text:"tab_furs", event:ITEM.SKIN },
 				{ text:"tab_head", event:ITEM.HAT },
-				{ text:"tab_hair", event:ITEM.HAIR },
 				{ text:"tab_ears", event:ITEM.EARS },
 				{ text:"tab_eyes", event:ITEM.EYES },
 				{ text:"tab_mouth", event:ITEM.MOUTH },
 				{ text:"tab_neck", event:ITEM.NECK },
 				{ text:"tab_tail", event:ITEM.TAIL },
-				{ text:"tab_hand", event:ITEM.HAND },
+				{ text:"tab_hair", event:ITEM.HAIR },
 				{ text:"tab_contacts", event:ITEM.CONTACTS },
-				{ text:"tab_furs", event:ITEM.SKIN },
+				{ text:"tab_hand", event:ITEM.HAND },
 				{ text:"tab_poses", event:ITEM.POSE },
 				{ text:"tab_other", event:TAB_OTHER }
 			];
