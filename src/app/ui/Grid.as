@@ -13,6 +13,7 @@ package app.ui
 		private var _spacing : Number; // Simply the radius+margin for easily spacing items added to grid.
 
 		private var _array : Array;
+		private var _reversed : Boolean;
 
 		// Temp for add
 		private var _w : int; // column of item
@@ -21,6 +22,7 @@ package app.ui
 		// Properties
 		public function get radius():Number { return _radius; }
 		public function get array():Array { return _array; }
+		public function get reversed():Boolean { return _reversed; }
 		public function get Height():Number { return _radius + (_h * _spacing); }
 
 		// pData = { width:Number, columns:int, margin:Number, ?x:Number=0, ?y:Number=0 }
@@ -32,6 +34,7 @@ package app.ui
 			y = pData.y != null ? pData.y : 0;
 
 			_array = [];
+			_reversed = false;
 			_w = 0;
 			_h = 0;
 
@@ -45,6 +48,7 @@ package app.ui
 				removeChild(_array[i]);
 			}
 			_array = [];
+			_reversed = false;
 			_w = 0;
 			_h = 0;
 			this.graphics.clear();
@@ -75,8 +79,10 @@ package app.ui
 		
 		public function reverse() : void {
 			var list = _array;
+			var prevReversed = _reversed;
 			reset();
 			addList(list.reverse());
+			_reversed = !prevReversed;
 		}
 	}
 }
