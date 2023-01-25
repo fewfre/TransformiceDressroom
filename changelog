@@ -1,3 +1,10 @@
+== V1.23 - 24 January 2023 ==
+- Fixed bug with slot colors not being properly counted, and showing up as non-customizable
+- Removing `username_lookup_url` in the config will now hide the feature in-app
+	- Since this would leave config tab very empty, share code paste input moved to old location in the above case.
+- Removed duplicate mouth item (hardcoded)
+
+
 == V1.22b - 17 October 2022 ==
 - Hovering over color swatch square on color picker will temporarily invert the corresponding color on the target item until hovering is stopped
 - Tweaked top bar on shop tab panes to have a larger item preview size

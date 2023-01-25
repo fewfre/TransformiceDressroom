@@ -58,6 +58,7 @@ package app.world
 		// Constructor
 		public function World(pStage:Stage) {
 			super();
+			ConstantsApp.CONFIG_TAB_ENABLED = !!Fewf.assets.getData("config").username_lookup_url;
 			_buildWorld(pStage);
 			pStage.addEventListener(MouseEvent.MOUSE_WHEEL, _onMouseWheel);
 		}
@@ -92,30 +93,32 @@ package app.world
 			tShop.drawSimpleGradient(ConstantsApp.COLOR_TRAY_GRADIENT, 15, ConstantsApp.COLOR_TRAY_B_1, ConstantsApp.COLOR_TRAY_B_2, ConstantsApp.COLOR_TRAY_B_3);
 			_paneManager = tShop.addChild(new PaneManager()) as PaneManager;
 			
-			this.shopTabs = addChild(new ShopTabContainer({ x:375, y:10, width:70, height:ConstantsApp.APP_HEIGHT,
-				tabs:[
-					{ text:"tab_config", event:TAB_CONFIG },
-					{ text:"tab_head", event:ITEM.HAT },
-					{ text:"tab_hair", event:ITEM.HAIR },
-					{ text:"tab_ears", event:ITEM.EARS },
-					{ text:"tab_eyes", event:ITEM.EYES },
-					{ text:"tab_mouth", event:ITEM.MOUTH },
-					{ text:"tab_neck", event:ITEM.NECK },
-					{ text:"tab_tail", event:ITEM.TAIL },
-					{ text:"tab_hand", event:ITEM.HAND },
-					{ text:"tab_contacts", event:ITEM.CONTACTS },
-					{ text:"tab_furs", event:ITEM.SKIN },
-					{ text:"tab_poses", event:ITEM.POSE },
-					{ text:"tab_other", event:TAB_OTHER }
-				]
-			})) as ShopTabContainer;
+			var tabs:Array = [
+				{ text:"tab_head", event:ITEM.HAT },
+				{ text:"tab_hair", event:ITEM.HAIR },
+				{ text:"tab_ears", event:ITEM.EARS },
+				{ text:"tab_eyes", event:ITEM.EYES },
+				{ text:"tab_mouth", event:ITEM.MOUTH },
+				{ text:"tab_neck", event:ITEM.NECK },
+				{ text:"tab_tail", event:ITEM.TAIL },
+				{ text:"tab_hand", event:ITEM.HAND },
+				{ text:"tab_contacts", event:ITEM.CONTACTS },
+				{ text:"tab_furs", event:ITEM.SKIN },
+				{ text:"tab_poses", event:ITEM.POSE },
+				{ text:"tab_other", event:TAB_OTHER }
+			];
+			if(ConstantsApp.CONFIG_TAB_ENABLED) {
+				tabs.unshift({ text:"tab_config", event:TAB_CONFIG });
+			}
+			this.shopTabs = addChild(new ShopTabContainer({ x:375, y:10, width:70, height:ConstantsApp.APP_HEIGHT, tabs:tabs })) as ShopTabContainer;
 			this.shopTabs.addEventListener(ShopTabContainer.EVENT_SHOP_TAB_CLICKED, _onTabClicked);
 
 			// Toolbox
 			_toolbox = addChild(new Toolbox({
 				x:188, y:28, character:character,
 				onSave:_onSaveClicked, onAnimate:_onPlayerAnimationToggle, onRandomize:_onRandomizeDesignClicked,
-				onTrash:_onTrashButtonClicked, onShare:_onShareButtonClicked, onScale:_onScaleSliderChange
+				onTrash:_onTrashButtonClicked, onShare:_onShareButtonClicked, onScale:_onScaleSliderChange,
+				onShareCodeEntered:_onShareCodeEntered
 			})) as Toolbox;
 			
 			var tLangButton = addChild(new LangButton({ x:22, y:pStage.stageHeight-17, width:30, height:25, origin:0.5 }));
@@ -163,10 +166,12 @@ package app.world
 			/****************************
 			* Config Pane
 			*****************************/
-			tPane = _paneManager.addPane(TAB_CONFIG, new ConfigTabPane({
-				onShareCodeEntered:_onShareCodeEntered,
-				onUserLookClicked:_useShareCode
-			}));
+			if(ConstantsApp.CONFIG_TAB_ENABLED) {
+				tPane = _paneManager.addPane(TAB_CONFIG, new ConfigTabPane({
+					onShareCodeEntered:_onShareCodeEntered,
+					onUserLookClicked:_useShareCode
+				}));
+			}
 			
 			/****************************
 			* Other Pane

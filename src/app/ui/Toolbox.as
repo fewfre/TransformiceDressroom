@@ -106,6 +106,10 @@ package app.ui
 				scaleSlider.addEventListener(FancySlider.CHANGE, pData.onScale);
 			}
 			
+			if(!ConstantsApp.CONFIG_TAB_ENABLED) {
+				addChild(new PasteShareCodeInput({ x:18, y:33, onChange:pData.onShareCodeEntered }));
+			}
+			
 			/********************
 			* Events
 			*********************/

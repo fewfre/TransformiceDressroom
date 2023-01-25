@@ -41,39 +41,40 @@ package app.ui.panes
 			addItem(new PasteShareCodeInput({ x:xx + sizex*0.5, y:yy, width:sizex, onChange:pData.onShareCodeEntered }));
 			yy += 14;
 			
-			// Line
-			yy += 16;
-			addItemDO(_drawLine(5, yy, ConstantsApp.PANE_WIDTH - 15));
-			yy += 16;
-			
-			// User look fetcher - Title
-			sizey = 20;
-			xx = 10-2; yy += sizey*0.5;
-			addItem(new TextBase({ text:"user_lookup_title", x:xx, y:yy-3, originX:0, size:14 }));
-			yy += sizey*0.5 + 3;
-			
-			// User look fetcher - Search
-			sizex = sizey = 18+10; spacingx = 10;
-			xx = 10; yy += sizey*0.5;
-			
-			var fieldWidth = ConstantsApp.PANE_WIDTH*0.65 - spacingx*3 - sizex;
-			usernameInput = addItem(new FancyInput({ placeholder:"user_lookup_placeholder", x:xx + fieldWidth*0.5, y:yy, width:fieldWidth, height:sizey-10 })) as FancyInput;
-			usernameInput.field.addEventListener(KeyboardEvent.KEY_DOWN, function(pEvent){
-				if(usernameInput.text != "" && pEvent.charCode == 13) {
-					_onFetchUserLooks(null);
-				}
-			});
-			
-			var looksGoBtn = addItem(new SpriteButton({ x:xx+fieldWidth + spacingx + sizex*0.5, y:yy, width:sizex, height:sizey, obj:new $PlayButton(), obj_scale:0.5, origin:0.5 }));
-			looksGoBtn.addEventListener(MouseEvent.CLICK, _onFetchUserLooks);
-			
-			yy += sizey*0.5 + 10;
-			userOutfitsGrid = addItem( new Grid({ x:xx-2, y:yy, width:ConstantsApp.PANE_WIDTH - spacingx*2 - 5, columns:6, margin:5 }) ) as Grid;
-			
-			// Since we want this to disappear after a search anyways, coop the error text variable
-			yy += 2;
-			usernameErrorText = addChild(new TextBase({ text:"user_lookup_details", color:0xAAAAAA, x:xx-2, y:yy, originX:0, originY:0, align:TextFormatAlign.LEFT }));
-			
+			if(Fewf.assets.getData("config").username_lookup_url) {
+				// Line
+				yy += 16;
+				addItemDO(_drawLine(5, yy, ConstantsApp.PANE_WIDTH - 15));
+				yy += 16;
+				
+				// User look fetcher - Title
+				sizey = 20;
+				xx = 10-2; yy += sizey*0.5;
+				addItem(new TextBase({ text:"user_lookup_title", x:xx, y:yy-3, originX:0, size:14 }));
+				yy += sizey*0.5 + 3;
+				
+				// User look fetcher - Search
+				sizex = sizey = 18+10; spacingx = 10;
+				xx = 10; yy += sizey*0.5;
+				
+				var fieldWidth = ConstantsApp.PANE_WIDTH*0.65 - spacingx*3 - sizex;
+				usernameInput = addItem(new FancyInput({ placeholder:"user_lookup_placeholder", x:xx + fieldWidth*0.5, y:yy, width:fieldWidth, height:sizey-10 })) as FancyInput;
+				usernameInput.field.addEventListener(KeyboardEvent.KEY_DOWN, function(pEvent){
+					if(usernameInput.text != "" && pEvent.charCode == 13) {
+						_onFetchUserLooks(null);
+					}
+				});
+				
+				var looksGoBtn = addItem(new SpriteButton({ x:xx+fieldWidth + spacingx + sizex*0.5, y:yy, width:sizex, height:sizey, obj:new $PlayButton(), obj_scale:0.5, origin:0.5 }));
+				looksGoBtn.addEventListener(MouseEvent.CLICK, _onFetchUserLooks);
+				
+				yy += sizey*0.5 + 10;
+				userOutfitsGrid = addItem( new Grid({ x:xx-2, y:yy, width:ConstantsApp.PANE_WIDTH - spacingx*2 - 5, columns:6, margin:5 }) ) as Grid;
+				
+				// Since we want this to disappear after a search anyways, coop the error text variable
+				yy += 2;
+				usernameErrorText = addChild(new TextBase({ text:"user_lookup_details", color:0xAAAAAA, x:xx-2, y:yy, originX:0, originY:0, align:TextFormatAlign.LEFT })) as TextBase;
+			}
 			
 			UpdatePane();
 		}
@@ -172,7 +173,7 @@ package app.ui.panes
 		}
 		
 		private function _setFetchUserError(message:String) {
-			usernameErrorText = addChild(new TextBase({ color:0xFF0000, x:5+ConstantsApp.PANE_WIDTH*0.5, y:userOutfitsGrid.y+25 }));
+			usernameErrorText = addChild(new TextBase({ color:0xFF0000, x:5+ConstantsApp.PANE_WIDTH*0.5, y:userOutfitsGrid.y+25 })) as TextBase;
 			usernameErrorText.setUntranslatedText(message);
 		}
 		

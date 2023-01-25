@@ -124,6 +124,11 @@ package app.data
 			var tSexSpecificParts:int;
 			var breakCount = 0; // quit early if enough nulls in a row
 			for(var i = 0; i <= _MAX_COSTUMES_TO_CHECK_TO; i++) {
+				// hardcoded skip for duplicate items in game files - TODO: add values to config maybe?
+				if(i == 85 && pData.type == ITEM.MOUTH) {
+					continue;
+				}
+				
 				if(pData.map) {
 					for(var g:int = 0; g < (pData.sex ? 2 : 1); g++) {
 						var tClassMap = {  }, tClassSuccess = null;
@@ -313,6 +318,9 @@ package app.data
 				tChild = pMC.getChildAt(i);
 				if (tChild.name.indexOf("Couleur") == 0 && tChild.name.length > 7) {
 					num++;
+				}
+				else if(tChild.name.indexOf("slot_") == 0) {
+					num += getNumOfCustomColors(tChild);
 				}
 				i++;
 			}
