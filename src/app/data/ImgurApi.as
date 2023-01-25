@@ -37,7 +37,7 @@ package app.data
 			
 			var uri:String = _convertDisplayObjectToURI(pObj);
 			if(ConstantsApp.ANIMATION_FRAME_BY_FRAME) {
-				uri = _convertDisplayObjectToURIFrameByFrameVersion(pObj(Character));
+				uri = _convertDisplayObjectToURIFrameByFrameVersion(pObj as Character);
 			}
 			_sendDataToApi(uri);
 		}
