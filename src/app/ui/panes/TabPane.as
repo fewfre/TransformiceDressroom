@@ -76,6 +76,17 @@ package app.ui.panes
 			return this.grid = addItem(pGrid) as Grid;
 		}
 
+		public function scrollItemIntoView(pItem:Sprite) : Grid {
+			trace(pItem.y , pItem.height , _scrollPane.height , _scrollPane.verticalScrollPosition);
+			
+			if(pItem.y+5 < _scrollPane.verticalScrollPosition) {
+				_scrollPane.verticalScrollPosition = pItem.y+5;
+			}
+			else if(pItem.y + pItem.height+5 - _scrollPane.height > _scrollPane.verticalScrollPosition) {
+				_scrollPane.verticalScrollPosition = pItem.y + pItem.height+5 - _scrollPane.height;
+			}
+		}
+
 		public function UpdatePane(pItemPane:Boolean=true) : void {
 			this.x = 5;
 			this.y = 5;//40;

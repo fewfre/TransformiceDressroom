@@ -32,7 +32,7 @@ package app.ui.panes
 		private var _dontTrackNextRecentChange	: Boolean;
 		
 		private var _recentColorsDisplay   : RecentColorsListDisplay;
-		private var _refreshButton         : SpriteButton;
+		private var _randomizeButton         : SpriteButton;
 		
 		private var _historyTray          : Sprite;
 		
@@ -44,7 +44,7 @@ package app.ui.panes
 		{
 			super();
 			
-			this.addInfoBar( new ShopInfoBar({ showBackButton:true, showRefreshButton:false }) );
+			this.addInfoBar( new ShopInfoBar({ showBackButton:true }) );
 			this.infoBar.colorWheel.addEventListener(MouseEvent.MOUSE_UP, _onColorPickerBackClicked);
 			
 			var tClickOffDetector = addChild(new Sprite()) as Sprite;
@@ -71,8 +71,8 @@ package app.ui.panes
 				defaults_btn.addEventListener(ButtonBase.CLICK, _onDefaultButtonClicked);
 			}
 			
-			_refreshButton = this.addItem(new SpriteButton({ x:ConstantsApp.PANE_WIDTH - 24 - 11, y:14, width:24, height:24, obj_scale:0.8, obj:new $Dice() })) as SpriteButton;
-			_refreshButton.addEventListener(ButtonBase.CLICK, function(){ _randomizeAllColors(); });
+			_randomizeButton = this.addItem(new SpriteButton({ x:ConstantsApp.PANE_WIDTH - 24 - 11, y:14, width:24, height:24, obj_scale:0.8, obj:new $Dice() })) as SpriteButton;
+			_randomizeButton.addEventListener(ButtonBase.CLICK, function(){ _randomizeAllColors(); });
 			
 			_recentColorsDisplay = new RecentColorsListDisplay({ x:ConstantsApp.PANE_WIDTH/2, y:316+60+17 });
 			_recentColorsDisplay.addEventListener(RecentColorsListDisplay.EVENT_COLOR_PICKED, _onRecentColorBtnClicked);

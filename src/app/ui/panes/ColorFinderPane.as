@@ -50,7 +50,7 @@ package app.ui.panes
 		public function ColorFinderPane(pData:Object)
 		{
 			super();
-			this.addInfoBar( new ShopInfoBar({ showBackButton:true, showRefreshButton:false }) );
+			this.addInfoBar( new ShopInfoBar({ showBackButton:true }) );
 			this.infoBar.colorWheel.addEventListener(MouseEvent.MOUSE_UP, _onBackClicked);
 			this.UpdatePane(false);
 			

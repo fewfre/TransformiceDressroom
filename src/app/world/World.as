@@ -203,12 +203,14 @@ package app.world
 
 		private function _setupPane(pType:String) : TabPane {
 			var tPane:TabPane = new TabPane();
-			tPane.addInfoBar( new ShopInfoBar({ showEyeDropButton:pType!=ITEM.POSE, showReverseIcon:true }) );
+			tPane.addInfoBar( new ShopInfoBar({ showEyeDropButton:pType!=ITEM.POSE, showGridManagementButtons:true }) );
 			_setupPaneButtons(pType, tPane, GameAssets.getArrayByType(pType));
 			tPane.infoBar.colorWheel.addEventListener(ButtonBase.CLICK, function(){ _colorButtonClicked(pType); });
-			tPane.infoBar.imageCont.addEventListener(MouseEvent.CLICK, function(){ _removeItem(pType); });
-			tPane.infoBar.refreshButton.addEventListener(ButtonBase.CLICK, function(){ _randomItemOfType(pType); });
+			tPane.infoBar.removeItemOverlay.addEventListener(MouseEvent.CLICK, function(){ _removeItem(pType); });
+			tPane.infoBar.randomizeButton.addEventListener(ButtonBase.CLICK, function(){ _randomItemOfType(pType); });
 			tPane.infoBar.reverseButton.addEventListener(ButtonBase.CLICK, function(){ _reverseGrid(pType); });
+			tPane.infoBar.rightItemButton.addEventListener(ButtonBase.CLICK, function(){ _traversePaneButtonGrid(tPane, true); });
+			tPane.infoBar.leftItemButton.addEventListener(ButtonBase.CLICK, function(){ _traversePaneButtonGrid(tPane, false); });
 			if(tPane.infoBar.eyeDropButton) {
 				tPane.infoBar.eyeDropButton.addEventListener(ButtonBase.CLICK, function(){ _eyeDropButtonClicked(pType); });
 			}
@@ -267,12 +269,15 @@ package app.world
 		}
 
 		private function _onKeyDownListener(e:KeyboardEvent) : void {
-			var pane:TabPane = _paneManager.getOpenPane();
-			trace('down', new Date(), !!pane,
-			pane && !!pane.grid,
-			pane && pane.grid && !!pane.buttons,
-			pane && pane.grid && pane.buttons && pane.buttons.length > 0,
-			pane && pane.grid && pane.buttons && pane.buttons.length > 0 && pane.buttons[0] is PushButton);
+			if (e.keyCode == Keyboard.RIGHT){
+				_traversePaneButtonGrid(_paneManager.getOpenPane(), true);
+			}
+			else if (e.keyCode == Keyboard.LEFT) {
+				_traversePaneButtonGrid(_paneManager.getOpenPane(), false);
+			}
+		}
+		
+		private function _traversePaneButtonGrid(pane:TabPane, pRight:Boolean):void {
 			if(pane && pane.grid && pane.buttons && pane.buttons.length > 0 && pane.buttons[0] is PushButton) {
 				var activeButtonIndex:int = 0;
 				// Find the pressed button
@@ -283,17 +288,13 @@ package app.world
 					}
 				}
 				
-				var dir:int = pane.grid.reversed ? -1 : 1, length:uint = pane.buttons.length;
-				if(Fewf.i18n.lang == 'ar') {
-					dir *= -1;
-				}
-				// `length` added before mod to allow `-1` to properly wrap
-				if (e.keyCode == Keyboard.RIGHT){
-					pane.buttons[(length+activeButtonIndex+dir) % length].toggleOn();
-				}
-				else if (e.keyCode == Keyboard.LEFT) {
-					pane.buttons[(length+activeButtonIndex-dir) % length].toggleOn();
-				}
+				var dir:int = (pRight ? 1 : -1) * (pane.grid.reversed ? -1 : 1),
+					length:uint = pane.buttons.length;
+				
+				// `length` added before mod to allow a `-1` dir to properly wrap
+				var btn:PushButton = pane.buttons[(length+activeButtonIndex+dir) % length];
+				btn.toggleOn();
+				pane.scrollItemIntoView(btn);
 			}
 		}
 
@@ -477,9 +478,20 @@ package app.world
 			if(!pSetToDefault) {
 				var tButtons = getButtonArrayByType(pType);
 				var tLength = tButtons.length;
-				tButtons[ Math.floor(Math.random() * tLength) ].toggleOn();
+				var btn = tButtons[ Math.floor(Math.random() * tLength) ];
+				btn.toggleOn();
+				var pane:TabPane = getTabByType(pType);
+				if(pane.flagOpen) pane.scrollItemIntoView(btn);
 			} else {
 				_removeItem(pType);
+				if(pType == ITEM.SKIN || pType == ITEM.SKIN_COLOR) {
+					var pane:TabPane = getTabByType(pType);
+					if(pane.flagOpen) pane.scrollItemIntoView(pane.buttons[GameAssets.defaultSkinIndex]);
+				}
+				else if(pType == ITEM.POSE) {
+					var pane:TabPane = getTabByType(pType);
+					if(pane.flagOpen) pane.scrollItemIntoView(pane.buttons[GameAssets.defaultPoseIndex]);
+				}
 			}
 		}
 		

@@ -1,3 +1,11 @@
+== V1.23b - 25 January 2023 ==
+- TabPane infobar redesigned
+- Added left/right arrows to infobar that do same as keyboard arrow keys (mobile support)
+- Hovering over infobar image will now show an 'x' to better signal that clicking it will remove the item
+- Fixed clicking infobar item image not always removing it
+- Using arrows / randomize button to select an item off-screen will now scroll the button into view
+
+
 == V1.23 - 24 January 2023 ==
 - Fixed bug with slot colors not being properly counted, and showing up as non-customizable
 - Removing `username_lookup_url` in the config will now hide the feature in-app
