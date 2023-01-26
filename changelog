@@ -4,6 +4,7 @@
 - Hovering over infobar image will now show an 'x' to better signal that clicking it will remove the item
 - Fixed clicking infobar item image not always removing it
 - Using arrows / randomize button to select an item off-screen will now scroll the button into view
+- Tweaked icon representing no selected item
 
 
 == V1.23 - 24 January 2023 ==

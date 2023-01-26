@@ -61,8 +61,7 @@ package app.ui
 			_imageCont = addChild(new RoundedRectangle({ x:0, y:0, width:50, height:50 })) as RoundedRectangle;
 			_imageCont.draw(0x6A7495, 15, 0x5d7d90, 0x11171c, 0x3c5064);
 			
-			ChangeImage( new $NoItem() );
-			this.Image.scaleX = this.Image.scaleY = 0.75;
+			_setNoItemImage();
 			
 			// Overlay that shows up when hovering over image
 			removeItemOverlay = addChild(new Sprite()) as Sprite;
@@ -231,13 +230,24 @@ package app.ui
 		
 		public function removeInfo() : void {
 			data = null;
-			ChangeImage(new $NoItem());
-			this.Image.scaleX = this.Image.scaleY = 0.75;
+			_setNoItemImage();
 			
 			Text.alpha = 0;
 			showColorWheel(false);
 			downloadButton.disable().alpha = 0;
 			if(eyeDropButton) eyeDropButton.disable().alpha = 0;
+		}
+		
+		private function _setNoItemImage() :void {
+			var img:MovieClip = new MovieClip();
+			img.graphics.lineStyle(3, 0x999999);
+			img.graphics.drawCircle(0, 0, 22);
+			
+			var icon:MovieClip = img.addChild(new $NoItem()) as MovieClip
+			icon.scaleX = icon.scaleY = 0.5;
+			
+			ChangeImage(img);
+			this.Image.scaleX = this.Image.scaleY = 0.75;
 		}
 		
 		internal function saveSprite(pEvent:Event) : void {
