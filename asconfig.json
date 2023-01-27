@@ -1,0 +1,22 @@
+{
+    "config":"flex",
+    "type":"app",
+    "compilerOptions": {
+		"source-path": ["src"],
+        "output": "dressroom2.swf",
+		"warnings": false,
+		"strict": true,
+		"library-path": [
+			"fla/interface.swc",
+			"fla/assets.swc",
+			"C:/Program Files (x86)/Adobe/Adobe Flash CS6/Common/Configuration/ActionScript 3.0/libs",
+			"C:/Program Files (x86)/Adobe/Adobe Flash CS6/Common/Configuration/ActionScript 3.0/libs/flash.swc",
+			"C:/Program Files (x86)/Adobe/Adobe Flash CS6/Common/Configuration/ActionScript 3.0/libs/11.0/textLayout.swc"
+		]
+    },
+    "files": [
+        "src/app/Main.as"
+    ],
+    "__comment":"Needed since main is inside two sub folders? https://stackoverflow.com/a/3885656/1411473",
+    "additionalOptions": "-compiler.source-path=./src"
+}
