@@ -105,7 +105,7 @@
 
 == V1.12 - 6 June 2018 ==
 - Async loading added, that preserves load order.
-- Ability to translate pose names as per a request (added prior to this version, but never comitted)
+- Ability to translate pose names as per a request (added prior to this version, but never committed)
 
 
 == V1.11 - 10 February 2018 ==
