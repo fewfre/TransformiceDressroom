@@ -71,7 +71,7 @@ package app.world.data
 		
 		private function getDefaultSkinPart(pName:String) : Class {
 			try {
-				return getDefinitionByName(pName);
+				return getDefinitionByName(pName) as Class;
 			}
 			catch(err:Error) {
 				return null;

@@ -104,7 +104,7 @@ package app.world.elements
 				var validBoneNamesForItemCat:Array = GameAssets.accessorySlotBones[tAccItemCat];
 				if(validBoneNamesForItemCat) {
 					for(var bnaI:int = 0; bnaI < validBoneNamesForItemCat.length; bnaI++) {
-						var tBoneMC:MovieClip = _pose.getChildByName(validBoneNamesForItemCat[bnaI]);
+						var tBoneMC:MovieClip = _pose.getChildByName(validBoneNamesForItemCat[bnaI]) as MovieClip;
 
 						if(tBoneMC) {
 							var tNewAccPos:Point = tBoneMC.globalToLocal(tAccMC.parent.localToGlobal(new Point(tAccMC.x,tAccMC.y)));

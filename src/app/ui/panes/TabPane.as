@@ -76,7 +76,7 @@ package app.ui.panes
 			return this.grid = addItem(pGrid) as Grid;
 		}
 
-		public function scrollItemIntoView(pItem:Sprite) : Grid {
+		public function scrollItemIntoView(pItem:Sprite) : void {
 			trace(pItem.y , pItem.height , _scrollPane.height , _scrollPane.verticalScrollPosition);
 			
 			if(pItem.y+5 < _scrollPane.verticalScrollPosition) {

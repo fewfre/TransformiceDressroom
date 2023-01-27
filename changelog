@@ -95,7 +95,7 @@
 
 == V1.14 - 7 June 2018 ==
 - [Bug] When a hand item was downloaded, it had the name as "hand" instead of "hands" (as it is in-game)
-- [Bug] When the trash icon is removed, "other" items and shamn mode are now removed as well.
+- [Bug] When the trash icon is removed, "other" items and shaman mode are now removed as well.
 
 
 == V1.13 - 7 June 2018 ==

@@ -2,7 +2,7 @@ package app.ui
 {
 	import flash.display.*;
 	import flash.events.*;
-	import fl.events.*;
+	import fl.events.SliderEvent;
 	import fl.controls.Slider;
 	
 	public class FancySlider extends Slider
@@ -40,8 +40,8 @@ package app.ui
 			this.y = pData.y;
 			this.width = pData.width;
 			
-			this.addEventListener(fl.events.SliderEvent.CHANGE, _onChanged);
-			this.addEventListener(fl.events.SliderEvent.THUMB_DRAG, _onChanged);
+			this.addEventListener(SliderEvent.CHANGE, _onChanged);
+			this.addEventListener(SliderEvent.THUMB_DRAG, _onChanged);
 		}
 		
 		private function _onChanged(pEvent:Event) : void {
