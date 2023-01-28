@@ -31,7 +31,7 @@ package app
 		}
 		
 		private function _start(...args:*) {
-			Fewf.init(stage, this.loaderInfo.parameters.swfUrlBase);
+			Fewf.init(stage, this.loaderInfo.parameters.swfUrlBase, 'transformice-dressroom');
 
 			stage.align = StageAlign.TOP;
 			stage.scaleMode = StageScaleMode.SHOW_ALL;
@@ -110,7 +110,7 @@ package app
 		
 		private function _getDefaultLang(pConfigLang:String) : String {
 			// If user manually picked a language previously, override system check
-			var detectedLang = Fewf.sharedObject.getData("lang") || Capabilities.language;
+			var detectedLang = Fewf.sharedObjectGlobal.getData(ConstantsApp.SHARED_OBJECT_KEY_GLOBAL_LANG) || Capabilities.language;
 			
 			var tFlagDefaultLangExists:Boolean = false;
 			// http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/system/Capabilities.html#language

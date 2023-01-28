@@ -205,6 +205,13 @@ package app.ui
 			}
 		}
 		
+		public function hideImageCont() : void {
+			_imageCont.visible = false;
+			removeItemOverlay.visible = false;
+			colorWheel.x = colorWheel.Image.width*0.5 + 10;
+			_gridManagmentTray.x = this.Width*0.5-(25*5 + 3*4 + 8*2)*0.5; // Center tray
+		}
+		
 		private function _updateID() : void {
 			var tText = data.id;
 			if(data.type == ITEM.POSE) {

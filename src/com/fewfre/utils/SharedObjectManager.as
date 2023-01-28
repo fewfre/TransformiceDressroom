@@ -8,7 +8,7 @@ package com.fewfre.utils
 		public function SharedObjectManager(storageID:String):void {
 			sharedObject = SharedObject.getLocal(storageID);
 		}
-		public function getData(_key:String):Object {
+		public function getData(_key:String):* {
 			return sharedObject.data[_key];
 		}
 		public function setData(_key:String,_val:*):void {

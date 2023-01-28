@@ -26,6 +26,9 @@ package app.data
 		
 		public static var CONFIG_TAB_ENABLED: Boolean = true;
 		
+		public static var SHARED_OBJECT_KEY_GLOBAL_LANG: String = 'lang';
+		public static var SHARED_OBJECT_KEY_OUTFITS: String = 'saved-outfits';
+		
 		/****************************
 		* Colors
 		*****************************/
