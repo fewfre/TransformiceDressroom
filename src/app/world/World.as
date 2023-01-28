@@ -147,11 +147,16 @@ package app.world
 			*****************************/
 			var tPane = null;
 			
+			// Color Picker Pane
 			tPane = _paneManager.addPane(COLOR_PANE_ID, new ColorPickerTabPane({}));
 			tPane.addEventListener(ColorPickerTabPane.EVENT_COLOR_PICKED, _onColorPickChanged);
 			tPane.addEventListener(ColorPickerTabPane.EVENT_DEFAULT_CLICKED, _onDefaultsButtonClicked);
 			tPane.addEventListener(ColorPickerTabPane.EVENT_PREVIEW_COLOR, _onColorPickHoverPreview);
 			tPane.addEventListener(ColorPickerTabPane.EVENT_EXIT, _onColorPickerBackClicked);
+			tPane.infoBar.removeItemOverlay.addEventListener(MouseEvent.CLICK, function(e){
+				_onColorPickerBackClicked(e);
+				_removeItem(_paneManager.getPane(COLOR_PANE_ID).infoBar.data.type);
+			});
 
 			// Create the panes
 			var tTypes = [ ITEM.HAT, ITEM.HAIR, ITEM.EARS, ITEM.EYES, ITEM.MOUTH, ITEM.NECK, ITEM.TAIL, ITEM.HAND, ITEM.CONTACTS, ITEM.SKIN, ITEM.POSE ], tData:ItemData, tType:String;
@@ -199,10 +204,15 @@ package app.world
 			tPane = _paneManager.addPane(CONFIG_COLOR_PANE_ID, new ColorPickerTabPane({ hide_default:true }));
 			tPane.addEventListener(ColorPickerTabPane.EVENT_COLOR_PICKED, _onConfigColorPickChanged);
 			tPane.addEventListener(ColorPickerTabPane.EVENT_EXIT, function(pEvent:Event){ _paneManager.openPane(TAB_OTHER); });
+			tPane.infoBar.hideImageCont();
 			
 			// Color Finder Pane
 			tPane = _paneManager.addPane(COLOR_FINDER_PANE_ID, new ColorFinderPane({ }));
 			tPane.addEventListener(ColorPickerTabPane.EVENT_EXIT, _onColorFinderBackClicked);
+			tPane.infoBar.removeItemOverlay.addEventListener(MouseEvent.CLICK, function(e){
+				_onColorFinderBackClicked(e);
+				_removeItem(_paneManager.getPane(COLOR_FINDER_PANE_ID).infoBar.data.type);
+			});
 			
 			// Select First Pane
 			shopTabs.tabs[0].toggleOn();
