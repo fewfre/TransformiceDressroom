@@ -10,6 +10,8 @@ package com.fewfre.utils
 	import flash.utils.getDefinitionByName;
 	import flash.utils.ByteArray;
 	import ext.ParentAppSystem;
+	import flash.desktop.Clipboard;
+	import flash.desktop.ClipboardFormats;
 	// import flash.media.CameraRoll;
 	// import flash.events.PermissionEvent;
 	// import flash.permissions.PermissionStatus;
@@ -58,6 +60,23 @@ package com.fewfre.utils
 			var text = new TextBase({ color:0xFF0000, x:Fewf.stage.stageWidth*0.25, y:Fewf.stage.stageHeight-25 });
 			text.setUntranslatedText("["+e.name+":"+e.errorID+"] "+e.message);
 			Fewf.stage.addChild(text);
+		}
+		
+		/**
+		 * Only works in AIR app due to saving bitmap data not being supported on web
+		 * https://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/desktop/Clipboard.html#setData()
+		 */
+		public static function copyToClipboard(pObj:DisplayObject, pScale:Number=1) {
+			if(!pObj){ return; }
+
+			var tRect:flash.geom.Rectangle = pObj.getBounds(pObj);
+			var tBitmap:flash.display.BitmapData = new flash.display.BitmapData(tRect.width*pScale, tRect.height*pScale, true, 0xFFFFFF);
+
+			var tMatrix:flash.geom.Matrix = new flash.geom.Matrix(1, 0, 0, 1, -tRect.left, -tRect.top);
+			tMatrix.scale(pScale, pScale);
+			tBitmap.draw(pObj, tMatrix);
+			
+			Clipboard.generalClipboard.setData(ClipboardFormats.BITMAP_FORMAT, tBitmap);
 		}
 		
 		// Converts the image to a PNG bitmap and prompts the user to save.

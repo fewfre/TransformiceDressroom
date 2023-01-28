@@ -9,12 +9,17 @@ package app.ui
 	import flash.display.*;
 	import flash.net.*;
 	import ext.ParentApp;
+	import com.fewfre.utils.FewfDisplayUtils;
+	import app.world.elements.Character;
+	import flash.utils.setTimeout;
 	
 	public class Toolbox extends MovieClip
 	{
 		// Storage
 		private var _downloadTray	: FrameBase;
 		private var _bg				: RoundedRectangle;
+		private var _character		: Character;
+		
 		public var scaleSlider		: Object;//FancySlider;
 		public var animateButton	: SpriteButton;
 		public var imgurButton		: SpriteButton;
@@ -25,6 +30,7 @@ package app.ui
 		public function Toolbox(pData:Object) {
 			this.x = pData.x;
 			this.y = pData.y;
+			_character = pData.character;
 			
 			var btn:ButtonBase;
 			
@@ -59,10 +65,21 @@ package app.ui
 			
 			if(!Fewf.isExternallyLoaded) {
 				btn = imgurButton = tTray.addChild(new SpriteButton({ x:tX+tButtonXInc*tButtonsOnLeft, y:tY, width:tButtonSize, height:tButtonSize, obj_scale:0.45, obj:new $ImgurIcon(), origin:0.5 })) as SpriteButton;
-				var tCharacter = pData.character;
 				btn.addEventListener(ButtonBase.CLICK, function(e:*){
-					ImgurApi.uploadImage(tCharacter);
+					ImgurApi.uploadImage(_character);
 					imgurButton.disable();
+				});
+				tButtonsOnLeft++;
+			} else {
+				btn = imgurButton = tTray.addChild(new SpriteButton({ x:tX+tButtonXInc*tButtonsOnLeft, y:tY, width:tButtonSize, height:tButtonSize, obj_scale:0.415, obj:new $CopyIcon(), origin:0.5 })) as SpriteButton;
+				btn.addEventListener(ButtonBase.CLICK, function(e:*){
+					try {
+						FewfDisplayUtils.copyToClipboard(_character);
+						imgurButton.ChangeImage(new $Yes());
+					} catch(e) {
+						imgurButton.ChangeImage(new $No());
+					}
+					setTimeout(function(){ imgurButton.ChangeImage(new $CopyIcon()); }, 750)
 				});
 				tButtonsOnLeft++;
 			}
@@ -81,12 +98,12 @@ package app.ui
 			
 			animateButton = tTray.addChild(new SpriteButton({ x:tX-tButtonXInc*tButtonOnRight, y:tY, width:tButtonSize, height:tButtonSize, obj_scale:0.5, obj:new MovieClip(), origin:0.5 }));
 			animateButton.addEventListener(ButtonBase.CLICK, pData.onAnimate);
-			toggleAnimateButtonAsset(pData.character.animatePose);
+			toggleAnimateButtonAsset(_character.animatePose);
 			tButtonOnRight++;
 			
 			if(ConstantsApp.ANIMATION_FRAME_BY_FRAME) {
 				curanimationFrameText = tTray.addChild(new TextBase({ text:"loading_progress", originX:1, x:_bg.Width/2-50, y:35 }));
-				curanimationFrameText.setValues( tCharacter.outfit.poseCurrentFrame + "/" + tCharacter.outfit.poseTotalFrames );
+				curanimationFrameText.setValues( _character.outfit.poseCurrentFrame + "/" + _character.outfit.poseTotalFrames );
 			}
 			
 			/********************
@@ -96,7 +113,7 @@ package app.ui
 			var tSliderWidth = tTrayWidth - tButtonXInc*(tTotalButtons) - 20;
 			var sliderProps = {
 				x:-tSliderWidth*0.5+(tButtonXInc*((tButtonsOnLeft-tButtonOnRight)*0.5))-1, y:tY,
-				value: pData.character.outfit.scaleX*10, min:10, max:80, width:tSliderWidth
+				value: _character.outfit.scaleX*10, min:10, max:80, width:tSliderWidth
 			};
 			if(Fewf.isExternallyLoaded) {
 				scaleSlider = tTray.addChild(ParentApp.newFancySlider(sliderProps));

@@ -246,14 +246,7 @@ package app.ui
 		}
 		
 		private function _setNoItemImage() :void {
-			var img:MovieClip = new MovieClip();
-			img.graphics.lineStyle(3, 0x999999);
-			img.graphics.drawCircle(0, 0, 22);
-			
-			var icon:MovieClip = img.addChild(new $NoItem()) as MovieClip
-			icon.scaleX = icon.scaleY = 0.5;
-			
-			ChangeImage(img);
+			ChangeImage(new $NoItem());
 			this.Image.scaleX = this.Image.scaleY = 0.75;
 		}
 		
