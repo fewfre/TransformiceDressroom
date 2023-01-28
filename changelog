@@ -1,6 +1,6 @@
 == V1.23c - 28 January 2023 ==
 - Outfit Manager added (button to access it on "Other" tab pane)
-- Clicking infobar item image container now closes the screen and removes the item like it normally does (suggestion: Barberserk)
+- Clicking infobar item image container now closes the screen and removes the item like it normally does on other screens (suggestion: Barberserk)
 - Item image container now hidden on shaman color picker
 - Copy button added to toolbox (app only, due to AIR requirements)
 
