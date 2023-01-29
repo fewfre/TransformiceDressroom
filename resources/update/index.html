@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Resource Updater</title>
+	<meta name="robots" content="noindex" />
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	
+	<style id="background-style">
+		:root {
+			background: black;
+			color: #001a00; /*darken(green, 20%);*/
+		}
+		#background {
+			position: absolute;
+			top:0;bottom:0;left:0;right:0;
+			
+			
+			display: flex;
+			gap: 0.25em;
+			justify-content: center;
+			align-items: center;
+			
+			font-size: 3em;
+			font-family: monospace;
+			
+			height: 100vh;
+			width: 100vw;
+			overflow: hidden;
+			text-align: center;
+			
+			user-select: none;
+		}
+
+		.column > * {
+			display: block;
+			animation: 3s infinite colorPulse;
+		}
+		@keyframes colorPulse {
+			0% {
+				color: #e6ffe6;/*lighten(green, 70%);*/
+			}
+			40% {
+				color: green;
+			}
+			50% {
+				color: #006700;/*darken(green, 5%);*/
+			}
+			100% {
+				color: #001a00;/*darken(green, 20%);*/
+			}
+		}
+	</style>
+	
+	<style>
+		body {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			height: 100vh;
+			width: 100vw;
+			margin: 0;
+			padding: 0;
+		}
+		main {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			
+			min-width: 800px;
+			padding: 20px 50px;
+			z-index: 2;
+			
+			background: lightgreen;
+			border: double 5px green;
+		}
+		h1 {
+			text-align: center;
+		}
+		
+		p {
+			margin: 6px 0;
+		}
+		
+		#progress-cont {
+			margin: 30px 15%;
+			box-shadow: 0 0 15px 20px #e6ffe6;
+			min-width: 500px;
+			text-align: center;
+		}
+		#progress-cont > * {
+			padding: 10px 20px;
+		}
+		#progress-cont .timestamp {
+			font-size: 16px;
+			margin-top: 6px;
+			font-family: monospace;
+		}
+		
+		#progress-cont .starting {
+			background: blue;
+			color: lightblue;
+			font-size: 22px;
+		}
+		#progress-cont .updating {
+			background: green;
+			color: lightgreen;
+			font-size: 28px;
+		}
+		@-webkit-keyframes animate-stripes {
+			100% { background-position: -100px 0px; }
+		}
+
+		@keyframes animate-stripes {
+			100% { background-position: -100px 0px; }
+		}
+		/* Animated and styled progress tags: https://css-tricks.com/html5-progress-element/ */
+		progress[value]::-webkit-progress-value, progress[value]::-moz-progress-bar {
+			background-image:
+				-webkit-linear-gradient(-45deg, 
+										transparent 33%, rgba(0, 0, 0, .1) 33%, 
+										rgba(0,0, 0, .1) 66%, transparent 66%),
+				-webkit-linear-gradient(top, 
+										rgba(255, 255, 255, .25), 
+										rgba(0, 0, 0, .25)),
+				-webkit-linear-gradient(left, #09c, #09c);
+
+			border-radius: 2px; 
+			background-size: 35px 20px, 100% 100%, 100% 100%;
+			-webkit-animation: animate-stripes 5s linear infinite;
+			animation: animate-stripes 5s linear infinite;
+		}
+		#progress-cont .completed {
+			background: gold;
+			color: brown;
+			font-size: 28px;
+		}
+		
+		.start-cont {
+			padding: 16px 0 24px;
+		}
+
+		/* Button 89 - https://getcssscan.com/css-buttons-examples */
+		#start-button {
+			--b: 3px;   /* border thickness */
+			--s: .45em; /* size of the corner */
+			--color: #0c2e0c; /*#373B44;*/
+			
+			padding: calc(.5em + var(--s)) calc(.9em + var(--s));
+			color: var(--color);
+			--_p: var(--s);
+			background:
+				conic-gradient(from 90deg at var(--b) var(--b),#0000 90deg,var(--color) 0)
+				var(--_p) var(--_p)/calc(100% - var(--b) - 2*var(--_p)) calc(100% - var(--b) - 2*var(--_p));
+			transition: .3s linear, color 0s, background-color 0s;
+			outline: var(--b) solid #0000;
+			outline-offset: .6em;
+			font-size: 22px;
+
+			border: 0;
+
+			user-select: none;
+			-webkit-user-select: none;
+			touch-action: manipulation;
+		}
+		#start-button:hover, #start-button:focus-visible{
+			--_p: 0px;
+			outline-color: var(--color);
+			outline-offset: .05em;
+		}
+		#start-button:active {
+			background: var(--color);
+			color: #fff;
+		}
+		
+		#goback-cont {
+			font-size: 18px;
+			text-transform: capitalize;
+			font-family: monospace;
+		}
+	</style>
+</head>
+<body>
+	<div id="background"></div>
+	
+	<main>
+		<h1>Resource Updater</h1>
+		
+		<p>This page is used update the resources on this server, usually after an in-game update that added new items.</p>
+		
+		<p>
+			The progress shown below is the same for everyone.
+			If the progress shows it's already running, please don't not run it again unless it appears to be stuck.
+		</p>
+		
+		<div id="progress-cont"><div>Loading Progress...</div></div>
+		
+		<div class="start-cont">
+			<button id="start-button">Start</button>
+		</div>
+		
+		<div id="goback-cont">
+			<a href="../../">back</a>
+		</div>
+	</main>
+	
+	<script>
+		(()=>{
+			let justStarted = false;
+			document.getElementById('start-button').addEventListener('click', function(){
+				fetch('update.php', { method:'POST' });
+				
+				justStarted = true;
+				onProgressLoaded({ state:'starting', timestamp:Date.now() });
+				setTimeout(fetchProgress, 750); // give it a bit more change to fire sooner since we just hit start
+			});
+			
+			setInterval(fetchProgress, 2000);
+			
+			function fetchProgress() {
+				// cache breaking: https://stackoverflow.com/a/42518434
+				fetch('progress.json', {cache: "no-store"}).then(res => res.json()).then(onProgressLoaded);
+			}
+			
+			function onProgressLoaded(obj) {
+				if(justStarted && obj?.state === 'completed') {
+					// Prevent it being stuck showing "completed" for a couple seconds
+					document.getElementById('progress-cont').innerHTML = renderProgressMessage({ state:'starting', timestamp:Date.now() });
+				} else {
+					justStarted = false;
+					document.getElementById('progress-cont').innerHTML = renderProgressMessage(obj);
+				}
+			}
+			// Test responses
+			// onProgressLoaded({ state:'starting', timestamp:0 });
+			// onProgressLoaded({ state:'updating', value:111, max:124, timestamp:0 });
+			// onProgressLoaded({ state:'completed', timestamp:0 });
+			
+			function renderTimestamp(dateString) {
+				const date = new Date(dateString);
+				return `<div class="timestamp"><strong>Progress Last Updated (Local Time):</strong> ${date.toLocaleString()}</div>`;
+			}
+			
+			function renderProgressMessage(obj) {
+				switch(obj.state) {
+					case 'starting': {
+						return `<div class="starting">&#8987; Starting &#8987;${renderTimestamp(obj.timestamp)}</div>`;
+					}
+					case 'updating': {
+						return `<div class="updating">Updating Resources ${obj.message ? ` - ${obj.message}` : '...'}<div>
+							<progress value="${obj.value}" max="${obj.max}">${obj.value}/${obj.max}</progress> (${obj.value}/${obj.max})
+						</div>${renderTimestamp(obj.timestamp)}</div>`;
+					}
+					case 'completed': {
+						return `<div class="completed">Completed!${renderTimestamp(obj.timestamp)}</div>`;
+					}
+				}
+				return 'Unknown progress state';
+			}
+		})();
+		(()=>{
+			// Matrix effect BG
+			// https://alvarotrigo.com/blog/animated-backgrounds-css/
+			// https://codepen.io/alvarotrigo/pen/LYjgxPy
+			
+			const useDots = Math.random() < 0.5;
+			const columns = 100 + (useDots ? 0 : 20), rows = 50;
+			
+			document.getElementById('background').innerHTML += Array.from({ length:columns })
+			.map((_,n)=>`<div class="column col-${n+1}">${
+				Array.from({ length:rows }).map((_,i)=>`<span>&#${
+					!useDots
+						? Math.floor(Math.random() * 431) + 256
+						: Math.floor(Math.random() * 255) + 10240
+				}</span>`).join('')
+			}</div>`).join('');
+			
+			
+			document.getElementById('background-style').innerHTML += Array.from({ length:columns })
+			.map((_,colNum)=>{
+				const duration = Math.random()*100 / 23 + 1;
+				const delay = duration / 50;
+				return Array.from({ length:rows }).map((_,i)=>`.col-${colNum+1} :nth-child(${i+1}) {
+					animation-duration: ${duration}s;
+					animation-delay: ${i * delay}s;
+				}`).join('');
+			}).join('');
+		})();
+	</script>
+</body>
+</html>
