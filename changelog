@@ -1,6 +1,8 @@
 == V1.23d - 30 January 2023 ==
 - Fixed color swatches not formatting number with 0s
 	- Reworked color picker code a bit to finally fix this issue
+		- Moved `ColorSwatch` and `ColorPickerTab` into the same folder
+		- Moved color history into it's own component
 - The black handle above color picker updated to be white to be more visible
 
 
