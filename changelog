@@ -1,3 +1,9 @@
+== V1.23d - 30 January 2023 ==
+- Fixed color swatches not formatting number with 0s
+	- Reworked color picker code a bit to finally fix this issue
+- The black handle above color picker updated to be white to be more visible
+
+
 == V1.23c - 28 January 2023 ==
 - Outfit Manager added (button to access it on "Other" tab pane) (suggestion: Icylina#0000)
 - Clicking infobar item image container now closes the screen and removes the item like it normally does on other screens (suggestion: Barberserk)

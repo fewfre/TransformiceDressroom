@@ -104,9 +104,8 @@ package com.piterwilson.utils
 			this._colorCursor.y = tY;
 		}
 
-		public function setCursor(arg1:String):void {
-			var loc1:*=com.piterwilson.utils.ColorMathUtil.HexToDeci(arg1);
-			var loc2:*=com.piterwilson.utils.ColorMathUtil.hexToHsv(loc1);
+		public function setCursor(color:uint):void {
+			var loc2:*=com.piterwilson.utils.ColorMathUtil.hexToHsv(color);
 			var loc3:*=360 * 0.75;
 			if (loc2[0] > 0) 
 			{
@@ -122,13 +121,13 @@ package com.piterwilson.utils
 			var loc4:*=this._width * loc2[1] * 0.01;
 			var loc5:*=this._height - this._height * loc2[2] * 0.01;
 			this.setCursorXY(loc4, loc5);
-			this._newColorSprite.graphics.beginFill(loc1, 1);
+			this._newColorSprite.graphics.beginFill(color, 1);
 			this._newColorSprite.graphics.drawRect(0, 0, this._swatchWidth, 135);
 			this._newColorSprite.graphics.endFill();
-			this._oldColorSprite.graphics.beginFill(loc1, 1);
+			this._oldColorSprite.graphics.beginFill(color, 1);
 			this._oldColorSprite.graphics.drawRect(0, 0, this._swatchWidth, 135);
 			this._oldColorSprite.graphics.endFill();
-			this.setNewColor(loc1);
+			this.setNewColor(color, false);
 		}
 
 		internal function onAddedToStage(e:Event):void {
@@ -166,12 +165,12 @@ package com.piterwilson.utils
 			return com.piterwilson.utils.ColorMathUtil.hsvToHex(loc4, loc5, loc6);
 		}
 
-		internal function setNewColor(pColor:uint):void {
+		internal function setNewColor(pColor:uint, pTriggerEvent:Boolean=true):void {
 			this._newColorSprite.graphics.clear();
 			this._newColorSprite.graphics.beginFill(pColor, 1);
 			this._newColorSprite.graphics.drawRect(0, 0, this._swatchWidth, 135);
 			this._newColorSprite.graphics.endFill();
-			dispatchEvent(new flash.events.DataEvent(COLOR_PICKED, false, false, pColor.toString()));
+			if(pTriggerEvent) dispatchEvent(new flash.events.DataEvent(COLOR_PICKED, false, false, pColor.toString()));
 		}
 
 		internal function colorPickerHandleMotion(arg1:MouseEvent):void {

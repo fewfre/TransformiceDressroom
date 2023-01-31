@@ -8,7 +8,6 @@ package app.world
 	import com.fewfre.utils.*;
 
 	import app.ui.*;
-	import app.ui.panes.*;
 	import app.ui.screens.*;
 	import app.ui.buttons.*;
 	import app.data.*;
@@ -24,9 +23,8 @@ package app.world
 	import flash.geom.*;
 	import flash.net.*;
 	import flash.utils.*;
-	import app.ui.panes.ColorFinderPane;
-	import app.ui.panes.OtherTabPane;
-	import app.ui.panes.ConfigTabPane;
+	import app.ui.panes.*;
+	import app.ui.panes.colorpicker.ColorPickerTabPane;
 	import flash.display.MovieClip;
 	import flash.ui.Keyboard;
 	
