@@ -267,13 +267,13 @@ package app.ui.panes.colorpicker
 			return _colorHistory.getHistoryColors(itemID);
 		}
 		private function _showHistory(swatchI:int) {
-			var itemID = _getHistoryDictKey(swatchI);
-			_colorHistory.renderHistory(itemID);
-			addItem(_colorHistory);
-			
 			// Also select the swatch related to history, and submit any tracked recent color
 			_selectSwatch(swatchI);
 			_addRecentColor();
+			
+			var itemID = _getHistoryDictKey(swatchI);
+			_colorHistory.renderHistory(itemID);
+			addItem(_colorHistory);
 		}
 		private function _hideHistory() {
 			if(containsItem(_colorHistory)) removeItem(_colorHistory);
