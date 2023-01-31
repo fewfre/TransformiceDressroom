@@ -95,7 +95,25 @@
 			margin-top: 6px;
 			font-family: monospace;
 		}
+		#progress-cont .timestamp:after {
+			position: absolute;
+			content: '(Local Time)';
+			display: inline-block;
+			font-size: 10px;
+			margin-left: 5px;
+			padding: 1px 2px;
+			background: #ffffffcc;
+			color: black;
+			font-family: initial;
+			border-radius: 2px;
+			box-shadow: 0 0 3px 1px black;
+		}
 		
+		#progress-cont .idle {
+			background: skyblue;
+			color: #111;
+			font-size: 20px;
+		}
 		#progress-cont .starting {
 			background: blue;
 			color: lightblue;
@@ -231,17 +249,21 @@
 				}
 			}
 			// Test responses
+			// onProgressLoaded({ state:'idle', timestamp:0 });
 			// onProgressLoaded({ state:'starting', timestamp:0 });
 			// onProgressLoaded({ state:'updating', value:111, max:124, timestamp:0 });
 			// onProgressLoaded({ state:'completed', timestamp:0 });
 			
 			function renderTimestamp(dateString) {
 				const date = new Date(dateString);
-				return `<div class="timestamp"><strong>Progress Last Updated (Local Time):</strong> ${date.toLocaleString()}</div>`;
+				return `<div class="timestamp"><strong>Progress Last Updated:</strong> ${date.toLocaleString()}</div>`;
 			}
 			
 			function renderProgressMessage(obj) {
 				switch(obj.state) {
+					case 'idle': {
+						return `<div class="idle">💤 Idle 💤${renderTimestamp(obj.timestamp)}</div>`;
+					}
 					case 'starting': {
 						return `<div class="starting">&#8987; Starting &#8987;${renderTimestamp(obj.timestamp)}</div>`;
 					}
@@ -254,7 +276,7 @@
 						return `<div class="completed">Completed!${renderTimestamp(obj.timestamp)}</div>`;
 					}
 				}
-				return 'Unknown progress state';
+				return `Unknown progress state - ${obj.state}`;
 			}
 		})();
 		(()=>{

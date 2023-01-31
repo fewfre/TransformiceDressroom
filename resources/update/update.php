@@ -56,6 +56,9 @@ file_put_contents($json_path, json_encode($json));//, JSON_PRETTY_PRINT
 
 setProgress('completed');
 echo "Update Successful!";
+
+sleep(10);
+setProgress('idle');
 // echo "Update Successful! Redirecting...";
 // echo '<script>window.setTimeout(function(){ window.location = "../"; },1000);</script>';
 
