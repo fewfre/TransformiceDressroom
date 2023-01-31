@@ -23,7 +23,7 @@ package app.ui.panes.colorpicker
 		public static const EVENT_EXIT				: String = "event_exit";
 		
 		// Storage
-		private var _colorSwatches             : Array;
+		private var _colorSwatches             : Vector.<ColorSwatch>;
 		private var _selectedSwatch            : int=0;
 		private var _psColorPick               : ColorPicker;
 		
@@ -61,7 +61,7 @@ package app.ui.panes.colorpicker
 			_psColorPick.y = 5;
 			_psColorPick.addEventListener(ColorPicker.COLOR_PICKED, _onColorPickChanged);
 			
-			_colorSwatches = new Array();
+			_colorSwatches = new Vector.<ColorSwatch>();
 			
 			if(!pData.hide_default) {
 				var defaults_btn:SpriteButton;
@@ -105,7 +105,7 @@ package app.ui.panes.colorpicker
 			for each(var btn:ColorSwatch in _colorSwatches) {
 				this.removeItem(btn);
 			}
-			_colorSwatches = [];
+			_colorSwatches = new Vector.<ColorSwatch>;
 			
 			var swatch:ColorSwatch;
 			for(var i:int = 0; i < pSwatches.length; i++) {
@@ -132,7 +132,11 @@ package app.ui.panes.colorpicker
 		}
 		
 		public function getAllColors() : Array {
-			return _colorSwatches.map(function(swatch:ColorSwatch,i,a){ return swatch.color });
+			var colors = new Array();
+			for(var i:int = 0; i < _colorSwatches.length; i++){
+				colors.push( _colorSwatches[i].color );
+			}
+			return colors;
 		}
 		
 		/****************************
