@@ -119,6 +119,7 @@ package app.ui.panes
 		public function addLook(lookCode:String) {
 			var grid = this.userOutfitsGrid;
 			var character = new Character({
+				isOutfit:true,
 				params:lookCode,
 				pose:GameAssets.poses[GameAssets.defaultPoseIndex]
 			});

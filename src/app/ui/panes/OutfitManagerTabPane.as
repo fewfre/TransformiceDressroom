@@ -20,7 +20,7 @@ package app.ui.panes
 	public class OutfitManagerTabPane extends TabPane
 	{
 		// Storage
-		public var character : Character;
+		private var _character : Character;
 		
 		private var _deleteBtnGrid		: Grid;
 		private var _onUserLookClicked	: Function;
@@ -30,7 +30,7 @@ package app.ui.panes
 		// Constructor
 		public function OutfitManagerTabPane(pCharacter:Character, pOnUserLookClicked:Function) {
 			super();
-			character = pCharacter;
+			_character = pCharacter;
 			_onUserLookClicked = pOnUserLookClicked;
 			
 			this.addInfoBar( new ShopInfoBar({ showBackButton:true, showGridManagementButtons:true }) );
@@ -69,6 +69,7 @@ package app.ui.panes
 		}
 		
 		public function addNewLook(lookCode:String) : void {
+			trace('addNewLook', lookCode);
 			var looks:Array = Fewf.sharedObject.getData(ConstantsApp.SHARED_OBJECT_KEY_OUTFITS) || [];
 			looks.push(lookCode);
 			Fewf.sharedObject.setData(ConstantsApp.SHARED_OBJECT_KEY_OUTFITS, looks);
@@ -116,7 +117,7 @@ package app.ui.panes
 				var look = looks[i];
 				_addLookButton(look, i);
 			}
-				_addNewOutfitButton();
+			_addNewOutfitButton();
 			
 			if(wasReversed) {
 				grid.reverse();
@@ -127,12 +128,9 @@ package app.ui.panes
 		}
 		
 		public function _addLookButton(lookCode:String, i:int) : void {
-			var character = new Character({
-				params:lookCode,
-				pose:GameAssets.poses[GameAssets.defaultPoseIndex]
-			});
-			character.parseParams(lookCode);
-			var btn:PushButton = new PushButton({ width:grid.radius, height:grid.radius, obj:character, id:i }) as PushButton;
+			var lookMC = new Character({ isOutfit:true, params:lookCode, pose:GameAssets.poses[GameAssets.defaultPoseIndex] });
+			
+			var btn:PushButton = new PushButton({ width:grid.radius, height:grid.radius, obj:lookMC, id:i }) as PushButton;
 			btn.addEventListener(PushButton.STATE_CHANGED_AFTER, function(){
 				_onUserLookClicked(lookCode);
 				
@@ -157,7 +155,7 @@ package app.ui.panes
 		private function _addNewOutfitButton() : void {
 			var holder = new Sprite();
 			var tNewOutfitBtn = holder.addChild(new ScaleButton({ x:grid.radius*0.5, y:grid.radius*0.5, width:this.grid.radius, height:this.grid.radius, obj:new $OutfitAdd() }));
-			tNewOutfitBtn.addEventListener(MouseEvent.CLICK, function(e){ addNewLook(character.getParamsTfmOfficialSyntax()) });
+			tNewOutfitBtn.addEventListener(MouseEvent.CLICK, function(e){ addNewLook(_character.getParamsTfmOfficialSyntax()) });
 			this.grid.add(holder);
 			_deleteBtnGrid.add(new Sprite()); // empty spot since no delete button for this
 			// this.buttons.push(tNewOutfitBtn);// DO NOT ADD TO BUTTONS! only add to grid; this avoids issue when clicking "random" button
@@ -197,7 +195,7 @@ package app.ui.panes
 				var oldLooks:Array = Fewf.sharedObject.getData(ConstantsApp.SHARED_OBJECT_KEY_OUTFITS) || [];
 				for(var i:int = importedLooks.length-1; i >= 0; i--) {
 					// Don't allow an import file with invalid code
-					if(this.character.parseParams(importedLooks[i]) === false) {
+					if(this._character.parseParams(importedLooks[i]) === false) {
 						throw 'Invalid code in list';
 					}
 					// Remove duplicates being imported

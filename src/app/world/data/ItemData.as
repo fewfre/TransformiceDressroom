@@ -33,6 +33,10 @@ package app.world.data
 			colors = defaultColors.concat();
 		}
 		
+		public function copy() : ItemData {
+			return new ItemData({  id:id, type:type, gender:gender, itemClass:itemClass, classMap:classMap });
+		}
+		
 		public function isSkin() : Boolean { return type == ITEM.SKIN || type == ITEM.SKIN_COLOR; }
 
 		public function getPart(pID:String, pOptions:Object=null) : Class {

@@ -668,6 +668,7 @@ package app.world
 				this.currentlyColoringType = pType;
 				(_paneManager.getPane(COLOR_PANE_ID) as ColorPickerTabPane).setupSwatches( this.character.getColors(pType) );
 				_paneManager.openPane(COLOR_PANE_ID);
+				_refreshSelectedItemColor(pType);
 			}
 
 			private function _onColorPickerBackClicked(pEvent:Event):void {

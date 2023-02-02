@@ -13,6 +13,7 @@ package app.world.elements
 		// Storage
 		public var outfit:MovieClip;
 		public var animatePose:Boolean;
+		public var isOutfit:Boolean;
 
 		private var _itemDataMap:Object;
 
@@ -24,6 +25,7 @@ package app.world.elements
 		public function Character(pData:Object) {
 			super();
 			animatePose = false;
+			isOutfit = !!pData.isOutfit;
 
 			this.x = pData.x;
 			this.y = pData.y;
@@ -82,7 +84,8 @@ package app.world.elements
 					getItemData(ITEM.OBJECT),
 					getItemData(ITEM.BACK),
 					getItemData(ITEM.PAW_BACK)
-				]
+				],
+				shamanMode: isOutfit ? SHAMAN_MODE.OFF : null // null sets it to use global value
 			});
 			if(animatePose) outfit.play(); else outfit.stopAtLastFrame();
 		}
@@ -152,6 +155,7 @@ package app.world.elements
 						tColors = [];
 					}
 					tData = GameAssets.getItemFromTypeID(pType, tID);
+					if(isOutfit) tData = tData.copy();
 					if(tColors.length > 0) { tData.colors = _hexArrayToIntArray(tColors, tData.defaultColors); }
 					else if(tID == 1 || tID == "1") { tData.setColorsToDefault(); }
 				}
@@ -165,6 +169,7 @@ package app.world.elements
 					tColors = _splitOnUrlColorSeperator(tID); // Get a list of all the colors (ID is first); ex: 5;ffffff;abcdef;169742
 					tID = tColors.splice(0, 1)[0]; // Remove first item and store it as the ID.
 					tData = GameAssets.getItemFromTypeID(pType, tID);
+					if(isOutfit) tData = tData.copy();
 					if(tColors.length > 0) { tData.colors = _hexArrayToIntArray(tColors, tData.defaultColors); }
 					else if(tID == 1 || tID == "1") { tData.setColorsToDefault(); }
 				}
