@@ -13,7 +13,7 @@ package app.data
 	public class GameAssets
 	{
 		private static const _MAX_COSTUMES_TO_CHECK_TO:Number = 999;
-		public static const FUR_COLORS:Array = [ 0xBD9067, 0x593618, 0x8C887F, 0xDED7CE, 0x4E443A, 0xE3C07E, 0x272220 ];
+		public static const FUR_COLORS:Vector.<uint> = new <uint>[ 0xBD9067, 0x593618, 0x8C887F, 0xDED7CE, 0x4E443A, 0xE3C07E, 0x272220 ];
 
 		public static var hair:Array;
 		public static var head:Array;
@@ -28,7 +28,7 @@ package app.data
 		public static var skins:Array;
 		public static var poses:Array;
 		
-		public static var accessorySlotBones:Array;
+		public static var accessorySlotBones:Vector.< Vector.<String> >;
 
 		public static var defaultSkinIndex:int;
 		public static var defaultPoseIndex:int;
@@ -46,15 +46,15 @@ package app.data
 		public static function init() : void {
 			var i:int;
 
-			head = _setupCostumeArray({ base:"$Costume_0_", type:ITEM.HAT, itemClassToClassMap:"Tete_1" });
-			eyes = _setupCostumeArray({ base:"$Costume_1_", type:ITEM.EYES, itemClassToClassMap:["Oeil_1", "OeilVide_1", "Oeil2_1", "Oeil3_1", "Oeil4_1"] });
-			ears = _setupCostumeArray({ base:"$Costume_2_", type:ITEM.EARS, itemClassToClassMap:"OreilleD_1" });
-			mouth = _setupCostumeArray({ base:"$Costume_3_", type:ITEM.MOUTH, itemClassToClassMap:"Tete_1" });
-			neck = _setupCostumeArray({ base:"$Costume_4_", type:ITEM.NECK, itemClassToClassMap:"Tete_1" });
-			hair = _setupCostumeArray({ base:"$Costume_5_", type:ITEM.HAIR, itemClassToClassMap:"Tete_1" });
-			tail = _setupCostumeArray({ base:"$Costume_6_", type:ITEM.TAIL, itemClassToClassMap:"Boule_1" });
-			contacts = _setupCostumeArray({ base:"$Costume_7_", type:ITEM.CONTACTS, itemClassToClassMap:["Oeil_1", "OeilVide_1"] });
-			hands = _setupCostumeArray({ base:"$Costume_8_", type:ITEM.HAND, itemClassToClassMap:"Gant_1" });
+			head = _setupCostumeArray(ITEM.HAT, "$Costume_0_", { itemClassToClassMap:"Tete_1" });
+			eyes = _setupCostumeArray(ITEM.EYES, "$Costume_1_", { itemClassToClassMap:["Oeil_1", "OeilVide_1", "Oeil2_1", "Oeil3_1", "Oeil4_1"] });
+			ears = _setupCostumeArray(ITEM.EARS, "$Costume_2_", { itemClassToClassMap:"OreilleD_1" });
+			mouth = _setupCostumeArray(ITEM.MOUTH, "$Costume_3_", { itemClassToClassMap:"Tete_1" });
+			neck = _setupCostumeArray(ITEM.NECK, "$Costume_4_", { itemClassToClassMap:"Tete_1" });
+			hair = _setupCostumeArray(ITEM.HAIR, "$Costume_5_", { itemClassToClassMap:"Tete_1" });
+			tail = _setupCostumeArray(ITEM.TAIL, "$Costume_6_", { itemClassToClassMap:"Boule_1" });
+			contacts = _setupCostumeArray(ITEM.CONTACTS, "$Costume_7_", { itemClassToClassMap:["Oeil_1", "OeilVide_1"] });
+			hands = _setupCostumeArray(ITEM.HAND, "$Costume_8_", { itemClassToClassMap:"Gant_1" });
 
 			extraObjectWand = new ItemData({ type:ITEM.OBJECT, itemClass:Fewf.assets.getLoadedClass("$Costume_9_1") });
 			extraObjectWand.classMap = { Arme_1:extraObjectWand.itemClass };
@@ -63,18 +63,18 @@ package app.data
 			extraFromage = new ItemData({ type:ITEM.BACK, itemClass:Fewf.assets.getLoadedClass("FromageSouris") });
 			extraFromage.classMap = { ClipGrosse:extraFromage.itemClass };
 			
-			accessorySlotBones = new Array();
-			accessorySlotBones[0] = new Array("Tete_1");
-			accessorySlotBones[1] = new Array("OeilVide_1","Oeil2_1","Oeil3_1","Oeil4_1");
-			accessorySlotBones[2] = new Array("OreilleD_1");
-			accessorySlotBones[3] = new Array("Tete_1");
-			accessorySlotBones[4] = new Array("Tete_1");
-			accessorySlotBones[5] = new Array("Tete_1");
-			accessorySlotBones[6] = new Array("Boule_1");
-			accessorySlotBones[7] = new Array("Oeil_1");
-			accessorySlotBones[8] = new Array("Gant_1");
-			accessorySlotBones[9] = new Array("Arme_1");
-			accessorySlotBones[10] = new Array("Bouclier_1");
+			accessorySlotBones = new Vector.< Vector.<String> >();
+			accessorySlotBones[0] = new <String>["Tete_1"];
+			accessorySlotBones[1] = new <String>["OeilVide_1","Oeil2_1","Oeil3_1","Oeil4_1"];
+			accessorySlotBones[2] = new <String>["OreilleD_1"];
+			accessorySlotBones[3] = new <String>["Tete_1"];
+			accessorySlotBones[4] = new <String>["Tete_1"];
+			accessorySlotBones[5] = new <String>["Tete_1"];
+			accessorySlotBones[6] = new <String>["Boule_1"];
+			accessorySlotBones[7] = new <String>["Oeil_1"];
+			accessorySlotBones[8] = new <String>["Gant_1"];
+			accessorySlotBones[9] = new <String>["Arme_1"];
+			accessorySlotBones[10]= new <String>["Bouclier_1"];
 
 			skins = new Array();
 			
@@ -116,65 +116,35 @@ package app.data
 			defaultPoseIndex = 0;//FewfUtils.getIndexFromArrayWithKeyVal(poses, "id", ConstantsApp.DEFAULT_POSE_ID);
 		}
 
-		// pData = { base:String, type:String, after:String, pad:int, map:Array, sex:Boolean, itemClassToClassMap:String OR Array }
-		private static function _setupCostumeArray(pData:Object) : Array {
-			var tArray:Array = new Array();
-			var tClassName:String;
-			var tClass:Class;
-			var tSexSpecificParts:int;
+		// pData = { after:String, pad:int, itemClassToClassMap:String OR Array }
+		private static function _setupCostumeArray(type:String, base:String, pData:Object) : Array {
+			var tArray:Array = new Array(), tClassName:String, tClass:Class;
 			var breakCount = 0; // quit early if enough nulls in a row
+			
 			for(var i = 0; i <= _MAX_COSTUMES_TO_CHECK_TO; i++) {
 				// hardcoded skip for duplicate items in game files - TODO: add values to config maybe?
-				if(i == 85 && pData.type == ITEM.MOUTH) {
+				if(i == 85 && type == ITEM.MOUTH) {
 					continue;
 				}
 				
-				if(pData.map) {
-					for(var g:int = 0; g < (pData.sex ? 2 : 1); g++) {
-						var tClassMap = {  }, tClassSuccess = null;
-						tSexSpecificParts = 0;
-						for(var j = 0; j <= pData.map.length; j++) {
-							tClass = Fewf.assets.getLoadedClass( tClassName = pData.base+(pData.pad ? zeroPad(i, pData.pad) : i)+(pData.after ? pData.after : "")+pData.map[j] );
-							if(tClass) { tClassMap[pData.map[j]] = tClass; tClassSuccess = tClass; }
-							else if(pData.sex){
-								tClass = Fewf.assets.getLoadedClass( tClassName+"_"+(g==0?1:2) );
-								if(tClass) { tClassMap[pData.map[j]] = tClass; tClassSuccess = tClass; tSexSpecificParts++ }
+				tClass = Fewf.assets.getLoadedClass( base+(pData.pad ? zeroPad(i, pData.pad) : i)+(pData.after ? pData.after : "") );
+				if(tClass != null) {
+					breakCount = 0;
+					tArray.push( new ItemData({ id:i, type:type, itemClass:tClass}) );
+					if(pData.itemClassToClassMap) {
+						tArray[tArray.length-1].classMap = {};
+						if(pData.itemClassToClassMap is Array) {
+							for(var c:int = 0; c < pData.itemClassToClassMap.length; c++) {
+								tArray[tArray.length-1].classMap[pData.itemClassToClassMap[c]] = tClass;
 							}
-						}
-						if(tClassSuccess) {
-							breakCount = 0;
-							var tIsSexSpecific = pData.sex && tSexSpecificParts > 0;
-							tArray.push( new ItemData({ id:i+(tIsSexSpecific ? (g==1 ? "M" : "F") : ""), type:pData.type, classMap:tClassMap, itemClass:tClassSuccess, gender:(tIsSexSpecific ? (g==1?GENDER.MALE:GENDER.FEMALE) : null) }) );
 						} else {
-							breakCount++;
-							if(breakCount > 5) {
-								break;
-							}
-						}
-						if(tSexSpecificParts == 0) {
-							break;
+							tArray[tArray.length-1].classMap[pData.itemClassToClassMap] = tClass;
 						}
 					}
 				} else {
-					tClass = Fewf.assets.getLoadedClass( pData.base+(pData.pad ? zeroPad(i, pData.pad) : i)+(pData.after ? pData.after : "") );
-					if(tClass != null) {
-						breakCount = 0;
-						tArray.push( new ItemData({ id:i, type:pData.type, itemClass:tClass}) );
-						if(pData.itemClassToClassMap) {
-							tArray[tArray.length-1].classMap = {};
-							if(pData.itemClassToClassMap is Array) {
-								for(var c:int = 0; c < pData.itemClassToClassMap.length; c++) {
-									tArray[tArray.length-1].classMap[pData.itemClassToClassMap[c]] = tClass;
-								}
-							} else {
-								tArray[tArray.length-1].classMap[pData.itemClassToClassMap] = tClass;
-							}
-						}
-					} else {
-						breakCount++;
-						if(breakCount > 5) {
-							break;
-						}
+					breakCount++;
+					if(breakCount > 5) {
+						break;
 					}
 				}
 			}
@@ -381,15 +351,9 @@ package app.data
 			var tSkinData = pData.skin ? pData.skin : skins[defaultSkinIndex];
 
 			var tPose = new Pose(tPoseData);
-			if(tSkinData.gender == GENDER.MALE) {
-				tPose.apply({ items:[
-					tSkinData
-				], shamanMode:SHAMAN_MODE.OFF });
-			} else {
-				tPose.apply({ items:[
-					tSkinData
-				], shamanMode:SHAMAN_MODE.OFF });
-			}
+			tPose.apply({ items:[
+				tSkinData
+			], shamanMode:SHAMAN_MODE.OFF });
 			tPose.stopAtLastFrame();
 
 			return tPose;

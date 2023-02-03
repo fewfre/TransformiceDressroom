@@ -100,8 +100,8 @@ package app.world.elements
 			var tAccMC:MovieClip;
 			for(var aI:int = 0; aI < tAccessoires.length; aI++) {
 				tAccMC = tAccessoires[aI];
-				var tAccItemCat = int(tAccMC.name.substr(5)); // removes `slot_`
-				var validBoneNamesForItemCat:Array = GameAssets.accessorySlotBones[tAccItemCat];
+				var tAccItemCat:int = int(tAccMC.name.substr(5)); // removes `slot_`
+				var validBoneNamesForItemCat:Vector.<String> = GameAssets.accessorySlotBones[tAccItemCat];
 				if(validBoneNamesForItemCat) {
 					for(var bnaI:int = 0; bnaI < validBoneNamesForItemCat.length; bnaI++) {
 						var tBoneMC:MovieClip = _pose.getChildByName(validBoneNamesForItemCat[bnaI]) as MovieClip;

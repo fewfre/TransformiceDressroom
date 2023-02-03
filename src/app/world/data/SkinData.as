@@ -55,7 +55,7 @@ package app.world.data
 		}
 		
 		public override function copy() : ItemData {
-			return new SkinData({ assetID:_assetID, id:id, type:type, color:defaultColors ? defaultColors[0] : null, gender:gender, itemClass:itemClass, classMap:classMap });
+			return new SkinData({ assetID:_assetID, id:id, type:type, color:defaultColors ? defaultColors[0] : null, itemClass:itemClass, classMap:classMap });
 		}
 		
 		// pOptions = { shamanMode:int(SHAMAN_MODE) }

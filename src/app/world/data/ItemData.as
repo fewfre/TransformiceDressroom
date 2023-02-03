@@ -8,19 +8,17 @@ package app.world.data
 	{
 		public var id			: String;
 		public var type			: String;
-		public var gender		: String;
 		public var itemClass	: Class;
 		public var classMap		: Object;
 
 		public var defaultColors: Array;
 		public var colors		: Array;
 
-		// pData = { id:String, type:String, itemClass:Class, ?gender:String, ?classMap:Object<Class> }
+		// pData = { id:String, type:String, itemClass:Class, ?classMap:Object<Class> }
 		public function ItemData(pData:Object) {
 			super();
 			id = pData.id;
 			type = pData.type;
-			gender = pData.gender;
 			itemClass = pData.itemClass;
 			classMap = pData.classMap;
 			_initDefaultColors();
@@ -34,7 +32,7 @@ package app.world.data
 		}
 		
 		public function copy() : ItemData {
-			return new ItemData({  id:id, type:type, gender:gender, itemClass:itemClass, classMap:classMap });
+			return new ItemData({  id:id, type:type, itemClass:itemClass, classMap:classMap });
 		}
 		
 		public function isSkin() : Boolean { return type == ITEM.SKIN || type == ITEM.SKIN_COLOR; }
