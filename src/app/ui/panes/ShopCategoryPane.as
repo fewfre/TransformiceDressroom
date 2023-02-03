@@ -2,7 +2,7 @@ package app.ui.panes
 {
 	
 	import app.ui.ShopInfoBar;
-	import app.data.ITEM;
+	import app.data.ItemType;
 	import app.data.GameAssets;
 	import app.ui.Grid;
 	import flash.display.MovieClip;
@@ -14,18 +14,18 @@ package app.ui.panes
 
 	public class ShopCategoryPane extends TabPane
 	{
-		private var _type: String;
+		private var _type: ItemType;
 		
-		public function get type():String { return _type; }
+		public function get type():ItemType { return _type; }
 		
 		public static const ITEM_TOGGLED : String = 'ITEM_TOGGLED';
 		public static const DEFAULT_SKIN_COLOR_BTN_CLICKED : String = 'DEFAULT_SKIN_COLOR_BTN_CLICKED';
 		
 		// Constructor
-		public function ShopCategoryPane(pType:String) {
+		public function ShopCategoryPane(pType:ItemType) {
 			super();
 			this._type = pType;
-			this.addInfoBar( new ShopInfoBar({ showEyeDropButton:_type!=ITEM.POSE, showGridManagementButtons:true }) );
+			this.addInfoBar( new ShopInfoBar({ showEyeDropButton:_type!=ItemType.POSE, showGridManagementButtons:true }) );
 			_setupGrid(_type, this, GameAssets.getArrayByType(_type));
 			
 			infoBar.reverseButton.addEventListener(ButtonBase.CLICK, _onReverseGrid);
@@ -41,10 +41,10 @@ package app.ui.panes
 		/****************************
 		* Private
 		*****************************/
-		private function _setupGrid(pType:String, pPane:TabPane, pItemArray:Array) : void {
+		private function _setupGrid(pType:ItemType, pPane:TabPane, pItemArray:Array) : void {
 			var buttonPerRow = 6;
 			var scale = 1;
-			if(pType == ITEM.SKIN || pType == ITEM.POSE) {
+			if(pType == ItemType.SKIN || pType == ItemType.POSE) {
 					buttonPerRow = 5;
 					scale = 1;
 			}
@@ -65,7 +65,7 @@ package app.ui.panes
 				pPane.buttons.push(shopItemButton);
 				shopItemButton.addEventListener(PushButton.STATE_CHANGED_AFTER, _onItemToggled);
 			}
-			if(pType !== ITEM.POSE) {
+			if(pType !== ItemType.POSE) {
 				// Start these ones reversed by default
 				grid.reverse();
 				_addDefaultSkinColorButtonIfSkinPane(pType);
@@ -73,10 +73,10 @@ package app.ui.panes
 			pPane.UpdatePane();
 		}
 		
-		private function _addDefaultSkinColorButtonIfSkinPane(pType:String) {
+		private function _addDefaultSkinColorButtonIfSkinPane(pType:ItemType) {
 			// Customizeable fur color button
 			// cannot attach to button due to main button eating mouse events
-			if(pType == ITEM.SKIN) {
+			if(pType == ItemType.SKIN) {
 				var tSkinButton = buttons[GameAssets.defaultSkinIndex];
 				var tColorWheel = tSkinButton.parent.addChild(new ScaleButton({ x:tSkinButton.x + 60, y:tSkinButton.y + 12, obj:new $ColorWheel(), obj_scale:0.5 }));
 				tColorWheel.addEventListener(ButtonBase.CLICK, function(){

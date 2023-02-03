@@ -53,9 +53,9 @@ package app.world.elements
 		public function apply(items:Array, shamanMode:ShamanMode, removeBlanks:Boolean=false) : MovieClip {
 			if(!items) items = [];
 			
-			var tSkinData = FewfUtils.getFromArrayWithKeyVal(items, "type", ITEM.SKIN);
-			if(tSkinData == null) { tSkinData = FewfUtils.getFromArrayWithKeyVal(items, "type", ITEM.SKIN_COLOR); }
-			var tTailData = FewfUtils.getFromArrayWithKeyVal(items, "type", ITEM.TAIL);
+			var tSkinData = FewfUtils.getFromArrayWithKeyVal(items, "type", ItemType.SKIN);
+			if(tSkinData == null) { tSkinData = FewfUtils.getFromArrayWithKeyVal(items, "type", ItemType.SKIN_COLOR); }
+			var tTailData = FewfUtils.getFromArrayWithKeyVal(items, "type", ItemType.TAIL);
 			
 			var tShopData:Array = _orderType(items);
 			var part:MovieClip = null;
@@ -166,7 +166,7 @@ package app.world.elements
 			}
 			
 			pItems.sort(function(a, b){
-				return ITEM.LAYERING.indexOf(a.type) > ITEM.LAYERING.indexOf(b.type) ? 1 : -1;
+				return ItemType.LAYERING.indexOf(a.type) > ItemType.LAYERING.indexOf(b.type) ? 1 : -1;
 			});
 			
 			return pItems;

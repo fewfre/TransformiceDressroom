@@ -6,6 +6,7 @@
 	- Moved shop item pane code from `World` into `ShopCategoryPane`
 	- Removed some old DeadMaze gender code
 	- `SHAMAN_MODE` renamed to `ShamanMode` and given proper enum typing
+	- `ITEM` renamed to `ItemType` and given proper enum typing
 	- `ImgurApi` moved to `com.fewfre.utils`
 
 

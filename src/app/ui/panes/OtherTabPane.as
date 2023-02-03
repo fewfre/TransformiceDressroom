@@ -73,15 +73,15 @@ package app.ui.panes
 
 			this.button_hand = new PushButton({ width:grid.radius, height:grid.radius, obj:new GameAssets.extraObjectWand.itemClass(), obj_scale:1.5, id:i++ });
 			grid.add(this.button_hand);
-			if(character.getItemData(ITEM.OBJECT)) { this.button_hand.toggleOn(); }
+			if(character.getItemData(ItemType.OBJECT)) { this.button_hand.toggleOn(); }
 			
 			this.button_back = new PushButton({ width:grid.radius, height:grid.radius, obj:new GameAssets.extraFromage.itemClass(), obj_scale:1.5, id:i++ });
 			grid.add(this.button_back);
-			if(character.getItemData(ITEM.BACK)) { this.button_back.toggleOn(); }
+			if(character.getItemData(ItemType.BACK)) { this.button_back.toggleOn(); }
 			
 			this.button_backHand = new PushButton({ width:grid.radius, height:grid.radius, obj:new GameAssets.extraBackHand.itemClass(), obj_scale:1.5, id:i++ });
 			grid.add(this.button_backHand);
-			if(character.getItemData(ITEM.PAW_BACK)) { this.button_backHand.toggleOn(); }
+			if(character.getItemData(ItemType.PAW_BACK)) { this.button_backHand.toggleOn(); }
 			
 			yy += grid.Height + 10;
 			
@@ -137,12 +137,12 @@ package app.ui.panes
 		
 		private function _updateHead() {
 			// copy character data onto our copy
-			for each(var tItemType in ITEM.LAYERING) {
-				if(tItemType == ITEM.SKIN_COLOR) continue;
+			for each(var tItemType in ItemType.LAYERING) {
+				if(tItemType == ItemType.SKIN_COLOR) continue;
 				var data = character.getItemData(tItemType);
 				if(data) characterHead.setItemData( data ); else characterHead.removeItem( tItemType );
 			}
-			characterHead.setItemData( character.getItemData(ITEM.POSE) );
+			characterHead.setItemData( character.getItemData(ItemType.POSE) );
 			characterHead.scale = 1;
 			
 			// Cut the head off the poor mouse ;_;
@@ -211,9 +211,9 @@ package app.ui.panes
 				shamanButtons[GameAssets.shamanMode.toInt()-2].toggleOn(false);
 			}
 			
-			button_hand.toggle(!!character.getItemData(ITEM.OBJECT), false);
-			button_back.toggle(!!character.getItemData(ITEM.BACK), false);
-			button_backHand.toggle(!!character.getItemData(ITEM.PAW_BACK), false);
+			button_hand.toggle(!!character.getItemData(ItemType.OBJECT), false);
+			button_back.toggle(!!character.getItemData(ItemType.BACK), false);
+			button_backHand.toggle(!!character.getItemData(ItemType.PAW_BACK), false);
 			_updateHead();
 		}
 		

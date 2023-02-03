@@ -6,6 +6,7 @@ package app.ui
 	import flash.display.*;
 	import flash.display.Shape;
 	import flash.events.*;
+	import com.fewfre.events.FewfEvent;
 
 	public class ShopTabContainer extends RoundedRectangle
 	{
@@ -59,7 +60,7 @@ package app.ui
 				}
 			}
 
-			if(pEvent!=null) { dispatchEvent(new DataEvent(EVENT_SHOP_TAB_CLICKED, false, false, pEvent)); }
+			if(pEvent!=null) { dispatchEvent(new FewfEvent(EVENT_SHOP_TAB_CLICKED, pEvent)); }
 		}
 	}
 }

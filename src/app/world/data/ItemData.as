@@ -6,19 +6,19 @@ package app.world.data
 
 	public class ItemData
 	{
+		public var type			: ItemType;
 		public var id			: String;
-		public var type			: String;
 		public var itemClass	: Class;
 		public var classMap		: Object;
 
 		public var defaultColors: Array;
 		public var colors		: Array;
 
-		// pData = { id:String, type:String, itemClass:Class, ?classMap:Object<Class> }
-		public function ItemData(pData:Object) {
+		// pData = { itemClass:Class, ?classMap:Object<Class> }
+		public function ItemData(pType:ItemType, pId:String, pData:Object) {
 			super();
-			id = pData.id;
-			type = pData.type;
+			type = pType;
+			id = pId;
 			itemClass = pData.itemClass;
 			classMap = pData.classMap;
 			_initDefaultColors();
@@ -32,10 +32,10 @@ package app.world.data
 		}
 		
 		public function copy() : ItemData {
-			return new ItemData({  id:id, type:type, itemClass:itemClass, classMap:classMap });
+			return new ItemData(type, id, { itemClass:itemClass, classMap:classMap });
 		}
 		
-		public function isSkin() : Boolean { return type == ITEM.SKIN || type == ITEM.SKIN_COLOR; }
+		public function isSkin() : Boolean { return type == ItemType.SKIN || type == ItemType.SKIN_COLOR; }
 
 		public function getPart(pID:String, pOptions:Object=null) : Class {
 			return !classMap ? null : (classMap[pID] ? classMap[pID] : null);

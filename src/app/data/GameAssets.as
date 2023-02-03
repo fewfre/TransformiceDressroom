@@ -14,6 +14,7 @@ package app.data
 	{
 		private static const _MAX_COSTUMES_TO_CHECK_TO:Number = 999;
 		public static const FUR_COLORS:Vector.<uint> = new <uint>[ 0xBD9067, 0x593618, 0x8C887F, 0xDED7CE, 0x4E443A, 0xE3C07E, 0x272220 ];
+		public static const DEFAULT_FUR_COLOR:uint = 0x78583A;
 
 		public static var hair:Array;
 		public static var head:Array;
@@ -40,27 +41,27 @@ package app.data
 		public static var shamanMode:ShamanMode = ShamanMode.OFF;
 		public static var shamanColor:int = 0x95D9D6;
 		
-		// { type:ITEM, id:String, colorI:int }
+		// { type:ItemType, id:String, colorI:int }
 		public static var swatchHoverPreviewData:Object = null;
 
 		public static function init() : void {
 			var i:int;
 
-			head = _setupCostumeArray(ITEM.HAT, "$Costume_0_", { itemClassToClassMap:"Tete_1" });
-			eyes = _setupCostumeArray(ITEM.EYES, "$Costume_1_", { itemClassToClassMap:["Oeil_1", "OeilVide_1", "Oeil2_1", "Oeil3_1", "Oeil4_1"] });
-			ears = _setupCostumeArray(ITEM.EARS, "$Costume_2_", { itemClassToClassMap:"OreilleD_1" });
-			mouth = _setupCostumeArray(ITEM.MOUTH, "$Costume_3_", { itemClassToClassMap:"Tete_1" });
-			neck = _setupCostumeArray(ITEM.NECK, "$Costume_4_", { itemClassToClassMap:"Tete_1" });
-			hair = _setupCostumeArray(ITEM.HAIR, "$Costume_5_", { itemClassToClassMap:"Tete_1" });
-			tail = _setupCostumeArray(ITEM.TAIL, "$Costume_6_", { itemClassToClassMap:"Boule_1" });
-			contacts = _setupCostumeArray(ITEM.CONTACTS, "$Costume_7_", { itemClassToClassMap:["Oeil_1", "OeilVide_1"] });
-			hands = _setupCostumeArray(ITEM.HAND, "$Costume_8_", { itemClassToClassMap:"Gant_1" });
+			head = _setupCostumeArray(ItemType.HEAD, "$Costume_0_", { itemClassToClassMap:"Tete_1" });
+			eyes = _setupCostumeArray(ItemType.EYES, "$Costume_1_", { itemClassToClassMap:["Oeil_1", "OeilVide_1", "Oeil2_1", "Oeil3_1", "Oeil4_1"] });
+			ears = _setupCostumeArray(ItemType.EARS, "$Costume_2_", { itemClassToClassMap:"OreilleD_1" });
+			mouth = _setupCostumeArray(ItemType.MOUTH, "$Costume_3_", { itemClassToClassMap:"Tete_1" });
+			neck = _setupCostumeArray(ItemType.NECK, "$Costume_4_", { itemClassToClassMap:"Tete_1" });
+			hair = _setupCostumeArray(ItemType.HAIR, "$Costume_5_", { itemClassToClassMap:"Tete_1" });
+			tail = _setupCostumeArray(ItemType.TAIL, "$Costume_6_", { itemClassToClassMap:"Boule_1" });
+			contacts = _setupCostumeArray(ItemType.CONTACTS, "$Costume_7_", { itemClassToClassMap:["Oeil_1", "OeilVide_1"] });
+			hands = _setupCostumeArray(ItemType.HAND, "$Costume_8_", { itemClassToClassMap:"Gant_1" });
 
-			extraObjectWand = new ItemData({ type:ITEM.OBJECT, itemClass:Fewf.assets.getLoadedClass("$Costume_9_1") });
+			extraObjectWand = new ItemData(ItemType.OBJECT, null, { itemClass:Fewf.assets.getLoadedClass("$Costume_9_1") });
 			extraObjectWand.classMap = { Arme_1:extraObjectWand.itemClass };
-			extraBackHand = new ItemData({ type:ITEM.PAW_BACK, itemClass:$HandButtonShield });
+			extraBackHand = new ItemData(ItemType.PAW_BACK, null, { itemClass:$HandButtonShield });
 			extraBackHand.classMap = { PatteG_1:extraBackHand.itemClass };
-			extraFromage = new ItemData({ type:ITEM.BACK, itemClass:Fewf.assets.getLoadedClass("FromageSouris") });
+			extraFromage = new ItemData(ItemType.BACK, null, { itemClass:Fewf.assets.getLoadedClass("FromageSouris") });
 			extraFromage.classMap = { ClipGrosse:extraFromage.itemClass };
 			
 			accessorySlotBones = new Vector.< Vector.<String> >();
@@ -79,10 +80,10 @@ package app.data
 			skins = new Array();
 			
 			for(i = 0; i < FUR_COLORS.length; i++) {
-				skins.push( new SkinData({ id:"color"+i, assetID:1, color:FUR_COLORS[i], type:ITEM.SKIN_COLOR }) );
+				skins.push( new SkinData({ id:"color"+i, assetID:1, color:FUR_COLORS[i], isSkinColor:true }) );
 			}
 			
-			skins.push( new SkinData({ id:1, assetID:1, color:0x78583A, type:ITEM.SKIN }) );
+			skins.push( new SkinData({ id:1, assetID:1, color:DEFAULT_FUR_COLOR, type:ItemType.SKIN }) );
 			for(i = 2; i < _MAX_COSTUMES_TO_CHECK_TO; i++) {
 				if(Fewf.assets.getLoadedClass( "_Corps_2_"+i+"_1" ) != null) {
 					skins.push( new SkinData({ id:i }) );
@@ -111,26 +112,26 @@ package app.data
 			];
 			// Unused: Calin,
 			for(i = 0; i < tPoseClasses.length; i++) {
-				poses.push(new ItemData({ id:tPoseClasses[i], type:ITEM.POSE, itemClass:Fewf.assets.getLoadedClass( "Anim"+tPoseClasses[i] ) }));
+				poses.push(new ItemData(ItemType.POSE, tPoseClasses[i], { itemClass:Fewf.assets.getLoadedClass( "Anim"+tPoseClasses[i] ) }));
 			}
 			defaultPoseIndex = 0;//FewfUtils.getIndexFromArrayWithKeyVal(poses, "id", ConstantsApp.DEFAULT_POSE_ID);
 		}
 
 		// pData = { after:String, pad:int, itemClassToClassMap:String OR Array }
-		private static function _setupCostumeArray(type:String, base:String, pData:Object) : Array {
+		private static function _setupCostumeArray(type:ItemType, base:String, pData:Object) : Array {
 			var tArray:Array = new Array(), tClassName:String, tClass:Class;
 			var breakCount = 0; // quit early if enough nulls in a row
 			
 			for(var i = 0; i <= _MAX_COSTUMES_TO_CHECK_TO; i++) {
 				// hardcoded skip for duplicate items in game files - TODO: add values to config maybe?
-				if(i == 85 && type == ITEM.MOUTH) {
+				if(i == 85 && type == ItemType.MOUTH) {
 					continue;
 				}
 				
 				tClass = Fewf.assets.getLoadedClass( base+(pData.pad ? zeroPad(i, pData.pad) : i)+(pData.after ? pData.after : "") );
 				if(tClass != null) {
 					breakCount = 0;
-					tArray.push( new ItemData({ id:i, type:type, itemClass:tClass}) );
+					tArray.push( new ItemData(type, i, { itemClass:tClass }) );
 					if(pData.itemClassToClassMap) {
 						tArray[tArray.length-1].classMap = {};
 						if(pData.itemClassToClassMap is Array) {
@@ -158,26 +159,26 @@ package app.data
 			return ret;
 		}
 
-		public static function getArrayByType(pType:String) : Array {
+		public static function getArrayByType(pType:ItemType) : Array {
 			switch(pType) {
-				case ITEM.HAIR:		return hair;
-				case ITEM.HAT:		return head;
-				case ITEM.EARS:		return ears;
-				case ITEM.EYES:		return eyes;
-				case ITEM.MOUTH:	return mouth;
-				case ITEM.NECK:		return neck;
-				case ITEM.TAIL:		return tail;
-				case ITEM.CONTACTS:	return contacts;
-				case ITEM.HAND:		return hands;
-				case ITEM.SKIN_COLOR:
-				case ITEM.SKIN:		return skins;
-				case ITEM.POSE:		return poses;
+				case ItemType.HAIR:		return hair;
+				case ItemType.HEAD:		return head;
+				case ItemType.EARS:		return ears;
+				case ItemType.EYES:		return eyes;
+				case ItemType.MOUTH:	return mouth;
+				case ItemType.NECK:		return neck;
+				case ItemType.TAIL:		return tail;
+				case ItemType.CONTACTS:	return contacts;
+				case ItemType.HAND:		return hands;
+				case ItemType.SKIN_COLOR:
+				case ItemType.SKIN:		return skins;
+				case ItemType.POSE:		return poses;
 				default: trace("[GameAssets](getArrayByType) Unknown type: "+pType);
 			}
 			return null;
 		}
 
-		public static function getItemFromTypeID(pType:String, pID:String) : ItemData {
+		public static function getItemFromTypeID(pType:ItemType, pID:String) : ItemData {
 			return FewfUtils.getFromArrayWithKeyVal(getArrayByType(pType), "id", pID);
 		}
 
@@ -325,16 +326,16 @@ package app.data
 		public static function getItemImage(pData:ItemData) : MovieClip {
 			var tItem:MovieClip;
 			switch(pData.type) {
-				case ITEM.SKIN:
-				case ITEM.SKIN_COLOR:
+				case ItemType.SKIN:
+				case ItemType.SKIN_COLOR:
 					tItem = getDefaultPoseSetup({ skin:pData });
 					break;
-				case ITEM.POSE:
+				case ItemType.POSE:
 					tItem = getDefaultPoseSetup({ pose:pData });
 					break;
-				/*case ITEM.SHIRT:
-				case ITEM.PANTS:
-				case ITEM.SHOES:
+				/*case ItemType.SHIRT:
+				case ItemType.PANTS:
+				case ItemType.SHOES:
 					tItem = new Pose(poses[defaultPoseIndex]).apply([ pData ], ShamanMode.OFF, true);
 					break;*/
 				default:

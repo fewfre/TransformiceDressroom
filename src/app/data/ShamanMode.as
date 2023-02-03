@@ -7,6 +7,7 @@ package app.data
 		public static const HARD			: ShamanMode = new ShamanMode(3);
 		public static const DIVINE			: ShamanMode = new ShamanMode(4);
 		
+		// Enum Storage + Constructor
 		private var _value: int;
 		function ShamanMode(pValue:int) { _value = pValue; }
 		
@@ -21,7 +22,7 @@ package app.data
 			return OFF;
 		}
 		
-		// This is required for proper auto string convertion on `trace` and such - enums should always have
+		// This is required for proper auto string convertion on `trace`/`Dictionary` and such - enums should always have
 		public function toString() : String { return _value.toString(); }
 	}
 }

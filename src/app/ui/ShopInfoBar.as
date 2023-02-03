@@ -214,7 +214,7 @@ package app.ui
 		
 		private function _updateID() : void {
 			var tText = data.id;
-			if(data.type == ITEM.POSE) {
+			if(data.type == ItemType.POSE) {
 				tText = Fewf.i18n.getText(("pose_"+data.id).toLowerCase());
 				if(tText == null) { tText = data.id; }
 			}
@@ -224,7 +224,7 @@ package app.ui
 		public function addInfo(pData:ItemData, pMC:MovieClip) : void {
 			if(pData == null) { return; }
 			data = pData;
-			if(data.type == ITEM.POSE || data.type == ITEM.SKIN) {
+			if(data.type == ItemType.POSE || data.type == ItemType.SKIN) {
 				pMC.scaleX = pMC.scaleY = 1;
 			}
 			ChangeImage(pMC);
@@ -254,7 +254,7 @@ package app.ui
 			if(!data) { return; }
 			var tName = "shop-"+data.type+data.id;
 			var tScale = ConstantsApp.ITEM_SAVE_SCALE;
-			if(data.type == ITEM.CONTACTS) { tScale *= 2; }
+			if(data.type == ItemType.CONTACTS) { tScale *= 2; }
 			FewfDisplayUtils.saveAsPNG(GameAssets.getColoredItemImage(data), tName, tScale);
 		}
 	}

@@ -3,7 +3,6 @@
 - kill apple (aka, try to make a new build that doesn't freaking get flagged as a virus no matter what I do)
 
 - Signal vs events: // https://github.com/creynders/as3-signals
-- Enums rework: https://www.liranuna.com/typesafe-assignable-enumerations-in-as3/
 - Array -> Vector
 
 

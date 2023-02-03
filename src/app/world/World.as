@@ -44,16 +44,16 @@ package app.world
 		internal var button_back	: PushButton;
 		internal var button_backHand: PushButton;
 
-		internal var currentlyColoringType:String="";
+		internal var currentlyColoringType:ItemType=null;
 		internal var configCurrentlyColoringType:String;
 		
 		// Constants
-		public static const COLOR_PANE_ID = "colorPane";
+		public static const COLOR_PANE_ID:String = "colorPane";
 		public static const TAB_OTHER:String = "other";
 		public static const TAB_CONFIG:String = "config";
 		public static const TAB_OUTFITS:String = "outfits";
-		public static const CONFIG_COLOR_PANE_ID = "configColorPane";
-		public static const COLOR_FINDER_PANE_ID = "colorFinderPane";
+		public static const CONFIG_COLOR_PANE_ID:String = "configColorPane";
+		public static const COLOR_FINDER_PANE_ID:String = "colorFinderPane";
 		
 		// Constructor
 		public function World(pStage:Stage) {
@@ -95,17 +95,17 @@ package app.world
 			_paneManager = tShop.addChild(new PaneManager()) as PaneManager;
 			
 			var tabs:Array = [
-				{ text:"tab_furs", event:ITEM.SKIN },
-				{ text:"tab_head", event:ITEM.HAT },
-				{ text:"tab_ears", event:ITEM.EARS },
-				{ text:"tab_eyes", event:ITEM.EYES },
-				{ text:"tab_mouth", event:ITEM.MOUTH },
-				{ text:"tab_neck", event:ITEM.NECK },
-				{ text:"tab_tail", event:ITEM.TAIL },
-				{ text:"tab_hair", event:ITEM.HAIR },
-				{ text:"tab_contacts", event:ITEM.CONTACTS },
-				{ text:"tab_hand", event:ITEM.HAND },
-				{ text:"tab_poses", event:ITEM.POSE },
+				{ text:"tab_furs", event:ItemType.SKIN.toString() },
+				{ text:"tab_head", event:ItemType.HEAD.toString() },
+				{ text:"tab_ears", event:ItemType.EARS.toString() },
+				{ text:"tab_eyes", event:ItemType.EYES.toString() },
+				{ text:"tab_mouth", event:ItemType.MOUTH.toString() },
+				{ text:"tab_neck", event:ItemType.NECK.toString() },
+				{ text:"tab_tail", event:ItemType.TAIL.toString() },
+				{ text:"tab_hair", event:ItemType.HAIR.toString() },
+				{ text:"tab_contacts", event:ItemType.CONTACTS.toString() },
+				{ text:"tab_hand", event:ItemType.HAND.toString() },
+				{ text:"tab_poses", event:ItemType.POSE.toString() },
 				{ text:"tab_other", event:TAB_OTHER }
 			];
 			if(ConstantsApp.CONFIG_TAB_ENABLED) {
@@ -157,9 +157,9 @@ package app.world
 			});
 
 			// Create the panes
-			var tTypes = [ ITEM.HAT, ITEM.HAIR, ITEM.EARS, ITEM.EYES, ITEM.MOUTH, ITEM.NECK, ITEM.TAIL, ITEM.HAND, ITEM.CONTACTS, ITEM.SKIN, ITEM.POSE ], tData:ItemData, tType:String;
+			var tTypes:Vector.<ItemType> = new <ItemType>[ ItemType.HEAD, ItemType.HAIR, ItemType.EARS, ItemType.EYES, ItemType.MOUTH, ItemType.NECK, ItemType.TAIL, ItemType.HAND, ItemType.CONTACTS, ItemType.SKIN, ItemType.POSE ], tData:ItemData, tType:ItemType;
 			for(var i:int = 0; i < tTypes.length; i++) { tType = tTypes[i];
-				tPane = _paneManager.addPane(tType, _setupPane(tType));
+				tPane = _paneManager.addPane(tType.toString(), _setupPane(tType));
 				// Based on what the character is wearing at start, toggle on the appropriate buttons.
 				tData = character.getItemData(tType);
 				if(tData) {
@@ -167,7 +167,7 @@ package app.world
 					tPane.buttons[ tIndex ].toggleOn();
 				}
 			}
-			_paneManager.addPane(ITEM.SKIN_COLOR, _paneManager.getPane(ITEM.SKIN));
+			_paneManager.addPane(ItemType.SKIN_COLOR.toString(), _paneManager.getPane(ItemType.SKIN.toString()));
 			
 			/****************************
 			* Config Pane
@@ -182,14 +182,15 @@ package app.world
 			/****************************
 			* Other Pane
 			*****************************/
-			tPane = _paneManager.addPane(TAB_OTHER, new OtherTabPane(character));
-			tPane.button_hand.addEventListener(PushButton.STATE_CHANGED_AFTER, this.buttonHandClickAfter);
-			tPane.button_back.addEventListener(PushButton.STATE_CHANGED_AFTER, this.buttonBackClickAfter);
-			tPane.button_backHand.addEventListener(PushButton.STATE_CHANGED_AFTER, this.buttonBackHandClickAfter);
-			tPane.shamanColorPickerButton.addEventListener(ButtonBase.CLICK, function(pEvent:Event){ _shamanColorButtonClicked(); });
-			tPane.shamanColorBlueButton.addEventListener(ButtonBase.CLICK, function(pEvent:Event){ _setConfigShamanColor(0x95D9D6); });
-			tPane.shamanColorPinkButton.addEventListener(ButtonBase.CLICK, function(pEvent:Event){ _setConfigShamanColor(0xFCA6F1); });
-			tPane.outfitsButton.addEventListener(ButtonBase.CLICK, function(pEvent:Event){ _paneManager.openPane(TAB_OUTFITS); });
+			var tPaneOther:OtherTabPane = _paneManager.addPane(TAB_OTHER, new OtherTabPane(character)) as OtherTabPane;
+			tPaneOther.button_hand.addEventListener(PushButton.STATE_CHANGED_AFTER, this.buttonHandClickAfter);
+			tPaneOther.button_back.addEventListener(PushButton.STATE_CHANGED_AFTER, this.buttonBackClickAfter);
+			tPaneOther.button_backHand.addEventListener(PushButton.STATE_CHANGED_AFTER, this.buttonBackHandClickAfter);
+			tPaneOther.shamanColorPickerButton.addEventListener(ButtonBase.CLICK, function(pEvent:Event){ _shamanColorButtonClicked(); });
+			tPaneOther.shamanColorBlueButton.addEventListener(ButtonBase.CLICK, function(pEvent:Event){ _setConfigShamanColor(0x95D9D6); });
+			tPaneOther.shamanColorPinkButton.addEventListener(ButtonBase.CLICK, function(pEvent:Event){ _setConfigShamanColor(0xFCA6F1); });
+			tPaneOther.outfitsButton.addEventListener(ButtonBase.CLICK, function(pEvent:Event){ _paneManager.openPane(TAB_OUTFITS); });
+			tPaneOther = null;
 			
 			// Outfit Pane
 			tPane = _paneManager.addPane(TAB_OUTFITS, new OutfitManagerTabPane(character, _useShareCode));
@@ -220,7 +221,7 @@ package app.world
 			tData = null;
 		}
 
-		private function _setupPane(pType:String) : TabPane {
+		private function _setupPane(pType:ItemType) : TabPane {
 			var tPane:ShopCategoryPane = new ShopCategoryPane(pType);
 			tPane.addEventListener(ShopCategoryPane.ITEM_TOGGLED, _onItemToggled);
 			tPane.addEventListener(ShopCategoryPane.DEFAULT_SKIN_COLOR_BTN_CLICKED, function(){ _colorButtonClicked(pType); });
@@ -300,8 +301,8 @@ package app.world
 			
 			// First remove old stuff to prevent conflicts
 			GameAssets.shamanMode = ShamanMode.OFF;
-			for each(var tItem in ITEM.LAYERING) { _removeItem(tItem); }
-			_removeItem(ITEM.POSE);
+			for each(var tItem in ItemType.LAYERING) { _removeItem(tItem); }
+			_removeItem(ItemType.POSE);
 			
 			// Now update pose
 			character.parseParams(pCode);
@@ -309,7 +310,7 @@ package app.world
 			
 			// now update the infobars
 			_updateUIBasedOnCharacter();
-			(getTabByType(TAB_OTHER) as OtherTabPane).updateButtonsBasedOnCurrentData();
+			(_paneManager.getPane(TAB_OTHER) as OtherTabPane).updateButtonsBasedOnCurrentData();
 		}
 
 		private function _onPlayerAnimationToggle(pEvent:Event):void {
@@ -335,7 +336,7 @@ package app.world
 				character.outfit.pose.gotoAndPlay(0);
 				character.outfit.pose.stop();
 				var downloadFrame = function(){
-					var fileRef = GameAssets.saveAsPNGFrameByFrameVersion(character, "frame_"+character.getItemData(ITEM.POSE).id+"_"+character.outfit.poseCurrentFrame);
+					var fileRef = GameAssets.saveAsPNGFrameByFrameVersion(character, "frame_"+character.getItemData(ItemType.POSE).id+"_"+character.outfit.poseCurrentFrame);
 					fileRef.addEventListener("complete", function(e){
 						if(character.outfit.poseCurrentFrame >= character.outfit.poseTotalFrames) { return; }
 						character.outfit.poseNextFrame();
@@ -357,8 +358,8 @@ package app.world
 		// Note: does not automatically de-select previous buttons / infobars; do that before calling this
 		// This function is required when setting data via parseParams
 		private function _updateUIBasedOnCharacter() : void {
-			var tPane:TabPane, tData:ItemData, tType:String;
-			var tTypes = [ ITEM.HAT, ITEM.HAIR, ITEM.EARS, ITEM.EYES, ITEM.MOUTH, ITEM.NECK, ITEM.TAIL, ITEM.HAND, ITEM.CONTACTS, ITEM.SKIN, ITEM.POSE ], tData:ItemData, tType:String;
+			var tPane:TabPane, tData:ItemData, tType:ItemType;
+			var tTypes:Vector.<ItemType> = new <ItemType>[ ItemType.HEAD, ItemType.HAIR, ItemType.EARS, ItemType.EYES, ItemType.MOUTH, ItemType.NECK, ItemType.TAIL, ItemType.HAND, ItemType.CONTACTS, ItemType.SKIN, ItemType.POSE ];
 			for(var i:int = 0; i < tTypes.length; i++) { tType = tTypes[i];
 				tPane = getTabByType(tType);
 				
@@ -400,18 +401,18 @@ package app.world
 		}
 
 		public function buttonHandClickAfter(pEvent:Event):void {
-			toggleItemSelectionOneOff(ITEM.OBJECT, pEvent.target as PushButton, GameAssets.extraObjectWand);
+			toggleItemSelectionOneOff(ItemType.OBJECT, pEvent.target as PushButton, GameAssets.extraObjectWand);
 		}
 
 		public function buttonBackClickAfter(pEvent:Event):void {
-			toggleItemSelectionOneOff(ITEM.BACK, pEvent.target as PushButton, GameAssets.extraFromage);
+			toggleItemSelectionOneOff(ItemType.BACK, pEvent.target as PushButton, GameAssets.extraFromage);
 		}
 
 		public function buttonBackHandClickAfter(pEvent:Event):void {
-			toggleItemSelectionOneOff(ITEM.PAW_BACK, pEvent.target as PushButton, GameAssets.extraBackHand);
+			toggleItemSelectionOneOff(ItemType.PAW_BACK, pEvent.target as PushButton, GameAssets.extraBackHand);
 		}
 
-		private function toggleItemSelectionOneOff(pType:String, pButton:PushButton, pItemData:ItemData) : void {
+		private function toggleItemSelectionOneOff(pType:ItemType, pButton:PushButton, pItemData:ItemData) : void {
 			if (pButton.pushed) {
 				this.character.setItemData( pItemData );
 			} else {
@@ -419,16 +420,16 @@ package app.world
 			}
 		}
 
-		private function _removeItem(pType:String) : void {
-			if(pType == ITEM.BACK || pType == ITEM.PAW_BACK || pType == ITEM.OBJECT) {
+		private function _removeItem(pType:ItemType) : void {
+			if(pType == ItemType.BACK || pType == ItemType.PAW_BACK || pType == ItemType.OBJECT) {
 				this.character.removeItem(pType);
 			}
 			var tTabPane = getTabByType(pType);
 			if(!tTabPane || tTabPane.infoBar.hasData == false) { return; }
 
 			// If item has a default value, toggle it on. otherwise remove item.
-			if(pType == ITEM.SKIN || pType == ITEM.POSE) {
-				var tDefaultIndex = (pType == ITEM.POSE ? GameAssets.defaultPoseIndex : GameAssets.defaultSkinIndex);
+			if(pType == ItemType.SKIN || pType == ItemType.POSE) {
+				var tDefaultIndex = (pType == ItemType.POSE ? GameAssets.defaultPoseIndex : GameAssets.defaultSkinIndex);
 				tTabPane.buttons[tDefaultIndex].toggleOn();
 			} else {
 				this.character.removeItem(pType);
@@ -437,20 +438,20 @@ package app.world
 			}
 		}
 		
-		private function _onTabClicked(pEvent:flash.events.DataEvent) : void {
-			_paneManager.openPane(pEvent.data);
+		private function _onTabClicked(pEvent:FewfEvent) : void {
+			_paneManager.openPane(pEvent.data.toString());
 		}
 
 		private function _onRandomizeDesignClicked(pEvent:Event) : void {
-			for each(var tItem in ITEM.LAYERING) {
-				if(tItem == ITEM.OBJECT || tItem == ITEM.BACK || tItem == ITEM.PAW_BACK || tItem == ITEM.SKIN_COLOR) continue;
+			for each(var tItem in ItemType.LAYERING) {
+				if(tItem == ItemType.OBJECT || tItem == ItemType.BACK || tItem == ItemType.PAW_BACK || tItem == ItemType.SKIN_COLOR) continue;
 				_randomItemOfType(tItem, Math.random() <= 0.65);
 			}
-			_randomItemOfType(ITEM.POSE, Math.random() <= 0.5);
-			(getTabByType(TAB_OTHER) as OtherTabPane).updateButtonsBasedOnCurrentData();
+			_randomItemOfType(ItemType.POSE, Math.random() <= 0.5);
+			(_paneManager.getPane(TAB_OTHER) as OtherTabPane).updateButtonsBasedOnCurrentData();
 		}
 
-		private function _randomItemOfType(pType:String, pSetToDefault:Boolean=false) : void {
+		private function _randomItemOfType(pType:ItemType, pSetToDefault:Boolean=false) : void {
 			var pane:TabPane = getTabByType(pType);
 			if(pane.infoBar.isRefreshLocked) { return; }
 			
@@ -462,10 +463,10 @@ package app.world
 			} else {
 				_removeItem(pType);
 				// Set to default values for required types
-				if(pType == ITEM.SKIN || pType == ITEM.SKIN_COLOR) {
+				if(pType == ItemType.SKIN || pType == ItemType.SKIN_COLOR) {
 					if(pane.flagOpen) pane.scrollItemIntoView(pane.buttons[GameAssets.defaultSkinIndex]);
 				}
-				else if(pType == ITEM.POSE) {
+				else if(pType == ItemType.POSE) {
 					if(pane.flagOpen) pane.scrollItemIntoView(pane.buttons[GameAssets.defaultPoseIndex]);
 				}
 			}
@@ -505,9 +506,9 @@ package app.world
 		private function _onTrashConfirmScreenConfirm(pEvent:Event) : void {
 			removeChild(trashConfirmScreen);
 			GameAssets.shamanMode = ShamanMode.OFF;
-			for each(var tItem in ITEM.LAYERING) { _removeItem(tItem); }
-			_removeItem(ITEM.POSE);
-			(getTabByType(TAB_OTHER) as OtherTabPane).updateButtonsBasedOnCurrentData();
+			for each(var tItem in ItemType.LAYERING) { _removeItem(tItem); }
+			_removeItem(ItemType.POSE);
+			(_paneManager.getPane(TAB_OTHER) as OtherTabPane).updateButtonsBasedOnCurrentData();
 		}
 
 		private function _onTrashConfirmScreenClosed(pEvent:Event) : void {
@@ -524,23 +525,23 @@ package app.world
 		}
 
 		//{REGION Get TabPane data
-			private function getTabByType(pType:String) : TabPane {
-				return _paneManager.getPane(pType);
+			private function getTabByType(pType:ItemType) : TabPane {
+				return _paneManager.getPane(pType.toString());
 			}
 
-			private function getInfoBarByType(pType:String) : ShopInfoBar {
+			private function getInfoBarByType(pType:ItemType) : ShopInfoBar {
 				return getTabByType(pType).infoBar;
 			}
 
-			private function getButtonArrayByType(pType:String) : Array {
+			private function getButtonArrayByType(pType:ItemType) : Array {
 				return getTabByType(pType).buttons;
 			}
 
-			private function getCurItemID(pType:String) : int {
+			private function getCurItemID(pType:ItemType) : int {
 				return getTabByType(pType).selectedButtonIndex;
 			}
 
-			private function setCurItemID(pType:String, pID:int) : void {
+			private function setCurItemID(pType:ItemType, pID:int) : void {
 				getTabByType(pType).selectedButtonIndex = pID;
 			}
 		//}END Get TabPane data
@@ -574,11 +575,11 @@ package app.world
 				_refreshSelectedItemColor(this.currentlyColoringType);
 			}
 			
-			private function _refreshSelectedItemColor(pType:String) : void {
+			private function _refreshSelectedItemColor(pType:ItemType) : void {
 				character.updatePose();
 				
 				var tItemData = this.character.getItemData(pType);
-				if(pType != ITEM.SKIN) {
+				if(pType != ItemType.SKIN) {
 					var tItem:MovieClip = GameAssets.getColoredItemImage(tItemData);
 					GameAssets.copyColor(tItem, getButtonArrayByType(pType)[ getCurItemID(pType) ].Image );
 					GameAssets.copyColor(tItem, getInfoBarByType( pType ).Image );
@@ -609,7 +610,7 @@ package app.world
 				pOldSource.Image = pNew;
 			}
 
-			private function _colorButtonClicked(pType:String) : void {
+			private function _colorButtonClicked(pType:ItemType) : void {
 				if(this.character.getItemData(pType) == null) { return; }
 
 				var tData:ItemData = getInfoBarByType(pType).data;
@@ -621,10 +622,10 @@ package app.world
 			}
 
 			private function _onColorPickerBackClicked(pEvent:Event):void {
-				_paneManager.openPane(_paneManager.getPane(COLOR_PANE_ID).infoBar.data.type);
+				_paneManager.openPane(_paneManager.getPane(COLOR_PANE_ID).infoBar.data.type.toString());
 			}
 
-			private function _eyeDropButtonClicked(pType:String) : void {
+			private function _eyeDropButtonClicked(pType:ItemType) : void {
 				if(this.character.getItemData(pType) == null) { return; }
 
 				var tData:ItemData = getInfoBarByType(pType).data;
@@ -637,7 +638,7 @@ package app.world
 			}
 
 			private function _onColorFinderBackClicked(pEvent:Event):void {
-				_paneManager.openPane(_paneManager.getPane(COLOR_FINDER_PANE_ID).infoBar.data.type);
+				_paneManager.openPane(_paneManager.getPane(COLOR_FINDER_PANE_ID).infoBar.data.type.toString());
 			}
 
 			private function _onConfigColorPickChanged(pEvent:flash.events.DataEvent):void

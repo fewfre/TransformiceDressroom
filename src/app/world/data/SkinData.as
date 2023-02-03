@@ -11,9 +11,9 @@ package app.world.data
 		// Storage
 		private var _assetID : String;
 		
-		// pData = { id:String, ?type:String, ?color:int, ?assetID:String }
+		// pData = { id:String, ?isSkinColor:Boolean, ?color:int, ?assetID:String }
 		public function SkinData(pData:Object) {
-			super({ id:pData.id, type:pData.type == null ? ITEM.SKIN : pData.type });
+			super(pData.isSkinColor ? ItemType.SKIN_COLOR : ItemType.SKIN, pData.id, {});
 			_assetID = pData.assetID != null ? pData.assetID : id;
 			if(pData.color) {
 				defaultColors = [ pData.color ];
