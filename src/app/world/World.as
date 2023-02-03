@@ -221,14 +221,14 @@ package app.world
 		}
 
 		private function _setupPane(pType:String) : TabPane {
-			var tPane:TabPane = new TabPane();
-			tPane.addInfoBar( new ShopInfoBar({ showEyeDropButton:pType!=ITEM.POSE, showGridManagementButtons:true }) );
-			_setupPaneButtons(pType, tPane, GameAssets.getArrayByType(pType));
+			var tPane:ShopCategoryPane = new ShopCategoryPane(pType);
+			tPane.addEventListener(ShopCategoryPane.ITEM_TOGGLED, _onItemToggled);
+			tPane.addEventListener(ShopCategoryPane.DEFAULT_SKIN_COLOR_BTN_CLICKED, function(){ _colorButtonClicked(pType); });
+			
 			tPane.infoBar.colorWheel.addEventListener(ButtonBase.CLICK, function(){ _colorButtonClicked(pType); });
 			tPane.infoBar.removeItemOverlay.addEventListener(MouseEvent.CLICK, function(){ _removeItem(pType); });
 			// Grid Management Events
 			tPane.infoBar.randomizeButton.addEventListener(ButtonBase.CLICK, function(){ _randomItemOfType(pType); });
-			tPane.infoBar.reverseButton.addEventListener(ButtonBase.CLICK, function(){ _reverseGrid(pType); });
 			tPane.infoBar.rightItemButton.addEventListener(ButtonBase.CLICK, function(){ _traversePaneButtonGrid(tPane, true); });
 			tPane.infoBar.leftItemButton.addEventListener(ButtonBase.CLICK, function(){ _traversePaneButtonGrid(tPane, false); });
 			// Misc
@@ -236,50 +236,6 @@ package app.world
 				tPane.infoBar.eyeDropButton.addEventListener(ButtonBase.CLICK, function(){ _eyeDropButtonClicked(pType); });
 			}
 			return tPane;
-		}
-
-		private function _setupPaneButtons(pType:String, pPane:TabPane, pItemArray:Array) : void {
-			var buttonPerRow = 6;
-			var scale = 1;
-			if(pType == ITEM.SKIN || pType == ITEM.POSE) {
-					buttonPerRow = 5;
-					scale = 1;
-			}
-
-			var grid:Grid = pPane.grid;
-			if(!grid) { grid = pPane.addGrid( new Grid({ x:15, y:5, width:385, columns:buttonPerRow, margin:5 }) ); }
-			grid.reset();
-
-			var shopItem : MovieClip;
-			var shopItemButton : PushButton;
-			var i = -1;
-			while (i < pItemArray.length-1) { i++;
-				shopItem = GameAssets.getItemImage(pItemArray[i]);
-				shopItem.scaleX = shopItem.scaleY = scale;
-
-				shopItemButton = new PushButton({ width:grid.radius, height:grid.radius, obj:shopItem, id:i, data:{ type:pType, id:i } });
-				grid.add(shopItemButton);
-				pPane.buttons.push(shopItemButton);
-				shopItemButton.addEventListener(PushButton.STATE_CHANGED_AFTER, _onItemToggled);
-			}
-			if(pType !== ITEM.POSE) {
-				grid.reverse();
-				_addDefaultSkinColorButtonIfSkinPane(pPane, pType);
-			}
-			pPane.UpdatePane();
-		}
-		
-		private function _addDefaultSkinColorButtonIfSkinPane(pPane:TabPane, pType:String) {
-			// Customizeable fur color button
-			// cannot attach to button due to main button eating mouse events
-			if(pType == ITEM.SKIN) {
-				var tSkinButton = pPane.buttons[GameAssets.defaultSkinIndex];
-				var tColorWheel = tSkinButton.parent.addChild(new ScaleButton({ x:tSkinButton.x + 60, y:tSkinButton.y + 12, obj:new $ColorWheel(), obj_scale:0.5 }));
-				tColorWheel.addEventListener(ButtonBase.CLICK, function(){
-					tSkinButton.toggleOn();
-					_colorButtonClicked(pType);
-				});
-			}
 		}
 
 		private function _onMouseWheel(pEvent:MouseEvent) : void {
@@ -495,31 +451,24 @@ package app.world
 		}
 
 		private function _randomItemOfType(pType:String, pSetToDefault:Boolean=false) : void {
-			if(getInfoBarByType(pType).isRefreshLocked) { return; }
+			var pane:TabPane = getTabByType(pType);
+			if(pane.infoBar.isRefreshLocked) { return; }
+			
 			if(!pSetToDefault) {
-				var tButtons = getButtonArrayByType(pType);
-				var tLength = tButtons.length;
-				var btn = tButtons[ Math.floor(Math.random() * tLength) ];
+				var tLength = pane.buttons.length;
+				var btn = pane.buttons[ Math.floor(Math.random() * tLength) ];
 				btn.toggleOn();
-				var pane:TabPane = getTabByType(pType);
 				if(pane.flagOpen) pane.scrollItemIntoView(btn);
 			} else {
 				_removeItem(pType);
+				// Set to default values for required types
 				if(pType == ITEM.SKIN || pType == ITEM.SKIN_COLOR) {
-					var pane:TabPane = getTabByType(pType);
 					if(pane.flagOpen) pane.scrollItemIntoView(pane.buttons[GameAssets.defaultSkinIndex]);
 				}
 				else if(pType == ITEM.POSE) {
-					var pane:TabPane = getTabByType(pType);
 					if(pane.flagOpen) pane.scrollItemIntoView(pane.buttons[GameAssets.defaultPoseIndex]);
 				}
 			}
-		}
-		
-		private function _reverseGrid(pType:String) : void {
-			var tPane = getTabByType(pType);
-			tPane.grid.reverse();
-			_addDefaultSkinColorButtonIfSkinPane(tPane, pType);
 		}
 		
 		private function _onShareButtonClicked(pEvent:Event) : void {
