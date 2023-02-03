@@ -11,7 +11,7 @@ package app.world.elements
 	public class Character extends Sprite
 	{
 		// Storage
-		public var outfit:MovieClip;
+		public var outfit:Pose;
 		public var animatePose:Boolean;
 		public var isOutfit:Boolean;
 
@@ -68,8 +68,7 @@ package app.world.elements
 			outfit.mouseChildren = false;
 			outfit.mouseEnabled = false;
 
-			outfit.apply({
-				items:[
+			outfit.apply([
 					getItemData(ITEM.SKIN),
 					getItemData(ITEM.HAT),
 					getItemData(ITEM.HAIR),
@@ -85,8 +84,8 @@ package app.world.elements
 					getItemData(ITEM.BACK),
 					getItemData(ITEM.PAW_BACK)
 				],
-				shamanMode: isOutfit ? SHAMAN_MODE.OFF : null // null sets it to use global value
-			});
+				isOutfit ? ShamanMode.OFF : GameAssets.shamanMode
+			);
 			if(animatePose) outfit.play(); else outfit.stopAtLastFrame();
 		}
 
@@ -117,7 +116,7 @@ package app.world.elements
 					
 					if(pParams["sh"] && pParams["sh"] != "") {
 						var tColor = _splitOnUrlColorSeperator(pParams["sh"]);
-						GameAssets.shamanMode = parseInt(tColor.splice(0, 1)[0]);
+						GameAssets.shamanMode = ShamanMode.fromInt( parseInt(tColor.splice(0, 1)[0]) );
 						if(tColor.length > 0) {
 							GameAssets.shamanColor = _hexToInt(tColor[0]);
 						}
@@ -210,8 +209,8 @@ package app.world.elements
 			if(getItemData(ITEM.BACK)) { tParms.back = "y"; }
 			if(getItemData(ITEM.PAW_BACK)) { tParms.pawb = "y"; }
 			
-			if(GameAssets.shamanMode != SHAMAN_MODE.OFF) {
-				tParms["sh"] = GameAssets.shamanMode+";"+_intToHex(GameAssets.shamanColor);
+			if(GameAssets.shamanMode != ShamanMode.OFF) {
+				tParms["sh"] = GameAssets.shamanMode.toInt()+";"+_intToHex(GameAssets.shamanColor);
 			}
 
 			return tParms.toString().replace(/%3B/g, ";");

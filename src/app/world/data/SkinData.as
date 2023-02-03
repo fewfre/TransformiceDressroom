@@ -58,19 +58,20 @@ package app.world.data
 			return new SkinData({ assetID:_assetID, id:id, type:type, color:defaultColors ? defaultColors[0] : null, itemClass:itemClass, classMap:classMap });
 		}
 		
-		// pOptions = { shamanMode:int(SHAMAN_MODE) }
+		// pOptions = { shamanMode:ShamanMode }
 		public override function getPart(pID:String, pOptions:Object=null) : Class {
-			var shamanMode = GameAssets.shamanMode;
+			var shamanMode:ShamanMode = GameAssets.shamanMode;
 			if(pOptions != null) {
 				if(pOptions.shamanMode) { shamanMode = pOptions.shamanMode; }
 			}
-			if(shamanMode == SHAMAN_MODE.DIVINE) {
-				shamanMode--; // saves each piece having to decrement one recursevly.
+			if(shamanMode == ShamanMode.DIVINE) {
+				shamanMode = ShamanMode.HARD; // Divine uses the same setup as hard, so just switch to hard
 			}
-			var mcName = "_"+pID+"_"+_assetID+"_"+shamanMode;
+			var mcName = "_"+pID+"_"+_assetID+"_"+shamanMode.toInt();
 			var tClass = _assetID == 1 ? getDefaultSkinPart(mcName) : Fewf.assets.getLoadedClass(mcName);
 			// trace("_"+pID+"_"+_assetID+"_"+shamanMode+" - "+tClass);
-			return tClass == null && shamanMode > SHAMAN_MODE.NORMAL ? getPart(pID, { shamanMode:shamanMode-1 }) : tClass;
+			// recursively decrease shaman mode until valid part is found
+			return tClass == null && shamanMode.toInt() > ShamanMode.NORMAL.toInt() ? getPart(pID, { shamanMode:ShamanMode.fromInt(shamanMode.toInt()-1) }) : tClass;
 		}
 		
 		private function getDefaultSkinPart(pName:String) : Class {

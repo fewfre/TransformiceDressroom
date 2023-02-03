@@ -299,7 +299,7 @@ package app.world
 			}
 			
 			// First remove old stuff to prevent conflicts
-			GameAssets.shamanMode = SHAMAN_MODE.OFF;
+			GameAssets.shamanMode = ShamanMode.OFF;
 			for each(var tItem in ITEM.LAYERING) { _removeItem(tItem); }
 			_removeItem(ITEM.POSE);
 			
@@ -504,7 +504,7 @@ package app.world
 
 		private function _onTrashConfirmScreenConfirm(pEvent:Event) : void {
 			removeChild(trashConfirmScreen);
-			GameAssets.shamanMode = SHAMAN_MODE.OFF;
+			GameAssets.shamanMode = ShamanMode.OFF;
 			for each(var tItem in ITEM.LAYERING) { _removeItem(tItem); }
 			_removeItem(ITEM.POSE);
 			(getTabByType(TAB_OTHER) as OtherTabPane).updateButtonsBasedOnCurrentData();

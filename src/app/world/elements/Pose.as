@@ -49,24 +49,24 @@ package app.world.elements
 			stop();
 		}
 		
-		// pData = { ?items:Array, ?removeBlanks:Boolean=false, ?shamanMode:int(SHAMAN_MODE) }
-		public function apply(pData:Object) : MovieClip {
-			if(!pData.items) pData.items = [];
+		// pData = { ?removeBlanks:Boolean=false }
+		public function apply(items:Array, shamanMode:ShamanMode, removeBlanks:Boolean=false) : MovieClip {
+			if(!items) items = [];
 			
-			var tSkinData = FewfUtils.getFromArrayWithKeyVal(pData.items, "type", ITEM.SKIN);
-			if(tSkinData == null) { tSkinData = FewfUtils.getFromArrayWithKeyVal(pData.items, "type", ITEM.SKIN_COLOR); }
-			var tTailData = FewfUtils.getFromArrayWithKeyVal(pData.items, "type", ITEM.TAIL);
+			var tSkinData = FewfUtils.getFromArrayWithKeyVal(items, "type", ITEM.SKIN);
+			if(tSkinData == null) { tSkinData = FewfUtils.getFromArrayWithKeyVal(items, "type", ITEM.SKIN_COLOR); }
+			var tTailData = FewfUtils.getFromArrayWithKeyVal(items, "type", ITEM.TAIL);
 			
-			var tShopData:Array = _orderType(pData.items);
+			var tShopData:Array = _orderType(items);
 			var part:MovieClip = null;
 			var tChild:DisplayObject = null;
 			var tItemsOnChild:int = 0;
 			var tSlotName:String;
 			var tHandItemAdded:Boolean = false;
 			
-			pData.shamanMode = pData.shamanMode != null ? pData.shamanMode : GameAssets.shamanMode;
-			
 			var tAccessoires = [];
+			
+			var addToPoseData = { shamanMode:shamanMode };
 			
 			// This works because poses, skins, and items have a group of letters/numbers that let each other know they should be grouped together.
 			// For example; the "head" of a pose is T, as is the skin's head, hats, and hair. Thus they all go onto same area of the skin.
@@ -77,7 +77,7 @@ package app.world.elements
 				tSlotName = tChild.name;
 				for(var j:int = 0; j < tShopData.length; j++) {
 					if(tTailData != null && tShopData[j].isSkin() && tSlotName.indexOf("Boule_") > -1) { continue; }
-					part = _addToPoseIfCan(tChild as MovieClip, tShopData[j], tSlotName, pData) as MovieClip;
+					part = _addToPoseIfCan(tChild as MovieClip, tShopData[j], tSlotName, addToPoseData) as MovieClip;
 					if(part) {
 						_colorPart(part, tShopData[j], tSlotName);
 						tAccessoires = tAccessoires.concat(getMcItemSubAccessories(part));
@@ -85,13 +85,13 @@ package app.world.elements
 					}
 				}
 				// A complete hack to get shaman wings. Can't figure out the "proper" way to do it.
-				if(tSlotName.indexOf("CuisseD_") > -1 && tSkinData != null && pData.shamanMode == SHAMAN_MODE.DIVINE
+				if(tSlotName.indexOf("CuisseD_") > -1 && tSkinData != null && shamanMode == ShamanMode.DIVINE
 					&& (_poseData.id == "Statique" || _poseData.id == "Course" || _poseData.id == "Duck") // Wings only show for these animations in-game
 				) {
 					part = _getWingsMC(tSkinData);
 					(tChild as MovieClip).addChild(part);
 				}
-				if(pData.removeBlanks && tItemsOnChild == 0) {
+				if(removeBlanks && tItemsOnChild == 0) {
 					_pose.removeChildAt(i);
 				}
 				part = null;

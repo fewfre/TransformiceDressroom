@@ -37,7 +37,7 @@ package app.data
 		public static var extraBackHand:ItemData;
 		public static var extraFromage:ItemData;
 		
-		public static var shamanMode:int = SHAMAN_MODE.OFF;
+		public static var shamanMode:ShamanMode = ShamanMode.OFF;
 		public static var shamanColor:int = 0x95D9D6;
 		
 		// { type:ITEM, id:String, colorI:int }
@@ -335,7 +335,7 @@ package app.data
 				/*case ITEM.SHIRT:
 				case ITEM.PANTS:
 				case ITEM.SHOES:
-					tItem = new Pose(poses[defaultPoseIndex]).apply({ items:[ pData ], removeBlanks:true });
+					tItem = new Pose(poses[defaultPoseIndex]).apply([ pData ], ShamanMode.OFF, true);
 					break;*/
 				default:
 					tItem = new pData.itemClass();
@@ -350,10 +350,8 @@ package app.data
 			var tPoseData = pData.pose ? pData.pose : poses[defaultPoseIndex];
 			var tSkinData = pData.skin ? pData.skin : skins[defaultSkinIndex];
 
-			var tPose = new Pose(tPoseData);
-			tPose.apply({ items:[
-				tSkinData
-			], shamanMode:SHAMAN_MODE.OFF });
+			var tPose:Pose = new Pose(tPoseData);
+			tPose.apply([ tSkinData ], ShamanMode.OFF);
 			tPose.stopAtLastFrame();
 
 			return tPose;

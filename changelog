@@ -4,6 +4,7 @@
 - Fixed bug that doesn't show existing item customization on infobar when opening color picker
 - [code rework] Moved shop item pane code from `World` into `ShopCategoryPane`
 - [code rework] Removed some old DeadMaze gender code
+- [code rework] `SHAMAN_MODE` renamed to `ShamanMode` and given proper enum typing
 
 
 == V1.23d - 30 January 2023 ==

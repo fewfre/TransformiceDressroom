@@ -43,11 +43,11 @@ package app.ui.panes
 			var icon = addItem(new $ShamFeather()); icon.x = (xx += spacingx) + sizex*0.5; icon.y = yy + sizey*0.5; icon.scaleX = icon.scaleY = 2;
 			icon.addEventListener(MouseEvent.CLICK, _onNoShamanButtonClicked);
 			xx -= 5;
-			shamanButtons.push(tButton = addItem(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextBase({ text:"btn_normal_mode", text:"Normal" }), id:SHAMAN_MODE.NORMAL })) as PushButton);
-			shamanButtons.push(tButton = addItem(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextBase({ text:"btn_hard_mode", text:"Hard" }), id:SHAMAN_MODE.HARD })) as PushButton);
-			shamanButtons.push(tButton = addItem(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextBase({ text:"btn_divine_mode", text:"Divine" }), id:SHAMAN_MODE.DIVINE })) as PushButton);
-			if(GameAssets.shamanMode != SHAMAN_MODE.OFF) {
-				shamanButtons[GameAssets.shamanMode-2].toggleOn();
+			shamanButtons.push(tButton = addItem(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextBase({ text:"btn_normal_mode", text:"Normal" }), id:ShamanMode.NORMAL.toInt() })) as PushButton);
+			shamanButtons.push(tButton = addItem(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextBase({ text:"btn_hard_mode", text:"Hard" }), id:ShamanMode.HARD.toInt() })) as PushButton);
+			shamanButtons.push(tButton = addItem(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextBase({ text:"btn_divine_mode", text:"Divine" }), id:ShamanMode.DIVINE.toInt() })) as PushButton);
+			if(GameAssets.shamanMode != ShamanMode.OFF) {
+				shamanButtons[GameAssets.shamanMode.toInt()-2].toggleOn();
 			}
 			_registerClickHandler(shamanButtons, _onShamanButtonClicked);
 			
@@ -177,9 +177,9 @@ package app.ui.panes
 		
 		private function _onShamanButtonClicked(pEvent:Event) {
 			_untoggle(shamanButtons, pEvent.target as PushButton);
-			GameAssets.shamanMode = pEvent.target.id;
+			GameAssets.shamanMode = ShamanMode.fromInt(pEvent.target.id);
 			if(pEvent.target.pushed) {
-				GameAssets.shamanMode = SHAMAN_MODE.OFF;
+				GameAssets.shamanMode = ShamanMode.OFF;
 			}
 			character.updatePose();
 			_updateHead();
@@ -187,7 +187,7 @@ package app.ui.panes
 		
 		private function _onNoShamanButtonClicked(pEvent:Event) {
 			_untoggle(shamanButtons);
-			GameAssets.shamanMode = SHAMAN_MODE.OFF;
+			GameAssets.shamanMode = ShamanMode.OFF;
 			character.updatePose();
 			_updateHead();
 		}
@@ -208,7 +208,7 @@ package app.ui.panes
 				shamanButtons[i].toggleOff();
 			}
 			if(GameAssets.shamanMode >= 2) {
-				shamanButtons[GameAssets.shamanMode-2].toggleOn(false);
+				shamanButtons[GameAssets.shamanMode.toInt()-2].toggleOn(false);
 			}
 			
 			button_hand.toggle(!!character.getItemData(ITEM.OBJECT), false);
