@@ -3,6 +3,7 @@ package app.ui
 	import com.fewfre.display.ButtonBase;
 	import com.fewfre.display.TextBase;
 	import com.fewfre.utils.Fewf;
+	import com.fewfre.utils.ImgurApi;
 	import app.data.*;
 	import app.ui.*;
 	import app.ui.buttons.*;

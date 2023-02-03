@@ -1,7 +1,5 @@
-package app.data
+package com.fewfre.utils
 {
-	import app.world.elements.Character;
-	
 	import com.adobe.images.PNGEncoder;
 	import com.fewfre.utils.Fewf;
 	import flash.display.BitmapData;
@@ -36,9 +34,6 @@ package app.data
 			if(!_flagInited) { _init(); }
 			
 			var uri:String = _convertDisplayObjectToURI(pObj);
-			if(ConstantsApp.ANIMATION_FRAME_BY_FRAME) {
-				uri = _convertDisplayObjectToURIFrameByFrameVersion(pObj as Character);
-			}
 			_sendDataToApi(uri);
 		}
 		
@@ -65,24 +60,6 @@ package app.data
 			// Encode and then convert byte array to string.
 			var ba:ByteArray = PNGEncoder.encode(bmd);
 			var uri:String = encodeByteArray(ba);
-			return uri;
-		}
-		
-		// Converts the image to a PNG bitmap and prompts the user to save.
-		public static function _convertDisplayObjectToURIFrameByFrameVersion(pObj:Character) : String {
-			var tOrigScale = pObj.outfit.scaleX;
-			pObj.scale = 1;
-			var tWidth = 80, tHeight = 65;
-			
-			var tRect:flash.geom.Rectangle = pObj.getBounds(pObj);
-			var tBitmap:flash.display.BitmapData = new flash.display.BitmapData(tWidth, tHeight, true, 0xFFFFFF);
-			var tMatrix:flash.geom.Matrix = new flash.geom.Matrix(1, 0, 0, 1, -tRect.left + (tWidth-tRect.width)/2, -tRect.top + (tHeight-tRect.height)/2);
-			tMatrix.scale(1, 1);
-			tBitmap.draw(pObj, tMatrix);
-			// Encode and then convert byte array to string.
-			var ba:ByteArray = PNGEncoder.encode(tBitmap);
-			var uri:String = encodeByteArray(ba);
-			pObj.scale = tOrigScale;
 			return uri;
 		}
 		
