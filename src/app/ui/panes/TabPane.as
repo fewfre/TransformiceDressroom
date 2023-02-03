@@ -77,8 +77,6 @@ package app.ui.panes
 		}
 
 		public function scrollItemIntoView(pItem:Sprite) : void {
-			trace(pItem.y , pItem.height , _scrollPane.height , _scrollPane.verticalScrollPosition);
-			
 			if(pItem.y+5 < _scrollPane.verticalScrollPosition) {
 				_scrollPane.verticalScrollPosition = pItem.y+5;
 			}
