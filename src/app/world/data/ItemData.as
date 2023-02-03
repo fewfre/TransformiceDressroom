@@ -35,7 +35,7 @@ package app.world.data
 			return new ItemData(type, id, { itemClass:itemClass, classMap:classMap });
 		}
 		
-		public function isSkin() : Boolean { return type == ItemType.SKIN || type == ItemType.SKIN_COLOR; }
+		public function isSkin() : Boolean { return type == ItemType.SKIN; }
 
 		public function getPart(pID:String, pOptions:Object=null) : Class {
 			return !classMap ? null : (classMap[pID] ? classMap[pID] : null);

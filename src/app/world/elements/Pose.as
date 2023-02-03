@@ -54,7 +54,6 @@ package app.world.elements
 			if(!items) items = [];
 			
 			var tSkinData = FewfUtils.getFromArrayWithKeyVal(items, "type", ItemType.SKIN);
-			if(tSkinData == null) { tSkinData = FewfUtils.getFromArrayWithKeyVal(items, "type", ItemType.SKIN_COLOR); }
 			var tTailData = FewfUtils.getFromArrayWithKeyVal(items, "type", ItemType.TAIL);
 			
 			var tShopData:Array = _orderType(items);

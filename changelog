@@ -8,6 +8,8 @@
 	- `SHAMAN_MODE` renamed to `ShamanMode` and given proper enum typing
 	- `ITEM` renamed to `ItemType` and given proper enum typing
 	- `ImgurApi` moved to `com.fewfre.utils`
+	- Removed `SKIN_COLOR` from `ItemType` as it's no longer useful and is instead awkward to work around
+		- replaced by `isSkinColor` property on `SkinData`
 
 
 == V1.23d - 30 January 2023 ==

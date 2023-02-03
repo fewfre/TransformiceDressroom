@@ -170,7 +170,6 @@ package app.data
 				case ItemType.TAIL:		return tail;
 				case ItemType.CONTACTS:	return contacts;
 				case ItemType.HAND:		return hands;
-				case ItemType.SKIN_COLOR:
 				case ItemType.SKIN:		return skins;
 				case ItemType.POSE:		return poses;
 				default: trace("[GameAssets](getArrayByType) Unknown type: "+pType);
@@ -327,7 +326,6 @@ package app.data
 			var tItem:MovieClip;
 			switch(pData.type) {
 				case ItemType.SKIN:
-				case ItemType.SKIN_COLOR:
 					tItem = getDefaultPoseSetup({ skin:pData });
 					break;
 				case ItemType.POSE:

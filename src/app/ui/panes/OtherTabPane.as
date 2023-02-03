@@ -138,7 +138,6 @@ package app.ui.panes
 		private function _updateHead() {
 			// copy character data onto our copy
 			for each(var tItemType in ItemType.LAYERING) {
-				if(tItemType == ItemType.SKIN_COLOR) continue;
 				var data = character.getItemData(tItemType);
 				if(data) characterHead.setItemData( data ); else characterHead.removeItem( tItemType );
 			}

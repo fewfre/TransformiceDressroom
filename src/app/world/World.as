@@ -167,7 +167,6 @@ package app.world
 					tPane.buttons[ tIndex ].toggleOn();
 				}
 			}
-			_paneManager.addPane(ItemType.SKIN_COLOR.toString(), _paneManager.getPane(ItemType.SKIN.toString()));
 			
 			/****************************
 			* Config Pane
@@ -444,7 +443,7 @@ package app.world
 
 		private function _onRandomizeDesignClicked(pEvent:Event) : void {
 			for each(var tItem in ItemType.LAYERING) {
-				if(tItem == ItemType.OBJECT || tItem == ItemType.BACK || tItem == ItemType.PAW_BACK || tItem == ItemType.SKIN_COLOR) continue;
+				if(tItem == ItemType.OBJECT || tItem == ItemType.BACK || tItem == ItemType.PAW_BACK) continue;
 				_randomItemOfType(tItem, Math.random() <= 0.65);
 			}
 			_randomItemOfType(ItemType.POSE, Math.random() <= 0.5);
@@ -463,7 +462,7 @@ package app.world
 			} else {
 				_removeItem(pType);
 				// Set to default values for required types
-				if(pType == ItemType.SKIN || pType == ItemType.SKIN_COLOR) {
+				if(pType == ItemType.SKIN) {
 					if(pane.flagOpen) pane.scrollItemIntoView(pane.buttons[GameAssets.defaultSkinIndex]);
 				}
 				else if(pType == ItemType.POSE) {

@@ -217,11 +217,8 @@ package app.world.elements
 			return tParms.toString().replace(/%3B/g, ";");
 		}
 		public function getParamsTfmOfficialSyntax() : String {
-			var tSkinData = getItemData(ItemType.SKIN);
-			var skinId = tSkinData.id;
-			if(tSkinData.type == ItemType.SKIN_COLOR) {
-				skinId = 1;
-			}
+			var tSkinData:SkinData = getItemData(ItemType.SKIN) as SkinData;
+			var skinId = tSkinData.isSkinColor ? 1 : tSkinData.id;
 			var code:String = skinId+";";
 			
 			// Apply various parts
@@ -290,8 +287,7 @@ package app.world.elements
 		}
 
 		public function setItemData(pItem:ItemData) : void {
-			var tType = pItem.type == ItemType.SKIN_COLOR ? ItemType.SKIN : pItem.type;
-			_itemDataMap[tType] = pItem;
+			_itemDataMap[pItem.type] = pItem;
 			updatePose();
 		}
 

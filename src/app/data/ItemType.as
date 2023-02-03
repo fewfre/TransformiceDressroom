@@ -4,7 +4,6 @@ package app.data
 	{
 		public static const POSE				: ItemType = new ItemType("pose");
 		public static const SKIN				: ItemType = new ItemType("fur");
-		public static const SKIN_COLOR			: ItemType = new ItemType("fur-color");
 		public static const HEAD				: ItemType = new ItemType("head");
 		public static const HAIR				: ItemType = new ItemType("hair");
 		public static const EYES				: ItemType = new ItemType("eyes");
@@ -21,7 +20,7 @@ package app.data
 		
 		// Order of item layering when occupying the same spot.
 		public static const LAYERING : Vector.<ItemType> = new <ItemType>[
-			SKIN, SKIN_COLOR, NECK, HAIR, HEAD, EARS, MOUTH, CONTACTS, EYES, TAIL, HAND, OBJECT, BACK, PAW_BACK
+			SKIN, NECK, HAIR, HEAD, EARS, MOUTH, CONTACTS, EYES, TAIL, HAND, OBJECT, BACK, PAW_BACK
 		];
 		
 		// Enum Storage + Constructor
