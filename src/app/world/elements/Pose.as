@@ -50,13 +50,13 @@ package app.world.elements
 		}
 		
 		// pData = { ?removeBlanks:Boolean=false }
-		public function apply(items:Array, shamanMode:ShamanMode, removeBlanks:Boolean=false) : MovieClip {
-			if(!items) items = [];
+		public function apply(items:Vector.<ItemData>, shamanMode:ShamanMode, removeBlanks:Boolean=false) : MovieClip {
+			if(!items) items = new Vector.<ItemData>();
 			
-			var tSkinData = FewfUtils.getFromArrayWithKeyVal(items, "type", ItemType.SKIN);
-			var tTailData = FewfUtils.getFromArrayWithKeyVal(items, "type", ItemType.TAIL);
+			var tSkinData = FewfUtils.getFromVectorWithKeyVal(items, "type", ItemType.SKIN);
+			var tTailData = FewfUtils.getFromVectorWithKeyVal(items, "type", ItemType.TAIL);
 			
-			var tShopData:Array = _orderType(items);
+			var tShopData:Vector.<ItemData> = _orderType(items);
 			var part:MovieClip = null;
 			var tChild:DisplayObject = null;
 			var tItemsOnChild:int = 0;
@@ -156,19 +156,12 @@ package app.world.elements
 			return tAccessoires;
 		}
 		
-		private function _orderType(pItems:Array) : Array {
-			var i = pItems.length;
-			while(i > 0) { i--;
-				if(pItems[i] == null) {
-					pItems.splice(i, 1);
-				}
-			}
-			
-			pItems.sort(function(a, b){
+		private function _orderType(pItems:Vector.<ItemData>) : Vector.<ItemData> {
+			return pItems
+			.filter(function(a){ return a != null })
+			.sort(function(a, b){
 				return ItemType.LAYERING.indexOf(a.type) > ItemType.LAYERING.indexOf(b.type) ? 1 : -1;
 			});
-			
-			return pItems;
 		}
 		
 		public function colorFur(pSkinPart:MovieClip, pColor:int):DisplayObject {

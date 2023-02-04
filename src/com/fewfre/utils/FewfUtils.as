@@ -16,6 +16,19 @@ package com.fewfre.utils
 			return -1;
 		}
 		
+		public static function getFromVectorWithKeyVal(pVector:Object, pKey:String, pVal:*) : * {
+			var i:int = getIndexFromVectorWithKeyVal(pVector, pKey, pVal);
+			return i > -1 ? pVector[i] : null;
+		}
+		
+		// Sadly can't checky for generic vector, so just accept Object
+		public static function getIndexFromVectorWithKeyVal(pVector:Object, pKey:String, pVal:*) : int {
+			for(var i:int = 0; i < pVector.length; i++) {
+				if(pVector[i] && pVector[i][pKey] == pVal) { return i; }
+			}
+			return -1;
+		}
+		
 		public static function stringSubstitute(pVal:String, ...pValues) : String {
 			if(pValues[0] is Array) { pValues = pValues[0]; }
 			// pVal.replace(/{(.*?)}/gi, "a");

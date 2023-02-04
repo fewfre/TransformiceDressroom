@@ -181,6 +181,10 @@ package app.data
 			return FewfUtils.getFromArrayWithKeyVal(getArrayByType(pType), "id", pID);
 		}
 
+		public static function getItemIndexFromTypeID(pType:ItemType, pID:String) : int {
+			return FewfUtils.getIndexFromArrayWithKeyVal(getArrayByType(pType), "id", pID);
+		}
+
 		/****************************
 		* Color
 		*****************************/
@@ -334,7 +338,7 @@ package app.data
 				/*case ItemType.SHIRT:
 				case ItemType.PANTS:
 				case ItemType.SHOES:
-					tItem = new Pose(poses[defaultPoseIndex]).apply([ pData ], ShamanMode.OFF, true);
+					tItem = new Pose(poses[defaultPoseIndex]).apply(new <ItemData>[ pData ], ShamanMode.OFF, true);
 					break;*/
 				default:
 					tItem = new pData.itemClass();
@@ -350,7 +354,7 @@ package app.data
 			var tSkinData = pData.skin ? pData.skin : skins[defaultSkinIndex];
 
 			var tPose:Pose = new Pose(tPoseData);
-			tPose.apply([ tSkinData ], ShamanMode.OFF);
+			tPose.apply(new <ItemData>[ tSkinData ], ShamanMode.OFF);
 			tPose.stopAtLastFrame();
 
 			return tPose;

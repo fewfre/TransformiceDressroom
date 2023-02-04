@@ -20,8 +20,10 @@ package app.data
 		
 		// Order of item layering when occupying the same spot.
 		public static const LAYERING : Vector.<ItemType> = new <ItemType>[
-			SKIN, NECK, HAIR, HEAD, EARS, MOUTH, CONTACTS, EYES, TAIL, HAND, OBJECT, BACK, PAW_BACK
-		];
+			SKIN, NECK, HAIR, HEAD, EARS, MOUTH, CONTACTS, EYES, TAIL, HAND, OBJECT, BACK, PAW_BACK ];
+		
+		public static const TYPES_WITH_SHOP_PANES : Vector.<ItemType> = new <ItemType>[
+			HEAD, HAIR, EARS, EYES, MOUTH, NECK, TAIL, HAND, CONTACTS, SKIN, POSE ];
 		
 		// Enum Storage + Constructor
 		private var _value: String;

@@ -69,7 +69,7 @@ package app.world.elements
 			outfit.mouseChildren = false;
 			outfit.mouseEnabled = false;
 
-			outfit.apply([
+			outfit.apply(new <ItemData>[
 					getItemData(ItemType.SKIN),
 					getItemData(ItemType.HEAD),
 					getItemData(ItemType.HAIR),
