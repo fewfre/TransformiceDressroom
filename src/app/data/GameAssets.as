@@ -264,20 +264,24 @@ package app.data
 			pItem.transform.colorTransform = new flash.geom.ColorTransform(tR / 128, tG / 128, tB / 128);
 		}
 
-		public static function getColors(pMC:MovieClip, tArray:Array=null) : Array {
-			var tChild:*=null;
-			var tTransform:*=null;
-			var tArray:Array=tArray ? tArray : new Array();
+		public static function getColors(pMC:MovieClip) : Vector.<uint> {
+			return Vector.<uint>( _getColorsRecursive(pMC, []) );
+		}
+		// Has to be an array since numbers aren't always added in order, which messes up Vectors
+		private static function _getColorsRecursive(pMC:MovieClip, tArray:Array) : Array {
+			var tChild:*=null, tTransform:ColorTransform=null, color:uint;
+			trace('(_getColorsRecursive)', tArray.length)
 
 			var i:int=0;
 			while (i < pMC.numChildren) {
 				tChild = pMC.getChildAt(i);
 				if (tChild.name.indexOf("Couleur") == 0 && tChild.name.length > 7) {
 					tTransform = tChild.transform.colorTransform;
-					tArray[tChild.name.charAt(7)] = ColorMathUtil.RGBToHex(tTransform.redMultiplier * 128, tTransform.greenMultiplier * 128, tTransform.blueMultiplier * 128);
+					color = ColorMathUtil.RGBToHex(tTransform.redMultiplier * 128, tTransform.greenMultiplier * 128, tTransform.blueMultiplier * 128);
+					tArray[tChild.name.charAt(7)] = color;
 				}
 				else if(tChild.name.indexOf("slot_") == 0) {
-					getColors(tChild, tArray);
+					_getColorsRecursive(tChild, tArray);
 				}
 				i++;
 			}
@@ -285,29 +289,28 @@ package app.data
 		}
 
 		public static function getNumOfCustomColors(pMC:MovieClip) : int {
-			var tChild:*=null;
-			var num:int = 0;
+			var count:int = 0, tChild:*=null;
 			var i:int = 0;
 			while (i < pMC.numChildren) {
 				tChild = pMC.getChildAt(i);
 				if (tChild.name.indexOf("Couleur") == 0 && tChild.name.length > 7) {
-					num++;
+					count++;
 				}
 				else if(tChild.name.indexOf("slot_") == 0) {
-					num += getNumOfCustomColors(tChild);
+					count += getNumOfCustomColors(tChild);
 				}
 				i++;
 			}
-			return num;
+			return count;
 		}
 		
 		public static function getColoredItemImage(pData:ItemData) : MovieClip {
 			return colorItem({ obj:getItemImage(pData), colors:getColorsWithPossibleHoverEffect(pData) }) as MovieClip;
 		}
 		
-		public static function getColorsWithPossibleHoverEffect(pData:ItemData) : Array {
+		public static function getColorsWithPossibleHoverEffect(pData:ItemData) : Vector.<uint> {
 			if(!pData.colors || !swatchHoverPreviewData) { return pData.colors; }
-			var colors = pData.colors.concat();
+			var colors = pData.colors.concat(); // shallow copy
 			if(pData.type == swatchHoverPreviewData.type && pData.id == swatchHoverPreviewData.id) {
 				var i = swatchHoverPreviewData.colorI;
 				colors[i] = GameAssets.invertColor(colors[i]);

@@ -11,8 +11,8 @@ package app.world.data
 		public var itemClass	: Class;
 		public var classMap		: Object;
 
-		public var defaultColors: Array;
-		public var colors		: Array;
+		public var defaultColors: Vector.<uint>;
+		public var colors		: Vector.<uint>;
 
 		// pData = { itemClass:Class, ?classMap:Object<Class> }
 		public function ItemData(pType:ItemType, pId:String, pData:Object) {

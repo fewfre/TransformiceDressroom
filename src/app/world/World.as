@@ -637,7 +637,7 @@ package app.world
 
 			private function _shamanColorButtonClicked(/*pType:String, pColor:int*/) : void {
 				/*this.configCurrentlyColoringType = pType;*/
-				(_paneManager.getPane(CONFIG_COLOR_PANE_ID) as ColorPickerTabPane).setupSwatches( [ GameAssets.shamanColor ] );
+				(_paneManager.getPane(CONFIG_COLOR_PANE_ID) as ColorPickerTabPane).setupSwatches( new <uint>[ GameAssets.shamanColor ] );
 				_paneManager.openPane(CONFIG_COLOR_PANE_ID);
 			}
 		//}END Color Tab

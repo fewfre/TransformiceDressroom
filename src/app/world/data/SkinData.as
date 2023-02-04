@@ -18,7 +18,7 @@ package app.world.data
 			_assetID = pData.assetID != null ? pData.assetID : id;
 			isSkinColor = !!pData.isSkinColor;
 			if(pData.color) {
-				defaultColors = [ pData.color ];
+				defaultColors = new <uint>[ pData.color ];
 				setColorsToDefault();
 			}
 			

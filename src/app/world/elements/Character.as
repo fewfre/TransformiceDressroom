@@ -145,7 +145,7 @@ package app.world.elements
 		}
 		private function _setParamToTypeTfmOfficialSyntax(pType:ItemType, pParamVal:String, pAllowNull:Boolean=true) {
 			try {
-				var tData:ItemData = null, tID = pParamVal, tColors;
+				var tData:ItemData = null, tID:String = pParamVal, tColors;
 				if(tID != null && tID != "") {
 					tColors = tID.split(/\_|\+/); // Get a list of all the colors (ID is first); ex: 5_ffffff+abcdef+169742
 					tID = tColors.splice(0, 1)[0]; // Remove first item and store it as the ID.
@@ -176,12 +176,12 @@ package app.world.elements
 				_itemDataMap[pType] = pAllowNull ? tData : ( tData == null ? _itemDataMap[pType] : tData );
 			} catch (error:Error) { };
 		}
-		private function _hexArrayToIntArray(pColors:Array, pDefaults:Array) : Array {
-			pColors = pColors.concat(); // Shallow Copy
+		private function _hexArrayToIntArray(pColors:Array, pDefaults:Vector.<uint>) : Vector.<uint> {
+			var ints = new Vector.<uint>();
 			for(var i = 0; i < pDefaults.length; i++) {
-				pColors[i] = pColors[i] ? _hexToInt(pColors[i]) : pDefaults[i];
+				ints.push( pColors[i] ? _hexToInt(pColors[i]) : pDefaults[i] );
 			}
-			return pColors;
+			return ints;
 		}
 		private function _hexToInt(pVal:String) : int {
 			return parseInt(pVal, 16);
@@ -227,7 +227,7 @@ package app.world.elements
 			for(var i:int = 0; i < tTypes.length; i++) {
 				var tData:ItemData = getItemData(tTypes[i]);
 				if(tData) {
-					var tColors = getColors(tTypes[i]);
+					var tColors:Vector.<uint> = getColors(tTypes[i]);
 					if(String(tColors) != String(tData.defaultColors)) { // Quick way to compare two arrays with primitive types
 						tIds.push(tData.id+"_"+_intArrayToHexArray(tColors).join("+") );
 					} else {
@@ -249,17 +249,17 @@ package app.world.elements
 			var tData:ItemData = getItemData(pType);
 			if(tData) {
 				pParams[pParam] = tData.id;
-				var tColors = getColors(pType);
+				var tColors:Vector.<uint> = getColors(pType);
 				if(String(tColors) != String(tData.defaultColors)) { // Quick way to compare two arrays with primitive types
 					pParams[pParam] += ";"+_intArrayToHexArray(tColors).join(";");
 				}
 			}
 			/*else { pParams[pParam] = ''; }*/
 		}
-		private function _intArrayToHexArray(pColors:Array) : Vector.<String> {
+		private function _intArrayToHexArray(pColors:Vector.<uint>) : Vector.<String> {
 			var hexList = new Vector.<String>();
 			for(var i = 0; i < pColors.length; i++) {
-				hexList[i] = _intToHex(pColors[i]);
+				hexList.push( _intToHex(pColors[i]) );
 			}
 			return hexList;
 		}
@@ -270,12 +270,12 @@ package app.world.elements
 		/****************************
 		* Color
 		*****************************/
-		public function getColors(pType:ItemType) : Array {
-			return _itemDataMap[pType].colors;
+		public function getColors(pType:ItemType) : Vector.<uint> {
+			return getItemData(pType).colors;
 		}
 
 		public function colorItem(pType:ItemType, arg2:int, pColor:String) : void {
-			_itemDataMap[pType].colors[arg2] = GameAssets.convertColorToNumber(pColor);
+			getItemData(pType).colors[arg2] = GameAssets.convertColorToNumber(pColor);
 			updatePose();
 		}
 

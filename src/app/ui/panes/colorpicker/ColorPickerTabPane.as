@@ -101,7 +101,7 @@ package app.ui.panes.colorpicker
 		/****************************
 		* Public
 		*****************************/
-		public function setupSwatches(pSwatches:Array) : void {
+		public function setupSwatches(pSwatches:Vector.<uint>) : void {
 			for each(var btn:ColorSwatch in _colorSwatches) {
 				this.removeItem(btn);
 			}
