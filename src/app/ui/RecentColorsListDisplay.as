@@ -18,7 +18,7 @@ package app.ui
 		public static var RECENTS					: Array = null;
 		
 		// Storage
-		private var _recentColorButtons	: Array;
+		private var _recentColorButtons	: Vector.<ColorButton>;
 		private var _deleteToggleButton	: DeleteButton;
 		private var _bg : RoundedRectangle;
 		private var _verticalRule : Shape;
@@ -38,7 +38,7 @@ package app.ui
 			this.x = pData.x;
 			this.y = pData.y;
 			
-			_recentColorButtons = new Array();
+			_recentColorButtons = new Vector.<ColorButton>();
 			
 			var deleteWidth = 50;
 			var bgWidth = ConstantsApp.PANE_WIDTH - 20 - deleteWidth, bgHeight = 24;
@@ -73,10 +73,8 @@ package app.ui
 		
 		public function render() : void {
 			// Clear old buttons
-			for each(var btn:ColorButton in _recentColorButtons) {
-				removeChild(btn);
-			}
-			_recentColorButtons = [];
+			_recentColorButtons.forEach(function(o,i,a){ removeChild(o); });
+			_recentColorButtons = new Vector.<ColorButton>();
 			
 			this.visible = RECENTS.length > 0;
 			var bgBorderColor = isDeleteModeOn ? 0x780f11 : 0;//0x0f474f;

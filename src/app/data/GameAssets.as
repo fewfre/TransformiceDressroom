@@ -16,18 +16,18 @@ package app.data
 		public static const FUR_COLORS:Vector.<uint> = new <uint>[ 0xBD9067, 0x593618, 0x8C887F, 0xDED7CE, 0x4E443A, 0xE3C07E, 0x272220 ];
 		public static const DEFAULT_FUR_COLOR:uint = 0x78583A;
 
-		public static var hair:Array;
-		public static var head:Array;
-		public static var eyes:Array;
-		public static var ears:Array;
-		public static var mouth:Array;
-		public static var neck:Array;
-		public static var tail:Array;
-		public static var contacts:Array;
-		public static var hands:Array;
+		public static var hair: Vector.<ItemData>;
+		public static var head: Vector.<ItemData>;
+		public static var eyes: Vector.<ItemData>;
+		public static var ears: Vector.<ItemData>;
+		public static var mouth: Vector.<ItemData>;
+		public static var neck: Vector.<ItemData>;
+		public static var tail: Vector.<ItemData>;
+		public static var contacts: Vector.<ItemData>;
+		public static var hands: Vector.<ItemData>;
 
-		public static var skins:Array;
-		public static var poses:Array;
+		public static var skins: Vector.<ItemData>;
+		public static var poses: Vector.<ItemData>;
 		
 		public static var accessorySlotBones:Vector.< Vector.<String> >;
 
@@ -47,15 +47,15 @@ package app.data
 		public static function init() : void {
 			var i:int;
 
-			head = _setupCostumeArray(ItemType.HEAD, "$Costume_0_", { itemClassToClassMap:"Tete_1" });
-			eyes = _setupCostumeArray(ItemType.EYES, "$Costume_1_", { itemClassToClassMap:["Oeil_1", "OeilVide_1", "Oeil2_1", "Oeil3_1", "Oeil4_1"] });
-			ears = _setupCostumeArray(ItemType.EARS, "$Costume_2_", { itemClassToClassMap:"OreilleD_1" });
-			mouth = _setupCostumeArray(ItemType.MOUTH, "$Costume_3_", { itemClassToClassMap:"Tete_1" });
-			neck = _setupCostumeArray(ItemType.NECK, "$Costume_4_", { itemClassToClassMap:"Tete_1" });
-			hair = _setupCostumeArray(ItemType.HAIR, "$Costume_5_", { itemClassToClassMap:"Tete_1" });
-			tail = _setupCostumeArray(ItemType.TAIL, "$Costume_6_", { itemClassToClassMap:"Boule_1" });
-			contacts = _setupCostumeArray(ItemType.CONTACTS, "$Costume_7_", { itemClassToClassMap:["Oeil_1", "OeilVide_1"] });
-			hands = _setupCostumeArray(ItemType.HAND, "$Costume_8_", { itemClassToClassMap:"Gant_1" });
+			head = _setupCostumeList(ItemType.HEAD, "$Costume_0_", { itemClassToClassMap:"Tete_1" });
+			eyes = _setupCostumeList(ItemType.EYES, "$Costume_1_", { itemClassToClassMap:["Oeil_1", "OeilVide_1", "Oeil2_1", "Oeil3_1", "Oeil4_1"] });
+			ears = _setupCostumeList(ItemType.EARS, "$Costume_2_", { itemClassToClassMap:"OreilleD_1" });
+			mouth = _setupCostumeList(ItemType.MOUTH, "$Costume_3_", { itemClassToClassMap:"Tete_1" });
+			neck = _setupCostumeList(ItemType.NECK, "$Costume_4_", { itemClassToClassMap:"Tete_1" });
+			hair = _setupCostumeList(ItemType.HAIR, "$Costume_5_", { itemClassToClassMap:"Tete_1" });
+			tail = _setupCostumeList(ItemType.TAIL, "$Costume_6_", { itemClassToClassMap:"Boule_1" });
+			contacts = _setupCostumeList(ItemType.CONTACTS, "$Costume_7_", { itemClassToClassMap:["Oeil_1", "OeilVide_1"] });
+			hands = _setupCostumeList(ItemType.HAND, "$Costume_8_", { itemClassToClassMap:"Gant_1" });
 
 			extraObjectWand = new ItemData(ItemType.OBJECT, null, { itemClass:Fewf.assets.getLoadedClass("$Costume_9_1") });
 			extraObjectWand.classMap = { Arme_1:extraObjectWand.itemClass };
@@ -77,7 +77,7 @@ package app.data
 			accessorySlotBones[9] = new <String>["Arme_1"];
 			accessorySlotBones[10]= new <String>["Bouclier_1"];
 
-			skins = new Array();
+			skins = new Vector.<ItemData>();
 			
 			for(i = 0; i < FUR_COLORS.length; i++) {
 				skins.push( new SkinData({ id:"color"+i, assetID:1, color:FUR_COLORS[i], isSkinColor:true }) );
@@ -89,7 +89,7 @@ package app.data
 					skins.push( new SkinData({ id:i }) );
 				}
 			}
-			defaultSkinIndex = 7;//FewfUtils.getIndexFromArrayWithKeyVal(skins, "id", ConstantsApp.DEFAULT_SKIN_ID);
+			defaultSkinIndex = 7;//FewfUtils.getIndexFromVectorWithKeyVal(skins, "id", ConstantsApp.DEFAULT_SKIN_ID);
 
 			/*for(var i = 0; i < 7; i++) {
 				furs.push( new FurData( i, ItemType.COLOR ).initColor() );
@@ -103,7 +103,7 @@ package app.data
 				}
 			}*/
 
-			poses = [];
+			poses = new Vector.<ItemData>();
 			var tPoseClasses = [
 				"Statique", "Course", "Duck", "Sleep", "Sit", "Mad", "Laugh", "Kiss", "Facepalm", "Danse", "Cry", "Confetti", "Clap",
 				"Rondoudou", "Selfie", "Zelda", "Plumes", "Langue", "Drapeau",
@@ -114,12 +114,12 @@ package app.data
 			for(i = 0; i < tPoseClasses.length; i++) {
 				poses.push(new ItemData(ItemType.POSE, tPoseClasses[i], { itemClass:Fewf.assets.getLoadedClass( "Anim"+tPoseClasses[i] ) }));
 			}
-			defaultPoseIndex = 0;//FewfUtils.getIndexFromArrayWithKeyVal(poses, "id", ConstantsApp.DEFAULT_POSE_ID);
+			defaultPoseIndex = 0;//FewfUtils.getIndexFromVectorWithKeyVal(poses, "id", ConstantsApp.DEFAULT_POSE_ID);
 		}
 
 		// pData = { after:String, pad:int, itemClassToClassMap:String OR Array }
-		private static function _setupCostumeArray(type:ItemType, base:String, pData:Object) : Array {
-			var tArray:Array = new Array(), tClassName:String, tClass:Class;
+		private static function _setupCostumeList(type:ItemType, base:String, pData:Object) : Vector.<ItemData> {
+			var list:Vector.<ItemData> = new Vector.<ItemData>(), tClassName:String, tClass:Class;
 			var breakCount = 0; // quit early if enough nulls in a row
 			
 			for(var i = 0; i <= _MAX_COSTUMES_TO_CHECK_TO; i++) {
@@ -131,15 +131,15 @@ package app.data
 				tClass = Fewf.assets.getLoadedClass( base+(pData.pad ? zeroPad(i, pData.pad) : i)+(pData.after ? pData.after : "") );
 				if(tClass != null) {
 					breakCount = 0;
-					tArray.push( new ItemData(type, i, { itemClass:tClass }) );
+					list.push( new ItemData(type, i, { itemClass:tClass }) );
 					if(pData.itemClassToClassMap) {
-						tArray[tArray.length-1].classMap = {};
+						list[list.length-1].classMap = {};
 						if(pData.itemClassToClassMap is Array) {
 							for(var c:int = 0; c < pData.itemClassToClassMap.length; c++) {
-								tArray[tArray.length-1].classMap[pData.itemClassToClassMap[c]] = tClass;
+								list[list.length-1].classMap[pData.itemClassToClassMap[c]] = tClass;
 							}
 						} else {
-							tArray[tArray.length-1].classMap[pData.itemClassToClassMap] = tClass;
+							list[list.length-1].classMap[pData.itemClassToClassMap] = tClass;
 						}
 					}
 				} else {
@@ -149,7 +149,7 @@ package app.data
 					}
 				}
 			}
-			return tArray;
+			return list;
 		}
 
 		public static function zeroPad(number:int, width:int):String {
@@ -159,7 +159,7 @@ package app.data
 			return ret;
 		}
 
-		public static function getArrayByType(pType:ItemType) : Array {
+		public static function getItemDataListByType(pType:ItemType) :  Vector.<ItemData> {
 			switch(pType) {
 				case ItemType.HAIR:		return hair;
 				case ItemType.HEAD:		return head;
@@ -172,17 +172,17 @@ package app.data
 				case ItemType.HAND:		return hands;
 				case ItemType.SKIN:		return skins;
 				case ItemType.POSE:		return poses;
-				default: trace("[GameAssets](getArrayByType) Unknown type: "+pType);
+				default: trace("[GameAssets](getItemDataListByType) Unknown type: "+pType);
 			}
 			return null;
 		}
 
 		public static function getItemFromTypeID(pType:ItemType, pID:String) : ItemData {
-			return FewfUtils.getFromArrayWithKeyVal(getArrayByType(pType), "id", pID);
+			return FewfUtils.getFromVectorWithKeyVal(getItemDataListByType(pType), "id", pID);
 		}
 
 		public static function getItemIndexFromTypeID(pType:ItemType, pID:String) : int {
-			return FewfUtils.getIndexFromArrayWithKeyVal(getArrayByType(pType), "id", pID);
+			return FewfUtils.getIndexFromVectorWithKeyVal(getItemDataListByType(pType), "id", pID);
 		}
 
 		/****************************
@@ -226,33 +226,22 @@ package app.data
 			return pMC;
 		}
 
-		// pData = { obj:DisplayObject, color:String OR int, ?swatch:int, ?name:String, ?colors:Array<int> }
-		public static function colorItem(pData:Object) : DisplayObject {
-			if (pData.obj == null) { return null; }
+		public static function colorItemUsingColorList(pSprite:Sprite, pColors:Vector.<uint>) : DisplayObject {
+			if (pSprite == null) { return null; }
 
-			var tHex:int = convertColorToNumber(pData.color);
-
-			var tChild:DisplayObject;
+			var tChild: DisplayObject, name:String;
 			var i:int=0;
-			while (i < pData.obj.numChildren) {
-				tChild = pData.obj.getChildAt(i);
-				if (tChild.name == pData.name || (tChild.name.indexOf("Couleur") == 0 && tChild.name.length > 7)) {
-					if(pData.colors != null && pData.colors[tChild.name.charAt(7)] != null) {
-						applyColorToObject(tChild, convertColorToNumber(pData.colors[tChild.name.charAt(7)]));
-					}
-					else if (!pData.swatch || pData.swatch == tChild.name.charAt(7)) {
-						applyColorToObject(tChild, tHex);
-					}
+			while (i < pSprite.numChildren) {
+				tChild = pSprite.getChildAt(i); name = tChild.name;
+				if (tChild.name.indexOf("Couleur") == 0 && name.length > 7 && pColors[name.charAt(7)] != null) {
+					applyColorToObject(tChild, pColors[name.charAt(7)]);
 				}
 				else if(tChild.name.indexOf("slot_") == 0) {
-					colorItem({ obj:tChild, color:tHex, swatch:pData.swatch, colors:pData.colors })
+					colorItemUsingColorList(tChild as Sprite, pColors);
 				}
 				i++;
 			}
-			return pData.obj;
-		}
-		public static function convertColorToNumber(pColor) : int {
-			return pColor is Number || pColor == null ? pColor : int("0x" + pColor);
+			return pSprite;
 		}
 		
 		// pColor is an int hex value. ex: 0x000000
@@ -270,8 +259,6 @@ package app.data
 		// Has to be an array since numbers aren't always added in order, which messes up Vectors
 		private static function _getColorsRecursive(pMC:MovieClip, tArray:Array) : Array {
 			var tChild:*=null, tTransform:ColorTransform=null, color:uint;
-			trace('(_getColorsRecursive)', tArray.length)
-
 			var i:int=0;
 			while (i < pMC.numChildren) {
 				tChild = pMC.getChildAt(i);
@@ -305,7 +292,7 @@ package app.data
 		}
 		
 		public static function getColoredItemImage(pData:ItemData) : MovieClip {
-			return colorItem({ obj:getItemImage(pData), colors:getColorsWithPossibleHoverEffect(pData) }) as MovieClip;
+			return colorItemUsingColorList(getItemImage(pData), getColorsWithPossibleHoverEffect(pData)) as MovieClip;
 		}
 		
 		public static function getColorsWithPossibleHoverEffect(pData:ItemData) : Vector.<uint> {

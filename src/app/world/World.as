@@ -358,14 +358,14 @@ package app.world
 
 		private function _onItemToggled(pEvent:FewfEvent) : void {
 			var tType:ItemType = pEvent.data.type;
-			var tItemArray:Array = GameAssets.getArrayByType(tType);
+			var tItemList:Vector.<ItemData> = GameAssets.getItemDataListByType(tType);
 			var tInfoBar:ShopInfoBar = getInfoBarByType(tType);
 
 			// De-select all buttons that aren't the clicked one.
 			var tButtons:Array = getButtonArrayByType(tType);
 			for(var i:int = 0; i < tButtons.length; i++) {
 				if(tButtons[i].data.id != pEvent.data.id) {
-					if (tButtons[i].pushed)  { tButtons[i].toggleOff(); }
+					if (tButtons[i].pushed) { tButtons[i].toggleOff(); }
 				}
 			}
 
@@ -373,7 +373,7 @@ package app.world
 			var tData:ItemData;
 			// If clicked button is toggled on, equip it. Otherwise remove it.
 			if(tButton.pushed) {
-				tData = tItemArray[pEvent.data.id];
+				tData = tItemList[pEvent.data.id];
 				setCurItemID(tType, tButton.id);
 				this.character.setItemData(tData);
 

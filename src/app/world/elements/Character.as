@@ -274,11 +274,6 @@ package app.world.elements
 			return getItemData(pType).colors;
 		}
 
-		public function colorItem(pType:ItemType, arg2:int, pColor:String) : void {
-			getItemData(pType).colors[arg2] = GameAssets.convertColorToNumber(pColor);
-			updatePose();
-		}
-
 		/****************************
 		* Update Data
 		*****************************/

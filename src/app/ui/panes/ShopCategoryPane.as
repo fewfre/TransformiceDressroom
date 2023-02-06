@@ -27,7 +27,7 @@ package app.ui.panes
 			super();
 			this._type = pType;
 			this.addInfoBar( new ShopInfoBar({ showEyeDropButton:_type!=ItemType.POSE, showGridManagementButtons:true }) );
-			_setupGrid(GameAssets.getArrayByType(_type));
+			_setupGrid(GameAssets.getItemDataListByType(_type));
 			
 			infoBar.reverseButton.addEventListener(ButtonBase.CLICK, _onReverseGrid);
 		}
@@ -49,7 +49,7 @@ package app.ui.panes
 		/****************************
 		* Private
 		*****************************/
-		private function _setupGrid(pItemArray:Array) : void {
+		private function _setupGrid(pItemList:Vector.<ItemData>) : void {
 			var buttonPerRow = 6;
 			var scale = 1;
 			if(_type == ItemType.SKIN || _type == ItemType.POSE) {
@@ -64,8 +64,8 @@ package app.ui.panes
 			var shopItem : MovieClip;
 			var shopItemButton : PushButton;
 			var i = -1;
-			while (i < pItemArray.length-1) { i++;
-				shopItem = GameAssets.getItemImage(pItemArray[i]);
+			while (i < pItemList.length-1) { i++;
+				shopItem = GameAssets.getItemImage(pItemList[i]);
 				shopItem.scaleX = shopItem.scaleY = scale;
 
 				shopItemButton = new PushButton({ width:grid.radius, height:grid.radius, obj:shopItem, id:i, data:{ type:_type, id:i } });

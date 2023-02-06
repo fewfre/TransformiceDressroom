@@ -132,15 +132,13 @@ package app.world.elements
 			if(!part) { return; }
 			if(part is MovieClip) {
 				if(pData.colors != null && !pData.isSkin()) {
-					GameAssets.colorItem({ obj:part, colors:GameAssets.getColorsWithPossibleHoverEffect(pData) });
+					GameAssets.colorItemUsingColorList(part, GameAssets.getColorsWithPossibleHoverEffect(pData));
 				}
 				else { GameAssets.colorDefault(part); }
 				
 				if(pData.isSkin() && isFurPartColorable(pSlotName)) {
 					colorFur(part, pData.colors ? pData.colors[0] : -1);
 				}
-				//GameAssets.colorItem({ obj:part, color: tSkinColor, name:"$0" });
-				//GameAssets.colorItem({ obj:part, color: tSecondaryColor, name:"$2" });
 			}
 		}
 		

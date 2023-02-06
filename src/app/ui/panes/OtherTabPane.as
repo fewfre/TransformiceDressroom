@@ -21,7 +21,7 @@ package app.ui.panes
 		public var button_back		: PushButton;
 		public var button_backHand	: PushButton;
 		
-		public var shamanButtons	: Array;
+		public var shamanButtons	: Vector.<PushButton>;
 		public var shamanColorPickerButton	: ScaleButton;
 		public var shamanColorBlueButton	: ColorButton;
 		public var shamanColorPinkButton	: ColorButton;
@@ -39,7 +39,7 @@ package app.ui.panes
 			// Shaman options
 			sizex = 80; sizey = 50; spacingx = sizex + 10; xx = 5 - spacingx;
 			
-			shamanButtons = [];
+			shamanButtons = new Vector.<PushButton>();
 			var icon = addItem(new $ShamFeather()); icon.x = (xx += spacingx) + sizex*0.5; icon.y = yy + sizey*0.5; icon.scaleX = icon.scaleY = 2;
 			icon.addEventListener(MouseEvent.CLICK, _onNoShamanButtonClicked);
 			xx -= 5;
@@ -168,9 +168,9 @@ package app.ui.panes
 		/****************************
 		* Events
 		*****************************/
-		private function _registerClickHandler(pArray:Array, pCallback:Function) : void {
-			for(var i:int = 0; i < pArray.length; i++) {
-				pArray[i].addEventListener(PushButton.STATE_CHANGED_BEFORE, pCallback);
+		private function _registerClickHandler(pList:Vector.<PushButton>, pCallback:Function) : void {
+			for(var i:int = 0; i < pList.length; i++) {
+				pList[i].addEventListener(PushButton.STATE_CHANGED_BEFORE, pCallback);
 			}
 		}
 		
@@ -191,7 +191,7 @@ package app.ui.panes
 			_updateHead();
 		}
 
-		private function _untoggle(pList:Array, pButton:PushButton=null) : void {
+		private function _untoggle(pList:Vector.<PushButton>, pButton:PushButton=null) : void {
 			/*if (pButton != null && pButton.pushed) { return; }*/
 
 			for(var i:int = 0; i < pList.length; i++) {

@@ -14,7 +14,7 @@ package app.ui
 		public static const EVENT_SHOP_TAB_CLICKED			: String = "shop_tab_clicked";
 
 		// Storage
-		public var tabs:Array;
+		public var tabs: Vector.<PushButton>;
 
 		// Constructor
 		// pData = { x:Number, y:Number, width:Number, height:Number, tabs:Array<{ text:String, event:String }> }
@@ -34,7 +34,7 @@ package app.ui
 			var tX:Number = tXMargin;
 			var tY:Number = tYMargin - tYSpacing; // Go back one space for when for loop adds one space.
 
-			tabs = new Array();
+			tabs = new Vector.<PushButton>();
 			for(var i:int = 0; i < tTabInfo.length; i++) {
 				_createTab(tTabInfo[i].text, tX, tY += tYSpacing, tWidth, tHeight, tTabInfo[i].event);
 			}
@@ -42,8 +42,9 @@ package app.ui
 
 		private function _createTab(pText:String, pX:Number, pY:Number, pWidth:Number, pHeight:Number, pEvent:String) : PushButton {
 			var tBttn:PushButton = new PushButton({ x:pX, y:pY, width:pWidth, height:pHeight, text:pText, allowToggleOff:false });
-			tabs.push(addChild(tBttn));
 			tBttn.addEventListener(PushButton.STATE_CHANGED_BEFORE, function(tBttn){ return function(){ untoggle(tBttn, pEvent); }; }(tBttn));//, false, 0, true
+			addChild(tBttn)
+			tabs.push(tBttn);
 			return tBttn;
 		}
 
