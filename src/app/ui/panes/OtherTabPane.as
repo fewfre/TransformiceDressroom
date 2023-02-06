@@ -146,7 +146,7 @@ package app.ui.panes
 			
 			// Cut the head off the poor mouse ;_;
 			var pose = characterHead.outfit.pose;
-			var partsToKeep = ["Tete_", "Oeil_", "OeilVide_", "Oeil2_", "Oeil3_", "Oeil4_", "OreilleD_", "OreilleG_"];
+			var partsToKeep:Array = ["Tete_", "Oeil_", "OeilVide_", "Oeil2_", "Oeil3_", "Oeil4_", "OreilleD_", "OreilleG_"];
 			var tChild:DisplayObject = null;
 			for(var i:int = pose.numChildren-1; i >= 0; i--) {
 				tChild = pose.getChildAt(i);

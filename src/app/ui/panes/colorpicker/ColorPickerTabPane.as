@@ -131,8 +131,8 @@ package app.ui.panes.colorpicker
 			_recentColorsDisplay.render();
 		}
 		
-		public function getAllColors() : Array {
-			var colors = new Array();
+		public function getAllColors() : Vector.<uint> {
+			var colors:Vector.<uint> = new Vector.<uint>();
 			for(var i:int = 0; i < _colorSwatches.length; i++){
 				colors.push( _colorSwatches[i].color );
 			}

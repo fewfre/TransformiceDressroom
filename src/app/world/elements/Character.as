@@ -156,7 +156,7 @@ package app.world.elements
 					}
 					tData = GameAssets.getItemFromTypeID(pType, tID);
 					if(isOutfit) tData = tData.copy();
-					if(tColors.length > 0) { tData.colors = _hexArrayToIntArray(tColors, tData.defaultColors); }
+					if(tColors.length > 0) { tData.colors = _hexArrayToIntList(tColors, tData.defaultColors); }
 					else if(tID == 1 || tID == "1") { tData.setColorsToDefault(); }
 				}
 				_itemDataMap[pType] = pAllowNull ? tData : ( tData == null ? _itemDataMap[pType] : tData );
@@ -170,13 +170,13 @@ package app.world.elements
 					tID = tColors.splice(0, 1)[0]; // Remove first item and store it as the ID.
 					tData = GameAssets.getItemFromTypeID(pType, tID);
 					if(isOutfit) tData = tData.copy();
-					if(tColors.length > 0) { tData.colors = _hexArrayToIntArray(tColors, tData.defaultColors); }
+					if(tColors.length > 0) { tData.colors = _hexArrayToIntList(tColors, tData.defaultColors); }
 					else if(tID == 1 || tID == "1") { tData.setColorsToDefault(); }
 				}
 				_itemDataMap[pType] = pAllowNull ? tData : ( tData == null ? _itemDataMap[pType] : tData );
 			} catch (error:Error) { };
 		}
-		private function _hexArrayToIntArray(pColors:Array, pDefaults:Vector.<uint>) : Vector.<uint> {
+		private function _hexArrayToIntList(pColors:Array, pDefaults:Vector.<uint>) : Vector.<uint> {
 			var ints = new Vector.<uint>();
 			for(var i = 0; i < pDefaults.length; i++) {
 				ints.push( pColors[i] ? _hexToInt(pColors[i]) : pDefaults[i] );
@@ -229,7 +229,7 @@ package app.world.elements
 				if(tData) {
 					var tColors:Vector.<uint> = getColors(tTypes[i]);
 					if(String(tColors) != String(tData.defaultColors)) { // Quick way to compare two arrays with primitive types
-						tIds.push(tData.id+"_"+_intArrayToHexArray(tColors).join("+") );
+						tIds.push(tData.id+"_"+_intListToHexList(tColors).join("+") );
 					} else {
 						tIds.push(tData.id);
 					}
@@ -241,7 +241,7 @@ package app.world.elements
 			
 			// Add fur color to end, if there is one
 			if(tSkinData.defaultColors && skinId == 1 && tSkinData.colors[0] != GameAssets.DEFAULT_FUR_COLOR) {
-				code += ";"+_intArrayToHexArray(tSkinData.colors)[0];
+				code += ";"+_intListToHexList(tSkinData.colors)[0];
 			}
 			return code;
 		}
@@ -251,12 +251,12 @@ package app.world.elements
 				pParams[pParam] = tData.id;
 				var tColors:Vector.<uint> = getColors(pType);
 				if(String(tColors) != String(tData.defaultColors)) { // Quick way to compare two arrays with primitive types
-					pParams[pParam] += ";"+_intArrayToHexArray(tColors).join(";");
+					pParams[pParam] += ";"+_intListToHexList(tColors).join(";");
 				}
 			}
 			/*else { pParams[pParam] = ''; }*/
 		}
-		private function _intArrayToHexArray(pColors:Vector.<uint>) : Vector.<String> {
+		private function _intListToHexList(pColors:Vector.<uint>) : Vector.<String> {
 			var hexList = new Vector.<String>();
 			for(var i = 0; i < pColors.length; i++) {
 				hexList.push( _intToHex(pColors[i]) );
