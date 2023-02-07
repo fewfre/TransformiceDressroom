@@ -5,6 +5,7 @@ package app.ui.panes
 	import app.ui.buttons.*;
 	import fl.containers.ScrollPane;
 	import flash.display.*;
+	import com.fewfre.display.Grid;
 
 	public class TabPane extends MovieClip
 	{

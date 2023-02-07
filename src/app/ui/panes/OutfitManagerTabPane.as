@@ -34,14 +34,17 @@ package app.ui.panes
 			_onUserLookClicked = pOnUserLookClicked;
 			
 			this.addInfoBar( new ShopInfoBar({ showBackButton:true, showGridManagementButtons:true }) );
-			this.addGrid( new Grid({ x:15, y:5, width:385, columns:5, margin:5 }) );
-			_deleteBtnGrid = addItem(new Grid({ x:15, y:5, width:385, columns:5, margin:5 })) as Grid;
+			this.addGrid( new Grid(385, 5).setXY(15,5) );
+			_deleteBtnGrid = addItem(new Grid(385, 5).setXY(15,5)) as Grid;
 			this.infoBar.hideImageCont();
 			
 			this.grid.reverse(); // Start reversed so that new outfits get added to start of list
 			_deleteBtnGrid.reverse();
 			this.infoBar.randomizeButton.addEventListener(ButtonBase.CLICK, function(){ selectRandomOutfit(); });
-			this.infoBar.reverseButton.addEventListener(ButtonBase.CLICK, function(){ grid.reverse(); _renderOutfits(); });
+			this.infoBar.reverseButton.addEventListener(ButtonBase.CLICK, function(){
+				grid.reverse(); _deleteBtnGrid.reverse();
+				_renderOutfits(); // Have to manually re-render since otherwise "add" button doesn't stick to top left
+			});
 			
 			// Custom infobar buttons
 			var size = 40, xx = ConstantsApp.PANE_WIDTH - size - 5, yy = 6;
@@ -103,26 +106,18 @@ package app.ui.panes
 				_exportButton.disable().alpha = 0;
 			}
 			
-			
-			// keep track of last grid reversed state
-			var wasReversed = grid.reversed;
-			
 			grid.reset();
 			_deleteBtnGrid.reset();
 			buttons = [];
 			
-			// if(!wasReversed) _addNewOutfitButton();
+			if(!grid.reversed) { _addNewOutfitButton(); }
 			
 			for(var i:int = 0; i < looks.length; i++) {
 				var look = looks[i];
 				_addLookButton(look, i);
 			}
-			_addNewOutfitButton();
 			
-			if(wasReversed) {
-				grid.reverse();
-				_deleteBtnGrid.reverse();
-			}
+			if(grid.reversed) { _addNewOutfitButton(); }
 			
 			UpdatePane();
 		}
@@ -130,7 +125,7 @@ package app.ui.panes
 		public function _addLookButton(lookCode:String, i:int) : void {
 			var lookMC = new Character({ isOutfit:true, params:lookCode, pose:GameAssets.poses[GameAssets.defaultPoseIndex] });
 			
-			var btn:PushButton = new PushButton({ width:grid.radius, height:grid.radius, obj:lookMC, id:i }) as PushButton;
+			var btn:PushButton = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:lookMC, id:i }) as PushButton;
 			btn.addEventListener(PushButton.STATE_CHANGED_AFTER, function(){
 				_onUserLookClicked(lookCode);
 				
@@ -141,7 +136,7 @@ package app.ui.panes
 			
 			// Corresponding Delete Button
 			var deleteBtnHolder = new Sprite(); deleteBtnHolder.alpha = 0;
-			var deleteBtn = deleteBtnHolder.addChild(new ScaleButton({ x:grid.radius-5, y:5, obj:new $Trash(), obj_scale:0.4 }));
+			var deleteBtn = deleteBtnHolder.addChild(new ScaleButton({ x:grid.cellSize-5, y:5, obj:new $Trash(), obj_scale:0.4 }));
 			deleteBtn.addEventListener(MouseEvent.CLICK, function(e){ deleteLookByIndex(i); });
 			_deleteBtnGrid.add(deleteBtnHolder);
 			
@@ -154,7 +149,7 @@ package app.ui.panes
 		
 		private function _addNewOutfitButton() : void {
 			var holder = new Sprite();
-			var tNewOutfitBtn = holder.addChild(new ScaleButton({ x:grid.radius*0.5, y:grid.radius*0.5, width:this.grid.radius, height:this.grid.radius, obj:new $OutfitAdd() }));
+			var tNewOutfitBtn = holder.addChild(new ScaleButton({ x:grid.cellSize*0.5, y:grid.cellSize*0.5, width:grid.cellSize, height:grid.cellSize, obj:new $OutfitAdd() }));
 			tNewOutfitBtn.addEventListener(MouseEvent.CLICK, function(e){ addNewLook(_character.getParamsTfmOfficialSyntax()) });
 			this.grid.add(holder);
 			_deleteBtnGrid.add(new Sprite()); // empty spot since no delete button for this

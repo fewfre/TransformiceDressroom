@@ -69,7 +69,7 @@ package app.ui.panes
 				looksGoBtn.addEventListener(MouseEvent.CLICK, _onFetchUserLooks);
 				
 				yy += sizey*0.5 + 10;
-				userOutfitsGrid = addItem( new Grid({ x:xx-2, y:yy, width:ConstantsApp.PANE_WIDTH - spacingx*2 - 5, columns:6, margin:5 }) ) as Grid;
+				userOutfitsGrid = addItem( new Grid(ConstantsApp.PANE_WIDTH - spacingx*2 - 5, 6).setXY(xx-2,yy) ) as Grid;
 				
 				// Since we want this to disappear after a search anyways, coop the error text variable
 				yy += 2;
@@ -117,14 +117,14 @@ package app.ui.panes
 		* Public
 		*****************************/
 		public function addLook(lookCode:String) {
-			var grid = this.userOutfitsGrid;
-			var character = new Character({
+			var grid:Grid = this.userOutfitsGrid;
+			var character:Character = new Character({
 				isOutfit:true,
 				params:lookCode,
 				pose:GameAssets.poses[GameAssets.defaultPoseIndex]
 			});
 			character.parseParams(lookCode);
-			var btn = new PushButton({ width:grid.radius, height:grid.radius, obj:character });
+			var btn = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:character });
 			btn.addEventListener(MouseEvent.CLICK, function(){
 				onUserLookClicked(lookCode);
 				// Hacky way to make push button a normal button

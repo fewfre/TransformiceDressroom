@@ -69,22 +69,21 @@ package app.ui.panes
 			
 			// Grid
 			yy += 15; xx = 15;
-			var grid:Grid = this.addItem( new Grid({ x:xx, y:yy, width:385, columns:5, margin:5 }) ) as Grid;
+			var grid:Grid = this.addItem( new Grid(385, 5).setXY(xx,yy) ) as Grid;
 
-			this.button_hand = new PushButton({ width:grid.radius, height:grid.radius, obj:new GameAssets.extraObjectWand.itemClass(), obj_scale:1.5, id:i++ });
+			this.button_hand = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:new GameAssets.extraObjectWand.itemClass(), obj_scale:1.5, id:i++ });
 			grid.add(this.button_hand);
 			if(character.getItemData(ItemType.OBJECT)) { this.button_hand.toggleOn(); }
 			
-			this.button_back = new PushButton({ width:grid.radius, height:grid.radius, obj:new GameAssets.extraFromage.itemClass(), obj_scale:1.5, id:i++ });
+			this.button_back = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:new GameAssets.extraFromage.itemClass(), obj_scale:1.5, id:i++ });
 			grid.add(this.button_back);
 			if(character.getItemData(ItemType.BACK)) { this.button_back.toggleOn(); }
 			
-			this.button_backHand = new PushButton({ width:grid.radius, height:grid.radius, obj:new GameAssets.extraBackHand.itemClass(), obj_scale:1.5, id:i++ });
+			this.button_backHand = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:new GameAssets.extraBackHand.itemClass(), obj_scale:1.5, id:i++ });
 			grid.add(this.button_backHand);
 			if(character.getItemData(ItemType.PAW_BACK)) { this.button_backHand.toggleOn(); }
 			
-			yy += grid.Height + 10;
-			
+			// Bottom buttons
 			characterHead = new Character({ skin:GameAssets.skins[GameAssets.defaultSkinIndex], pose:GameAssets.poses[GameAssets.defaultPoseIndex] });
 			var saveHeadButton = addItem(new GameButton({ x:348, y:310, width:70, height:70 }));
 			saveHeadButton.addChild(characterHead);
