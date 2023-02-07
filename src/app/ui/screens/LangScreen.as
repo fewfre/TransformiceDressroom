@@ -40,9 +40,8 @@ package app.ui.screens
 			* Background
 			*****************************/
 			var tWidth:Number = 500, tHeight:Number = 200;
-			_tray = addChild(new RoundedRectangle({ x:0, y:0, width:tWidth, height:tHeight, origin:0.5 })) as RoundedRectangle;
-			_tray.drawSimpleGradient(ConstantsApp.COLOR_TRAY_GRADIENT, 15, ConstantsApp.COLOR_TRAY_B_1, ConstantsApp.COLOR_TRAY_B_2, ConstantsApp.COLOR_TRAY_B_3);
-			
+			_tray = new RoundedRectangle({ width:tWidth, height:tHeight, origin:0.5 }).appendTo(this).drawAsTray();
+
 			/****************************
 			* Languages
 			*****************************/

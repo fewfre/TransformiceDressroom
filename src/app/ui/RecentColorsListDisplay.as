@@ -79,7 +79,7 @@ package app.ui
 			
 			this.visible = RECENTS.length > 0;
 			var bgBorderColor = isDeleteModeOn ? 0x780f11 : 0;//0x0f474f;
-			_bg.draw(0x6f6b64, 5, bgBorderColor, bgBorderColor, bgBorderColor);
+			_bg.draw(0x6f6b64, 5, bgBorderColor);
 			
 			_verticalRule.graphics.clear();
 			_verticalRule.graphics.lineStyle(5, bgBorderColor, 1, false, "normal", "square");
@@ -148,7 +148,7 @@ class DeleteButton extends PushButton
 		*****************************/
 		override protected function _renderUp() : void {
 			if (this.pushed == false) {
-				_bg.draw(0xeb9d9e, 5, 0xFF0000, 0xFF0000, 0xFF0000);
+				_bg.draw(0xeb9d9e, 5, 0xFF0000);
 			}
 		}
 		
@@ -158,9 +158,9 @@ class DeleteButton extends PushButton
 		
 		override protected function _renderOver() : void {
 			if (this.pushed == false) {
-				_bg.draw(0xf57375, 5, 0xFF0000, 0xFF0000, 0xFF0000);
+				_bg.draw(0xf57375, 5, 0xFF0000);
 			} else {
-				_bg.draw(0xDD0000, 5, 0x780f11, 0x780f11, 0x780f11);
+				_bg.draw(0xDD0000, 5, 0x780f11);
 			}
 		}
 		
@@ -173,6 +173,6 @@ class DeleteButton extends PushButton
 		}
 
 		override protected function _renderPressed() : void {
-			_bg.draw(0xFF0000, 5, 0x780f11, 0x780f11, 0x780f11);
+			_bg.draw(0xFF0000, 5, 0x780f11);
 		}
 }

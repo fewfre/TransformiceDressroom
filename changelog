@@ -12,6 +12,7 @@
 		- replaced by `isSkinColor` property on `SkinData`
 	- `Grid` revamped and moved to `com.fewfre.display`
 	- Some components in `ui` moved to new `ui.common` folder
+	- Small `RoundedRectangle` revamp
 
 
 == V1.23d - 30 January 2023 ==

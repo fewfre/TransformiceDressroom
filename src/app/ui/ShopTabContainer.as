@@ -1,6 +1,5 @@
 package app.ui
 {
-	import app.data.ConstantsApp;
 	import app.ui.buttons.*;
 	import app.ui.common.RoundedRectangle;
 	import com.fewfre.events.FewfEvent;
@@ -19,7 +18,7 @@ package app.ui
 		{
 			super(pData);
 
-			this.drawSimpleGradient(ConstantsApp.COLOR_TRAY_GRADIENT, 15, ConstantsApp.COLOR_TRAY_B_1, ConstantsApp.COLOR_TRAY_B_2, ConstantsApp.COLOR_TRAY_B_3);
+			this.drawAsTray();
 
 			var tTabInfo = pData.tabs;
 

@@ -2,6 +2,7 @@ package app.ui.common
 {
 	import flash.display.*;
 	import flash.geom.Matrix;
+	import app.data.ConstantsApp;
 	
 	public class RoundedRectangle extends Sprite
 	{
@@ -13,8 +14,7 @@ package app.ui.common
 		
 		// Constructor
 		// pData = { x:Number, y:Number, width:Number, height:Number, ?origin:Number, ?originX:Number=0, ?originY:Number=0 }
-		public function RoundedRectangle(pData:Object)
-		{
+		public function RoundedRectangle(pData:Object) {
 			super();
 			
 			this.x = pData.x;
@@ -30,10 +30,18 @@ package app.ui.common
 			if(pData.originX != null) { originX = pData.originX; }
 			if(pData.originY != null) { originY = pData.originY; }
 		}
+		public function setXY(pX:Number, pY:Number) : RoundedRectangle { x = pX; y = pY; return this; }
+		public function appendTo(target:Sprite): RoundedRectangle { target.addChild(this); return this; }
 		
-		public function draw(pColor:Number, pRadius:Number, pLineColor1:Number, pLineColor2:Number, pLineColor3:Number) : void {
+		/****************************
+		* Public
+		*****************************/
+		public function draw(pColor:uint, pRadius:Number, pLineColor1:uint, pLineColor2:int=-1, pLineColor3:int=-1) : RoundedRectangle {
 			var tX:Number = 0 - (Width * originX);
 			var tY:Number = 0 - (Height * originY);
+			
+			if(pLineColor2 == -1) pLineColor2 = pLineColor1;
+			if(pLineColor3 == -1) pLineColor3 = pLineColor1;
 			
 			graphics.clear();
 			graphics.moveTo(tX, tY);
@@ -45,9 +53,10 @@ package app.ui.common
 			graphics.beginFill(pColor);
 			graphics.drawRoundRect(tX+1, tY+1, this.Width - 3, this.Height - 3, pRadius, pRadius);
 			graphics.endFill();
+			return this;
 		}
 		
-		public function drawSimpleGradient(pColors:Array, pRadius:Number, pLineColor1:Number, pLineColor2:Number, pLineColor3:Number) : void {
+		public function drawSimpleGradient(pColors:Array, pRadius:Number, pLineColor1:uint, pLineColor2:uint, pLineColor3:uint) : RoundedRectangle {
 			var tX:Number = 0 - (Width * originX);
 			var tY:Number = 0 - (Height * originY);
 			
@@ -90,6 +99,15 @@ package app.ui.common
 			// Finish
 			graphics.drawRoundRect(tX+1, tY+1, this.Width - 3, this.Height - 3, pRadius, pRadius);
 			graphics.endFill();
+			return this;
+		}
+		
+		/****************************
+		* Convience methods
+		*****************************/
+		public function drawAsTray() : RoundedRectangle {
+			this.drawSimpleGradient(ConstantsApp.COLOR_TRAY_GRADIENT, 15, ConstantsApp.COLOR_TRAY_B_1, ConstantsApp.COLOR_TRAY_B_2, ConstantsApp.COLOR_TRAY_B_3);
+			return this;
 		}
 	}
 }

@@ -24,7 +24,7 @@ package app.ui.screens
 			pData.height = 200;
 			pData.origin = 0.5;
 			super(pData);
-			this.drawSimpleGradient(ConstantsApp.COLOR_TRAY_GRADIENT, 15, ConstantsApp.COLOR_TRAY_B_1, ConstantsApp.COLOR_TRAY_B_2, ConstantsApp.COLOR_TRAY_B_3);
+			this.drawAsTray();
 			
 			Fewf.assets.addEventListener(ProgressEvent.PROGRESS, _onLoadProgress);
 			Fewf.assets.addEventListener(AssetManager.PACK_LOADED, _onPackLoaded);

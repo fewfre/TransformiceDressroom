@@ -28,8 +28,8 @@ package app.ui
 			
 			var tTFWidth:Number = pData.width ? pData.width : 250, tTFHeight:Number = 18, tTFPaddingX:Number = 5, tTFPaddingY:Number = 5;
 			// So much easier than doing it with those darn native text field options which have no padding.
-			var tTextBackground:RoundedRectangle = addChild(new RoundedRectangle({ width:tTFWidth+tTFPaddingX*2, height:tTFHeight+tTFPaddingY*2, origin:0.5 })) as RoundedRectangle;
-			tTextBackground.draw(0xdcdfea, 7, 0x444444, 0x444444, 0x444444);
+			var tTextBackground:RoundedRectangle = new RoundedRectangle({ width:tTFWidth+tTFPaddingX*2, height:tTFHeight+tTFPaddingY*2, origin:0.5 })
+				.appendTo(this).draw(0xdcdfea, 7, 0x444444);
 			
 			_textField = tTextBackground.addChild(new TextField()) as TextField;
 			_textField.type = TextFieldType.INPUT;

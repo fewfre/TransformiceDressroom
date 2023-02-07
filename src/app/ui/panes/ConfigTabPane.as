@@ -85,7 +85,7 @@ package app.ui.panes
 			var tTFWidth:Number = pData.width, tTFHeight:Number = pData.height, tTFPaddingX:Number = 5, tTFPaddingY:Number = 5;
 			// So much easier than doing it with those darn native text field options which have no padding.
 			var tTextBackground:RoundedRectangle = addItem(new RoundedRectangle({ x:pData.x, y:pData.y, width:tTFWidth+tTFPaddingX*2, height:tTFHeight+tTFPaddingY*2, origin:0.5 })) as RoundedRectangle;
-			tTextBackground.draw(0xdcdfea, 7, 0x444444, 0x444444, 0x444444);
+			tTextBackground.draw(0xdcdfea, 7, 0x444444);
 			
 			var tTextField = tTextBackground.addChild(new TextField()) as TextField;
 			tTextField.type = TextFieldType.INPUT;

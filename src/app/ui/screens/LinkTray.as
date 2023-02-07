@@ -52,8 +52,7 @@ package app.ui.screens
 			* Background
 			*****************************/
 			var tWidth:Number = 500, tHeight:Number = 300;
-			_bg = addChild(new RoundedRectangle({ x:0, y:0, width:tWidth, height:tHeight, origin:0.5 })) as RoundedRectangle;
-			_bg.drawSimpleGradient(ConstantsApp.COLOR_TRAY_GRADIENT, 15, ConstantsApp.COLOR_TRAY_B_1, ConstantsApp.COLOR_TRAY_B_2, ConstantsApp.COLOR_TRAY_B_3);
+			_bg = new RoundedRectangle({ width:tWidth, height:tHeight, origin:0.5 }).appendTo(this).drawAsTray();
 			
 			/****************************
 			* Header
@@ -142,8 +141,8 @@ package app.ui.screens
 		
 		private function _newCopyInput(pData:Object, pParent:Sprite) : TextField {
 			var tTFWidth:Number = _bg.width-50, tTFHeight:Number = 18, tTFPaddingX:Number = 5, tTFPaddingY:Number = 5;
-			var tTextBackground:RoundedRectangle = pParent.addChild(new RoundedRectangle({ x:pData.x, y:pData.y, width:tTFWidth+tTFPaddingX*2, height:tTFHeight+tTFPaddingY*2, origin:0.5 })) as RoundedRectangle;
-			tTextBackground.draw(0xFFFFFF, 7, 0x444444, 0x444444, 0x444444);
+			var tTextBackground:RoundedRectangle = new RoundedRectangle({ x:pData.x, y:pData.y, width:tTFWidth+tTFPaddingX*2, height:tTFHeight+tTFPaddingY*2, origin:0.5 })
+				.appendTo(pParent).draw(0xFFFFFF, 7, 0x444444);
 			
 			var tTextField:TextField = tTextBackground.addChild(new TextField()) as TextField;
 			tTextField.type = TextFieldType.DYNAMIC;

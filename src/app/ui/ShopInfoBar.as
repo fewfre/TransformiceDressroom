@@ -74,7 +74,7 @@ package app.ui
 			rioVisual.alpha = 0;
 			
 			var rioBackdrop:RoundedRectangle = rioVisual.addChild(new RoundedRectangle({ origin:0.5, width:50, height:50 })) as RoundedRectangle;
-			rioBackdrop.draw(0, 15, 0, 0, 0);
+			rioBackdrop.draw(0x000000, 15, 0x000000);
 			rioBackdrop.alpha = 0.1;
 			
 			var rioIcon:DisplayObject = rioVisual.addChild(new $No());

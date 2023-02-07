@@ -1,13 +1,12 @@
 package app.ui.screens
 {
 	import com.fewfre.display.*;
-	import app.data.*;
 	import app.ui.buttons.*;
 	import app.ui.common.*;
-	import flash.display.*;
+	import flash.display.Sprite;
 	import flash.events.*;
 	
-	public class TrashConfirmScreen extends MovieClip
+	public class TrashConfirmScreen extends Sprite
 	{
 		// Constants
 		public static const CONFIRM : String= "confirm_tray_screen";
@@ -37,8 +36,7 @@ package app.ui.screens
 			* Background
 			*****************************/
 			var tWidth:Number = 66, tHeight:Number = 34;
-			_bg = addChild(new RoundedRectangle({ x:0, y:0, width:tWidth, height:tHeight, origin:0.5 })) as RoundedRectangle;
-			_bg.drawSimpleGradient(ConstantsApp.COLOR_TRAY_GRADIENT, 15, ConstantsApp.COLOR_TRAY_B_1, ConstantsApp.COLOR_TRAY_B_2, ConstantsApp.COLOR_TRAY_B_3);
+			_bg = new RoundedRectangle({ width:tWidth, height:tHeight, origin:0.5 }).appendTo(this).drawAsTray();
 			
 			/****************************
 			* Buttons
