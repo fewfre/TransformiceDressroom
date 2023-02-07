@@ -4,8 +4,8 @@ package app.ui
 	import com.fewfre.utils.*;
 	import com.adobe.images.*;
 	import app.data.*;
-	import app.ui.*;
 	import app.ui.buttons.*;
+	import app.ui.common.*;
 	import app.world.data.*;
 	import flash.display.*;
 	import flash.events.*;

@@ -3,6 +3,7 @@ package app.ui.panes
 	import app.data.*;
 	import app.ui.*;
 	import app.ui.buttons.*;
+	import app.ui.common.*;
 	import com.fewfre.display.*;
 	import com.fewfre.utils.*;
 	import flash.display.*;
@@ -105,11 +106,11 @@ package app.ui.panes
 			};
 			if(Fewf.isExternallyLoaded) {
 				_scaleSlider = _tray.addChild(ParentApp.newFancySlider(sliderProps));
-				_scaleSlider.addEventListener(FancySlider.CHANGE, _onSliderChange);
 			} else {
 				_scaleSlider = _tray.addChild(new FancySlider(sliderProps));
-				_scaleSlider.addEventListener(FancySlider.CHANGE, _onSliderChange);
 			}
+			_scaleSlider.addEventListener(FancySlider.CHANGE, _onSliderChange);
+			
 			// Attach scroll event to back to detect scroll anywhere on pane
 			// and also attach to item since it ignores the other scroll event if mouse over it
 			this.contentBack.addEventListener(MouseEvent.MOUSE_WHEEL, _onMouseWheel);

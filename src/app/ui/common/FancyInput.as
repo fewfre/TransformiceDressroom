@@ -1,15 +1,11 @@
-package app.ui
+package app.ui.common
 {
 	import com.fewfre.display.TextBase;
-	import com.fewfre.utils.Fewf;
 	import flash.display.MovieClip;
 	import flash.text.TextField;
 	import flash.text.TextFieldType;
 	import flash.events.Event;
-	import flash.events.TextEvent;
 	import flash.events.FocusEvent;
-	import flash.utils.setTimeout;
-	import flash.utils.clearTimeout;
 	
 	public class FancyInput extends MovieClip
 	{

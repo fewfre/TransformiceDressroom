@@ -2,8 +2,8 @@ package app.ui.screens
 {
 	import com.fewfre.display.*;
 	import app.data.*;
-	import app.ui.*;
 	import app.ui.buttons.*;
+	import app.ui.common.*;
 	import flash.display.*;
 	import flash.events.*;
 	

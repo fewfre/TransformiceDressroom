@@ -7,6 +7,7 @@ package app.ui.panes
 	import app.data.*;
 	import app.ui.*;
 	import app.ui.buttons.*;
+	import app.ui.common.*;
 	import app.ui.screens.LoaderDisplay;
 	import app.ui.screens.LoadingSpinner;
 	import app.world.elements.*;

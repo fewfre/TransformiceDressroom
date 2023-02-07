@@ -4,7 +4,7 @@ package app.ui.screens
 	import com.fewfre.utils.*;
 	import com.fewfre.events.FewfEvent;
 	import app.data.*;
-	import app.ui.*;
+	import app.ui.common.*;
 	import flash.display.*;
 	import flash.events.*
 	import flash.text.*;

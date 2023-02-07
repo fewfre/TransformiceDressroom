@@ -1,12 +1,8 @@
 package app.ui.buttons
 {
 	import com.fewfre.display.ButtonBase;
-	import app.data.*;
-	import app.ui.*;
-	import flash.display.*;
-	import flash.events.MouseEvent;
-	import flash.text.*;
-	import flash.geom.*;
+	import app.data.ConstantsApp;
+	import app.ui.common.RoundedRectangle;
 	
 	public class GameButton extends ButtonBase
 	{

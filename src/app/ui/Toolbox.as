@@ -4,17 +4,17 @@ package app.ui
 	import com.fewfre.display.TextBase;
 	import com.fewfre.utils.Fewf;
 	import com.fewfre.utils.ImgurApi;
-	import app.data.*;
-	import app.ui.*;
+	import app.data.ConstantsApp;
 	import app.ui.buttons.*;
-	import flash.display.*;
+	import app.ui.common.*;
+	import flash.display.Sprite;
 	import flash.net.*;
 	import ext.ParentApp;
 	import com.fewfre.utils.FewfDisplayUtils;
 	import app.world.elements.Character;
 	import flash.utils.setTimeout;
 	
-	public class Toolbox extends MovieClip
+	public class Toolbox extends Sprite
 	{
 		// Storage
 		private var _downloadTray	: FrameBase;
@@ -50,7 +50,7 @@ package app.ui
 			/********************
 			* Toolbar Buttons
 			*********************/
-			var tTray = _bg.addChild(new MovieClip());
+			var tTray:Sprite = _bg.addChild(new Sprite()) as Sprite;
 			var tTrayWidth = _bg.Width - _downloadTray.Width;
 			tTray.x = -(_bg.Width*0.5) + (tTrayWidth*0.5) + (_bg.Width - tTrayWidth);
 			
@@ -60,7 +60,7 @@ package app.ui
 			// ### Left Side Buttons ###
 			tX = -tTrayWidth*0.5 + tButtonSize*0.5 + tButtonSizeSpace;
 			
-			btn = tTray.addChild(new SpriteButton({ x:tX+tButtonXInc*tButtonsOnLeft, y:tY, width:tButtonSize, height:tButtonSize, obj_scale:0.45, obj:new $Link(), origin:0.5 }));
+			btn = tTray.addChild(new SpriteButton({ x:tX+tButtonXInc*tButtonsOnLeft, y:tY, width:tButtonSize, height:tButtonSize, obj_scale:0.45, obj:new $Link(), origin:0.5 })) as SpriteButton;
 			btn.addEventListener(ButtonBase.CLICK, pData.onShare);
 			tButtonsOnLeft++;
 			
@@ -88,22 +88,22 @@ package app.ui
 			// ### Right Side Buttons ###
 			tX = tTrayWidth*0.5-(tButtonSize*0.5 + tButtonSizeSpace);
 
-			btn = tTray.addChild(new SpriteButton({ x:tX-tButtonXInc*tButtonOnRight, y:tY, width:tButtonSize, height:tButtonSize, obj_scale:0.42, obj:new $Trash(), origin:0.5 }));
+			btn = tTray.addChild(new SpriteButton({ x:tX-tButtonXInc*tButtonOnRight, y:tY, width:tButtonSize, height:tButtonSize, obj_scale:0.42, obj:new $Trash(), origin:0.5 })) as SpriteButton;
 			btn.addEventListener(ButtonBase.CLICK, pData.onTrash);
 			tButtonOnRight++;
 
 			// Dice icon based on https://www.iconexperience.com/i_collection/icons/?icon=dice
-			btn = tTray.addChild(new SpriteButton({ x:tX-tButtonXInc*tButtonOnRight, y:tY, width:tButtonSize, height:tButtonSize, obj_scale:1, obj:new $Dice(), origin:0.5 }));
+			btn = tTray.addChild(new SpriteButton({ x:tX-tButtonXInc*tButtonOnRight, y:tY, width:tButtonSize, height:tButtonSize, obj_scale:1, obj:new $Dice(), origin:0.5 })) as SpriteButton;
 			btn.addEventListener(ButtonBase.CLICK, pData.onRandomize);
 			tButtonOnRight++;
 			
-			animateButton = tTray.addChild(new SpriteButton({ x:tX-tButtonXInc*tButtonOnRight, y:tY, width:tButtonSize, height:tButtonSize, obj_scale:0.5, obj:new MovieClip(), origin:0.5 }));
+			animateButton = tTray.addChild(new SpriteButton({ x:tX-tButtonXInc*tButtonOnRight, y:tY, width:tButtonSize, height:tButtonSize, obj_scale:0.5, obj:new Sprite(), origin:0.5 })) as SpriteButton;
 			animateButton.addEventListener(ButtonBase.CLICK, pData.onAnimate);
 			toggleAnimateButtonAsset(_character.animatePose);
 			tButtonOnRight++;
 			
 			if(ConstantsApp.ANIMATION_FRAME_BY_FRAME) {
-				curanimationFrameText = tTray.addChild(new TextBase({ text:"loading_progress", originX:1, x:_bg.Width/2-50, y:35 }));
+				curanimationFrameText = tTray.addChild(new TextBase({ text:"loading_progress", originX:1, x:_bg.Width/2-50, y:35 })) as TextBase;
 				curanimationFrameText.setValues( _character.outfit.poseCurrentFrame + "/" + _character.outfit.poseTotalFrames );
 			}
 			

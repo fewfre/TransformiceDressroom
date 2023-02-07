@@ -1,7 +1,7 @@
 package app.ui
 {
 	import com.fewfre.display.TextBase;
-	import com.fewfre.utils.Fewf;
+	import app.ui.common.RoundedRectangle;
 	import flash.display.MovieClip;
 	import flash.text.TextField;
 	import flash.text.TextFieldType;

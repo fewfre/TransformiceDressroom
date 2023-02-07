@@ -1,4 +1,4 @@
-package app.ui
+package app.ui.common
 {
 	import com.fewfre.utils.*;
 	import flash.display.*;

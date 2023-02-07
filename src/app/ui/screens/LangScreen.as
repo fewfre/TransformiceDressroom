@@ -1,8 +1,8 @@
 package app.ui.screens
 {
 	import app.data.*;
-	import app.ui.*;
 	import app.ui.buttons.*;
+	import app.ui.common.*;
 	import app.world.data.*;
 	import com.adobe.images.*;
 	import com.fewfre.display.*;

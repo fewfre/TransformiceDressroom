@@ -1,11 +1,8 @@
 package app.ui
 {
-	import app.data.*;
-	import app.ui.*;
+	import app.data.ConstantsApp;
 	import app.ui.buttons.*;
-	import flash.display.*;
-	import flash.display.Shape;
-	import flash.events.*;
+	import app.ui.common.RoundedRectangle;
 	import com.fewfre.events.FewfEvent;
 
 	public class ShopTabContainer extends RoundedRectangle

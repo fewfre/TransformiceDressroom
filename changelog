@@ -11,6 +11,7 @@
 	- Removed `SKIN_COLOR` from `ItemType` as it's no longer useful and is instead awkward to work around
 		- replaced by `isSkinColor` property on `SkinData`
 	- `Grid` revamped and moved to `com.fewfre.display`
+	- Some components in `ui` moved to new `ui.common` folder
 
 
 == V1.23d - 30 January 2023 ==
