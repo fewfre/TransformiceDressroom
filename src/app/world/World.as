@@ -35,7 +35,7 @@ package app.world
 		internal var character		: Character;
 		internal var _paneManager	: PaneManager;
 
-		internal var shopTabs		: ShopTabContainer;
+		internal var shopTabs		: ShopTabList;
 		internal var _toolbox		: Toolbox;
 		internal var linkTray		: LinkTray;
 		internal var trashConfirmScreen	: TrashConfirmScreen;
@@ -109,8 +109,8 @@ package app.world
 			if(ConstantsApp.CONFIG_TAB_ENABLED) {
 				tabs.unshift({ text:"tab_config", event:TAB_CONFIG });
 			}
-			this.shopTabs = new ShopTabContainer(70, ConstantsApp.APP_HEIGHT, tabs).setXY(375, 10).appendTo(this);
-			this.shopTabs.addEventListener(ShopTabContainer.EVENT_SHOP_TAB_CLICKED, _onTabClicked);
+			this.shopTabs = new ShopTabList(70, ConstantsApp.APP_HEIGHT, tabs).setXY(375, 10).appendTo(this);
+			this.shopTabs.addEventListener(ShopTabList.TAB_CLICKED, _onTabClicked);
 
 			// Toolbox
 			_toolbox = new Toolbox({

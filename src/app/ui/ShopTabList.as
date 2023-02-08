@@ -5,17 +5,17 @@ package app.ui
 	import com.fewfre.events.FewfEvent;
 	import flash.display.Sprite;
 
-	public class ShopTabContainer extends Sprite
+	public class ShopTabList extends Sprite
 	{
 		// Constants
-		public static const EVENT_SHOP_TAB_CLICKED			: String = "shop_tab_clicked";
+		public static const TAB_CLICKED			: String = "shop_tab_clicked";
 
 		// Storage
 		public var tabs: Vector.<PushButton>;
 
 		// Constructor
 		// pTabDataList = Vector.<{ text:String, event:String }> }
-		public function ShopTabContainer(pWidth:Number, pHeight:Number, pTabDataList:Vector.<Object>) {
+		public function ShopTabList(pWidth:Number, pHeight:Number, pTabDataList:Vector.<Object>) {
 			// Background
 			new RoundedRectangle({ width:pWidth, height:pHeight }).appendTo(this).drawAsTray();
 
@@ -33,8 +33,8 @@ package app.ui
 				_createTab(pTabDataList[i].text, tX, tY += tYSpacing, tWidth, tHeight, pTabDataList[i].event);
 			}
 		}
-		public function setXY(pX:Number, pY:Number) : ShopTabContainer { x = pX; y = pY; return this; }
-		public function appendTo(target:Sprite): ShopTabContainer { target.addChild(this); return this; }
+		public function setXY(pX:Number, pY:Number) : ShopTabList { x = pX; y = pY; return this; }
+		public function appendTo(target:Sprite): ShopTabList { target.addChild(this); return this; }
 
 		private function _createTab(pText:String, pX:Number, pY:Number, pWidth:Number, pHeight:Number, pEvent:String) : PushButton {
 			var tBttn:PushButton = new PushButton({ x:pX, y:pY, width:pWidth, height:pHeight, text:pText, allowToggleOff:false });
@@ -58,7 +58,7 @@ package app.ui
 				}
 			}
 
-			if(pEvent!=null) { dispatchEvent(new FewfEvent(EVENT_SHOP_TAB_CLICKED, pEvent)); }
+			if(pEvent!=null) { dispatchEvent(new FewfEvent(TAB_CLICKED, pEvent)); }
 		}
 	}
 }
