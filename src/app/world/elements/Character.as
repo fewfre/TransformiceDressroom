@@ -22,14 +22,10 @@ package app.world.elements
 		public function set scale(pVal:Number) : void { outfit.scaleX = outfit.scaleY = pVal; }
 
 		// Constructor
-		// pData = { x:Number, y:Number, [various "__Data"s], ?params:String }
-		public function Character(pData:Object) {
+		public function Character(pWornItems:Vector.<ItemData>=null, pParams:String=null, pIsOutfit:Boolean=false) {
 			super();
 			animatePose = false;
-			isOutfit = !!pData.isOutfit;
-
-			this.x = pData.x;
-			this.y = pData.y;
+			isOutfit = pIsOutfit;
 
 			this.buttonMode = true;
 			this.addEventListener(MouseEvent.MOUSE_DOWN, function () { startDrag(); });
@@ -39,26 +35,16 @@ package app.world.elements
 			* Store Data
 			*****************************/
 			_itemDataMap = new Dictionary();
-			_itemDataMap[ItemType.SKIN] = pData.skin;
-			_itemDataMap[ItemType.HEAD] = pData.hat;
-			_itemDataMap[ItemType.HAIR] = pData.hair;
-			_itemDataMap[ItemType.EARS] = pData.ears;
-			_itemDataMap[ItemType.EYES] = pData.eyes;
-			_itemDataMap[ItemType.MOUTH] = pData.mouth;
-			_itemDataMap[ItemType.NECK] = pData.neck;
-			_itemDataMap[ItemType.TAIL] = pData.tail;
-			_itemDataMap[ItemType.CONTACTS] = pData.contacts;
-			_itemDataMap[ItemType.HAND] = pData.hand;
-			_itemDataMap[ItemType.POSE] = pData.pose;
-
-			_itemDataMap[ItemType.OBJECT] = pData.object;
-			_itemDataMap[ItemType.BACK] = pData.back;
-			_itemDataMap[ItemType.PAW_BACK] = pData.pawback;
+			for each(var item:ItemData in pWornItems) {
+				_itemDataMap[item.type] = item;
+			}
 			
-			if(pData.params) parseParams(pData.params);
+			if(pParams) parseParams(pParams);
 
 			updatePose();
 		}
+		public function setXY(pX:Number, pY:Number) : Character { x = pX; y = pY; return this; }
+		public function appendTo(target:Sprite): Character { target.addChild(this); return this; }
 
 		public function updatePose() {
 			var tScale = 3;

@@ -11,6 +11,7 @@ package app.ui.panes
 	import flash.display.*;
 	import flash.events.*;
 	import flash.display.MovieClip;
+	import app.world.data.ItemData;
 	
 	public class OtherTabPane extends TabPane
 	{
@@ -84,7 +85,7 @@ package app.ui.panes
 			if(character.getItemData(ItemType.PAW_BACK)) { this.button_backHand.toggleOn(); }
 			
 			// Bottom buttons
-			characterHead = new Character({ skin:GameAssets.skins[GameAssets.defaultSkinIndex], pose:GameAssets.poses[GameAssets.defaultPoseIndex] });
+			characterHead = new Character(new <ItemData>[ GameAssets.defaultSkin, GameAssets.defaultPose ]);
 			var saveHeadButton = addItem(new GameButton({ x:348, y:310, width:70, height:70 }));
 			saveHeadButton.addChild(characterHead);
 			saveHeadButton.addEventListener(MouseEvent.CLICK, _onSaveMouseHeadClicked);

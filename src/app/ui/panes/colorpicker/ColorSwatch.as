@@ -78,7 +78,7 @@ package app.ui.panes.colorpicker
 			_historyBtn = addChild(new ScaleButton({ x:100, y:SWATCH_SIZE*0.5+1.5, obj:tHistoryHitbox, obj_scale:0.5 })) as ScaleButton;
 			_historyBtn.visible = false;
 			
-			var tLockHitbox = new Sprite(), hitboxSize = SWATCH_SIZE*2;
+			var tLockHitbox = new Sprite(); hitboxSize = SWATCH_SIZE*2;
 			tLockHitbox.graphics.beginFill(0, 0);
 			tLockHitbox.graphics.drawRect(-hitboxSize*0.5, -hitboxSize*0.5, hitboxSize, hitboxSize);
 			tLockHitbox.graphics.endFill();

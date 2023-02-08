@@ -9,17 +9,13 @@ package app.ui
 	import flash.net.*;
 	import ext.ParentApp;
 
-	public class AppInfoBox extends MovieClip
+	public class AppInfoBox extends Sprite
 	{
 		// Storage
-		private var _textTray;
+		private var _textTray:Sprite;
 
 		// Constructor
-		// pData = { x:Number, y:Number }
-		public function AppInfoBox(pData:Object) {
-			this.x = pData.x;
-			this.y = pData.y;
-			
+		public function AppInfoBox() {
 			var btn:ButtonBase, tButtonSize = 25;
 			
 			btn = addChild(new SpriteButton({ width:tButtonSize, height:tButtonSize, obj_scale:0.35, obj:new $GitHubIcon(), origin:0.5 })) as SpriteButton;
@@ -27,16 +23,18 @@ package app.ui
 			
 			_setupTextTray();
 			
-			if(ParentApp.reopenSelectionLauncher()) {
+			if(!!(ParentApp.reopenSelectionLauncher())) {
 				btn = addChild(new ScaleButton({ x:-30, y:-28, obj_scale:0.5, obj:new $BackArrow(), origin:0.5 })) as ScaleButton;
 				btn.addEventListener(ButtonBase.CLICK, function(){ ParentApp.reopenSelectionLauncher()(); });
 			}
 			
 			_addEventListeners();
 		}
+		public function setXY(pX:Number, pY:Number) : AppInfoBox { x = pX; y = pY; return this; }
+		public function appendTo(target:Sprite): AppInfoBox { target.addChild(this); return this; }
 		
 		private function _setupTextTray() : void {
-			_textTray = addChild(new MovieClip());
+			_textTray = addChild(new Sprite()) as Sprite;
 			_textTray.x = 25*0.5 + 4;
 			if(Fewf.i18n.lang == "en" || !Fewf.i18n.getText("translated_by")) {
 				_textTray.addChild(new TextBase({ text:"version", originX:0, values:ConstantsApp.VERSION }));

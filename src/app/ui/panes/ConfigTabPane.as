@@ -18,6 +18,7 @@ package app.ui.panes
 	import flash.text.TextFieldType;
 	import flash.text.TextFormatAlign;
 	import flash.display.MovieClip;
+	import app.world.data.ItemData;
 	
 	public class ConfigTabPane extends TabPane
 	{
@@ -119,12 +120,7 @@ package app.ui.panes
 		*****************************/
 		public function addLook(lookCode:String) {
 			var grid:Grid = this.userOutfitsGrid;
-			var character:Character = new Character({
-				isOutfit:true,
-				params:lookCode,
-				pose:GameAssets.poses[GameAssets.defaultPoseIndex]
-			});
-			character.parseParams(lookCode);
+			var character:Character = new Character(new <ItemData>[ GameAssets.defaultPose ], lookCode, true);
 			var btn = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:character });
 			btn.addEventListener(MouseEvent.CLICK, function(){
 				onUserLookClicked(lookCode);

@@ -3,8 +3,9 @@ package app.ui
 	import app.ui.buttons.*;
 	import app.ui.common.RoundedRectangle;
 	import com.fewfre.events.FewfEvent;
+	import flash.display.Sprite;
 
-	public class ShopTabContainer extends RoundedRectangle
+	public class ShopTabContainer extends Sprite
 	{
 		// Constants
 		public static const EVENT_SHOP_TAB_CLICKED			: String = "shop_tab_clicked";
@@ -13,32 +14,32 @@ package app.ui
 		public var tabs: Vector.<PushButton>;
 
 		// Constructor
-		// pData = { x:Number, y:Number, width:Number, height:Number, tabs:Array<{ text:String, event:String }> }
-		public function ShopTabContainer(pData:Object)
-		{
-			super(pData);
+		// pTabDataList = Vector.<{ text:String, event:String }> }
+		public function ShopTabContainer(pWidth:Number, pHeight:Number, pTabDataList:Vector.<Object>) {
+			// Background
+			new RoundedRectangle({ width:pWidth, height:pHeight }).appendTo(this).drawAsTray();
 
-			this.drawAsTray();
-
-			var tTabInfo = pData.tabs;
-
+			// Tabs
 			var tXMargin:Number = 5;
 			var tYMargin:Number = 5;
-			var tHeight:Number = Math.min(65, (this.Height - tYMargin) / tTabInfo.length - tYMargin);
-			var tWidth:Number = this.Width - (tXMargin * 2);
+			var tHeight:Number = Math.min(65, (pHeight - tYMargin) / pTabDataList.length - tYMargin);
+			var tWidth:Number = pWidth - (tXMargin * 2);
 			var tYSpacing:Number = tHeight + tYMargin;
 			var tX:Number = tXMargin;
 			var tY:Number = tYMargin - tYSpacing; // Go back one space for when for loop adds one space.
 
 			tabs = new Vector.<PushButton>();
-			for(var i:int = 0; i < tTabInfo.length; i++) {
-				_createTab(tTabInfo[i].text, tX, tY += tYSpacing, tWidth, tHeight, tTabInfo[i].event);
+			for(var i:int = 0; i < pTabDataList.length; i++) {
+				_createTab(pTabDataList[i].text, tX, tY += tYSpacing, tWidth, tHeight, pTabDataList[i].event);
 			}
 		}
+		public function setXY(pX:Number, pY:Number) : ShopTabContainer { x = pX; y = pY; return this; }
+		public function appendTo(target:Sprite): ShopTabContainer { target.addChild(this); return this; }
 
 		private function _createTab(pText:String, pX:Number, pY:Number, pWidth:Number, pHeight:Number, pEvent:String) : PushButton {
 			var tBttn:PushButton = new PushButton({ x:pX, y:pY, width:pWidth, height:pHeight, text:pText, allowToggleOff:false });
-			tBttn.addEventListener(PushButton.STATE_CHANGED_BEFORE, function(tBttn){ return function(){ untoggle(tBttn, pEvent); }; }(tBttn));//, false, 0, true
+			// tBttn.addEventListener(PushButton.STATE_CHANGED_BEFORE, function(tBttn){ return function(){ untoggle(tBttn, pEvent); }; }(tBttn));//, false, 0, true
+			tBttn.addEventListener(PushButton.STATE_CHANGED_BEFORE, function(e){ untoggle(tBttn, pEvent); });
 			addChild(tBttn)
 			tabs.push(tBttn);
 			return tBttn;

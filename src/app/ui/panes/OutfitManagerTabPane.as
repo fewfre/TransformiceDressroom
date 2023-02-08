@@ -16,6 +16,7 @@ package app.ui.panes
 	import flash.net.FileReference;
 	import flash.net.FileFilter;
 	import flash.utils.setTimeout;
+	import app.world.data.ItemData;
 	
 	public class OutfitManagerTabPane extends TabPane
 	{
@@ -123,7 +124,7 @@ package app.ui.panes
 		}
 		
 		public function _addLookButton(lookCode:String, i:int) : void {
-			var lookMC = new Character({ isOutfit:true, params:lookCode, pose:GameAssets.poses[GameAssets.defaultPoseIndex] });
+			var lookMC = new Character(new <ItemData>[ GameAssets.defaultPose ], lookCode, true);
 			
 			var btn:PushButton = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:lookMC, id:i }) as PushButton;
 			btn.addEventListener(PushButton.STATE_CHANGED_AFTER, function(){

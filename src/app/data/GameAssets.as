@@ -44,6 +44,9 @@ package app.data
 		// { type:ItemType, id:String, colorI:int }
 		public static var swatchHoverPreviewData:Object = null;
 
+		public static function get defaultSkin() : ItemData { return skins[defaultSkinIndex]; }
+		public static function get defaultPose() : ItemData { return poses[defaultPoseIndex]; }
+
 		public static function init() : void {
 			var i:int;
 

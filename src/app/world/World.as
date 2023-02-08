@@ -82,11 +82,8 @@ package app.world
 				} catch (error:Error) { };
 			}
 
-			this.character = addChild(new Character({ x:180, y:275,
-				skin:GameAssets.skins[GameAssets.defaultSkinIndex],
-				pose:GameAssets.poses[GameAssets.defaultPoseIndex],
-				params:parms
-			})) as Character;
+			this.character = new Character(new <ItemData>[ GameAssets.defaultSkin, GameAssets.defaultPose ], parms)
+				.setXY(180, 275).appendTo(this);
 
 			/****************************
 			* Setup UI
@@ -95,7 +92,7 @@ package app.world
 				.appendTo(this).drawAsTray();
 			_paneManager = tShop.addChild(new PaneManager()) as PaneManager;
 			
-			var tabs:Array = [
+			var tabs:Vector.<Object> = new <Object>[
 				{ text:"tab_furs", event:ItemType.SKIN.toString() },
 				{ text:"tab_head", event:ItemType.HEAD.toString() },
 				{ text:"tab_ears", event:ItemType.EARS.toString() },
@@ -112,21 +109,21 @@ package app.world
 			if(ConstantsApp.CONFIG_TAB_ENABLED) {
 				tabs.unshift({ text:"tab_config", event:TAB_CONFIG });
 			}
-			this.shopTabs = addChild(new ShopTabContainer({ x:375, y:10, width:70, height:ConstantsApp.APP_HEIGHT, tabs:tabs })) as ShopTabContainer;
+			this.shopTabs = new ShopTabContainer(70, ConstantsApp.APP_HEIGHT, tabs).setXY(375, 10).appendTo(this);
 			this.shopTabs.addEventListener(ShopTabContainer.EVENT_SHOP_TAB_CLICKED, _onTabClicked);
 
 			// Toolbox
-			_toolbox = addChild(new Toolbox({
-				x:188, y:28, character:character,
+			_toolbox = new Toolbox({
+				character:character,
 				onSave:_onSaveClicked, onAnimate:_onPlayerAnimationToggle, onRandomize:_onRandomizeDesignClicked,
 				onTrash:_onTrashButtonClicked, onShare:_onShareButtonClicked, onScale:_onScaleSliderChange,
 				onShareCodeEntered:_onShareCodeEntered
-			})) as Toolbox;
+			}).setXY(188, 28).appendTo(this);
 			
-			var tLangButton = addChild(new LangButton({ x:22, y:pStage.stageHeight-17, width:30, height:25, origin:0.5 }));
+			var tLangButton:LangButton = addChild(new LangButton({ x:22, y:pStage.stageHeight-17, width:30, height:25, origin:0.5 })) as LangButton;
 			tLangButton.addEventListener(ButtonBase.CLICK, _onLangButtonClicked);
 			
-			addChild(new AppInfoBox({ x:tLangButton.x+(tLangButton.Width*0.5)+(25*0.5)+2, y:pStage.stageHeight-17 }));
+			new AppInfoBox().setXY(tLangButton.x+(tLangButton.Width*0.5)+(25*0.5)+2, pStage.stageHeight-17).appendTo(this);
 			
 			/****************************
 			* Screens

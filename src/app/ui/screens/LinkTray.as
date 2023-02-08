@@ -82,10 +82,10 @@ package app.ui.screens
 			
 			_text2 = _newCopyInput({ x:0, y:tY }, this);
 			
-			var tCopyButton:SpriteButton = addChild(new SpriteButton({ x:tWidth*0.5-(80/2)-20, y:tY+39, text:"share_copy", width:80, height:25, origin:0.5 })) as SpriteButton;
-			tCopyButton.addEventListener(ButtonBase.CLICK, function(){ _copyToClipboard2(); });
+			var tCopyButton2:SpriteButton = addChild(new SpriteButton({ x:tWidth*0.5-(80/2)-20, y:tY+39, text:"share_copy", width:80, height:25, origin:0.5 })) as SpriteButton;
+			tCopyButton2.addEventListener(ButtonBase.CLICK, function(){ _copyToClipboard2(); });
 			
-			_textCopiedMessage2 = addChild(new TextBase({ text:"share_link_copied", size:17, originX:1, x:tCopyButton.x - tCopyButton.Width/2 - 10, y:tCopyButton.y, alpha:0 })) as TextBase;
+			_textCopiedMessage2 = addChild(new TextBase({ text:"share_link_copied", size:17, originX:1, x:tCopyButton2.x - tCopyButton2.Width/2 - 10, y:tCopyButton2.y, alpha:0 })) as TextBase;
 			
 			/****************************
 			* Close Button

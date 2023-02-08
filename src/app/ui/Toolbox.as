@@ -27,10 +27,8 @@ package app.ui
 		public var curanimationFrameText: TextBase;
 		
 		// Constructor
-		// pData = { x:Number, y:Number, character:Character, onSave:Function, onAnimate:Function, onRandomize:Function, onTrash:Function, onShare:Function, onScale:Function }
+		// pData = { character:Character, onSave:Function, onAnimate:Function, onRandomize:Function, onTrash:Function, onShare:Function, onScale:Function }
 		public function Toolbox(pData:Object) {
-			this.x = pData.x;
-			this.y = pData.y;
 			_character = pData.character;
 			
 			var btn:ButtonBase;
@@ -135,6 +133,8 @@ package app.ui
 			
 			pData = null;
 		}
+		public function setXY(pX:Number, pY:Number) : Toolbox { x = pX; y = pY; return this; }
+		public function appendTo(target:Sprite): Toolbox { target.addChild(this); return this; }
 		
 		public function toggleAnimateButtonAsset(pOn:Boolean) : void {
 			animateButton.ChangeImage(pOn ? new $PauseButton() : new $PlayButton());
