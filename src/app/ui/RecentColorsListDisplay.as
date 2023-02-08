@@ -7,10 +7,9 @@ package app.ui
 	import app.ui.buttons.*;
 	import app.ui.common.*;
 	import flash.display.*;
-	import flash.events.*;
 	import ext.ParentApp;
 	
-	public class RecentColorsListDisplay extends MovieClip
+	public class RecentColorsListDisplay extends Sprite
 	{
 		// Constants
 		public static const EVENT_COLOR_PICKED		: String = "event_color_picked";
@@ -74,7 +73,7 @@ package app.ui
 		
 		public function render() : void {
 			// Clear old buttons
-			_recentColorButtons.forEach(function(o:*):void{ removeChild(o); });
+			_recentColorButtons.forEach(function(o:*,i:int,a:*):void{ removeChild(o); });
 			_recentColorButtons = new Vector.<ColorButton>();
 			
 			this.visible = RECENTS.length > 0;
@@ -106,7 +105,7 @@ package app.ui
 		*****************************/
 		
 		private function _dispatchColorChange(color:uint) {
-			dispatchEvent(new DataEvent(EVENT_COLOR_PICKED, false, false, color.toString()));
+			dispatchEvent(new FewfEvent(EVENT_COLOR_PICKED, color));
 		}
 		
 		private function _deleteRecentColor(color:int) {

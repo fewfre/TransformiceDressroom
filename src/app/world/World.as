@@ -528,21 +528,18 @@ package app.world
 		//}END Get TabPane data
 
 		//{REGION Color Tab
-			private function _onColorPickChanged(pEvent:flash.events.DataEvent):void
-			{
-				var tVal:int = int(pEvent.data);
+			private function _onColorPickChanged(pEvent:FewfEvent):void {
+				var color:uint = uint(pEvent.data.color);
 				var pane = _paneManager.getPane(COLOR_PANE_ID) as ColorPickerTabPane;
-				// Negative number indicates that all colors were randomized
-				if(tVal < 0) {
+				if(pEvent.data.randomizedAll) {
 					this.character.getItemData(this.currentlyColoringType).colors = pane.getAllColors();
 				} else {
-					this.character.getItemData(this.currentlyColoringType).colors[pane.selectedSwatch] = tVal;
+					this.character.getItemData(this.currentlyColoringType).colors[pane.selectedSwatch] = color;
 				}
 				_refreshSelectedItemColor(this.currentlyColoringType);
 			}
 
-			private function _onDefaultsButtonClicked(pEvent:Event) : void
-			{
+			private function _onDefaultsButtonClicked(pEvent:Event) : void {
 				this.character.getItemData(this.currentlyColoringType).setColorsToDefault();
 				_refreshSelectedItemColor(this.currentlyColoringType);
 				var pane = _paneManager.getPane(COLOR_PANE_ID) as ColorPickerTabPane;
@@ -622,8 +619,8 @@ package app.world
 				_paneManager.openPane(_paneManager.getPane(COLOR_FINDER_PANE_ID).infoBar.data.type.toString());
 			}
 
-			private function _onConfigColorPickChanged(pEvent:flash.events.DataEvent):void {
-				var tVal:uint = Math.abs(int(pEvent.data));
+			private function _onConfigColorPickChanged(pEvent:FewfEvent):void {
+				var tVal:uint = uint(pEvent.data.color);
 				_setConfigShamanColor(tVal);
 			}
 			

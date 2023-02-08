@@ -200,7 +200,7 @@ package app.ui.panes.colorpicker
 			if(!pSkipColorSwatch) _colorSwatches[_selectedSwatch].color = color;
 			if(!pSkipSetSursor) _psColorPick.setCursor(color);
 			_trackRecentColor(color);
-			dispatchEvent(new DataEvent(EVENT_COLOR_PICKED, false, false, color.toString()));
+			dispatchEvent(new FewfEvent(EVENT_COLOR_PICKED, { color:color }));
 		}
 		
 		private function _trackRecentColor(color:uint) {
@@ -246,8 +246,7 @@ package app.ui.panes.colorpicker
 			_colorSwatches[_selectedSwatch].select();
 			_psColorPick.setCursor(_colorSwatches[_selectedSwatch].color);
 			_untrackRecentColor();
-			// Sent number back as negative as an indicator that all swatches were randomized
-			dispatchEvent(new DataEvent(EVENT_COLOR_PICKED, false, false, (-_colorSwatches[_selectedSwatch].color).toString()));
+			dispatchEvent(new FewfEvent(EVENT_COLOR_PICKED, { randomizedAll:true, color:_colorSwatches[_selectedSwatch].color }));
 		}
 		
 		/****************************
@@ -292,7 +291,7 @@ package app.ui.panes.colorpicker
 			changeColor(uint(pEvent.data), false, true);
 		}
 		
-		private function _onRecentColorBtnClicked(pEvent:DataEvent) : void {
+		private function _onRecentColorBtnClicked(pEvent:FewfEvent) : void {
 			changeColor(uint(pEvent.data));
 			_lastColorChangeValue = uint(pEvent.data);
 			_dontTrackNextRecentChange = false;
