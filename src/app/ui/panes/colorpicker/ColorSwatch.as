@@ -70,7 +70,7 @@ package app.ui.panes.colorpicker
 			_textBorder.x = _border.x + SWATCH_SIZE+2 + 6;
 			_drawTextBorder();
 			
-			var tHistoryHitbox = new Sprite(), hitboxSize = SWATCH_SIZE*1.65;
+			var tHistoryHitbox:Sprite = new Sprite(), hitboxSize:Number = SWATCH_SIZE*1.65;
 			tHistoryHitbox.graphics.beginFill(0, 0);
 			tHistoryHitbox.graphics.drawRect(-hitboxSize*0.5, -hitboxSize*0.5, hitboxSize, hitboxSize);
 			tHistoryHitbox.graphics.endFill();
@@ -78,7 +78,7 @@ package app.ui.panes.colorpicker
 			_historyBtn = addChild(new ScaleButton({ x:100, y:SWATCH_SIZE*0.5+1.5, obj:tHistoryHitbox, obj_scale:0.5 })) as ScaleButton;
 			_historyBtn.visible = false;
 			
-			var tLockHitbox = new Sprite(); hitboxSize = SWATCH_SIZE*2;
+			var tLockHitbox:Sprite = new Sprite(); hitboxSize = SWATCH_SIZE*2;
 			tLockHitbox.graphics.beginFill(0, 0);
 			tLockHitbox.graphics.drawRect(-hitboxSize*0.5, -hitboxSize*0.5, hitboxSize, hitboxSize);
 			tLockHitbox.graphics.endFill();
@@ -142,11 +142,11 @@ package app.ui.panes.colorpicker
 			_textBorder.graphics.drawRoundRect(0, 0, TEXT_WIDTH+2, SWATCH_SIZE+2, 5);
 		}
 		
-		public function showHistoryButton() {
+		public function showHistoryButton() : void {
 			_historyBtn.visible = true;
 		}
 		
-		public function lock() {
+		public function lock() : void {
 			_lockIcon.alpha = 0.7;
 			_lockIcon.setScale(0.65);
 			_lockIcon.x = _swatch.x + SWATCH_SIZE*0.5 + 0.5 + 1;
@@ -154,7 +154,7 @@ package app.ui.panes.colorpicker
 			_locked = true;
 		}
 		
-		public function unlock() {
+		public function unlock() : void {
 			_lockIcon.alpha = 0.5;
 			_lockIcon.setScale(0.5);
 			_lockIcon.x = -1;
@@ -163,7 +163,7 @@ package app.ui.panes.colorpicker
 		}
 		
 		public function padCodeIfNeeded() : void {
-			var s = _text.text, pad = 6;
+			var s:String = _text.text, pad:int = 6;
 			for(;s.length<pad;s='0'+s);
 			_text.text = s;
 		}

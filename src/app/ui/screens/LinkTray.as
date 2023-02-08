@@ -40,7 +40,7 @@ package app.ui.screens
 			/****************************
 			* Click Tray
 			*****************************/
-			var tClickTray = addChild(new Sprite());
+			var tClickTray:Sprite = addChild(new Sprite()) as Sprite;
 			tClickTray.x = -5000;
 			tClickTray.y = -5000;
 			tClickTray.graphics.beginFill(0x000000, 0.2);
@@ -62,14 +62,14 @@ package app.ui.screens
 			/****************************
 			* #1 - Selectable text field + Copy Button and message
 			*****************************/
-			var tY = 80;
+			var tY:Number = 80;
 			
 			addChild(new TextBase({ text:"share_fewfre_syntax", size:15, y:tY-30 }));
 			
 			_text = _newCopyInput({ x:0, y:tY }, this);
 			
 			var tCopyButton:SpriteButton = addChild(new SpriteButton({ x:tWidth*0.5-(80/2)-20, y:tY+39, text:"share_copy", width:80, height:25, origin:0.5 })) as SpriteButton;
-			tCopyButton.addEventListener(ButtonBase.CLICK, function(){ _copyToClipboard(); });
+			tCopyButton.addEventListener(ButtonBase.CLICK, function():void{ _copyToClipboard(); });
 			
 			_textCopiedMessage = addChild(new TextBase({ text:"share_link_copied", size:17, originX:1, x:tCopyButton.x - tCopyButton.Width/2 - 10, y:tCopyButton.y, alpha:0 })) as TextBase;
 			
@@ -83,14 +83,14 @@ package app.ui.screens
 			_text2 = _newCopyInput({ x:0, y:tY }, this);
 			
 			var tCopyButton2:SpriteButton = addChild(new SpriteButton({ x:tWidth*0.5-(80/2)-20, y:tY+39, text:"share_copy", width:80, height:25, origin:0.5 })) as SpriteButton;
-			tCopyButton2.addEventListener(ButtonBase.CLICK, function(){ _copyToClipboard2(); });
+			tCopyButton2.addEventListener(ButtonBase.CLICK, function():void{ _copyToClipboard2(); });
 			
 			_textCopiedMessage2 = addChild(new TextBase({ text:"share_link_copied", size:17, originX:1, x:tCopyButton2.x - tCopyButton2.Width/2 - 10, y:tCopyButton2.y, alpha:0 })) as TextBase;
 			
 			/****************************
 			* Close Button
 			*****************************/
-			var tCloseIcon = new MovieClip();
+			var tCloseIcon:Sprite = new Sprite();
 			var tSize:Number = 10;
 			tCloseIcon.graphics.beginFill(0x000000, 0);
 			tCloseIcon.graphics.drawRect(-tSize*2, -tSize*2, tSize*4, tSize*4);
@@ -151,7 +151,7 @@ package app.ui.screens
 			tTextField.height = tTFHeight;
 			tTextField.x = tTFPaddingX - tTextBackground.Width*0.5;
 			tTextField.y = tTFPaddingY - tTextBackground.Height*0.5;
-			tTextField.addEventListener(MouseEvent.CLICK, function(pEvent:Event){
+			tTextField.addEventListener(MouseEvent.CLICK, function(pEvent:Event):void{
 				_clearCopiedMessages();
 				tTextField.setSelection(0, tTextField.text.length);
 			});

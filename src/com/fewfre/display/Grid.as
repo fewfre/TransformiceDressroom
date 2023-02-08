@@ -41,7 +41,7 @@ package com.fewfre.display
 		* Public
 		*****************************/
 		public function reset(pResetReversal:Boolean=false) : Grid {
-			_list.forEach(function(o,i,a){ removeChild(a[i]); });
+			_list.forEach(function(o:*,i:int,a:*):void{ removeChild(a[i]); });
 			_list = new Vector.<DisplayObject>();
 			if(pResetReversal) _reversed = false;
 			this.graphics.clear();
@@ -72,7 +72,7 @@ package com.fewfre.display
 		* Public
 		*****************************/
 		private function _repositionCells() : void {
-			var tList = reversed ? _list.concat().reverse() : _list;
+			var tList:Vector.<DisplayObject> = reversed ? _list.concat().reverse() : _list;
 			var len:int = tList.length;
 			for (var i:uint in tList) {
 				tList[i].x = i % _columns * _spacing;

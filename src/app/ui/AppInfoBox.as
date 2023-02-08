@@ -16,7 +16,7 @@ package app.ui
 
 		// Constructor
 		public function AppInfoBox() {
-			var btn:ButtonBase, tButtonSize = 25;
+			var btn:ButtonBase, tButtonSize:Number = 25;
 			
 			btn = addChild(new SpriteButton({ width:tButtonSize, height:tButtonSize, obj_scale:0.35, obj:new $GitHubIcon(), origin:0.5 })) as SpriteButton;
 			btn.addEventListener(ButtonBase.CLICK, _onSourceClicked);
@@ -25,7 +25,7 @@ package app.ui
 			
 			if(!!(ParentApp.reopenSelectionLauncher())) {
 				btn = addChild(new ScaleButton({ x:-30, y:-28, obj_scale:0.5, obj:new $BackArrow(), origin:0.5 })) as ScaleButton;
-				btn.addEventListener(ButtonBase.CLICK, function(){ ParentApp.reopenSelectionLauncher()(); });
+				btn.addEventListener(ButtonBase.CLICK, function():void{ ParentApp.reopenSelectionLauncher()(); });
 			}
 			
 			_addEventListeners();

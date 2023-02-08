@@ -24,7 +24,7 @@ package app.ui
 		private var _bg : RoundedRectangle;
 		private var _verticalRule : Shape;
 		
-		public function get isDeleteModeOn() { return _deleteToggleButton.pushed; }
+		public function get isDeleteModeOn():Boolean { return _deleteToggleButton.pushed; }
 		
 		// Constructor
 		public function RecentColorsListDisplay(pData:Object)
@@ -41,12 +41,12 @@ package app.ui
 			
 			_recentColorButtons = new Vector.<ColorButton>();
 			
-			var deleteWidth = 50;
-			var bgWidth = ConstantsApp.PANE_WIDTH - 20 - deleteWidth, bgHeight = 24;
+			var deleteWidth:Number = 50;
+			var bgWidth:Number = ConstantsApp.PANE_WIDTH - 20 - deleteWidth, bgHeight = 24;
 			
 			_deleteToggleButton = new DeleteButton({ x:bgWidth*0.5-25-2, width:deleteWidth, height:bgHeight, obj:new $Trash(), obj_scale:0.85 });;
 			_deleteToggleButton.y += -_deleteToggleButton.Height * 0.5;
-			_deleteToggleButton.addEventListener(PushButton.STATE_CHANGED_AFTER, function(){ render(); });
+			_deleteToggleButton.addEventListener(PushButton.STATE_CHANGED_AFTER, function():void{ render(); });
 			addChild(_deleteToggleButton);
 			
 			// Add BG
@@ -74,7 +74,7 @@ package app.ui
 		
 		public function render() : void {
 			// Clear old buttons
-			_recentColorButtons.forEach(function(o,i,a){ removeChild(o); });
+			_recentColorButtons.forEach(function(o:*):void{ removeChild(o); });
 			_recentColorButtons = new Vector.<ColorButton>();
 			
 			this.visible = RECENTS.length > 0;

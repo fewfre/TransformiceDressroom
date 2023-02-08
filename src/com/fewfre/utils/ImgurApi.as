@@ -214,7 +214,7 @@ package com.fewfre.utils
 		// https://stackoverflow.com/a/24896808/1411473
 		private static const ENCODE_CHARS : String = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
 		public static function encodeByteArray(bytes:ByteArray):String{
-			var encodeChars = ENCODE_CHARS.split("");
+			var encodeChars:Array = ENCODE_CHARS.split("");
 		/*public static function encodeByteArray(data:BitmapData):String{*/
 			/*if(data == null)throw new Error("data parameter can not be empty!");*/
 			/*var bytes:ByteArray = data.encode(data.rect, new JPEGEncoderOptions(100));  //100 is the JPG quality*/

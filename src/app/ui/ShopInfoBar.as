@@ -81,13 +81,13 @@ package app.ui
 			rioIcon.alpha = 0.5;
 			rioIcon.scaleX = rioIcon.scaleY = 0.75;
 			
-			removeItemOverlay.addEventListener(MouseEvent.MOUSE_OVER, function(){
+			removeItemOverlay.addEventListener(MouseEvent.MOUSE_OVER, function():void{
 				if(hasData && GameAssets.skins[GameAssets.defaultSkinIndex] != data && GameAssets.poses[GameAssets.defaultPoseIndex]) {
 					rioVisual.alpha = 1;
 				}
 			});
-			removeItemOverlay.addEventListener(MouseEvent.MOUSE_OUT, function(){ rioVisual.alpha = 0; });
-			removeItemOverlay.addEventListener(MouseEvent.CLICK, function(){ rioVisual.alpha = 0; });
+			removeItemOverlay.addEventListener(MouseEvent.MOUSE_OUT, function():void{ rioVisual.alpha = 0; });
+			removeItemOverlay.addEventListener(MouseEvent.CLICK, function():void{ rioVisual.alpha = 0; });
 			
 			/********************
 			* Color Wheel
@@ -131,7 +131,7 @@ package app.ui
 				tX += BTN_SIZE + spacing;
 				
 				randomizeLockButton = tray.addChild(new PushButton({ x:tX, y:BTN_Y, width:BTN_SIZE, height:BTN_SIZE, obj_scale:0.8, obj:new $Lock() })) as PushButton;
-				randomizeLockButton.addEventListener(ButtonBase.CLICK, function(){ isRefreshLocked ? randomizeButton.disable() : randomizeButton.enable(); });
+				randomizeLockButton.addEventListener(ButtonBase.CLICK, function():void{ isRefreshLocked ? randomizeButton.disable() : randomizeButton.enable(); });
 				tX += BTN_SIZE + spacing;
 				
 				tX += 8; // Add larger gap
@@ -213,7 +213,7 @@ package app.ui
 		}
 		
 		private function _updateID() : void {
-			var tText = data.id;
+			var tText:String = data.id;
 			if(data.type == ItemType.POSE) {
 				tText = Fewf.i18n.getText(("pose_"+data.id).toLowerCase());
 				if(tText == null) { tText = data.id; }
@@ -252,8 +252,8 @@ package app.ui
 		
 		internal function saveSprite(pEvent:Event) : void {
 			if(!data) { return; }
-			var tName = "shop-"+data.type+data.id;
-			var tScale = ConstantsApp.ITEM_SAVE_SCALE;
+			var tName:String = "shop-"+data.type+data.id;
+			var tScale:int = ConstantsApp.ITEM_SAVE_SCALE;
 			if(data.type == ItemType.CONTACTS) { tScale *= 2; }
 			FewfDisplayUtils.saveAsPNG(GameAssets.getColoredItemImage(data), tName, tScale);
 		}

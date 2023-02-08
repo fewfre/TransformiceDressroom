@@ -64,7 +64,7 @@ package app.ui.buttons
 			if(this.Text) { this.Text.color = 0xFFD800; }
 		}
 
-		public function toggle(pOn=null, pFireEvent:Boolean=true) : void
+		public function toggle(pOn:*=null, pFireEvent:Boolean=true) : void
 		{
 			if(pFireEvent) _dispatch(STATE_CHANGED_BEFORE);
 			

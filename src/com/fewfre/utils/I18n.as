@@ -62,8 +62,8 @@ package com.fewfre.utils
 		
 		public function getConfigLangData(pLangCode:String=null) : Object {
 			if(!pLangCode) { pLangCode = _lang; }
-			var tLanguages = Fewf.assets.getData("config").languages.list;
-			for(var i = 0; i < tLanguages.length; i++) {
+			var tLanguages:Array = Fewf.assets.getData("config").languages.list;
+			for(var i:int = 0; i < tLanguages.length; i++) {
 				if(tLanguages[i].code == pLangCode) {
 					return tLanguages[i];
 				}

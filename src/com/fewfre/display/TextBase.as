@@ -123,7 +123,7 @@ package com.fewfre.display
 		*****************************/
 		private function _setI18nData(pKey:String) : void {
 			_i18n = pKey;
-			var tI18nData = Fewf.i18n.getData(pKey);
+			var tI18nData:Object = Fewf.i18n.getData(pKey);
 			if(tI18nData != null) {
 				_text = tI18nData.text;
 				_scale = tI18nData.scale != null ? tI18nData.scale : 1;

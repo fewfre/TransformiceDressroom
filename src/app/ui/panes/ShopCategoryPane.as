@@ -51,8 +51,8 @@ package app.ui.panes
 		* Private
 		*****************************/
 		private function _setupGrid(pItemList:Vector.<ItemData>) : void {
-			var buttonPerRow = 6;
-			var scale = 1;
+			var buttonPerRow:int = 6;
+			var scale:Number = 1;
 			if(_type == ItemType.SKIN || _type == ItemType.POSE) {
 					buttonPerRow = 5;
 					scale = 1;
@@ -64,7 +64,7 @@ package app.ui.panes
 
 			var shopItem : MovieClip;
 			var shopItemButton : PushButton;
-			var i = -1;
+			var i:int = -1;
 			while (i < pItemList.length-1) { i++;
 				shopItem = GameAssets.getItemImage(pItemList[i]);
 				shopItem.scaleX = shopItem.scaleY = scale;
@@ -84,19 +84,19 @@ package app.ui.panes
 			this.UpdatePane();
 		}
 		
-		private function _addDefaultSkinColorButtonIfSkinPane() {
+		private function _addDefaultSkinColorButtonIfSkinPane() : void {
 			if(_type == ItemType.SKIN) {
 				// Customizeable fur color button
 				// cannot attach to button due to main button eating mouse events
 				_defaultSkinColorButton = grid.addChild(new ScaleButton({ obj:new $ColorWheel(), obj_scale:0.5 })) as ScaleButton;
-				_defaultSkinColorButton.addEventListener(ButtonBase.CLICK, function(){
+				_defaultSkinColorButton.addEventListener(ButtonBase.CLICK, function():void{
 					buttons[GameAssets.defaultSkinIndex].toggleOn();
 					dispatchEvent(new Event(DEFAULT_SKIN_COLOR_BTN_CLICKED));
 				});
 				_repositionDefaultSkinColorButtonIfExists();
 			}
 		}
-		private function _repositionDefaultSkinColorButtonIfExists() {
+		private function _repositionDefaultSkinColorButtonIfExists() : void {
 			if(_defaultSkinColorButton) {
 				var tSkinButton = buttons[GameAssets.defaultSkinIndex];
 				_defaultSkinColorButton.x = tSkinButton.x + 60;

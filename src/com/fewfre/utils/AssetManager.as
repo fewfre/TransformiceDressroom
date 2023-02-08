@@ -117,7 +117,7 @@ package com.fewfre.utils
 			}
 			
 			private function _onAssetsLoaded(pIndex:int, e:Event, pOnComplete) : void {
-				_loadedStuffCallbacks[pIndex] = function(){
+				_loadedStuffCallbacks[pIndex] = function():void{
 					_applicationDomains.push( MovieClip(e.target.content).loaderInfo.applicationDomain );
 					_destroyAssetLoader(e.target.loader, pOnComplete);
 				};
@@ -125,7 +125,7 @@ package com.fewfre.utils
 			}
 			
 			private function _onJsonLoaded(pIndex:int, e:Event, pKey:String, pOnComplete) : void {
-				_loadedStuffCallbacks[pIndex] = function(){
+				_loadedStuffCallbacks[pIndex] = function():void{
 					_loadedData[pKey] = JSON.parse(e.target.data);
 					_destroyURLLoader(e.target as URLLoader, pOnComplete);
 				};
@@ -156,7 +156,7 @@ package com.fewfre.utils
 					// _loadNextItem();
 				} else {
 					trace("[AssetManager](_checkIfLoadingDone) All resources loaded.");
-					for each(var pCallback in _loadedStuffCallbacks) {
+					for each(var pCallback:Function in _loadedStuffCallbacks) {
 						if(pCallback != null) { pCallback(); }
 					}
 					_loadedStuffCallbacks = null;

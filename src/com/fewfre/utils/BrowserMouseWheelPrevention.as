@@ -47,7 +47,7 @@ package com.fewfre.utils
 			}
 		}
 		
-		private static function _handleExternalMouseEvent(rawDelta:Number, scaledDelta):void {
+		private static function _handleExternalMouseEvent(rawDelta:Number, scaledDelta:*):void {
 			var curTime:uint = getTimer();
 			if (curTime >= eventTimeout + lastEventTime) {
 				// dispatch

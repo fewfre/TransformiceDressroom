@@ -17,7 +17,7 @@ package app.ui.buttons
 		public var originY:Number;
 		
 		private var _selected : Boolean;
-		private var _borderColor : int;
+		private var _borderColor : uint;
 		private var _baseBorderRadius : Number;
 		private var _borderRadius : Number;
 		
@@ -68,8 +68,8 @@ package app.ui.buttons
 		protected function _render() : void {
 			var tX:Number = 0 - (Width * originX);
 			var tY:Number = 0 - (Height * originY);
-			var tBorderWidth = _selected ? 2 : 1;
-			var tBorderColor = _selected ? 0xFFFFFF : _borderColor;
+			var tBorderWidth:Number = _selected ? 2 : 1;
+			var tBorderColor:uint = _selected ? 0xFFFFFF : _borderColor;
 			
 			this.alpha = _flagEnabled ? 1 : 0.75;
 			

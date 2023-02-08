@@ -32,7 +32,7 @@ package com.fewfre.utils
 		public static function stringSubstitute(pVal:String, ...pValues) : String {
 			if(pValues[0] is Array) { pValues = pValues[0]; }
 			// pVal.replace(/{(.*?)}/gi, "a");
-			for(var i in pValues) {
+			for(var i:* in pValues) {
 				pVal = pVal.replace("{"+i+"}", pValues[i]);
 			}
 			return pVal;

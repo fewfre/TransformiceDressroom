@@ -18,7 +18,7 @@ package app.ui.screens
 		public function LoadingSpinner(pData:Object) {
 			if(pData.x) { this.x = pData.x; }
 			if(pData.y) { this.y = pData.y; }
-			var scale = pData.scale ? pData.scale : 2;
+			var scale:Number = pData.scale ? pData.scale : 2;
 			
 			_loadingSpinner = addChild( new $Loader() ) as MovieClip;
 			_loadingSpinner.scaleX = scale;
