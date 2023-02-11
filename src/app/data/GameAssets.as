@@ -189,7 +189,66 @@ package app.data
 		}
 
 		/****************************
-		* Color
+		* Color - GET
+		*****************************/
+		public static function findDefaultColors(pMC:MovieClip) : Vector.<uint> {
+			return Vector.<uint>( _findDefaultColorsRecursive(pMC, []) );
+		}
+		private static function _findDefaultColorsRecursive(pMC:MovieClip, pList:Array) : Array {
+			if (!pMC) { return pList; }
+
+			var child:DisplayObject=null, name:String=null, colorI:int = 0;
+			var i:*=0;
+			while (i < pMC.numChildren)
+			{
+				child = pMC.getChildAt(i);
+				name = child.name;
+				
+				if(name) {
+					if (name.indexOf("Couleur") == 0 && name.length > 7) {
+						// hardcoded fix for tfm eye:31, which has a color of: Couleur_08C7474 (0 and _ are swapped)
+						if(name.charAt(7) == '_') {
+							colorI = int(name.charAt(8));
+							pList[colorI] = int("0x" + name.substr(name.indexOf("_") + 2, 6));
+						} else {
+							colorI = int(name.charAt(7));
+							pList[colorI] = int("0x" + name.substr(name.indexOf("_") + 1, 6));
+						}
+					}
+					else if(name.indexOf("slot_") == 0) {
+						_findDefaultColorsRecursive(child as MovieClip, pList);
+					}
+					i++;
+				}
+			}
+			return pList;
+		}
+
+		public static function getNumOfCustomColors(pMC:MovieClip) : int {
+			// Use recursive one since the array it returns is a bit more safe for this than the vector
+			return _findDefaultColorsRecursive(pMC, []).length;
+		}
+		
+		public static function getColorsWithPossibleHoverEffect(pData:ItemData) : Vector.<uint> {
+			if(!pData.colors || !swatchHoverPreviewData) { return pData.colors; }
+			var colors = pData.colors.concat(); // shallow copy
+			if(pData.type == swatchHoverPreviewData.type && pData.id == swatchHoverPreviewData.id) {
+				var i = swatchHoverPreviewData.colorI;
+				colors[i] = GameAssets.invertColor(colors[i]);
+			}
+			return colors;
+		}
+		
+		public static function invertColor(pColor:uint) : uint {
+			var tR:*=pColor >> 16 & 255;
+			var tG:*=pColor >> 8 & 255;
+			var tB:*=pColor & 255;
+			
+			return (255-tR)<<16 | (255-tG)<<8 | (255-tB);
+		}
+
+		/****************************
+		* Color - APPLY
 		*****************************/
 		public static function copyColor(copyFromMC:MovieClip, copyToMC:MovieClip) : MovieClip {
 			if (copyFromMC == null || copyToMC == null) { return null; }
@@ -206,32 +265,14 @@ package app.data
 			}
 			return copyToMC;
 		}
-
-		public static function colorDefault(pMC:MovieClip) : MovieClip {
-			if (pMC == null) { return null; }
-
-			var tChild:*=null;
-			var tHex:int=0;
-			var loc1:*=0;
-			while (loc1 < pMC.numChildren)
-			{
-				tChild = pMC.getChildAt(loc1);
-				if (tChild.name.indexOf("Couleur") == 0 && tChild.name.length > 7)
-				{
-					// hardcoded fix for tfm eye:31, which has a color of: Couleur_08C7474 (0 and _ are swapped)
-					if(tChild.name.charAt(7) == '_') {
-						tHex = int("0x" + tChild.name.substr(tChild.name.indexOf("_") + 2, 6));
-					} else {
-						tHex = int("0x" + tChild.name.substr(tChild.name.indexOf("_") + 1, 6));
-					}
-					applyColorToObject(tChild, tHex);
-				}
-				else if(tChild.name.indexOf("slot_") == 0) {
-					colorDefault(tChild)
-				}
-				++loc1;
-			}
-			return pMC;
+		
+		// pColor is an int hex value. ex: 0x000000
+		public static function applyColorToObject(pItem:DisplayObject, pColor:int) : void {
+			if(pColor < 0) { return; }
+			var tR:*=pColor >> 16 & 255;
+			var tG:*=pColor >> 8 & 255;
+			var tB:*=pColor & 255;
+			pItem.transform.colorTransform = new flash.geom.ColorTransform(tR / 128, tG / 128, tB / 128);
 		}
 
 		public static function colorItemUsingColorList(pSprite:Sprite, pColors:Vector.<uint>) : DisplayObject {
@@ -256,76 +297,11 @@ package app.data
 			}
 			return pSprite;
 		}
-		
-		// pColor is an int hex value. ex: 0x000000
-		public static function applyColorToObject(pItem:DisplayObject, pColor:int) : void {
-			if(pColor < 0) { return; }
-			var tR:*=pColor >> 16 & 255;
-			var tG:*=pColor >> 8 & 255;
-			var tB:*=pColor & 255;
-			pItem.transform.colorTransform = new flash.geom.ColorTransform(tR / 128, tG / 128, tB / 128);
-		}
 
-		public static function getColors(pMC:MovieClip) : Vector.<uint> {
-			return Vector.<uint>( _getColorsRecursive(pMC, []) );
-		}
-		// Has to be an array since numbers aren't always added in order, which messes up Vectors
-		private static function _getColorsRecursive(pMC:MovieClip, tArray:Array) : Array {
-			var tChild:*=null, tTransform:ColorTransform=null, color:uint;
-			var i:int=0;
-			while (i < pMC.numChildren) {
-				tChild = pMC.getChildAt(i);
-				if (tChild.name.indexOf("Couleur") == 0 && tChild.name.length > 7) {
-					// hardcoded fix for tfm eye:31, which has a color of: Couleur_08C7474 (0 and _ are swapped)
-					var colorI:int = int(tChild.name.charAt(7) == '_' ? tChild.name.charAt(8) : tChild.name.charAt(7));
-					tTransform = tChild.transform.colorTransform;
-					color = ColorMathUtil.RGBToHex(tTransform.redMultiplier * 128, tTransform.greenMultiplier * 128, tTransform.blueMultiplier * 128);
-					tArray[colorI] = color;
-				}
-				else if(tChild.name.indexOf("slot_") == 0) {
-					_getColorsRecursive(tChild, tArray);
-				}
-				i++;
-			}
-			return tArray;
-		}
-
-		public static function getNumOfCustomColors(pMC:MovieClip) : int {
-			var count:int = 0, tChild:*=null;
-			var i:int = 0;
-			while (i < pMC.numChildren) {
-				tChild = pMC.getChildAt(i);
-				if (tChild.name.indexOf("Couleur") == 0 && tChild.name.length > 7) {
-					count++;
-				}
-				else if(tChild.name.indexOf("slot_") == 0) {
-					count += getNumOfCustomColors(tChild);
-				}
-				i++;
-			}
-			return count;
-		}
-		
-		public static function getColoredItemImage(pData:ItemData) : MovieClip {
-			return colorItemUsingColorList(getItemImage(pData), getColorsWithPossibleHoverEffect(pData)) as MovieClip;
-		}
-		
-		public static function getColorsWithPossibleHoverEffect(pData:ItemData) : Vector.<uint> {
-			if(!pData.colors || !swatchHoverPreviewData) { return pData.colors; }
-			var colors = pData.colors.concat(); // shallow copy
-			if(pData.type == swatchHoverPreviewData.type && pData.id == swatchHoverPreviewData.id) {
-				var i = swatchHoverPreviewData.colorI;
-				colors[i] = GameAssets.invertColor(colors[i]);
-			}
-			return colors;
-		}
-		
-		public static function invertColor(pColor:uint) : uint {
-			var tR:*=pColor >> 16 & 255;
-			var tG:*=pColor >> 8 & 255;
-			var tB:*=pColor & 255;
-			
-			return (255-tR)<<16 | (255-tG)<<8 | (255-tB);
+		public static function colorDefault(pMC:MovieClip) : MovieClip {
+			var colors:Vector.<uint> = findDefaultColors(pMC);
+			colorItemUsingColorList(pMC, colors);
+			return pMC;
 		}
 
 		/****************************
@@ -351,6 +327,10 @@ package app.data
 					break;
 			}
 			return tItem;
+		}
+		
+		public static function getColoredItemImage(pData:ItemData) : MovieClip {
+			return colorItemUsingColorList(getItemImage(pData), getColorsWithPossibleHoverEffect(pData)) as MovieClip;
 		}
 
 		// pData = { ?pose:ItemData, ?skin:SkinData }

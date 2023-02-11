@@ -1,7 +1,8 @@
-== V1.23f -  February 2023 ==
+== V1.23f - 10 February 2023 ==
 - Trash can button will now reset pane lock state + reset all item customizations to default. (suggestion: QTAngel)
 - [Bug] Pasting a share code / selecting an outfit now properly customizes the List buttons to match the colors.
 - [Bug] Eye:31 now properly handles faulty MC id for first color
+- [Code rewrite] Updated/polished `GameAssets` color functions to be less awful
 
 
 == V1.23e - 30 January 2023 ==

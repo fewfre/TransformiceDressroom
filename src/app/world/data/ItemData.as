@@ -24,7 +24,8 @@ package app.world.data
 			_initDefaultColors();
 		}
 		protected function _initDefaultColors() : void {
-			defaultColors = GameAssets.getColors(GameAssets.colorDefault(new itemClass()));
+			// defaultColors = GameAssets.getColors(GameAssets.colorDefault(new itemClass()));
+			defaultColors = GameAssets.findDefaultColors(new itemClass());
 			setColorsToDefault();
 		}
 		public function setColorsToDefault() : void {
