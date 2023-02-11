@@ -131,7 +131,7 @@ package app.ui
 				tX += BTN_SIZE + spacing;
 				
 				randomizeLockButton = tray.addChild(new PushButton({ x:tX, y:BTN_Y, width:BTN_SIZE, height:BTN_SIZE, obj_scale:0.8, obj:new $Lock() })) as PushButton;
-				randomizeLockButton.addEventListener(ButtonBase.CLICK, function():void{ isRefreshLocked ? randomizeButton.disable() : randomizeButton.enable(); });
+				randomizeLockButton.addEventListener(PushButton.STATE_CHANGED_AFTER, function():void{ isRefreshLocked ? randomizeButton.disable() : randomizeButton.enable(); });
 				tX += BTN_SIZE + spacing;
 				
 				tX += 8; // Add larger gap
@@ -228,6 +228,10 @@ package app.ui
 			showColorWheel(false);
 			downloadButton.disable().alpha = 0;
 			if(eyeDropButton) eyeDropButton.disable().alpha = 0;
+		}
+		
+		public function unlockRandomizeButton() : void {
+			if(randomizeLockButton) randomizeLockButton.toggleOff(true);
 		}
 		
 		private function _setNoItemImage() :void {

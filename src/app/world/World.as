@@ -289,12 +289,14 @@ package app.world
 			
 			// First remove old stuff to prevent conflicts
 			GameAssets.shamanMode = ShamanMode.OFF;
-			for each(var tItem in ItemType.LAYERING) { _removeItem(tItem); }
+			for each(var tType:ItemType in ItemType.LAYERING) { _removeItem(tType); }
 			_removeItem(ItemType.POSE);
 			
 			// Now update pose
 			character.parseParams(pCode);
 			character.updatePose();
+			
+			for each(var tType:ItemType in ItemType.TYPES_WITH_SHOP_PANES) { _refreshButtonCustomizationForItemData(character.getItemData(tType)); }
 			
 			// now update the infobars
 			_updateUIBasedOnCharacter();
@@ -487,8 +489,29 @@ package app.world
 		private function _onTrashConfirmScreenConfirm(pEvent:Event) : void {
 			removeChild(trashConfirmScreen);
 			GameAssets.shamanMode = ShamanMode.OFF;
+			// Remove items
 			for each(var tItem in ItemType.LAYERING) { _removeItem(tItem); }
 			_removeItem(ItemType.POSE);
+			
+			// Refresh panes
+			for each(var tItem in ItemType.TYPES_WITH_SHOP_PANES) {
+				var pane:ShopCategoryPane = getTabByType(tItem);
+				pane.infoBar.unlockRandomizeButton();
+				
+				// Reset customizations
+				if(tItem != ItemType.POSE) {
+					var buttons = pane.buttons;
+					var dataList = GameAssets.getItemDataListByType(tItem);
+					
+					for(var i:int = 0; i < buttons.length; i++){
+						if(dataList[i].hasModifiedColors()) {
+							dataList[i].setColorsToDefault();
+							_refreshButtonCustomizationForItemData(dataList[i]);
+						}
+					}
+				}
+				
+			}
 			(_paneManager.getPane(TAB_OTHER) as OtherTabPane).updateButtonsBasedOnCurrentData();
 		}
 
@@ -586,6 +609,19 @@ package app.world
 				pOldSource.Image.parent.removeChild(pOldSource.Image);
 				pOldSource.Image = null;
 				pOldSource.Image = pNew;
+			}
+			
+			private function _refreshButtonCustomizationForItemData(data:ItemData) : void {
+				if(!data || data.type == ItemType.POSE) { return; }
+				
+				var pane:ShopCategoryPane = getTabByType(data.type);
+				var i:int = GameAssets.getItemIndexFromTypeID(data.type, data.id);
+				if(data.type != ItemType.SKIN) {
+					var tItem:MovieClip = GameAssets.getColoredItemImage(data);
+					GameAssets.copyColor(tItem, pane.buttons[i].Image );
+				} else {
+					_replaceImageWithNewImage(pane.buttons[i], GameAssets.getColoredItemImage(data));
+				}
 			}
 
 			private function _colorButtonClicked(pType:ItemType) : void {

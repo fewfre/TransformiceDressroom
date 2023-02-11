@@ -218,7 +218,12 @@ package app.data
 				tChild = pMC.getChildAt(loc1);
 				if (tChild.name.indexOf("Couleur") == 0 && tChild.name.length > 7)
 				{
-					tHex = int("0x" + tChild.name.substr(tChild.name.indexOf("_") + 1, 6));
+					// hardcoded fix for tfm eye:31, which has a color of: Couleur_08C7474 (0 and _ are swapped)
+					if(tChild.name.charAt(7) == '_') {
+						tHex = int("0x" + tChild.name.substr(tChild.name.indexOf("_") + 2, 6));
+					} else {
+						tHex = int("0x" + tChild.name.substr(tChild.name.indexOf("_") + 1, 6));
+					}
 					applyColorToObject(tChild, tHex);
 				}
 				else if(tChild.name.indexOf("slot_") == 0) {
@@ -236,8 +241,13 @@ package app.data
 			var i:int=0;
 			while (i < pSprite.numChildren) {
 				tChild = pSprite.getChildAt(i); name = tChild.name;
-				if (tChild.name.indexOf("Couleur") == 0 && name.length > 7 && pColors[name.charAt(7)] != null) {
-					applyColorToObject(tChild, pColors[name.charAt(7)]);
+				
+				if (name.indexOf("Couleur") == 0 && name.length > 7) {
+					// hardcoded fix for tfm eye:31, which has a color of: Couleur_08C7474 (0 and _ are swapped)
+					var colorI:int = int(name.charAt(7) == '_' ? name.charAt(8) : name.charAt(7));
+					// fallback encase colorI is outside of the list
+					var color:uint = colorI < pColors.length ? pColors[colorI] : int("0x" + name.split("_")[1]);
+					applyColorToObject(tChild, color);
 				}
 				else if(tChild.name.indexOf("slot_") == 0) {
 					colorItemUsingColorList(tChild as Sprite, pColors);
@@ -266,9 +276,11 @@ package app.data
 			while (i < pMC.numChildren) {
 				tChild = pMC.getChildAt(i);
 				if (tChild.name.indexOf("Couleur") == 0 && tChild.name.length > 7) {
+					// hardcoded fix for tfm eye:31, which has a color of: Couleur_08C7474 (0 and _ are swapped)
+					var colorI:int = int(tChild.name.charAt(7) == '_' ? tChild.name.charAt(8) : tChild.name.charAt(7));
 					tTransform = tChild.transform.colorTransform;
 					color = ColorMathUtil.RGBToHex(tTransform.redMultiplier * 128, tTransform.greenMultiplier * 128, tTransform.blueMultiplier * 128);
-					tArray[tChild.name.charAt(7)] = color;
+					tArray[colorI] = color;
 				}
 				else if(tChild.name.indexOf("slot_") == 0) {
 					_getColorsRecursive(tChild, tArray);

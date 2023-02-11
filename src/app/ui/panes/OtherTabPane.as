@@ -191,7 +191,7 @@ package app.ui.panes
 			for(var i:int = 0; i < shamanButtons.length; i++) {
 				shamanButtons[i].toggleOff();
 			}
-			if(GameAssets.shamanMode >= 2) {
+			if(GameAssets.shamanMode != ShamanMode.OFF) {
 				shamanButtons[GameAssets.shamanMode.toInt()-2].toggleOn(false);
 			}
 			

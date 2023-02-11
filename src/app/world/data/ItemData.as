@@ -30,6 +30,9 @@ package app.world.data
 		public function setColorsToDefault() : void {
 			colors = defaultColors.concat();
 		}
+		public function hasModifiedColors() : Boolean {
+			return (colors ? colors.join() : "") != (defaultColors ? defaultColors.join() : "");
+		}
 		
 		public function copy() : ItemData {
 			return new ItemData(type, id, { itemClass:itemClass, classMap:classMap });
