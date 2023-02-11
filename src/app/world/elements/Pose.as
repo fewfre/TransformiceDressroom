@@ -50,7 +50,7 @@ package app.world.elements
 		}
 		
 		// pData = { ?removeBlanks:Boolean=false }
-		public function apply(items:Vector.<ItemData>, shamanMode:ShamanMode, removeBlanks:Boolean=false) : MovieClip {
+		public function apply(items:Vector.<ItemData>, shamanMode:ShamanMode, shamanColor:uint=0x95D9D6, removeBlanks:Boolean=false) : MovieClip {
 			if(!items) items = new Vector.<ItemData>();
 			
 			var tSkinData = FewfUtils.getFromVectorWithKeyVal(items, "type", ItemType.SKIN);
@@ -78,7 +78,7 @@ package app.world.elements
 					if(tTailData != null && tShopData[j].isSkin() && tSlotName.indexOf("Boule_") > -1) { continue; }
 					part = _addToPoseIfCan(tChild as MovieClip, tShopData[j], tSlotName, addToPoseData) as MovieClip;
 					if(part) {
-						_colorPart(part, tShopData[j], tSlotName);
+						_colorPart(part, tShopData[j], tSlotName, shamanColor);
 						tAccessoires = tAccessoires.concat(getMcItemSubAccessories(part));
 						tItemsOnChild++;
 					}
@@ -87,7 +87,7 @@ package app.world.elements
 				if(tSlotName.indexOf("CuisseD_") > -1 && tSkinData != null && shamanMode == ShamanMode.DIVINE
 					&& (_poseData.id == "Statique" || _poseData.id == "Course" || _poseData.id == "Duck") // Wings only show for these animations in-game
 				) {
-					part = _getWingsMC(tSkinData);
+					part = _getWingsMC(tSkinData, shamanColor);
 					(tChild as MovieClip).addChild(part);
 				}
 				if(removeBlanks && tItemsOnChild == 0) {
@@ -128,7 +128,7 @@ package app.world.elements
 			return null;
 		}
 		
-		private function _colorPart(part:MovieClip, pData:ItemData, pSlotName:String) : void {
+		private function _colorPart(part:MovieClip, pData:ItemData, pSlotName:String, pShamanColor:uint) : void {
 			if(!part) { return; }
 			if(part is MovieClip) {
 				if(pData.colors != null && !pData.isSkin()) {
@@ -137,7 +137,7 @@ package app.world.elements
 				else { GameAssets.colorDefault(part); }
 				
 				if(pData.isSkin() && isFurPartColorable(pSlotName)) {
-					colorFur(part, pData.colors ? pData.colors[0] : -1);
+					colorFur(part, pData.colors ? pData.colors[0] : -1, pShamanColor);
 				}
 			}
 		}
@@ -162,7 +162,7 @@ package app.world.elements
 			});
 		}
 		
-		public function colorFur(pSkinPart:MovieClip, pColor:int):DisplayObject {
+		public function colorFur(pSkinPart:MovieClip, pColor:int, pShamanColor:uint):DisplayObject {
 			var i:int=0;
 			var tChild:DisplayObject;
 			if (pSkinPart.numChildren > 1) {
@@ -172,7 +172,7 @@ package app.world.elements
 						GameAssets.applyColorToObject(tChild, pColor);
 					}
 					else if (tChild.name == "c1") {
-						GameAssets.applyColorToObject(tChild, GameAssets.shamanColor);
+						GameAssets.applyColorToObject(tChild, pShamanColor);
 					}
 					i++;
 				}
@@ -191,7 +191,7 @@ package app.world.elements
 				|| pSkinPart.indexOf("PiedD2_") > -1
 			);
 		}
-		private function _getWingsMC(pSkinData:SkinData) : MovieClip {
+		private function _getWingsMC(pSkinData:SkinData, pShamanColor:uint) : MovieClip {
 			var part = new $AileChamane();
 			// Official hardcoded stats - found in decompiled game code
 			part.x = 10;
@@ -199,7 +199,7 @@ package app.world.elements
 			part.scaleX = 0.9;
 			part.scaleY = 0.9;
 			part.rotation = -10;
-			_colorPart(part, pSkinData, "shamanwings");
+			_colorPart(part, pSkinData, "shamanwings", pShamanColor);
 			return part;
 		}
 	}

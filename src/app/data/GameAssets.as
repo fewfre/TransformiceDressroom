@@ -38,9 +38,6 @@ package app.data
 		public static var extraBackHand:ItemData;
 		public static var extraFromage:ItemData;
 		
-		public static var shamanMode:ShamanMode = ShamanMode.OFF;
-		public static var shamanColor:int = 0x95D9D6;
-		
 		// { type:ItemType, id:String, colorI:int }
 		public static var swatchHoverPreviewData:Object = null;
 

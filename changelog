@@ -3,6 +3,7 @@
 - [Bug] Pasting a share code / selecting an outfit now properly customizes the List buttons to match the colors.
 - [Bug] Eye:31 now properly handles faulty MC id for first color
 - [Code rewrite] Updated/polished `GameAssets` color functions to be less awful
+- [Code rewrite] `shamanMode`/`shamanColor` moved from `GameAssets` onto `Character` so all character info is in the same place
 
 
 == V1.23e - 30 January 2023 ==

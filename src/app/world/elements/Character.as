@@ -15,6 +15,13 @@ package app.world.elements
 		public var outfit:Pose;
 		public var animatePose:Boolean;
 		public var isOutfit:Boolean;
+		
+		public var _shamanMode:ShamanMode = ShamanMode.OFF;
+		public var _shamanColor:int = 0x95D9D6;
+		public function get shamanMode():ShamanMode { return _shamanMode; }
+		public function set shamanMode(val:ShamanMode) { _shamanMode = val; updatePose(); }
+		public function get shamanColor():int { return _shamanColor; }
+		public function set shamanColor(val:int) { _shamanColor = val; updatePose(); }
 
 		private var _itemDataMap:Dictionary;
 
@@ -71,7 +78,8 @@ package app.world.elements
 					getItemData(ItemType.BACK),
 					getItemData(ItemType.PAW_BACK)
 				],
-				isOutfit ? ShamanMode.OFF : GameAssets.shamanMode
+				isOutfit ? ShamanMode.OFF : _shamanMode,
+				_shamanColor
 			);
 			if(animatePose) outfit.play(); else outfit.stopAtLastFrame();
 		}
@@ -103,9 +111,9 @@ package app.world.elements
 					
 					if(pParams["sh"] && pParams["sh"] != "") {
 						var tColor = _splitOnUrlColorSeperator(pParams["sh"]);
-						GameAssets.shamanMode = ShamanMode.fromInt( parseInt(tColor.splice(0, 1)[0]) );
+						_shamanMode = ShamanMode.fromInt( parseInt(tColor.splice(0, 1)[0]) );
 						if(tColor.length > 0) {
-							GameAssets.shamanColor = _hexToInt(tColor[0]);
+							_shamanColor = _hexToInt(tColor[0]);
 						}
 					}
 					
@@ -196,8 +204,8 @@ package app.world.elements
 			if(getItemData(ItemType.BACK)) { tParms.back = "y"; }
 			if(getItemData(ItemType.PAW_BACK)) { tParms.pawb = "y"; }
 			
-			if(GameAssets.shamanMode != ShamanMode.OFF) {
-				tParms["sh"] = GameAssets.shamanMode.toInt()+";"+_intToHex(GameAssets.shamanColor);
+			if(_shamanMode != ShamanMode.OFF) {
+				tParms["sh"] = _shamanMode.toInt()+";"+_intToHex(_shamanColor);
 			}
 
 			return tParms.toString().replace(/%3B/g, ";");

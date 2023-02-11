@@ -288,7 +288,7 @@ package app.world
 			}
 			
 			// First remove old stuff to prevent conflicts
-			GameAssets.shamanMode = ShamanMode.OFF;
+			character.shamanMode = ShamanMode.OFF;
 			for each(var tType:ItemType in ItemType.LAYERING) { _removeItem(tType); }
 			_removeItem(ItemType.POSE);
 			
@@ -488,7 +488,7 @@ package app.world
 
 		private function _onTrashConfirmScreenConfirm(pEvent:Event) : void {
 			removeChild(trashConfirmScreen);
-			GameAssets.shamanMode = ShamanMode.OFF;
+			character.shamanMode = ShamanMode.OFF;
 			// Remove items
 			for each(var tItem in ItemType.LAYERING) { _removeItem(tItem); }
 			_removeItem(ItemType.POSE);
@@ -662,13 +662,13 @@ package app.world
 			
 			private function _setConfigShamanColor(val:uint) : void {
 				/*_paneManager.getPane(TAB_OTHER).updateCustomColor(configCurrentlyColoringType, val);*/
-				GameAssets.shamanColor = val;
+				character.shamanColor = val;
 				character.updatePose();
 			}
 
 			private function _shamanColorButtonClicked(/*pType:String, pColor:int*/) : void {
 				/*this.configCurrentlyColoringType = pType;*/
-				(_paneManager.getPane(CONFIG_COLOR_PANE_ID) as ColorPickerTabPane).setupSwatches( new <uint>[ GameAssets.shamanColor ] );
+				(_paneManager.getPane(CONFIG_COLOR_PANE_ID) as ColorPickerTabPane).setupSwatches( new <uint>[ character.shamanColor ] );
 				_paneManager.openPane(CONFIG_COLOR_PANE_ID);
 			}
 		//}END Color Tab

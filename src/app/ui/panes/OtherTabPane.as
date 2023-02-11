@@ -47,8 +47,8 @@ package app.ui.panes
 			shamanButtons.push(tButton = addItem(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextBase({ text:"btn_normal_mode", text:"Normal" }), id:ShamanMode.NORMAL.toInt() })) as PushButton);
 			shamanButtons.push(tButton = addItem(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextBase({ text:"btn_hard_mode", text:"Hard" }), id:ShamanMode.HARD.toInt() })) as PushButton);
 			shamanButtons.push(tButton = addItem(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextBase({ text:"btn_divine_mode", text:"Divine" }), id:ShamanMode.DIVINE.toInt() })) as PushButton);
-			if(GameAssets.shamanMode != ShamanMode.OFF) {
-				shamanButtons[GameAssets.shamanMode.toInt()-2].toggleOn();
+			if(character.shamanMode != ShamanMode.OFF) {
+				shamanButtons[character.shamanMode.toInt()-2].toggleOn();
 			}
 			_registerClickHandler(shamanButtons, _onShamanButtonClicked);
 			
@@ -161,9 +161,9 @@ package app.ui.panes
 		
 		private function _onShamanButtonClicked(pEvent:Event) {
 			_untoggle(shamanButtons, pEvent.target as PushButton);
-			GameAssets.shamanMode = ShamanMode.fromInt(pEvent.target.id);
+			character.shamanMode = ShamanMode.fromInt(pEvent.target.id);
 			if(pEvent.target.pushed) {
-				GameAssets.shamanMode = ShamanMode.OFF;
+				character.shamanMode = ShamanMode.OFF;
 			}
 			character.updatePose();
 			_updateHead();
@@ -171,7 +171,7 @@ package app.ui.panes
 		
 		private function _onNoShamanButtonClicked(pEvent:Event) {
 			_untoggle(shamanButtons);
-			GameAssets.shamanMode = ShamanMode.OFF;
+			character.shamanMode = ShamanMode.OFF;
 			character.updatePose();
 			_updateHead();
 		}
@@ -191,8 +191,8 @@ package app.ui.panes
 			for(var i:int = 0; i < shamanButtons.length; i++) {
 				shamanButtons[i].toggleOff();
 			}
-			if(GameAssets.shamanMode != ShamanMode.OFF) {
-				shamanButtons[GameAssets.shamanMode.toInt()-2].toggleOn(false);
+			if(character.shamanMode != ShamanMode.OFF) {
+				shamanButtons[character.shamanMode.toInt()-2].toggleOn(false);
 			}
 			
 			button_hand.toggle(!!character.getItemData(ItemType.OBJECT), false);
