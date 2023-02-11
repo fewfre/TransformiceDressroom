@@ -78,7 +78,7 @@ package app.world.elements
 					getItemData(ItemType.BACK),
 					getItemData(ItemType.PAW_BACK)
 				],
-				isOutfit ? ShamanMode.OFF : _shamanMode,
+				_shamanMode,
 				_shamanColor
 			);
 			if(animatePose) outfit.play(); else outfit.stopAtLastFrame();
