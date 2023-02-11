@@ -158,22 +158,7 @@ package app.ui
 			downloadButton.disable().alpha = 0;
 			
 			// Line seperating infobar and contents below it.
-			_drawLine(5, 53, this.Width);
-		}
-		
-		private function _drawLine(pX:Number, pY:Number, pWidth:Number) : void {
-			var tLine:Shape = new Shape();
-			tLine.x = pX;
-			tLine.y = pY;
-			addChild(tLine);
-			
-			tLine.graphics.lineStyle(1, 0x11181c, 1, true);
-			tLine.graphics.moveTo(0, 0);
-			tLine.graphics.lineTo(pWidth - 10, 0);
-			
-			tLine.graphics.lineStyle(1, 0x608599, 1, true);
-			tLine.graphics.moveTo(0, 1);
-			tLine.graphics.lineTo(pWidth - 10, 1);
+			addChild( GameAssets.createHorizontalRule(5, 53, this.Width-10) );
 		}
 
 		public function ChangeImage(pMC:MovieClip) : void

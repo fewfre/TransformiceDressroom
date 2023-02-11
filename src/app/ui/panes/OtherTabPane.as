@@ -66,7 +66,7 @@ package app.ui.panes
 			
 			// Line
 			yy += 50 + 10;
-			_drawLine(this, 5, yy, ConstantsApp.PANE_WIDTH);
+			addChild( GameAssets.createHorizontalRule(5, yy, ConstantsApp.PANE_WIDTH - 10) );
 			
 			// Grid
 			yy += 15; xx = 15;
@@ -108,21 +108,6 @@ package app.ui.panes
 		/****************************
 		* Private
 		*****************************/
-		private function _drawLine(pParent:MovieClip, pX:Number, pY:Number, pWidth:Number) : void {
-			var tLine:Shape = new Shape();
-			tLine.x = pX;
-			tLine.y = pY;
-			pParent.addChild(tLine);
-			
-			tLine.graphics.lineStyle(1, 0x11181c, 1, true);
-			tLine.graphics.moveTo(0, 0);
-			tLine.graphics.lineTo(pWidth - 10, 0);
-			
-			tLine.graphics.lineStyle(1, 0x608599, 1, true);
-			tLine.graphics.moveTo(0, 1);
-			tLine.graphics.lineTo(pWidth - 10, 1);
-		}
-		
 		// pData = { color:int, box:Sprite[optional], size:Number=20, x:Number[optional], y:Number[optional] }
 		private function _colorSpriteBox(pData:Object) : Sprite {
 			var tBox:Sprite = pData.box ? pData.box : new Sprite();

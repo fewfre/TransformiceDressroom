@@ -356,6 +356,20 @@ package app.data
 		/****************************
 		* Misc
 		*****************************/
+		public static function createHorizontalRule(pX:Number, pY:Number, pWidth:Number) : Sprite {
+			var tLine:Sprite = new Sprite(); tLine.x = pX; tLine.y = pY;
+			
+			tLine.graphics.lineStyle(1, 0x11181c, 1, true);
+			tLine.graphics.moveTo(0, 0);
+			tLine.graphics.lineTo(pWidth, 0);
+			
+			tLine.graphics.lineStyle(1, 0x608599, 1, true);
+			tLine.graphics.moveTo(0, 1);
+			tLine.graphics.lineTo(pWidth, 1);
+			
+			return tLine;
+		}
+		
 		// Converts the image to a PNG bitmap and prompts the user to save.
 		public static function saveAsPNGFrameByFrameVersion(pObj:app.world.elements.Character, pName:String) {
 			if(!pObj){ return; }

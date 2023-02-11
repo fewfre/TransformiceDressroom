@@ -46,7 +46,7 @@ package app.ui.panes
 			if(Fewf.assets.getData("config").username_lookup_url) {
 				// Line
 				yy += 16;
-				addItemDO(_drawLine(5, yy, ConstantsApp.PANE_WIDTH - 15));
+				addItem( GameAssets.createHorizontalRule(5, yy, ConstantsApp.PANE_WIDTH - 15 - 10) );
 				yy += 16;
 				
 				// User look fetcher - Title
@@ -97,22 +97,6 @@ package app.ui.panes
 			tTextField.y = tTFPaddingY - tTextBackground.Height*0.5;
 			
 			return tTextField;
-		}
-		
-		private function _drawLine(pX:Number, pY:Number, pWidth:Number) : Shape {
-			var tLine:Shape = new Shape();
-			tLine.x = pX;
-			tLine.y = pY;
-			
-			tLine.graphics.lineStyle(1, 0x11181c, 1, true);
-			tLine.graphics.moveTo(0, 0);
-			tLine.graphics.lineTo(pWidth - 10, 0);
-			
-			tLine.graphics.lineStyle(1, 0x608599, 1, true);
-			tLine.graphics.moveTo(0, 1);
-			tLine.graphics.lineTo(pWidth - 10, 1);
-			
-			return tLine;
 		}
 		
 		/****************************

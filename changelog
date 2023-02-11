@@ -13,6 +13,7 @@
 	- `Grid` revamped and moved to `com.fewfre.display`
 	- Some components in `ui` moved to new `ui.common` folder
 	- Small `RoundedRectangle` revamp
+	- Multiple `_drawLine` function replaced with new `GameAssets.createHorizontalRule()`
 
 
 == V1.23d - 30 January 2023 ==
