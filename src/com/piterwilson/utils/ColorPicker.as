@@ -1,11 +1,10 @@
 package com.piterwilson.utils 
 {
-	import com.paulcoyle.utils.colour.*;
 	import flash.display.*;
 	import flash.events.*;
 	import flash.geom.*;
 	
-	public class ColorPicker extends flash.display.MovieClip
+	public class ColorPicker extends MovieClip
 	{
 		public static const COLOR_PICKED:String="colorpicker_pick";
 		
@@ -35,25 +34,36 @@ package com.piterwilson.utils
 			super();
 			this._width = 270;
 			this._height = 270;
+			
+			this._colors = [0, 0];
+			this._alphas = [0, 1];
+			this._ratios = [0, 255];
+			
+			if (stage) {
+				this.onAddedToStage(null);
+			} else {
+				addEventListener(flash.events.Event.ADDED_TO_STAGE, this.onAddedToStage);
+			}
+			
 			this.setupColorHueControlBar();
-			this._colorCursor = new Sprite();
-			this._colorGradSprite = new Sprite();
-			this._colorSprite = new Sprite();
-			this._blackWhiteSprite = new Sprite();
+			
 			this._newColorSprite = new Sprite();
-			this._oldColorSprite = new Sprite();
 			this._newColorSprite.x = 290;
 			this._newColorSprite.y = 40;
 			this._newColorSprite.graphics.beginFill(0, 1);
 			this._newColorSprite.graphics.drawRect(0, 0, this._swatchWidth, 135);
 			this._newColorSprite.graphics.endFill();
 			addChild(this._newColorSprite);
+			
+			this._oldColorSprite = new Sprite();
 			this._oldColorSprite.x = 290;
 			this._oldColorSprite.y = 175;
 			this._oldColorSprite.graphics.beginFill(0, 1);
 			this._oldColorSprite.graphics.drawRect(0, 0, this._swatchWidth, 135);
 			this._oldColorSprite.graphics.endFill();
 			addChild(this._oldColorSprite);
+			
+			this._colorGradSprite = new Sprite();
 			addChild(this._colorGradSprite);
 			this._colorGradSprite.y = 40;
 			this._colorGradSprite.x = 10;
@@ -61,30 +71,29 @@ package com.piterwilson.utils
 			this._colorGradSprite.graphics.drawRect(0, 0, this._width, this._height);
 			this._colorGradSprite.graphics.endFill();
 			this._colorGradSprite.addEventListener(MouseEvent.MOUSE_DOWN, this.colorGradSpriteMouseDown);
-			if (stage) {
-				this.onAddedToStage(null);
-			} else {
-				addEventListener(flash.events.Event.ADDED_TO_STAGE, this.onAddedToStage);
-			}
+			
+			this._colorSprite = new Sprite();
 			this._colorGradSprite.addChild(this._colorSprite);
 			this._colorSprite.y = 0;
 			this._colorSprite.x = 0;
+			
+			this._blackWhiteSprite = new Sprite();
 			this._colorGradSprite.addChild(this._blackWhiteSprite);
 			this._blackWhiteSprite.y = 0;
 			this._blackWhiteSprite.x = 0;
-			this._colors = [0, 0];
-			this._alphas = [0, 1];
-			this._ratios = [0, 255];
+			
+			this._colorCursor = new Sprite();
 			this._colorCursor.graphics.lineStyle(2, 0, 1);
 			this._colorCursor.graphics.drawCircle(0, 0, 6);
 			this._colorCursor.graphics.lineStyle(2, 16777215, 1);
 			this._colorCursor.graphics.drawCircle(0, 0, 5);
 			this._colorGradSprite.addChild(this._colorCursor);
-			var loc1:*=this._blackWhiteSprite.graphics;
+			
+			var bwGraphics:Graphics = this._blackWhiteSprite.graphics;
 			this._matr = new flash.geom.Matrix();
 			this._matr.createGradientBox(this._width, this._height, Math.PI / 2, 0, 0);
-			loc1.beginGradientFill(this._fType, this._colors, this._alphas, this._ratios, this._matr, this._sprMethod);
-			loc1.drawRect(0, 0, this._width, this._height);
+			bwGraphics.beginGradientFill(this._fType, this._colors, this._alphas, this._ratios, this._matr, this._sprMethod);
+			bwGraphics.drawRect(0, 0, this._width, this._height);
 			this.redrawBigGradient();
 		}
 
@@ -105,22 +114,22 @@ package com.piterwilson.utils
 		}
 
 		public function setCursor(color:uint):void {
-			var loc2:*=com.piterwilson.utils.ColorMathUtil.hexToHsv(color);
+			var hsv:*=ColorMathUtil.hexToHsv(color);
 			var loc3:*=360 * 0.75;
-			if (loc2[0] > 0) 
-			{
-				loc3 = Math.ceil(loc2[0] * 0.75);
+			if (hsv[0] > 0) {
+				loc3 = Math.ceil(hsv[0] * 0.75);
 			}
-			if (loc3 >= this._width) 
-			{
+			if (loc3 >= this._width) {
 				loc3 = (this._width - 1);
 			}
 			this._handle.x = loc3 + 10;
 			this._colorHueTarget = this._hueBitmapData.getPixel(loc3, 0);
 			this.redrawBigGradient();
-			var loc4:*=this._width * loc2[1] * 0.01;
-			var loc5:*=this._height - this._height * loc2[2] * 0.01;
-			this.setCursorXY(loc4, loc5);
+			
+			var tCursorX:Number = this._width * hsv[1] * 0.01;
+			var tCursorY:Number = this._height - this._height * hsv[2] * 0.01;
+			this.setCursorXY(tCursorX, tCursorY);
+			
 			this._newColorSprite.graphics.beginFill(color, 1);
 			this._newColorSprite.graphics.drawRect(0, 0, this._swatchWidth, 135);
 			this._newColorSprite.graphics.endFill();
@@ -138,7 +147,7 @@ package com.piterwilson.utils
 			stage.addEventListener(MouseEvent.MOUSE_UP, this.colorGradSpriteMouseUp);
 		}
 
-		internal function redrawBigGradient(arg1:Boolean=false):void {
+		internal function redrawBigGradient(pSetNewColor:Boolean=false):void {
 			this._ratios = [0, 255];
 			this._matr = new flash.geom.Matrix();
 			this._matr.createGradientBox(this._width, this._height, 0, 0, 0);
@@ -146,23 +155,24 @@ package com.piterwilson.utils
 			this._colors = [this._colorHueTarget, this._colorHueTarget];
 			this._colorSprite.graphics.beginGradientFill(this._fType, this._colors, this._alphas, this._ratios, this._matr, this._sprMethod);
 			this._colorSprite.graphics.drawRect(0, 0, this._width, this._height);
-			if (arg1) {
+			if (pSetNewColor) {
 				this.setNewColor(this.getColor());
 			}
 		}
 
 		internal function getColor():uint {
-			var loc1:*=com.piterwilson.utils.ColorMathUtil.hexToHsv(this._colorHueTarget);
-			var tMouseX:Number=this._colorCursor.x;
-			var tMouseY:Number=this._colorCursor.y;
+			var hsv:*=ColorMathUtil.hexToHsv(this._colorHueTarget);
+			var tMouseX:Number=this._colorCursor.x, tMouseY:Number=this._colorCursor.y;
+			
 			if (tMouseX < 0) { tMouseX = 0; }
 			if (tMouseY < 0) { tMouseY = 0; }
 			if (tMouseX > this._width) { tMouseX = this._width; }
 			if (tMouseY > this._height) { tMouseY = this._height; }
-			var loc4:*=loc1[0];
-			var loc5:*=tMouseX / this._width * 100;
-			var loc6:*=(this._height - tMouseY) / this._height * 100;
-			return com.piterwilson.utils.ColorMathUtil.hsvToHex(loc4, loc5, loc6);
+			
+			var h:*=hsv[0];
+			var s:Number = tMouseX / this._width * 100;
+			var v:Number = (this._height - tMouseY) / this._height * 100;
+			return ColorMathUtil.hsvToHex(h, s, v);
 		}
 
 		internal function setNewColor(pColor:uint, pTriggerEvent:Boolean=true):void {
@@ -173,33 +183,34 @@ package com.piterwilson.utils
 			if(pTriggerEvent) dispatchEvent(new flash.events.DataEvent(COLOR_PICKED, false, false, pColor.toString()));
 		}
 
-		internal function colorPickerHandleMotion(arg1:MouseEvent):void {
+		internal function colorPickerHandleMotion(e:MouseEvent):void {
 			if (this._colorHueControlBar.mouseX >= 0 && this._colorHueControlBar.mouseX <= this._width) {
 				this._handle.x = mouseX;
 				this._colorHueTarget = this._hueBitmapData.getPixel(this._colorHueControlBar.mouseX, 0);
 				this.redrawBigGradient(true);
+				
 				this._oldColorSprite.graphics.beginFill(this.getColor(), 1);
 				this._oldColorSprite.graphics.drawRect(0, 0, this._swatchWidth, 135);
 				this._oldColorSprite.graphics.endFill();
 			}
 		}
 
-		internal function stopColorPickerHandleMotion(arg1:MouseEvent):void {
+		internal function stopColorPickerHandleMotion(e:MouseEvent):void {
 			stage.removeEventListener(MouseEvent.MOUSE_MOVE, this.colorPickerHandleMotion);
 			stage.removeEventListener(MouseEvent.MOUSE_UP, this.stopColorPickerHandleMotion);
 			this._colorGradSprite.addEventListener(MouseEvent.MOUSE_MOVE, this.colorGradSpriteMouseMove);
 		}
 
-		internal function startColorPickerHandleMotionHue(arg1:MouseEvent):void {
+		internal function startColorPickerHandleMotionHue(e:MouseEvent):void {
 			startColorPickerHandleMotion(null);
 			colorPickerHandleMotion(null);
 		}
 		
-		internal function startColorPickerHandleMotionHandle(arg1:MouseEvent):void {
+		internal function startColorPickerHandleMotionHandle(e:MouseEvent):void {
 			startColorPickerHandleMotion(null);
 		}
 		
-		internal function startColorPickerHandleMotion(arg1:MouseEvent):void {
+		internal function startColorPickerHandleMotion(e:MouseEvent):void {
 			stage.addEventListener(MouseEvent.MOUSE_MOVE, this.colorPickerHandleMotion);
 			stage.addEventListener(MouseEvent.MOUSE_UP, this.stopColorPickerHandleMotion);
 			this._colorGradSprite.removeEventListener(MouseEvent.MOUSE_MOVE, this.colorGradSpriteMouseMove);
@@ -208,22 +219,26 @@ package com.piterwilson.utils
 		internal function setupColorHueControlBar():void {
 			this._handle = new ColorPickerHandle();
 			this._colorHueControlBar = new Sprite();
-			this._hueBitmapData = new flash.display.BitmapData(this._width, 1);
-			var loc1:*=20;
+			this._hueBitmapData = new BitmapData(this._width, 1);
+			
+			var barHeight:Number = 20;
 			this._rads = 2 * Math.PI / this._width;
-			var loc2:*=0;
-			while (loc2 < this._width) {
-				this._colorHueControlBar.graphics.beginFill(com.paulcoyle.utils.colour.AngularColour.angle_to_colour(this._rads * loc2), 1);
-				this._colorHueControlBar.graphics.drawRect(loc2, 0, 1, loc1);
-				++loc2;
+			var i:*=0;
+			while (i < this._width) {
+				this._colorHueControlBar.graphics.beginFill(ColorMathUtil.paulcoyle__angle_to_colour(this._rads * i), 1);
+				this._colorHueControlBar.graphics.drawRect(i, 0, 1, barHeight);
+				i++;
 			}
 			this._hueBitmapData.draw(this._colorHueControlBar);
 			this._colorHueTarget = this._hueBitmapData.getPixel(0, 0);
+			
 			addChild(this._colorHueControlBar);
 			addChild(this._handle);
+			
 			this._colorHueControlBar.x = 10;
 			this._colorHueControlBar.y = 10;
 			this._colorHueControlBar.addEventListener(MouseEvent.MOUSE_DOWN, this.startColorPickerHandleMotionHue);
+			
 			this._handle.x = 10;
 			this._handle.y = 10;
 			this._handle.buttonMode = true;
