@@ -225,7 +225,7 @@ package com.piterwilson.utils
 			this._rads = 2 * Math.PI / this._width;
 			var i:*=0;
 			while (i < this._width) {
-				this._colorHueControlBar.graphics.beginFill(ColorMathUtil.paulcoyle__angle_to_colour(this._rads * i), 1);
+				this._colorHueControlBar.graphics.beginFill(AngularColour.angle_to_colour(this._rads * i), 1);
 				this._colorHueControlBar.graphics.drawRect(i, 0, 1, barHeight);
 				i++;
 			}

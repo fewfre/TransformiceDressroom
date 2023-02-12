@@ -2,8 +2,11 @@
 - Trash can button will now reset pane lock state + reset all item customizations to default. (suggestion: QTAngel)
 - [Bug] Pasting a share code / selecting an outfit now properly customizes the List buttons to match the colors.
 - [Bug] Eye:31 now properly handles faulty MC id for first color
-- [Code rewrite] Updated/polished `GameAssets` color functions to be less awful
-- [Code rewrite] `shamanMode`/`shamanColor` moved from `GameAssets` onto `Character` so all character info is in the same place
+- Code rewrite / cleanup
+	- Updated/polished `GameAssets` color functions to be less awful
+	- `shamanMode`/`shamanColor` moved from `GameAssets` onto `Character` so all character info is in the same place
+	- `PNGEncoder` updated to match source
+	- `com.piterwilson` lib source polished + moved `com.paulcoyle`'s `AngularColour` into it
 
 
 == V1.23e - 30 January 2023 ==
