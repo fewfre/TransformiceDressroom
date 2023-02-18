@@ -63,7 +63,7 @@ package app.world.elements
 			var tSlotName:String;
 			var tHandItemAdded:Boolean = false;
 			
-			var tAccessoires = [];
+			var tAccessoires:Vector.<DisplayObject> = new Vector.<DisplayObject>();
 			
 			var addToPoseData = { shamanMode:shamanMode };
 			
@@ -96,24 +96,7 @@ package app.world.elements
 				part = null;
 			}
 			
-			var tAccMC:MovieClip;
-			for(var aI:int = 0; aI < tAccessoires.length; aI++) {
-				tAccMC = tAccessoires[aI];
-				var tAccItemCat:int = int(tAccMC.name.substr(5)); // removes `slot_`
-				var validBoneNamesForItemCat:Vector.<String> = GameAssets.accessorySlotBones[tAccItemCat];
-				if(validBoneNamesForItemCat) {
-					for(var bnaI:int = 0; bnaI < validBoneNamesForItemCat.length; bnaI++) {
-						var tBoneMC:MovieClip = _pose.getChildByName(validBoneNamesForItemCat[bnaI]) as MovieClip;
-
-						if(tBoneMC) {
-							var tNewAccPos:Point = tBoneMC.globalToLocal(tAccMC.parent.localToGlobal(new Point(tAccMC.x,tAccMC.y)));
-							tAccMC.x = tNewAccPos.x;
-							tAccMC.y = tNewAccPos.y;
-							tBoneMC.addChild(tAccMC);
-						}
-					}
-				}
-			}
+			_handleAccessories(tAccessoires);
 			
 			return this;
 		}
@@ -126,6 +109,38 @@ package app.world.elements
 				}
 			}
 			return null;
+		}
+		
+		private function _handleAccessories(pAccessoires:Vector.<DisplayObject>) : void {
+			var tAccMC:DisplayObject;
+			for(var aI:int = 0; aI < pAccessoires.length; aI++) {
+				tAccMC = pAccessoires[aI];
+				var tName:String = tAccMC.name;
+				var tNameMinusSlotPrefix:String = tName.substr(5); // removes `slot_`
+				var tSlotIsBehind = tNameMinusSlotPrefix.substr(0,6) == "behind";
+				if(tSlotIsBehind) {
+					tNameMinusSlotPrefix = tNameMinusSlotPrefix.substr(7); // removed "behind_"
+				}
+				var tAccItemCat:int = int(tNameMinusSlotPrefix);
+				var validBoneNamesForItemCat:Vector.<String> = GameAssets.accessorySlotBones[tAccItemCat];
+				if(validBoneNamesForItemCat) {
+					for(var bnaI:int = 0; bnaI < validBoneNamesForItemCat.length; bnaI++) {
+						var tBoneMC:MovieClip = _pose.getChildByName(validBoneNamesForItemCat[bnaI]) as MovieClip;
+
+						if(tBoneMC) {
+							var tNewAccPos:Point = tBoneMC.globalToLocal(tAccMC.parent.localToGlobal(new Point(tAccMC.x,tAccMC.y)));
+							tAccMC.x = tNewAccPos.x;
+							tAccMC.y = tNewAccPos.y;
+							if(tSlotIsBehind) {
+							tBoneMC.addChildAt(tAccMC, 0);
+							} else {
+								
+							tBoneMC.addChild(tAccMC);
+							}
+						}
+					}
+				}
+			}
 		}
 		
 		private function _colorPart(part:MovieClip, pData:ItemData, pSlotName:String, pShamanColor:uint) : void {
@@ -142,8 +157,8 @@ package app.world.elements
 			}
 		}
 		
-		private function getMcItemSubAccessories(part:MovieClip) {
-			var tAccessoires = [];
+		private function getMcItemSubAccessories(part:MovieClip):Vector.<DisplayObject> {
+			var tAccessoires:Vector.<DisplayObject> = new Vector.<DisplayObject>();
 			var tChild:DisplayObject;
 			for(var i:int = 0; i < part.numChildren; i++) {
 				tChild = part.getChildAt(i);
