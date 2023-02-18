@@ -21,7 +21,7 @@ package com.fewfre.display
 		
 		public function get cellSize():Number { return _cellSize; }
 		public function get rows():Number { return Math.ceil(_list.length / _columns); }
-		public function get columns():Number { return _columns; }
+		public function get columns():uint { return _columns; }
 
 		// Constructor
 		public function Grid(pWidth:Number, pColumns:uint, pMargin:Number=5) {

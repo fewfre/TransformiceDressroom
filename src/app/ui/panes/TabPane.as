@@ -106,6 +106,7 @@ package app.ui.panes
 				_scrollPane.verticalLineScrollSize = 25;
 				_scrollPane.verticalPageScrollSize = 25;
 				_scrollPane.scrollDrag = true;
+				_scrollPane.focusEnabled = false; // disables arrow keys moving scrollbars (we use arrows for grid traversal)
 			}
 			_scrollPane.source = this.content;
 

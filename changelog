@@ -1,6 +1,6 @@
 == V1.23g - 17 February 2023 ==
 - Added support for new `behind_` slot logic
-
+- Up/Down arrow keys now traverse the grids vertically
 
 
 == V1.23f - 10 February 2023 ==
