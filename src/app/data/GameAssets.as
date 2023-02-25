@@ -161,7 +161,7 @@ package app.data
 			return ret;
 		}
 
-		public static function getItemDataListByType(pType:ItemType) :  Vector.<ItemData> {
+		public static function getItemDataListByType(pType:ItemType) : Vector.<ItemData> {
 			switch(pType) {
 				case ItemType.HAIR:		return hair;
 				case ItemType.HEAD:		return head;

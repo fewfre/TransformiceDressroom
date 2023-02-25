@@ -13,7 +13,6 @@ package app.ui
 	import flash.net.*;
 	import flash.text.*;
 	import app.data.ConstantsApp;
-	import app.data.ITEM;
 	
 	public class ShopInfoBar extends MovieClip
 	{
