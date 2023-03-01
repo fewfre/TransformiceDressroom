@@ -58,7 +58,7 @@ package app.ui
 			* Active Item
 			*********************/
 			_imageCont = addChild(new RoundedRectangle({ x:0, y:0, width:50, height:50 })) as RoundedRectangle;
-			_imageCont.draw(0x6A7495, 15, 0x5d7d90, 0x11171c, 0x3c5064);
+			_imageCont.draw(ConstantsApp.APP_BG_COLOR, 15, 0x5d7d90, 0x11171c, 0x3c5064);
 			
 			_setNoItemImage();
 			

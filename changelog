@@ -1,3 +1,7 @@
+== V1.23h - 28 February 2023 ==
+- [Bug] Clicking scale slider will no longer prevent left/right arrow keys from traversing item grid.
+- Scale slider code polished - track hitbox increased & clicking anywhere on track now starts drag.
+
 == V1.23g - 17 February 2023 ==
 - Added support for new `behind_` slot logic
 - Up/Down arrow keys now traverse the grids vertically

@@ -11,7 +11,6 @@ package app.ui.panes
 	import flash.text.*;
 	import flash.geom.*;
 	import ext.ParentApp;
-	import fl.containers.ScrollPane;
 	
 	import flash.net.FileReference;
 	import flash.net.FileFilter;
@@ -36,7 +35,7 @@ package app.ui.panes
 		private var _hoverText : TextField;
 		private var _hoverColorBox : RoundedRectangle;
 		private var _recentColorsDisplay : RecentColorsListDisplay;
-		private var _scaleSlider : Object;//FancySlider;
+		private var _scaleSlider : FancySlider;
 		
 		private var _dragging : Boolean = false;
 		private var _ignoreNextColorClick : Boolean = false;
@@ -100,15 +99,10 @@ package app.ui.panes
 			* Scale slider
 			*********************/
 			var tSliderWidth = ConstantsApp.PANE_WIDTH * 0.4;
-			var sliderProps = {
-				x:-tSliderWidth*0.5, y:-110,
-				value:10, min:10, max:50, width:tSliderWidth
-			};
-			if(Fewf.isExternallyLoaded) {
-				_scaleSlider = _tray.addChild(ParentApp.newFancySlider(sliderProps));
-			} else {
-				_scaleSlider = _tray.addChild(new FancySlider(sliderProps));
-			}
+			_scaleSlider = new FancySlider(tSliderWidth)
+				.setXY(-tSliderWidth*0.5, -110)
+				.setSliderParams(1, 5, 1)
+				.appendTo(_tray);
 			_scaleSlider.addEventListener(FancySlider.CHANGE, _onSliderChange);
 			
 			// Attach scroll event to back to detect scroll anywhere on pane
@@ -197,7 +191,7 @@ package app.ui.panes
 			_item = _itemDragDrop.addChild(pObj) as MovieClip;
 			_item.scaleX = _item.scaleY = 5;
 			_itemDragDrop.scaleX = _itemDragDrop.scaleY = 1;
-			_scaleSlider.value = 10;
+			_scaleSlider.value = 1;
 			_itemDragDrop.x = _itemDragDrop.y = 0;
 			// Don't let the pose eat mouse input
 			_item.mouseChildren = false;
@@ -301,13 +295,13 @@ package app.ui.panes
 		}
 		
 		private function _onSliderChange(e:Event) : void {
-			_itemDragDrop.scaleX = _itemDragDrop.scaleY = _scaleSlider.getValueAsScale();
+			_itemDragDrop.scaleX = _itemDragDrop.scaleY = _scaleSlider.value;
 			_centerImageOrigin(_item);
 		}
 
 		private function _onMouseWheel(pEvent:MouseEvent) : void {
 			_scaleSlider.updateViaMouseWheelDelta(pEvent.delta);
-			_itemDragDrop.scaleX = _itemDragDrop.scaleY = _scaleSlider.getValueAsScale();
+			_itemDragDrop.scaleX = _itemDragDrop.scaleY = _scaleSlider.value;
 		}
 		
 		private function _onFileSelect(e:Event) : void {

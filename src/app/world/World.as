@@ -15,8 +15,6 @@ package app.world
 	import app.world.data.*;
 	import app.world.elements.*;
 
-	import fl.controls.*;
-	import fl.events.*;
 	import flash.display.*;
 	import flash.text.*;
 	import flash.events.*
@@ -230,7 +228,7 @@ package app.world
 		private function _onMouseWheel(pEvent:MouseEvent) : void {
 			if(this.mouseX < this.shopTabs.x) {
 				_toolbox.scaleSlider.updateViaMouseWheelDelta(pEvent.delta);
-				character.scale = _toolbox.scaleSlider.getValueAsScale();
+				character.scale = _toolbox.scaleSlider.value;
 			}
 		}
 
@@ -313,7 +311,7 @@ package app.world
 		}
 
 		private function _onScaleSliderChange(pEvent:Event):void {
-			character.scale = _toolbox.scaleSlider.getValueAsScale();
+			character.scale = _toolbox.scaleSlider.value;
 		}
 
 		private function _onShareCodeEntered(pCode:String, pProgressCallback:Function):void {
