@@ -3,11 +3,10 @@ package app.ui.panes
 	import app.data.*;
 	import app.ui.*;
 	import app.ui.buttons.*;
-	import fl.containers.*;
 	import flash.display.*;
 	import com.fewfre.utils.Fewf;
 
-	public class PaneManager extends MovieClip
+	public class PaneManager extends Sprite
 	{
 		// Storage
 		protected var _panes	: Object; // Tab pane should be stored in here to easy access the one you desire.

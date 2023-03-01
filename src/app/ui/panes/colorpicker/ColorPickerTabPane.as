@@ -6,7 +6,6 @@ package app.ui.panes.colorpicker
 	import app.data.*;
 	import app.ui.*;
 	import app.ui.buttons.*;
-	import fl.containers.*;
 	import flash.display.*;
 	import flash.events.*;
 	import flash.utils.Dictionary;
