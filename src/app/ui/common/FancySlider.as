@@ -57,7 +57,7 @@ package app.ui.common
 			this.minimum = min;
 			this.maximum = max;
 			this.value = value;
-			this.snapInterval = 0.1;
+			this.snapInterval = interval;
 			return this;
 		}
 		
