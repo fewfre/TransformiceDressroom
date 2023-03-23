@@ -24,7 +24,7 @@
 		]
 	},
 	
-	"username_lookup_url_DISABLED": "https://projects.fewfre.com/a801/transformice/dressroom/resources/fetchlooknickname/fetchlooknickname.php?nickname=$1",
+	"username_lookup_url_DISABLED": "https://projects.fewfre.com/a801/transformice/dressroom/resources/fetchlook/fetchlooknickname.php?nickname=$1",
 	
 	"packs": {
 		"items": [
