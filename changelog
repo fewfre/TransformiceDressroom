@@ -1,3 +1,9 @@
+== V1.23i - 8 April 2023 ==
+- Item layering fixed
+- Updated `slot_` code to support new `first_` option
+- Overhauled `Pose` to match in-game logic much more closely
+
+
 == V1.23h - 28 February 2023 ==
 - [Bug] Clicking scale slider will no longer prevent left/right arrow keys from traversing item grid.
 - Scale slider code polished - track hitbox increased & clicking anywhere on track now starts drag.

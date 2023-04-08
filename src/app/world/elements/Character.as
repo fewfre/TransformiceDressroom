@@ -129,7 +129,7 @@ package app.world.elements
 					_setParamToTypeTfmOfficialSyntax(ItemType.SKIN, arr[2] && arr[0]==1 ? arr[0]+"_"+arr[2] : arr[0], false);
 					
 					arr = arr[1].split(",");
-					var tTypes:Vector.<ItemType> = new <ItemType>[ItemType.HEAD, ItemType.EYES, ItemType.EARS, ItemType.MOUTH, ItemType.NECK, ItemType.HAIR, ItemType.TAIL, ItemType.CONTACTS, ItemType.HAND];
+					var tTypes:Vector.<ItemType> = ItemType.LOOK_CODE_ITEM_ORDER;
 					for(var i:int = 0; i < tTypes.length; i++) {
 						_setParamToTypeTfmOfficialSyntax(tTypes[i], arr[i]);
 					}
@@ -216,7 +216,7 @@ package app.world.elements
 			var code:String = skinId+";";
 			
 			// Apply various parts
-			var tTypes = [ItemType.HEAD, ItemType.EYES, ItemType.EARS, ItemType.MOUTH, ItemType.NECK, ItemType.HAIR, ItemType.TAIL, ItemType.CONTACTS, ItemType.HAND];
+			var tTypes = ItemType.LOOK_CODE_ITEM_ORDER;
 			var tIds = [];
 			for(var i:int = 0; i < tTypes.length; i++) {
 				var tData:ItemData = getItemData(tTypes[i]);
