@@ -276,110 +276,27 @@ package com.fewfre.utils
 			return new SpritesheetData(tBitmap, tWidth, tHeight, totalFrames);
 		}
 		
-		public static function convertMovieClipToSpriteSheetAsync(mc:MovieClip, scale:Number, bg:int, pCallback:Function) : void {
-			var tOrigScale = mc.scaleX;
-			mc.scaleX = mc.scaleY = scale;
-			
-			var totalFrames:int = mc.totalFrames;
-			// Get bounds across all frames - https://stackoverflow.com/a/13750049
-			var lifetimeBounds:Rectangle = new Rectangle(), tempRect:Rectangle;
-			mc.gotoAndStop(1);
-			for(var i:int = 0; i < totalFrames; i++) {
-				tempRect = mc.getBounds(mc);
-				lifetimeBounds.top = Math.min(lifetimeBounds.top, tempRect.top);
-				lifetimeBounds.left = Math.min(lifetimeBounds.left, tempRect.left);
-				lifetimeBounds.bottom = Math.max(lifetimeBounds.bottom, tempRect.bottom);
-				lifetimeBounds.right = Math.max(lifetimeBounds.right, tempRect.right);
-				mc.nextFrame();
-			}
-			var rect:Rectangle = lifetimeBounds;
-			
-			var tWidth = Math.ceil(rect.width*scale), tHeight = Math.ceil(rect.height*scale);
-			
-			// trace('lifetimeBounds', tWidth, tHeight, 'totalFrames', totalFrames);
-			
-			var tBitmap:BitmapData = new BitmapData(tWidth * totalFrames, tHeight, bg == -1, bg != -1 ? bg : 0xFFFFFF);
-			// trace("rect", rect.x, rect.y, rect.right, rect.bottom, rect.width, rect.height);
-			
-			
-			const tDrawNextFrame = function(i:uint){
-				if(i == totalFrames) {
-					mc.scaleX = mc.scaleY = tOrigScale;
-					pCallback(tBitmap, tWidth, tHeight);
-					return;
-				}
-				tempRect = mc.getBounds(mc);
-				
-				var tFrameBitmap:BitmapData = new BitmapData(tWidth, tHeight, true, 0xFFFFFF);
-				var tFrameMatrix:Matrix = new Matrix(1, 0, 0, 1, -rect.x, -rect.y);
-				tFrameMatrix.scale(scale, scale);
-				bitmapDataDrawBestQuality(tFrameBitmap, mc, tFrameMatrix);
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				// var tMatrix:Matrix = new Matrix(1, 0, 0, 1, i*tWidth + -tempRect.left + (tWidth-tempRect.width)/2, -tempRect.top + (tHeight-tempRect.height)/2);
-				// var tMatrix:Matrix = new Matrix(1, 0, 0, 1, i*tWidth - rect.x + tempRect.x, -rect.y + tempRect.y);
-				// var tMatrix:Matrix = new Matrix(1, 0, 0, 1, i*tWidth*(1/scale) - rect.x, 0 - rect.y);
-				var tMatrix:Matrix = new Matrix(1, 0, 0, 1, i*tWidth, 0);
-				// tMatrix.scale(scale, scale);
-				tMatrix.scale(1, 1);
-				
-				var defaultQuality = Fewf.stage.quality;
-				Fewf.stage.quality = StageQuality.BEST;
-				tBitmap.draw(tFrameBitmap, tMatrix, null, null, null, true);
-				Fewf.stage.quality = defaultQuality;
-			
-				mc.nextFrame();
-				setTimeout(function(){ tDrawNextFrame(i+1); }, 30);
-			};
-			mc.gotoAndStop(1);
-			tDrawNextFrame(0);
-			
-			// for(var i:int = 0; i < totalFrames; i++) {
-			// 	mc.gotoAndStop(i);
-			// 	tempRect = mc.getBounds(mc);
-			// 	// var tMatrix:Matrix = new Matrix(1, 0, 0, 1, i*tWidth + -tempRect.left + (tWidth-tempRect.width)/2, -tempRect.top + (tHeight-tempRect.height)/2);
-			// 	// var tMatrix:Matrix = new Matrix(1, 0, 0, 1, i*tWidth - rect.x + tempRect.x, -rect.y + tempRect.y);
-			// 	var tMatrix:Matrix = new Matrix(1, 0, 0, 1, i*tWidth*(1/scale) - rect.x, 0 - rect.y);
-			// 	tMatrix.scale(scale, scale);
-
-			// 	tBitmap.draw(mc, tMatrix, null, null, null, true);
-			// }
-			// Fewf.stage.quality = defaultQuality;
-			
-			// mc.scaleX = mc.scaleY = tOrigScale;
-
-			// return { bitmapData:tBitmap, frameWidth:tWidth, frameHeight:tHeight };
-		}
-		
 		public static function saveAsSpriteSheet(mc:MovieClip, pName:String, scale:Number=1) {
 			var sheetData = convertMovieClipToSpriteSheet(mc, scale);
 			saveImageDataToDevice(sheetData.bitmapData, pName, 'png');
 		}
 		
 		// Converts the image to a PNG bitmap and prompts the user to save.
-		public static function saveAsAnimatedGif(mc:MovieClip, pName:String, scale:Number=1, pFinished:Function=null) {
+		public static function saveAsAnimatedGif(mc:MovieClip, pName:String, scale:Number=1, pFormat:String=null, pFinished:Function=null) {
 			if(_deviceUsesCameraRoll()) {
 				handleErrorMessage(new Error("Sorry, animated GIFs cannot be saved to mobile camera roll - please use desktop app or disable animation to copy as a still image"));
 				pFinished && pFinished();
 				return;
 			}
-			_fetchGif(mc, scale, function(data:*, error:Error){
+			_fetchGif(mc, scale, pFormat, function(data:*, error:Error){
 				if(error) { handleErrorMessage(error); pFinished && pFinished(); return; }
 				
-				saveImageDataToDevice(data, pName, 'gif');
+				saveImageDataToDevice(data, pName, pFormat ? pFormat : 'gif');
 				pFinished && pFinished();
 			});
 		}
-		private static function _fetchGif(mc:MovieClip, scale:Number, pCallback:Function) {
-			var sheetData:SpritesheetData = convertMovieClipToSpriteSheet(mc, scale, 0x6A7495); // give it a bg color since gifs don't support partial opacity
+		private static function _fetchGif(mc:MovieClip, scale:Number, pFormat:String, pCallback:Function) {
+			var sheetData:SpritesheetData = convertMovieClipToSpriteSheet(mc, scale, pFormat && pFormat != "gif" ? -1 : 0x6A7495); // give it a bg color since gifs don't support partial opacity
 			var tPNG:ByteArray = PNGEncoder.encode(sheetData.bitmapData);
 			
 			var url = Fewf.assets.getData("config").spritesheet2gif_url;
@@ -400,6 +317,7 @@ package com.fewfre.utils
 			requestVars.height = sheetData.frameHeight;
 			requestVars.framescount = sheetData.framesCount;
 			requestVars.delay = (1 / Fewf.stage.frameRate) * 100; // 100 gif ticks in a second
+			if(pFormat) requestVars.format = pFormat;
 			
 			request.data = requestVars;
 			
@@ -411,7 +329,7 @@ package com.fewfre.utils
 				// trace('complete', e.target.data);
 				pCallback(e.target.data, null);
 			});
-			urlLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, function(e:ErrorEvent){ pCallback(null, new Error(e.text, e.errorID)); }, false, 0, true);
+			urlLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, function(e:SecurityErrorEvent){ pCallback(null, new SecurityError(e.text, e.errorID)); }, false, 0, true);
 			var status:int = 500;
 			urlLoader.addEventListener(HTTPStatusEvent.HTTP_STATUS, function(e:HTTPStatusEvent):void{
 				trace('status', e, e.target);

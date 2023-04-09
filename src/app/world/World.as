@@ -58,7 +58,7 @@ package app.world
 		public function World(pStage:Stage) {
 			super();
 			ConstantsApp.CONFIG_TAB_ENABLED = !!Fewf.assets.getData("config").username_lookup_url;
-			ConstantsApp.ANIMATION_DOWNLOAD_ENABLED = !!Fewf.assets.getData("config").spritesheet2gif_url;
+			ConstantsApp.ANIMATION_DOWNLOAD_ENABLED = !!Fewf.assets.getData("config").spritesheet2gif_url && (Fewf.isExternallyLoaded || ExternalInterface.call("eval", "window.location.href") == null);
 			_buildWorld(pStage);
 			pStage.addEventListener(MouseEvent.MOUSE_WHEEL, _onMouseWheel);
 			pStage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyDownListener);
@@ -364,7 +364,7 @@ package app.world
 			if(ConstantsApp.ANIMATION_DOWNLOAD_ENABLED && character.animatePose) {
 				// FewfDisplayUtils.saveAsSpriteSheet(this.character.copy().outfit.pose, "spritesheet", this.character.outfit.scaleX);
 				_toolbox.downloadButton.disable();
-				FewfDisplayUtils.saveAsAnimatedGif(this.character.copy().outfit.pose, "character", this.character.outfit.scaleX, function(){
+				FewfDisplayUtils.saveAsAnimatedGif(this.character.copy().outfit.pose, "character", this.character.outfit.scaleX, null, function(){
 					_toolbox.downloadButton.enable();
 				});
 			} else {

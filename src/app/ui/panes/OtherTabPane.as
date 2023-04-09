@@ -27,6 +27,7 @@ package app.ui.panes
 		public var shamanColorPinkButton	: ColorButton;
 		
 		public var characterHead	: Character;
+		public var webpButton		: GameButton;
 		public var outfitsButton	: SpriteButton;
 		
 		// Constructor
@@ -88,6 +89,14 @@ package app.ui.panes
 			var saveHeadButton = addItem(new GameButton({ x:348, y:310, width:70, height:70 }));
 			saveHeadButton.addChild(characterHead);
 			saveHeadButton.addEventListener(MouseEvent.CLICK, _onSaveMouseHeadClicked);
+			
+			if(ConstantsApp.ANIMATION_DOWNLOAD_ENABLED) {
+				webpButton = addItem(new GameButton({ x:348-70-5, y:310, width:70, height:70 })) as GameButton;
+				var webpText:TextBase = new TextBase({ x:35, y:35, origin:0.5, size:16 });
+				webpText.setUntranslatedText('.webp');
+				webpButton.addChild(webpText);
+				webpButton.addEventListener(MouseEvent.CLICK, _onSaveAsWebpClicked);
+			}
 			
 			outfitsButton = addItem(new SpriteButton({ x:15, y:310, width:70, height:70, obj:new $Outfit(), obj_scale:0.85 })) as SpriteButton;
 			
@@ -202,6 +211,13 @@ package app.ui.panes
 		
 		private function _onSaveMouseHeadClicked(pEvent:Event) {
 			FewfDisplayUtils.saveAsPNG(characterHead, 'mouse_head', character.outfit.scaleX);
+		}
+		
+		private function _onSaveAsWebpClicked(e:Event) {
+			webpButton.disable();
+			FewfDisplayUtils.saveAsAnimatedGif(character.copy().outfit.pose, "character", this.character.outfit.scaleX, "webp", function(){
+				webpButton.enable();
+			});
 		}
 	}
 }

@@ -29,15 +29,16 @@ if (count($errors) > 0) {
 	return;
 }
 
-$frameWidth = $_POST['width'];
-$frameHeight = $_POST['height'];
-$framesCount = $_POST['framescount'];
-$delay = $_POST['delay'];
+$frameWidth = intval($_POST['width']);
+$frameHeight = intval($_POST['height']);
+$framesCount = intval($_POST['framescount']);
+$delay = intval($_POST['delay']);
 
+$imageType = array_key_exists('format', $_POST) && $_POST['format'] == "webp" ? "webp" : "gif";
 
 $quality = 90;
 $imageSheet = new Imagick();
-// $imageSheet->setBackgroundColor('#6A7495'); // doesn't work
+// if($imageType == "gif") $imageSheet->setBackgroundColor('#6A7495'); // doesn't work
 if(array_key_exists('sheet', $_FILES)) {
 	$imageSheet->readImage($_FILES['sheet']['tmp_name']);
 } else {
@@ -50,7 +51,7 @@ $columns = round($imageSheet->getImageWidth() / $frameWidth);
 // $rows = round($imageSheet->getImageHeight() / $frameHeight);
 
 $GIF = new Imagick();
-$GIF->setFormat("gif");
+$GIF->setFormat($imageType);
 $GIF->setSize($frameWidth, $frameHeight);
 $GIF->setCompressionQuality($quality);
 
@@ -73,5 +74,5 @@ $GIF->coalesceImages();
 // exec("convert {$_FILES['sheet']['tmp_name']} -crop $crop +adjoin +repage -adjoin -loop 0 -delay $delay *.png -layers OptimizePlus -layers OptimizeTransparency 2>&1", $output);
 
 // return animated gif
-header('Content-Type: image/gif');
+header("Content-Type: image/$imageType");
 echo $GIF->getImagesBlob();
