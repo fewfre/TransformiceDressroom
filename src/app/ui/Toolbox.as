@@ -73,7 +73,7 @@ package app.ui
 				btn = imgurButton = tTray.addChild(new SpriteButton({ x:tX+tButtonXInc*tButtonsOnLeft, y:tY, width:tButtonSize, height:tButtonSize, obj_scale:0.415, obj:new $CopyIcon(), origin:0.5 })) as SpriteButton;
 				btn.addEventListener(ButtonBase.CLICK, function(e:*){
 					try {
-						if(_character.animatePose) {
+						if(ConstantsApp.ANIMATION_DOWNLOAD_ENABLED && _character.animatePose) {
 							FewfDisplayUtils.copyToClipboardAnimatedGif(_character.copy().outfit.pose, 1, function(){
 								imgurButton.ChangeImage(new $No());
 							})
