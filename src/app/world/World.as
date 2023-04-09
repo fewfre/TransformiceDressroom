@@ -58,6 +58,7 @@ package app.world
 		public function World(pStage:Stage) {
 			super();
 			ConstantsApp.CONFIG_TAB_ENABLED = !!Fewf.assets.getData("config").username_lookup_url;
+			ConstantsApp.ANIMATION_DOWNLOAD_ENABLED = !!Fewf.assets.getData("config").spritesheet2gif_url;
 			_buildWorld(pStage);
 			pStage.addEventListener(MouseEvent.MOUSE_WHEEL, _onMouseWheel);
 			pStage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyDownListener);
@@ -350,11 +351,6 @@ package app.world
 		}
 
 		private function _onPlayerAnimationToggle(pEvent:Event):void {
-			if(ConstantsApp.ANIMATION_FRAME_BY_FRAME) {
-				character.outfit.poseNextFrame();
-				_toolbox.curanimationFrameText.setValues( character.outfit.poseCurrentFrame + "/" + character.outfit.poseTotalFrames );
-				return;
-			}
 			character.animatePose = !character.animatePose;
 			if(character.animatePose) {
 				character.outfit.play();
@@ -365,29 +361,14 @@ package app.world
 		}
 
 		private function _onSaveClicked(pEvent:Event) : void {
-			if(!ConstantsApp.ANIMATION_FRAME_BY_FRAME) {
-				FewfDisplayUtils.saveAsPNG(this.character, "character");
+			if(ConstantsApp.ANIMATION_DOWNLOAD_ENABLED && character.animatePose) {
+				// FewfDisplayUtils.saveAsSpriteSheet(this.character.copy().outfit.pose, "spritesheet", this.character.outfit.scaleX);
+				_toolbox.downloadButton.disable();
+				FewfDisplayUtils.saveAsAnimatedGif(this.character.copy().outfit.pose, "character", this.character.outfit.scaleX, function(){
+					_toolbox.downloadButton.enable();
+				});
 			} else {
-				
-				character.outfit.pose.gotoAndPlay(0);
-				character.outfit.pose.stop();
-				var downloadFrame = function(){
-					var fileRef = GameAssets.saveAsPNGFrameByFrameVersion(character, "frame_"+character.getItemData(ItemType.POSE).id+"_"+character.outfit.poseCurrentFrame);
-					fileRef.addEventListener("complete", function(e){
-						if(character.outfit.poseCurrentFrame >= character.outfit.poseTotalFrames) { return; }
-						character.outfit.poseNextFrame();
-						downloadFrame();
-					});
-					
-					// trace("downloadFrame", i, frames.length, pName+"_"+(i+1)+".png" );
-					// if(i >= frames.length) { return; }
-					// var bytes = PNGEncoder.encode(frames[i]);
-					// fileRef.save( bytes, pName+"_"+(i+1)+".png" );
-					// i++;
-				};
-				downloadFrame();
-					
-					
+				FewfDisplayUtils.saveAsPNG(this.character, "character");
 			}
 		}
 

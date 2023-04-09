@@ -1,6 +1,5 @@
 package app.data
 {
-	import com.adobe.images.*;
 	import com.fewfre.utils.*;
 	import com.piterwilson.utils.ColorMathUtil;
 	import app.data.*;
@@ -8,7 +7,6 @@ package app.data
 	import app.world.elements.*;
 	import flash.display.*;
 	import flash.geom.*;
-	import flash.net.*;
 	import flash.utils.Dictionary;
 
 	public class GameAssets
@@ -359,27 +357,6 @@ package app.data
 			tLine.graphics.lineTo(pWidth, 1);
 			
 			return tLine;
-		}
-		
-		// Converts the image to a PNG bitmap and prompts the user to save.
-		public static function saveAsPNGFrameByFrameVersion(pObj:app.world.elements.Character, pName:String) {
-			if(!pObj){ return; }
-
-			var tOrigScale = pObj.outfit.scaleX;
-			pObj.scale = 1;
-			var tWidth = 80, tHeight = 65;
-			var tRect:flash.geom.Rectangle = pObj.getBounds(pObj);
-			var tBitmap:flash.display.BitmapData = new flash.display.BitmapData(tWidth, tHeight, true, 0xFFFFFF);
-
-			var tMatrix:flash.geom.Matrix = new flash.geom.Matrix(1, 0, 0, 1, -tRect.left + (tWidth-tRect.width)/2, -tRect.top + (tHeight-tRect.height)/2);
-			tMatrix.scale(1, 1);
-
-			tBitmap.draw(pObj, tMatrix);
-			var fileRef = new flash.net.FileReference();
-			fileRef.save( com.adobe.images.PNGEncoder.encode(tBitmap), pName+".png" );
-			
-			pObj.scale = tOrigScale;
-			return fileRef;
 		}
 	}
 }

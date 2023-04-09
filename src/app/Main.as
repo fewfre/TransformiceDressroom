@@ -9,12 +9,14 @@ package app
 	import flash.display.*;
 	import flash.events.*;
 	import flash.system.Capabilities;
+	import app.ui.screens.ErrorScreen;
 
 	[SWF(backgroundColor="0x6A7495" , width="900" , height="425")]
 	public class Main extends MovieClip
 	{
 		// Storage
 		private var _loaderDisplay	: LoaderDisplay;
+		private var _errorScreen	: ErrorScreen;
 		private var _world			: World;
 		private var _config			: Object;
 		private var _defaultLang	: String;
@@ -35,11 +37,15 @@ package app
 
 			stage.align = StageAlign.TOP;
 			stage.scaleMode = StageScaleMode.SHOW_ALL;
-			stage.frameRate = 16;
+			stage.frameRate = 32;//16;
 
 			BrowserMouseWheelPrevention.init(stage);
 
 			_loaderDisplay = addChild( new LoaderDisplay({ x:stage.stageWidth * 0.5, y:stage.stageHeight * 0.5 }) ) as LoaderDisplay;
+			
+			_errorScreen = new ErrorScreen();
+			_errorScreen.addEventListener(Event.CLOSE, function(e){ removeChild(_errorScreen); });
+			Fewf.dispatcher.addEventListener(ErrorEvent.ERROR, function(e:ErrorEvent){ addChild(_errorScreen); _errorScreen.open(e.text || 'Unknown Error'); })
 			
 			_startPreload();
 		}

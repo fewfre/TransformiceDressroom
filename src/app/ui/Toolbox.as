@@ -22,9 +22,9 @@ package app.ui
 		private var _character		: Character;
 		
 		public var scaleSlider		: FancySlider;
+		public var downloadButton	: ButtonBase;
 		public var animateButton	: SpriteButton;
 		public var imgurButton		: SpriteButton;
-		public var curanimationFrameText: TextBase;
 		
 		// Constructor
 		// pData = { character:Character, onSave:Function, onAnimate:Function, onRandomize:Function, onTrash:Function, onShare:Function, onScale:Function }
@@ -42,8 +42,8 @@ package app.ui
 			_downloadTray = addChild(new FrameBase({ x:-_bg.Width*0.5 + 33, y:9, width:66, height:66, origin:0.5 })) as FrameBase;
 			/*_downloadTray.drawAsTray();*/
 			
-			btn = _downloadTray.addChild(new SpriteButton({ width:46, height:46, obj:new $LargeDownload(), origin:0.5 })) as ButtonBase;
-			btn.addEventListener(ButtonBase.CLICK, pData.onSave);
+			downloadButton = _downloadTray.addChild(new SpriteButton({ width:46, height:46, obj:new $LargeDownload(), origin:0.5 })) as ButtonBase;
+			downloadButton.addEventListener(ButtonBase.CLICK, pData.onSave);
 			
 			/********************
 			* Toolbar Buttons
@@ -73,8 +73,14 @@ package app.ui
 				btn = imgurButton = tTray.addChild(new SpriteButton({ x:tX+tButtonXInc*tButtonsOnLeft, y:tY, width:tButtonSize, height:tButtonSize, obj_scale:0.415, obj:new $CopyIcon(), origin:0.5 })) as SpriteButton;
 				btn.addEventListener(ButtonBase.CLICK, function(e:*){
 					try {
-						FewfDisplayUtils.copyToClipboard(_character);
-						imgurButton.ChangeImage(new $Yes());
+						if(_character.animatePose) {
+							FewfDisplayUtils.copyToClipboardAnimatedGif(_character.copy().outfit.pose, 1, function(){
+								imgurButton.ChangeImage(new $No());
+							})
+						} {
+							FewfDisplayUtils.copyToClipboard(_character);
+							imgurButton.ChangeImage(new $Yes());
+						}
 					} catch(e) {
 						imgurButton.ChangeImage(new $No());
 					}
@@ -99,11 +105,6 @@ package app.ui
 			animateButton.addEventListener(ButtonBase.CLICK, pData.onAnimate);
 			toggleAnimateButtonAsset(_character.animatePose);
 			tButtonOnRight++;
-			
-			if(ConstantsApp.ANIMATION_FRAME_BY_FRAME) {
-				curanimationFrameText = tTray.addChild(new TextBase({ text:"loading_progress", originX:1, x:_bg.Width/2-50, y:35 })) as TextBase;
-				curanimationFrameText.setValues( _character.outfit.poseCurrentFrame + "/" + _character.outfit.poseTotalFrames );
-			}
 			
 			/********************
 			* Scale slider

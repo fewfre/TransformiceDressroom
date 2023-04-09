@@ -260,6 +260,10 @@ package app.world.elements
 		private function _intToHex(pVal:int) : String {
 			return pVal.toString(16).toUpperCase();
 		}
+		
+		public function copy() : Character {
+			return new Character(null, getParams(), true);
+		}
 
 		/****************************
 		* Color
