@@ -4,6 +4,7 @@
 - Removed old frame-by-frame code
 - Error window added
 - Added `.webp` animation download option
+- Fixed bug with item layering (again)
 
 
 == V1.23i - 8 April 2023 ==

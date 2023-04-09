@@ -124,23 +124,23 @@ package app.world.elements
 			return this;
 		}
 		
-		private function _addToPoseIfCan(pSkinPart:MovieClip, pData:ItemData, pID:String, pOptions:Object=null) : DisplayObject {
+		private function _addToPoseIfCan(pBone:MovieClip, pData:ItemData, pID:String, pOptions:Object=null) : DisplayObject {
 			if(pData) {
 				var tClass = pData.getPart(pID, pOptions);
 				if(tClass) {
 					var tMC = new tClass();
 					// This code seems to be related to `first` / `behind` working properly in `_handleAccessories`
 					if(pData.type == ItemType.HAIR || pData.type == ItemType.NECK) {
-						return pSkinPart.addChildAt(tMC, pSkinPart.numChildren > 0 ? 1 : 0);
+						return pBone.addChildAt(tMC, pBone.numChildren > 0 ? 1 : 0);
 					}
 					else if(pData.type == ItemType.TAIL) {
 						// Removes shaman tail item, if it exists?
-						if(pSkinPart.numChildren) {
-							pSkinPart.removeChildAt(0);
+						if(pBone.numChildren) {
+							pBone.removeChildAt(0);
 						}
-						return pSkinPart.addChild(tMC);
+						return pBone.addChild(tMC);
 					}
-					return pSkinPart.addChild(tMC);
+					return pBone.addChild(tMC);
 				}
 			}
 			return null;
