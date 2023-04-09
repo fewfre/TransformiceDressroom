@@ -101,8 +101,16 @@ package com.fewfre.utils
 				
 			// 	Clipboard.generalClipboard.setData(ClipboardFormats.BITMAP_FORMAT, data);
 			// });
-			handleErrorMessage(new Error("Sorry, animated GIFs cannot be saved to the clipboard - please download image or disable animation to copy as still image."));
+			handleErrorMessage(new Error("Sorry, animated GIFs cannot be saved to the clipboard - please download image or disable animation to copy as a still image."));
 			pFinished();
+		}
+		
+		private static function _deviceUsesCameraRoll() : Boolean {
+			try {
+				var CameraRoll = ParentAppSystem.getCameraRollClass();
+				return !!CameraRoll && CameraRoll.supportsAddBitmapData;
+			} catch(e) {}
+			return false;
 		}
 		
 		public static function saveImageDataToDevice(data:*, pName:String, pExt:String) : void {
@@ -358,6 +366,11 @@ package com.fewfre.utils
 		
 		// Converts the image to a PNG bitmap and prompts the user to save.
 		public static function saveAsAnimatedGif(mc:MovieClip, pName:String, scale:Number=1, pFinished:Function=null) {
+			if(_deviceUsesCameraRoll()) {
+				handleErrorMessage(new Error("Sorry, animated GIFs cannot be saved to mobile camera roll - please use desktop app or disable animation to copy as a still image"));
+				pFinished && pFinished();
+				return;
+			}
 			_fetchGif(mc, scale, function(data:*, error:Error){
 				if(error) { handleErrorMessage(error); pFinished && pFinished(); return; }
 				
