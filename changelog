@@ -1,10 +1,13 @@
+== V1.24b - 9 April 2023 ==
+- Fixed bug with item layering (again)
+- gif changed to no bg (even with the outside border weirdness it creates)
+
 == V1.24 - 8 April 2023 ==
 - Images can now be downloaded as gifs
 	- This happens automatically when downloading your mouse while the animation is on
 - Removed old frame-by-frame code
 - Error window added
 - Added `.webp` animation download option
-- Fixed bug with item layering (again)
 
 
 == V1.23i - 8 April 2023 ==

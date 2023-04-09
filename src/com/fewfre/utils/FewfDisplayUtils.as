@@ -296,7 +296,7 @@ package com.fewfre.utils
 			});
 		}
 		private static function _fetchGif(mc:MovieClip, scale:Number, pFormat:String, pCallback:Function) {
-			var sheetData:SpritesheetData = convertMovieClipToSpriteSheet(mc, scale, pFormat && pFormat != "gif" ? -1 : 0x6A7495); // give it a bg color since gifs don't support partial opacity
+			var sheetData:SpritesheetData = convertMovieClipToSpriteSheet(mc, scale, -1);//pFormat && pFormat != "gif" ? -1 : 0x6A7495); // give it a bg color since gifs don't support partial opacity
 			var tPNG:ByteArray = PNGEncoder.encode(sheetData.bitmapData);
 			
 			var url = Fewf.assets.getData("config").spritesheet2gif_url;
