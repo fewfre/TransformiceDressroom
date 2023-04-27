@@ -13,6 +13,7 @@ package app.data
 		public static const TAIL				: ItemType = new ItemType("tail", 6);
 		public static const CONTACTS			: ItemType = new ItemType("contacts", 7);
 		public static const HAND				: ItemType = new ItemType("hands", 8);
+		public static const TATTOO				: ItemType = new ItemType("tattoo", 11);
 		// Specials
 		public static const OBJECT				: ItemType = new ItemType("object", 9);
 		public static const PAW_BACK			: ItemType = new ItemType("back-paw", 10);
@@ -21,13 +22,13 @@ package app.data
 		// Order of item layering when occupying the same spot.
 		public static const LAYERING : Vector.<ItemType> = new <ItemType>[
 			// SKIN, NECK, HAIR, MOUTH, HEAD, EARS, CONTACTS, EYES, TAIL, HAND, OBJECT, BACK, PAW_BACK ];
-			SKIN, HEAD, MOUTH, HAIR, NECK, EARS, CONTACTS, EYES, TAIL, HAND, OBJECT, BACK, PAW_BACK ];
+			SKIN, TATTOO, HEAD, MOUTH, HAIR, NECK, EARS, CONTACTS, EYES, TAIL, HAND, OBJECT, BACK, PAW_BACK ];
 		
 		public static const TYPES_WITH_SHOP_PANES : Vector.<ItemType> = new <ItemType>[
-			HEAD, HAIR, EARS, EYES, MOUTH, NECK, TAIL, HAND, CONTACTS, SKIN, POSE ];
+			HEAD, HAIR, EARS, EYES, MOUTH, NECK, TAIL, CONTACTS, HAND, TATTOO, SKIN, POSE ];
 		
 		public static const LOOK_CODE_ITEM_ORDER : Vector.<ItemType> = new <ItemType>[
-			HEAD, EYES, EARS, MOUTH, NECK, HAIR, TAIL, CONTACTS, HAND]
+			HEAD, EYES, EARS, MOUTH, NECK, HAIR, TAIL, CONTACTS, HAND, TATTOO]
 		
 		// Enum Storage + Constructor
 		private var _value: String;

@@ -101,6 +101,7 @@ package app.world
 				{ text:"tab_tail", event:ItemType.TAIL.toString() },
 				{ text:"tab_hair", event:ItemType.HAIR.toString() },
 				{ text:"tab_contacts", event:ItemType.CONTACTS.toString() },
+				{ text:"tab_tattoo", event:ItemType.TATTOO.toString() },
 				{ text:"tab_hand", event:ItemType.HAND.toString() },
 				{ text:"tab_poses", event:ItemType.POSE.toString() },
 				{ text:"tab_other", event:TAB_OTHER }

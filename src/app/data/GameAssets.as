@@ -24,6 +24,7 @@ package app.data
 		public static var tail: Vector.<ItemData>;
 		public static var contacts: Vector.<ItemData>;
 		public static var hands: Vector.<ItemData>;
+		public static var tattoo: Vector.<ItemData>;
 
 		public static var skins: Vector.<ItemData>;
 		public static var poses: Vector.<ItemData>;
@@ -55,6 +56,7 @@ package app.data
 			tail = _setupCostumeList(ItemType.TAIL, "$Costume_6_", { itemClassToClassMap:"Boule_1" });
 			contacts = _setupCostumeList(ItemType.CONTACTS, "$Costume_7_", { itemClassToClassMap:["Oeil_1", "OeilVide_1"] });
 			hands = _setupCostumeList(ItemType.HAND, "$Costume_8_", { itemClassToClassMap:"Gant_1" });
+			tattoo = _setupCostumeList(ItemType.TATTOO, "$Costume_11_", { itemClassToClassMap:"CuisseD_1" });
 
 			extraObjectWand = new ItemData(ItemType.OBJECT, null, { itemClass:Fewf.assets.getLoadedClass("$Costume_9_1") });
 			extraObjectWand.classMap = { Arme_1:extraObjectWand.itemClass };
@@ -75,6 +77,7 @@ package app.data
 			accessorySlotBones[8]   = new <String>["Gant_1"];
 			accessorySlotBones[9]   = new <String>["Arme_1"];
 			accessorySlotBones[10]  = new <String>["Bouclier_1"];
+			accessorySlotBones[11]  = new <String>["CuisseD_1"];
 			accessorySlotBones[101] = new <String>["OreilleG_1"];
 
 			skins = new Vector.<ItemData>();
@@ -173,6 +176,7 @@ package app.data
 				case ItemType.TAIL:		return tail;
 				case ItemType.CONTACTS:	return contacts;
 				case ItemType.HAND:		return hands;
+				case ItemType.TATTOO:	return tattoo;
 				case ItemType.SKIN:		return skins;
 				case ItemType.POSE:		return poses;
 				default: trace("[GameAssets](getItemDataListByType) Unknown type: "+pType);

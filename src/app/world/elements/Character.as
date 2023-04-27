@@ -73,6 +73,7 @@ package app.world.elements
 					getItemData(ItemType.TAIL),
 					getItemData(ItemType.CONTACTS),
 					getItemData(ItemType.HAND),
+					getItemData(ItemType.TATTOO),
 
 					getItemData(ItemType.OBJECT),
 					getItemData(ItemType.BACK),
@@ -103,6 +104,7 @@ package app.world.elements
 					_setParamToType(pParams, ItemType.TAIL, "t");
 					_setParamToType(pParams, ItemType.CONTACTS, "c");
 					_setParamToType(pParams, ItemType.HAND, "hd");
+					_setParamToType(pParams, ItemType.TATTOO, "tt");
 					_setParamToType(pParams, ItemType.POSE, "p", false);
 					
 					if(pParams.paw == "y") { _itemDataMap[ItemType.OBJECT] = GameAssets.extraObjectWand; }
@@ -198,6 +200,7 @@ package app.world.elements
 			_addParamToVariables(tParms, "t", ItemType.TAIL);
 			_addParamToVariables(tParms, "c", ItemType.CONTACTS);
 			_addParamToVariables(tParms, "hd", ItemType.HAND);
+			_addParamToVariables(tParms, "tt", ItemType.TATTOO);
 			_addParamToVariables(tParms, "p", ItemType.POSE);
 			
 			if(getItemData(ItemType.OBJECT)) { tParms.paw = "y"; }

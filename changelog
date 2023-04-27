@@ -1,6 +1,11 @@
+== V1.25 - 27 April 2023 ==
+- Added support for new tattoo item category
+
+
 == V1.24b - 9 April 2023 ==
 - Fixed bug with item layering (again)
 - gif changed to no bg (even with the outside border weirdness it creates)
+
 
 == V1.24 - 8 April 2023 ==
 - Images can now be downloaded as gifs
@@ -19,6 +24,7 @@
 == V1.23h - 28 February 2023 ==
 - [Bug] Clicking scale slider will no longer prevent left/right arrow keys from traversing item grid.
 - Scale slider code polished - track hitbox increased & clicking anywhere on track now starts drag.
+
 
 == V1.23g - 17 February 2023 ==
 - Added support for new `behind_` slot logic
