@@ -41,6 +41,7 @@
     "tab_tail":                { "text":"Ocas" },
     "tab_contacts":            { "text":"Čočky" },
     "tab_hand":                { "text":"Tlapky" },
+    "tab_tattoo":              { "text":"Tattoo" },
     "tab_furs":                { "text":"Srst" },
     "tab_poses":               { "text":"Póza" },
     "tab_other":               { "text":"Jiné" }

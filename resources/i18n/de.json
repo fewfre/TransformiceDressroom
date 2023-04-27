@@ -35,6 +35,7 @@
     "tab_tail":                { "text":"Rute" },
     "tab_contacts":            { "text":"Kontaktlinsen", "scale":0.7 },
     "tab_hand":                { "text":"Pfoten" },
+    "tab_tattoo":              { "text":"Tattoo" },
     "tab_furs":                { "text":"Fell" },
     "tab_poses":               { "text":"Pose" },
     "tab_other":               { "text":"Anderes" }

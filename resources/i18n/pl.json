@@ -35,6 +35,7 @@
     "tab_tail":                { "text":"Ogon" },
     "tab_contacts":            { "text":"Szkła\nkontaktowe", "scale":0.75 },
     "tab_hand":                { "text":"Hands" },
+    "tab_tattoo":              { "text":"Tattoo" },
     "tab_furs":                { "text":"Futerka" },
     "tab_poses":               { "text":"Poza" },
     "tab_other":               { "text":"Inne" }

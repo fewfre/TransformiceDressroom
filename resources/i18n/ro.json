@@ -35,6 +35,7 @@
     "tab_tail":                { "text":"Coadă" },
     "tab_contacts":            { "text":"Lentile de\ncontact", "scale":0.9 },
     "tab_hand":                { "text":"Mâini" },
+    "tab_tattoo":              { "text":"Tatuaj" },
     "tab_furs":                { "text":"Blană" },
     "tab_poses":               { "text":"Poziție" },
     "tab_other":               { "text":"Altele" }

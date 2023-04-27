@@ -35,6 +35,7 @@
     "tab_tail":                { "text":"Farok" },
     "tab_contacts":            { "text":"Lencse" },
     "tab_hand":                { "text":"Kéz" },
+    "tab_tattoo":              { "text":"Tetoválás", "scale":0.95 },
     "tab_furs":                { "text":"Bunda" },
     "tab_poses":               { "text":"Póz" },
     "tab_other":               { "text":"Egyéb" }

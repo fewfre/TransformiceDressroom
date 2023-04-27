@@ -41,6 +41,7 @@
     "tab_tail":                { "text":"Chvost" },
     "tab_contacts":            { "text":"Šošovky" },
     "tab_hand":                { "text":"Ruky" },
+    "tab_tattoo":              { "text":"Tattoo" },
     "tab_furs":                { "text":"Kožušiny" },
     "tab_poses":               { "text":"Póza" },
     "tab_other":               { "text":"Iné" }

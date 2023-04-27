@@ -35,6 +35,7 @@
     "tab_tail":                { "text":"Kuyruk" },
     "tab_contacts":            { "text":"Kontakt\nLensler", "scale":0.9 },
     "tab_hand":                { "text":"Pati" },
+    "tab_tattoo":              { "text":"Tattoo" },
     "tab_furs":                { "text":"Kürkler" },
     "tab_poses":               { "text":"Poz" },
     "tab_other":               { "text":"Diğer" }

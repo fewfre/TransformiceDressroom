@@ -35,6 +35,7 @@
     "tab_tail":                { "text":"Rabo" },
     "tab_contacts":            { "text":"Lentes" },
     "tab_hand":                { "text":"Mãos" },
+    "tab_tattoo":              { "text":"Tatuagens", "scale":0.9 },
     "tab_furs":                { "text":"Pelos" },
     "tab_poses":               { "text":"Pose" },
     "tab_other":               { "text":"Outros" }

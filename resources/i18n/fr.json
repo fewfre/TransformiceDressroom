@@ -35,6 +35,7 @@
     "tab_tail":                { "text":"Queue" },
     "tab_contacts":            { "text":"Lentilles" },
     "tab_hand":                { "text":"Mains" },
+    "tab_tattoo":              { "text":"Tatouage", "scale":0.95 },
     "tab_furs":                { "text":"Fourrures", "scale":0.95 },
     "tab_poses":               { "text":"Pose" },
     "tab_other":               { "text":"Autres" }

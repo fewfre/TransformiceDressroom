@@ -35,6 +35,7 @@
     "tab_tail":                { "text":"Coda" },
     "tab_contacts":            { "text":"Lenti a\ncontatto", "scale":0.9 },
     "tab_hand":                { "text":"Mani" },
+    "tab_tattoo":              { "text":"Tattoo" },
     "tab_furs":                { "text":"Pellicce" },
     "tab_poses":               { "text":"Pose" },
     "tab_other":               { "text":"Altro" }

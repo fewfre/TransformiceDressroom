@@ -35,6 +35,7 @@
     "tab_tail":                { "text":"Cola" },
     "tab_contacts":            { "text":"Lentillas" },
     "tab_hand":                { "text":"Manos" },
+    "tab_tattoo":              { "text":"Tatuajes" },
     "tab_furs":                { "text":"Pieles" },
     "tab_poses":               { "text":"Pose" },
     "tab_other":               { "text":"Otro" }
