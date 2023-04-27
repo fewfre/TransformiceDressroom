@@ -159,6 +159,9 @@ package app.data
 			return ret;
 		}
 
+		/****************************
+		* Access Data
+		*****************************/
 		public static function getItemDataListByType(pType:ItemType) : Vector.<ItemData> {
 			switch(pType) {
 				case ItemType.HAIR:		return hair;

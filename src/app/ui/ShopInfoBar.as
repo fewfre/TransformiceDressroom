@@ -160,8 +160,7 @@ package app.ui
 			addChild( GameAssets.createHorizontalRule(5, 53, this.Width-10) );
 		}
 
-		public function ChangeImage(pMC:MovieClip) : void
-		{
+		public function ChangeImage(pMC:MovieClip) : void {
 			if(this.Image != null) { _imageCont.removeChild(this.Image); }
 			
 			var tBounds:Rectangle = pMC.getBounds(pMC);

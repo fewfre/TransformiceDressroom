@@ -196,7 +196,7 @@ package app.world
 			
 			// Color Finder Pane
 			tPane = _paneManager.addPane(COLOR_FINDER_PANE_ID, new ColorFinderPane({ }));
-			tPane.addEventListener(ColorPickerTabPane.EVENT_EXIT, _onColorFinderBackClicked);
+			tPane.addEventListener(ColorFinderPane.EVENT_EXIT, _onColorFinderBackClicked);
 			tPane.infoBar.removeItemOverlay.addEventListener(MouseEvent.CLICK, function(e){
 				_onColorFinderBackClicked(e);
 				_removeItem(_paneManager.getPane(COLOR_FINDER_PANE_ID).infoBar.data.type);

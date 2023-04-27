@@ -32,7 +32,7 @@ package app.data
 		// Enum Storage + Constructor
 		private var _value: String;
 		private var _num: int;
-		function ItemType(pValue:String, pNum:int=-1) { _value = pValue; _num:int }
+		function ItemType(pValue:String, pNum:int=-1) { _value = pValue; _num = pNum }
 		
 		// This is required for proper auto string convertion on `trace`/`Dictionary` and such - enums should always have
 		public function toString() : String { return _value.toString(); }
