@@ -138,6 +138,13 @@ package app.ui.panes.colorpicker
 			return colors;
 		}
 		
+		public function nextSwatch(pForward:Boolean=true) : void {
+			var newSwatchI:int = _selectedSwatch + (pForward ? 1 : -1);
+			// Force index to loop in both directions
+			newSwatchI = (newSwatchI + _colorSwatches.length) % _colorSwatches.length;
+			_selectSwatch(newSwatchI);
+		}
+		
 		/****************************
 		* Private
 		*****************************/

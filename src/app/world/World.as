@@ -269,7 +269,10 @@ package app.world
 		}
 		
 		private function _traversePaneButtonGridVertically(pane:TabPane, pUp:Boolean):void {
-			if(pane && pane.grid && pane.buttons && pane.buttons.length > 0 && pane.buttons[0] is PushButton) {
+			if(pane && pane is ColorPickerTabPane) {
+				(pane as ColorPickerTabPane).nextSwatch(!pUp);
+			}
+			else if(pane && pane.grid && pane.buttons && pane.buttons.length > 0 && pane.buttons[0] is PushButton) {
 				var buttons:Array = pane.buttons, grid:Grid = pane.grid;
 				
 				var activeButtonIndex:int = _findIndexActivePushButton(buttons);
