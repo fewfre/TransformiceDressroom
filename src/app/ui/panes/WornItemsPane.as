@@ -62,7 +62,7 @@ package app.ui.panes
 		
 		public function _addItemButton(itemData:ItemData) : void {
 			if(!itemData) { return; }
-			var shopItem : MovieClip = GameAssets.getItemImage(itemData);
+			var shopItem : MovieClip = GameAssets.getColoredItemImage(itemData);
 			shopItem.scaleX = shopItem.scaleY = 2;
 
 			var shopItemButton : PushButton = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:shopItem, data:itemData });
