@@ -5,6 +5,7 @@ package app.ui.panes.colorpicker
 	import flash.text.*;
 	import com.fewfre.display.TextBase;
 	import app.ui.buttons.*;
+	import flash.ui.Keyboard;
 	
 	public class ColorSwatch extends Sprite
 	{
@@ -47,7 +48,7 @@ package app.ui.panes.colorpicker
 			_swatch.x = 5;
 			_swatch.buttonMode = true;
 			_drawSwatch(0);
-			_swatch.addEventListener(flash.events.MouseEvent.CLICK, _onSwatchClicked);
+			_swatch.addEventListener(MouseEvent.CLICK, _onSwatchClicked);
 			
 			_border = addChild(new Sprite()) as Sprite;
 			_border.x = 5;
@@ -63,8 +64,9 @@ package app.ui.panes.colorpicker
 			_text.text = "000000";
 			_text.maxChars = 6;
 			_text.restrict = "0-9a-f";
-			_text.addEventListener(flash.events.KeyboardEvent.KEY_UP, _onTextInputKeyUp);
-			_text.addEventListener(flash.events.MouseEvent.CLICK, _onSwatchClicked);
+			_text.addEventListener(KeyboardEvent.KEY_UP, _onTextInputKeyUp);
+			_text.addEventListener(KeyboardEvent.KEY_DOWN, _onPreventTextInputEatingArrowKeys);
+			_text.addEventListener(MouseEvent.CLICK, _onSwatchClicked);
 			
 			_textBorder = addChild(new Sprite()) as Sprite;
 			_textBorder.x = _border.x + SWATCH_SIZE+2 + 6;
@@ -87,12 +89,20 @@ package app.ui.panes.colorpicker
 			unlock();
 		}
 
-		private function _onTextInputKeyUp(pEvent:KeyboardEvent) : void {
+		private function _onTextInputKeyUp(e:KeyboardEvent) : void {
 			dispatchEvent(new Event(USER_MODIFIED_TEXT));
 			_drawSwatch(color);
 			
-			if(pEvent.charCode == 13) {
+			if(e.charCode == 13) {
 				dispatchEvent(new Event(ENTER_PRESSED));
+			}
+		}
+		private function _onPreventTextInputEatingArrowKeys(e:KeyboardEvent) : void {
+			// These key events are used to change between different swatches by parent
+			if(e.keyCode == Keyboard.UP || e.keyCode == Keyboard.DOWN) {
+				_text.stage.focus = null;
+				e.stopImmediatePropagation();
+				dispatchEvent(e.clone());
 			}
 		}
 		private function _onSwatchClicked(pEvent:MouseEvent) : void {
