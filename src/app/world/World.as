@@ -53,6 +53,7 @@ package app.world
 		public static const TAB_OUTFITS:String = "outfits";
 		public static const CONFIG_COLOR_PANE_ID:String = "configColorPane";
 		public static const COLOR_FINDER_PANE_ID:String = "colorFinderPane";
+		public static const WORN_ITEMS_PANE_ID:String = "WORN_ITEMS_PANE_ID";
 		
 		// Constructor
 		public function World(pStage:Stage) {
@@ -83,6 +84,8 @@ package app.world
 
 			this.character = new Character(new <ItemData>[ GameAssets.defaultSkin, GameAssets.defaultPose ], parms)
 				.setXY(180, 275).appendTo(this);
+			this.character.doubleClickEnabled = true;
+			this.character.addEventListener(MouseEvent.DOUBLE_CLICK, function(e:MouseEvent){ _paneManager.openPane(WORN_ITEMS_PANE_ID); })
 
 			/****************************
 			* Setup UI
@@ -183,6 +186,10 @@ package app.world
 			tPane.addEventListener(ColorPickerTabPane.EVENT_COLOR_PICKED, _onConfigColorPickChanged);
 			tPane.addEventListener(ColorPickerTabPane.EVENT_EXIT, function(pEvent:Event){ _paneManager.openPane(TAB_OTHER); });
 			tPane.infoBar.hideImageCont();
+			
+			// Worn Items Pane
+			tPane = _paneManager.addPane(WORN_ITEMS_PANE_ID, new WornItemsPane(character, _goToItem));
+			tPane.infoBar.colorWheel.addEventListener(MouseEvent.MOUSE_UP, function(pEvent:Event){ _paneManager.openPane(TAB_OTHER); });
 			
 			// Color Picker Pane
 			tPane = _paneManager.addPane(COLOR_PANE_ID, new ColorPickerTabPane({}));
@@ -484,6 +491,16 @@ package app.world
 					if(pane.flagOpen) pane.scrollItemIntoView(pane.buttons[GameAssets.defaultPoseIndex]);
 				}
 			}
+		}
+		
+		private function _goToItem(pItemData:ItemData) : void {
+			var itemType:ItemType = pItemData.type;
+			
+			shopTabs.UnpressAll();
+			shopTabs.getTabButton(itemType.toString()).toggleOn(true);
+			var tPane:ShopCategoryPane = getTabByType(itemType);
+			var itemBttn:PushButton = tPane.toggleGridButtonWithData( character.getItemData(itemType) );
+			tPane.scrollItemIntoView(itemBttn);
 		}
 		
 		private function _onShareButtonClicked(pEvent:Event) : void {

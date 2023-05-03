@@ -40,11 +40,13 @@ package app.ui.panes
 			super.open();
 		}
 		
-		public function toggleGridButtonWithData(pData:ItemData) : void {
+		public function toggleGridButtonWithData(pData:ItemData) : PushButton {
 			if(pData) {
 				var tIndex:int = GameAssets.getItemIndexFromTypeID(_type, pData.id);
 				buttons[ tIndex ].toggleOn();
+				return buttons[tIndex];
 			}
+			return null;
 		}
 		
 		/****************************
