@@ -117,7 +117,7 @@ package com.fewfre.utils
 			try {
 				var CameraRoll = ParentAppSystem.getCameraRollClass();
 				if(!!CameraRoll && CameraRoll.supportsAddBitmapData) {
-					if(data is Bitmap) {
+					if(data is BitmapData) {
 						( new CameraRoll() ).addBitmapData(data);
 					} else {
 						handleErrorMessage(new Error("Sorry, this image type cannot be saved to mobile camera roll."));

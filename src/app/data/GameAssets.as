@@ -256,16 +256,17 @@ package app.data
 		*****************************/
 		public static function copyColor(copyFromMC:MovieClip, copyToMC:MovieClip) : MovieClip {
 			if (copyFromMC == null || copyToMC == null) { return null; }
-			var tChild1:*=null;
-			var tChild2:*=null;
-			var i:int = 0;
-			while (i < copyFromMC.numChildren) {
-				tChild1 = copyFromMC.getChildAt(i);
-				tChild2 = copyToMC.getChildAt(i);
-				if (tChild1.name.indexOf("Couleur") == 0 && tChild1.name.length > 7) {
-					tChild2.transform.colorTransform = tChild1.transform.colorTransform;
+			var tChildSource:DisplayObject=null, tChildTarget:DisplayObject=null;
+			
+			for(var i:int = 0; i < copyFromMC.numChildren; i++){
+				tChildSource = copyFromMC.getChildAt(i);
+				tChildTarget = copyToMC.getChildAt(i);
+				if (tChildSource.name.indexOf("Couleur") == 0 && tChildSource.name.length > 7) {
+					tChildTarget.transform.colorTransform = tChildSource.transform.colorTransform;
 				}
-				i++;
+				if(tChildSource is MovieClip && (tChildSource as MovieClip).numChildren > 0) {
+					copyColor(tChildSource as MovieClip, tChildTarget as MovieClip);
+				}
 			}
 			return copyToMC;
 		}
