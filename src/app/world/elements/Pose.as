@@ -147,38 +147,47 @@ package app.world.elements
 		}
 		
 		private function _handleAccessories(pAccessoires:Vector.<DisplayObject>) : void {
-			var tAccMC:DisplayObject;
+			var accMC:DisplayObject;
 			for(var aI:int = 0; aI < pAccessoires.length; aI++) {
-				tAccMC = pAccessoires[aI];
-				var tName:String = tAccMC.name;
-				var tNameMinusSlotPrefix:String = tName.substr(5); // removes `slot_`
+				accMC = pAccessoires[aI];
+				var nameParts:Array = accMC.name.split("_"); // [0] is always just 'slot' so we don't care about it
+				var accItemCat:int = 0;
+				var layer:String = null;
 				
-				var tSlotIsBehind = tNameMinusSlotPrefix.substr(0,6) == "behind";
-				if(tSlotIsBehind) {
-					tNameMinusSlotPrefix = tNameMinusSlotPrefix.substr(7); // removes "behind_"
+				if(nameParts.length == 3) {
+					accItemCat = int(nameParts[2]);
+					layer = String(nameParts[1]);
+				} else {
+					accItemCat = int(nameParts[1]);
 				}
 				
-				var tSlotIsFirst = tNameMinusSlotPrefix.substr(0,5) == "first";
-				if(tSlotIsFirst) {
-					tNameMinusSlotPrefix = tNameMinusSlotPrefix.substr(6); // removes "first_"
-				}
-				
-				var tAccItemCat:int = int(tNameMinusSlotPrefix);
-				var validBoneNamesForItemCat:Vector.<String> = GameAssets.accessorySlotBones[tAccItemCat];
+				var validBoneNamesForItemCat:Vector.<String> = GameAssets.accessorySlotBones[accItemCat];
 				if(validBoneNamesForItemCat) {
 					for(var bnaI:int = 0; bnaI < validBoneNamesForItemCat.length; bnaI++) {
 						var tBoneMC:MovieClip = _pose.getChildByName(validBoneNamesForItemCat[bnaI]) as MovieClip;
 
 						if(tBoneMC) {
-							var tNewAccPos:Point = tBoneMC.globalToLocal(tAccMC.parent.localToGlobal(new Point(tAccMC.x,tAccMC.y)));
-							tAccMC.x = tNewAccPos.x;
-							tAccMC.y = tNewAccPos.y;
-							if(tSlotIsBehind) {
-								tBoneMC.addChildAt(tAccMC, 0);
-							} else if(tSlotIsFirst) {
-								tBoneMC.addChildAt(tAccMC, 1);
-							} else {
-								tBoneMC.addChild(tAccMC);
+							var tNewAccPos:Point = tBoneMC.globalToLocal(accMC.parent.localToGlobal(new Point(accMC.x,accMC.y)));
+							accMC.x = tNewAccPos.x;
+							accMC.y = tNewAccPos.y;
+							if(layer == "behind") {
+								tBoneMC.addChildAt(accMC,0);
+							}
+							else if(layer == "first") {
+								tBoneMC.addChildAt(accMC,1);
+							}
+							else if(layer == "behindzero") {
+								accMC.x = 0;
+								accMC.y = 0;
+								tBoneMC.addChildAt(accMC,0);
+							}
+							else if(layer == "firstzero") {
+								accMC.x = 0;
+								accMC.y = 0;
+								tBoneMC.addChildAt(accMC,1);
+							}
+							else {
+								tBoneMC.addChild(accMC);
 							}
 						}
 					}
