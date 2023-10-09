@@ -25,6 +25,7 @@
     "btn_normal_mode":         { "text":"Lagani" },
     "btn_hard_mode":           { "text":"Teški" },
     "btn_divine_mode":         { "text":"Božanski" },
+    "btn_no_skills_mode":      { "text":"Disable skills" },
     "tab_config":              { "text":"Potvrdi" },
     "tab_head":                { "text":"Glava" },
     "tab_hair":                { "text":"Kosa" },

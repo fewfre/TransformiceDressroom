@@ -37,6 +37,7 @@
     "btn_normal_mode":         { "text":"Normal" },
     "btn_hard_mode":           { "text":"Hard" },
     "btn_divine_mode":         { "text":"Divine" },
+    "btn_no_skills_mode":      { "text":"Disable skills" },
     
     "tab_config":              { "text":"Config" },
     "tab_head":                { "text":"Head" },

@@ -25,6 +25,7 @@
     "btn_normal_mode":         { "text":"Normaal" },
     "btn_hard_mode":           { "text":"Moeilijk" },
     "btn_divine_mode":         { "text":"Goddelijk" },
+    "btn_no_skills_mode":      { "text":"Vaardigheden uitzetten" },
     "tab_config":              { "text":"Config-\nuratie", "scale":0.95 },
     "tab_head":                { "text":"Hoofd" },
     "tab_hair":                { "text":"Haarstijl" },

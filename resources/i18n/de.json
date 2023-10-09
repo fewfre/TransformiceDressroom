@@ -25,6 +25,7 @@
     "btn_normal_mode":         { "text":"Normal" },
     "btn_hard_mode":           { "text":"Schwer" },
     "btn_divine_mode":         { "text":"Göttlich" },
+    "btn_no_skills_mode":      { "text":"Fähigkeiten deaktivieren" },
     "tab_config":              { "text":"Konfig-\nuration", "scale":0.8 },
     "tab_head":                { "text":"Kopf" },
     "tab_hair":                { "text":"Frisur" },

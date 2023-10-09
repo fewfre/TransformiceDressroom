@@ -25,6 +25,7 @@
     "btn_normal_mode":         { "text":"العادي" },
     "btn_hard_mode":           { "text":"الصعب" },
     "btn_divine_mode":         { "text":"الخارق" },
+    "btn_no_skills_mode":      { "text":"تعطيل المهارات" },
     "tab_config":              { "text":"ترتيب" },
     "tab_head":                { "text":"الرأس" },
     "tab_hair":                { "text":"الشعر" },

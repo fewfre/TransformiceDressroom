@@ -25,6 +25,7 @@
     "btn_normal_mode":         { "text":"Normaali tila", "scale":0.95 },
     "btn_hard_mode":           { "text":"Vaativa tila", "scale":0.95 },
     "btn_divine_mode":         { "text":"Erittäin\nvaativa tila", "scale":0.95 },
+    "btn_no_skills_mode":      { "text":"Disable skills" },
     "tab_config":              { "text":"Haku" },
     "tab_head":                { "text":"Pää" },
     "tab_hair":                { "text":"Hiustyyli" },

@@ -63,7 +63,7 @@ package app.world.elements
 		}
 		
 		// pData = { ?removeBlanks:Boolean=false }
-		public function apply(items:Vector.<ItemData>, shamanMode:ShamanMode, shamanColor:uint=0x95D9D6, removeBlanks:Boolean=false) : MovieClip {
+		public function apply(items:Vector.<ItemData>, shamanMode:ShamanMode, shamanColor:uint=0x95D9D6, disableSkillsMode:Boolean=false, removeBlanks:Boolean=false) : MovieClip {
 			if(!items) items = new Vector.<ItemData>();
 			
 			var tSkinDataIndex = FewfUtils.getIndexFromVectorWithKeyVal(items, "type", ItemType.SKIN);
@@ -94,8 +94,29 @@ package app.world.elements
 						tAccessories = tAccessories.concat(getMcItemSubAccessories(part));
 					}
 					
+					// Add divine mode wings (if divine mode)
 					if(tBoneName == "CuisseD_1" && shamanMode == ShamanMode.DIVINE && isPoseWingsAddable(_poseData.id)) {
 						tPoseBone.addChild( _getWingsMC(shamanColor) );
+					}
+					// Add mask face tattoo (if noskills mode)
+					if(tBoneName == 'Tete_1' && shamanMode != ShamanMode.OFF && disableSkillsMode) {
+						// remove all other face tattoos first
+						var oldTattoo:DisplayObject = null;
+						for(var tatI:int = 0; tatI < part.numChildren; tatI++) {
+							var tChild:DisplayObject = part.getChildAt(tatI);
+							if(tChild.name == "c1") {
+								oldTattoo = tChild;
+							}
+						}
+						if(oldTattoo) {
+							oldTattoo.parent.removeChild(oldTattoo);
+						}
+						// Add noskills face tattoo
+						var noSkillsTattoo = new $TatouageSansComp();
+						noSkillsTattoo.name = "c1";
+						part.addChild(noSkillsTattoo);
+						_colorSkinPart(part, -1, shamanColor);
+						
 					}
 				}
 				

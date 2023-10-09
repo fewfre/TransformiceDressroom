@@ -37,6 +37,7 @@ package app.data
 		public static var extraObjectWand:ItemData;
 		public static var extraBackHand:ItemData;
 		public static var extraFromage:ItemData;
+		public static var extraFromagePumpkin:ItemData;
 		
 		// { type:ItemType, id:String, colorI:int }
 		public static var swatchHoverPreviewData:Object = null;
@@ -62,8 +63,10 @@ package app.data
 			extraObjectWand.classMap = { Arme_1:extraObjectWand.itemClass };
 			extraBackHand = new ItemData(ItemType.PAW_BACK, null, { itemClass:$HandButtonShield });
 			extraBackHand.classMap = { PatteG_1:extraBackHand.itemClass };
-			extraFromage = new ItemData(ItemType.BACK, null, { itemClass:Fewf.assets.getLoadedClass("FromageSouris") });
+			extraFromage = new ItemData(ItemType.BACK, 'frm', { itemClass:Fewf.assets.getLoadedClass("FromageSouris") });
 			extraFromage.classMap = { ClipGrosse:extraFromage.itemClass };
+			extraFromagePumpkin = new ItemData(ItemType.BACK, 'cit', { itemClass:$FromageSourisCitrouille });
+			extraFromagePumpkin.classMap = { ClipGrosse:extraFromagePumpkin.itemClass };
 			
 			accessorySlotBones = new Dictionary();
 			accessorySlotBones[0]   = new <String>["Tete_1"];

@@ -25,6 +25,7 @@
     "btn_normal_mode":         { "text":"Normal" },
     "btn_hard_mode":           { "text":"Zor" },
     "btn_divine_mode":         { "text":"Kutsal" },
+    "btn_no_skills_mode":      { "text":"Becerileri devre dışı bırak" },
     "tab_config":              { "text":"Yapılan\n-dırma", "scale":0.8 },
     "tab_head":                { "text":"Baş" },
     "tab_hair":                { "text":"Saç Şekli" },

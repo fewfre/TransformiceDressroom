@@ -30,6 +30,7 @@
     "btn_normal_mode":         { "text":"Normální" },
     "btn_hard_mode":           { "text":"Těžký" },
     "btn_divine_mode":         { "text":"Božský" },
+    "btn_no_skills_mode":      { "text":"Disable skills" },
     
     "tab_config":              { "text":"Config" },
     "tab_head":                { "text":"Hlava" },

@@ -1,3 +1,10 @@
+== V1.26 - 8 October 2023 ==
+- Added support for "disable skills" shaman mode
+- Added "pumpkin" as a back item to "Other" tab
+- [Bug] Fixed default skin ear using wrong pattern
+- Small code cleanup with default skin - now properly stored in swc, and fixed reason why it wasn't originally (compiler removing it due to no direct references)
+
+
 == V1.25d - 8 September 2023 ==
 - Updated `slot_` rendering to new code
 

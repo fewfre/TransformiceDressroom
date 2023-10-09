@@ -25,6 +25,7 @@
     "btn_normal_mode":         { "text":"Normal" },
     "btn_hard_mode":           { "text":"Difícil" },
     "btn_divine_mode":         { "text":"Divino" },
+    "btn_no_skills_mode":      { "text":"Desativar habilidades" },
     "tab_config":              { "text":"Config" },
     "tab_head":                { "text":"Cabeça" },
     "tab_hair":                { "text":"Penteado", "scale":0.95 },

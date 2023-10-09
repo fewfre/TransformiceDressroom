@@ -25,6 +25,7 @@
     "btn_normal_mode":         { "text":"Normal mode", "scale":0.9 },
     "btn_hard_mode":           { "text":"Svår mode" },
     "btn_divine_mode":         { "text":"Divine" },
+    "btn_no_skills_mode":      { "text":"Disable skills" },
     "tab_config":              { "text":"Konfig-\nuration", "scale":0.8 },
     "tab_head":                { "text":"Huvud" },
     "tab_hair":                { "text":"Hår" },

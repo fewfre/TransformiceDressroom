@@ -25,6 +25,7 @@
     "btn_normal_mode":         { "text":"Normālais\nrežīms" },
     "btn_hard_mode":           { "text":"Grūtais\nrežīms" },
     "btn_divine_mode":         { "text":"Dievišķais\nrežīms" },
+    "btn_no_skills_mode":      { "text":"Atspējot šamaņa iemaņas" },
     "tab_config":              { "text":"Konfigurēt", "scale":0.8 },
     "tab_head":                { "text":"Galva" },
     "tab_hair":                { "text":"Mati" },

@@ -19,9 +19,11 @@ package app.ui.panes
 		
 		public var button_hand		: PushButton;
 		public var button_back		: PushButton;
+		public var button_backPumpkin : PushButton;
 		public var button_backHand	: PushButton;
 		
 		public var shamanButtons	: Vector.<PushButton>;
+		public var disableSkillsModeButton	: PushButton;
 		public var shamanColorPickerButton	: ScaleButton;
 		public var shamanColorBlueButton	: ColorButton;
 		public var shamanColorPinkButton	: ColorButton;
@@ -38,12 +40,13 @@ package app.ui.panes
 			var i:int = 0, xx:Number = 15, yy:Number = 15, tButton:GameButton, sizex:Number, sizey:Number, spacingx:Number;
 			
 			// Shaman options
-			sizex = 80; sizey = 50; spacingx = sizex + 10; xx = 5 - spacingx;
+			sizex = 80; sizey = 40; spacingx = sizex + 10; xx = 5 - spacingx;
 			
 			shamanButtons = new Vector.<PushButton>();
 			var icon = addItem(new $ShamFeather()); icon.x = (xx += spacingx) + sizex*0.5; icon.y = yy + sizey*0.5; icon.scaleX = icon.scaleY = 2;
 			icon.addEventListener(MouseEvent.CLICK, _onNoShamanButtonClicked);
 			xx -= 5;
+			yy -= 10;
 			shamanButtons.push(tButton = addItem(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextBase({ text:"btn_normal_mode", text:"Normal" }), id:ShamanMode.NORMAL.toInt() })) as PushButton);
 			shamanButtons.push(tButton = addItem(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextBase({ text:"btn_hard_mode", text:"Hard" }), id:ShamanMode.HARD.toInt() })) as PushButton);
 			shamanButtons.push(tButton = addItem(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextBase({ text:"btn_divine_mode", text:"Divine" }), id:ShamanMode.DIVINE.toInt() })) as PushButton);
@@ -51,6 +54,16 @@ package app.ui.panes
 				shamanButtons[character.shamanMode.toInt()-2].toggleOn();
 			}
 			_registerClickHandler(shamanButtons, _onShamanButtonClicked);
+			
+			disableSkillsModeButton = addItem(new PushButton({ x:5 + sizex*1.5 + spacingx - 180/2, y:yy + sizey + 5, width:180, height:20, obj:new TextBase({ text:"btn_no_skills_mode", text:"Divine" }) })) as PushButton;
+			if(character.disableSkillsMode) {
+				disableSkillsModeButton.toggleOn();
+			}
+			disableSkillsModeButton.addEventListener(PushButton.STATE_CHANGED_AFTER, _onShamandisableSkillsModeButtonClicked);
+			
+			// Color buttons
+			yy += 10;
+			sizex = 80; sizey = 50;
 			
 			addItem( shamanColorPickerButton = new ScaleButton({ x:xx += spacingx + 30, y:yy + sizey*0.5 - 10, obj:new $ColorWheel() }) );
 			
@@ -78,7 +91,15 @@ package app.ui.panes
 			
 			this.button_back = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:new GameAssets.extraFromage.itemClass(), obj_scale:1.5, id:i++ });
 			grid.add(this.button_back);
-			if(character.getItemData(ItemType.BACK)) { this.button_back.toggleOn(); }
+			if(character.getItemData(ItemType.BACK) && character.getItemData(ItemType.BACK).id == GameAssets.extraFromage.id) {
+				this.button_back.toggleOn();
+			}
+			
+			this.button_backPumpkin = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:new GameAssets.extraFromagePumpkin.itemClass(), obj_scale:1.5, id:i++ });
+			grid.add(this.button_backPumpkin);
+			if(character.getItemData(ItemType.BACK) && character.getItemData(ItemType.BACK).id == GameAssets.extraFromagePumpkin.id) {
+				this.button_backPumpkin.toggleOn();
+			}
 			
 			this.button_backHand = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:new GameAssets.extraBackHand.itemClass(), obj_scale:1.5, id:i++ });
 			grid.add(this.button_backHand);
@@ -183,6 +204,17 @@ package app.ui.panes
 			character.updatePose();
 			_updateHead();
 		}
+		
+		private function _onShamandisableSkillsModeButtonClicked(pEvent:Event) {
+			character.disableSkillsMode = (pEvent.target as PushButton).pushed;
+			if(character.disableSkillsMode && character.shamanMode == ShamanMode.OFF) {
+				character.shamanMode = ShamanMode.fromInt(shamanButtons[0].id);
+				shamanButtons[0].toggleOn(false);
+			}
+			character.updatePose();
+			_updateHead();
+			
+		}
 
 		private function _untoggle(pList:Vector.<PushButton>, pButton:PushButton=null) : void {
 			/*if (pButton != null && pButton.pushed) { return; }*/
@@ -202,9 +234,11 @@ package app.ui.panes
 			if(character.shamanMode != ShamanMode.OFF) {
 				shamanButtons[character.shamanMode.toInt()-2].toggleOn(false);
 			}
+			disableSkillsModeButton.toggle(character.disableSkillsMode, false);
 			
 			button_hand.toggle(!!character.getItemData(ItemType.OBJECT), false);
-			button_back.toggle(!!character.getItemData(ItemType.BACK), false);
+			button_back.toggle(!!character.getItemData(ItemType.BACK) && character.getItemData(ItemType.BACK).id == GameAssets.extraFromage.id, false);
+			button_backPumpkin.toggle(!!character.getItemData(ItemType.BACK) && character.getItemData(ItemType.BACK).id == GameAssets.extraFromagePumpkin.id, false);
 			button_backHand.toggle(!!character.getItemData(ItemType.PAW_BACK), false);
 			_updateHead();
 		}

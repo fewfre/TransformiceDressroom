@@ -18,10 +18,13 @@ package app.world.elements
 		
 		public var _shamanMode:ShamanMode = ShamanMode.OFF;
 		public var _shamanColor:int = 0x95D9D6;
+		public var _disableSkillsMode:Boolean = false;
 		public function get shamanMode():ShamanMode { return _shamanMode; }
 		public function set shamanMode(val:ShamanMode) { _shamanMode = val; updatePose(); }
 		public function get shamanColor():int { return _shamanColor; }
 		public function set shamanColor(val:int) { _shamanColor = val; updatePose(); }
+		public function get disableSkillsMode():Boolean { return _disableSkillsMode; }
+		public function set disableSkillsMode(val:Boolean) { _disableSkillsMode = val; updatePose(); }
 
 		private var _itemDataMap:Dictionary;
 
@@ -80,7 +83,8 @@ package app.world.elements
 					getItemData(ItemType.PAW_BACK)
 				],
 				_shamanMode,
-				_shamanColor
+				_shamanColor,
+				_disableSkillsMode
 			);
 			if(animatePose) outfit.play(); else outfit.stopAtLastFrame();
 		}
@@ -108,7 +112,12 @@ package app.world.elements
 					_setParamToType(pParams, ItemType.POSE, "p", false);
 					
 					if(pParams.paw == "y") { _itemDataMap[ItemType.OBJECT] = GameAssets.extraObjectWand; }
-					if(pParams.back == "y") { _itemDataMap[ItemType.BACK] = GameAssets.extraFromage; }
+					if(pParams.back != null && pParams.back != "") {
+						if(pParams.back == "y" || pParams.back == GameAssets.extraFromage.id) {
+							_itemDataMap[ItemType.BACK] = GameAssets.extraFromage; }
+						if(pParams.back == GameAssets.extraFromagePumpkin.id) {
+							_itemDataMap[ItemType.BACK] = GameAssets.extraFromagePumpkin; }
+					}
 					if(pParams.pawb == "y") { _itemDataMap[ItemType.PAW_BACK] = GameAssets.extraBackHand; }
 					
 					if(pParams["sh"] && pParams["sh"] != "") {
@@ -118,6 +127,7 @@ package app.world.elements
 							_shamanColor = _hexToInt(tColor[0]);
 						}
 					}
+					_disableSkillsMode = pParams.ds == 'y';
 					
 				} catch (error:Error) { return false; };
 			} else {
@@ -204,11 +214,16 @@ package app.world.elements
 			_addParamToVariables(tParms, "p", ItemType.POSE);
 			
 			if(getItemData(ItemType.OBJECT)) { tParms.paw = "y"; }
-			if(getItemData(ItemType.BACK)) { tParms.back = "y"; }
+			if(getItemData(ItemType.BACK)) {
+				tParms.back = getItemData(ItemType.BACK).id == GameAssets.extraFromage.id ? "y" : getItemData(ItemType.BACK).id;
+			}
 			if(getItemData(ItemType.PAW_BACK)) { tParms.pawb = "y"; }
 			
 			if(_shamanMode != ShamanMode.OFF) {
 				tParms["sh"] = _shamanMode.toInt()+";"+_intToHex(_shamanColor);
+			}
+			if(_disableSkillsMode) {
+				tParms.ds = 'y';
 			}
 
 			return tParms.toString().replace(/%3B/g, ";");
