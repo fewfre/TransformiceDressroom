@@ -36,8 +36,7 @@ package app.data
 
 		public static var extraObjectWand:ItemData;
 		public static var extraBackHand:ItemData;
-		public static var extraFromage:ItemData;
-		public static var extraFromagePumpkin:ItemData;
+		public static var extraBack:Vector.<ItemData>;
 		
 		// { type:ItemType, id:String, colorI:int }
 		public static var swatchHoverPreviewData:Object = null;
@@ -59,14 +58,13 @@ package app.data
 			hands = _setupCostumeList(ItemType.HAND, "$Costume_8_", { itemClassToClassMap:"Gant_1" });
 			tattoo = _setupCostumeList(ItemType.TATTOO, "$Costume_11_", { itemClassToClassMap:"CuisseD_1" });
 
-			extraObjectWand = new ItemData(ItemType.OBJECT, null, { itemClass:Fewf.assets.getLoadedClass("$Costume_9_1") });
-			extraObjectWand.classMap = { Arme_1:extraObjectWand.itemClass };
-			extraBackHand = new ItemData(ItemType.PAW_BACK, null, { itemClass:$HandButtonShield });
-			extraBackHand.classMap = { PatteG_1:extraBackHand.itemClass };
-			extraFromage = new ItemData(ItemType.BACK, 'frm', { itemClass:Fewf.assets.getLoadedClass("FromageSouris") });
-			extraFromage.classMap = { ClipGrosse:extraFromage.itemClass };
-			extraFromagePumpkin = new ItemData(ItemType.BACK, 'cit', { itemClass:$FromageSourisCitrouille });
-			extraFromagePumpkin.classMap = { ClipGrosse:extraFromagePumpkin.itemClass };
+			extraObjectWand = new ItemData(ItemType.OBJECT, null, { itemClass:Fewf.assets.getLoadedClass("$Costume_9_1"), classMap:{ Arme_1:Fewf.assets.getLoadedClass("$Costume_9_1") } });
+			extraBackHand = new ItemData(ItemType.PAW_BACK, null, { itemClass:$HandButtonShield, classMap:{ PatteG_1:$HandButtonShield } });
+			extraBack = new <ItemData>[
+				new ItemData(ItemType.BACK, 'frm', { itemClass:Fewf.assets.getLoadedClass("FromageSouris"), classMap:{ ClipGrosse:Fewf.assets.getLoadedClass("FromageSouris") } }),
+				new ItemData(ItemType.BACK, 'stnk', { itemClass:$FromageStinky, classMap:{ ClipGrosse:$FromageStinky } }),
+				new ItemData(ItemType.BACK, 'cit', { itemClass:$FromageSourisCitrouille, classMap:{ ClipGrosse:$FromageSourisCitrouille } })
+			];
 			
 			accessorySlotBones = new Dictionary();
 			accessorySlotBones[0]   = new <String>["Tete_1"];
@@ -182,6 +180,7 @@ package app.data
 				case ItemType.TATTOO:	return tattoo;
 				case ItemType.SKIN:		return skins;
 				case ItemType.POSE:		return poses;
+				case ItemType.BACK:		return extraBack;
 				default: trace("[GameAssets](getItemDataListByType) Unknown type: "+pType);
 			}
 			return null;

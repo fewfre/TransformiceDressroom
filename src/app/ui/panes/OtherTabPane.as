@@ -18,9 +18,8 @@ package app.ui.panes
 		public var character:Character;
 		
 		public var button_hand		: PushButton;
-		public var button_back		: PushButton;
-		public var button_backPumpkin : PushButton;
 		public var button_backHand	: PushButton;
+		public var buttons_back		: Vector.<PushButton>;
 		
 		public var shamanButtons	: Vector.<PushButton>;
 		public var disableSkillsModeButton	: PushButton;
@@ -84,22 +83,20 @@ package app.ui.panes
 			// Grid
 			yy += 15; xx = 15;
 			var grid:Grid = this.addItem( new Grid(385, 5).setXY(xx,yy) ) as Grid;
+			
+			this.buttons_back = new Vector.<PushButton>();
+			for each(var itemData:ItemData in GameAssets.extraBack) {
+				var bttn:PushButton = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:new itemData.itemClass(), obj_scale:1.5, id:i++, data:{ id:itemData.id } });
+				grid.add(bttn);
+				this.buttons_back.push(bttn);
+				if(character.getItemData(ItemType.BACK) && character.getItemData(ItemType.BACK).id == itemData.id) {
+					bttn.toggleOn();
+				}
+			}
 
 			this.button_hand = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:new GameAssets.extraObjectWand.itemClass(), obj_scale:1.5, id:i++ });
 			grid.add(this.button_hand);
 			if(character.getItemData(ItemType.OBJECT)) { this.button_hand.toggleOn(); }
-			
-			this.button_back = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:new GameAssets.extraFromage.itemClass(), obj_scale:1.5, id:i++ });
-			grid.add(this.button_back);
-			if(character.getItemData(ItemType.BACK) && character.getItemData(ItemType.BACK).id == GameAssets.extraFromage.id) {
-				this.button_back.toggleOn();
-			}
-			
-			this.button_backPumpkin = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:new GameAssets.extraFromagePumpkin.itemClass(), obj_scale:1.5, id:i++ });
-			grid.add(this.button_backPumpkin);
-			if(character.getItemData(ItemType.BACK) && character.getItemData(ItemType.BACK).id == GameAssets.extraFromagePumpkin.id) {
-				this.button_backPumpkin.toggleOn();
-			}
 			
 			this.button_backHand = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:new GameAssets.extraBackHand.itemClass(), obj_scale:1.5, id:i++ });
 			grid.add(this.button_backHand);
@@ -237,8 +234,9 @@ package app.ui.panes
 			disableSkillsModeButton.toggle(character.disableSkillsMode, false);
 			
 			button_hand.toggle(!!character.getItemData(ItemType.OBJECT), false);
-			button_back.toggle(!!character.getItemData(ItemType.BACK) && character.getItemData(ItemType.BACK).id == GameAssets.extraFromage.id, false);
-			button_backPumpkin.toggle(!!character.getItemData(ItemType.BACK) && character.getItemData(ItemType.BACK).id == GameAssets.extraFromagePumpkin.id, false);
+			for each(var bttn:PushButton in buttons_back) {
+				bttn.toggle(!!character.getItemData(ItemType.BACK) && character.getItemData(ItemType.BACK).id == bttn.data.id, false);
+			}
 			button_backHand.toggle(!!character.getItemData(ItemType.PAW_BACK), false);
 			_updateHead();
 		}

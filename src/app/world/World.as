@@ -165,8 +165,9 @@ package app.world
 			*****************************/
 			var tPaneOther:OtherTabPane = _paneManager.addPane(TAB_OTHER, new OtherTabPane(character)) as OtherTabPane;
 			tPaneOther.button_hand.addEventListener(PushButton.STATE_CHANGED_AFTER, this.buttonHandClickAfter);
-			tPaneOther.button_back.addEventListener(PushButton.STATE_CHANGED_AFTER, this.buttonBackClickAfter);
-			tPaneOther.button_backPumpkin.addEventListener(PushButton.STATE_CHANGED_AFTER, this.buttonBackPumpkinClickAfter);
+			for each(var bttn:Object in tPaneOther.buttons_back) {
+				bttn.addEventListener(PushButton.STATE_CHANGED_AFTER, this.buttonBackClickAfter);
+			}
 			tPaneOther.button_backHand.addEventListener(PushButton.STATE_CHANGED_AFTER, this.buttonBackHandClickAfter);
 			tPaneOther.shamanColorPickerButton.addEventListener(ButtonBase.CLICK, function(pEvent:Event){ _shamanColorButtonClicked(); });
 			tPaneOther.shamanColorBlueButton.addEventListener(ButtonBase.CLICK, function(pEvent:Event){ _setConfigShamanColor(0x95D9D6); });
@@ -427,14 +428,11 @@ package app.world
 			toggleItemSelectionOneOff(ItemType.OBJECT, pEvent.target as PushButton, GameAssets.extraObjectWand);
 		}
 
-		public function buttonBackClickAfter(pEvent:Event):void {
-			(_paneManager.getPane(TAB_OTHER) as OtherTabPane).button_backPumpkin.toggleOff(false);
-			toggleItemSelectionOneOff(ItemType.BACK, pEvent.target as PushButton, GameAssets.extraFromage);
-		}
-
-		public function buttonBackPumpkinClickAfter(pEvent:Event):void {
-			(_paneManager.getPane(TAB_OTHER) as OtherTabPane).button_back.toggleOff(false);
-			toggleItemSelectionOneOff(ItemType.BACK, pEvent.target as PushButton, GameAssets.extraFromagePumpkin);
+		public function buttonBackClickAfter(pEvent:FewfEvent):void {
+			for each(var bttn:PushButton in (_paneManager.getPane(TAB_OTHER) as OtherTabPane).buttons_back) {
+				if(bttn.data.id != pEvent.data.id) bttn.toggleOff(false);
+			}
+			toggleItemSelectionOneOff(ItemType.BACK, pEvent.target as PushButton, GameAssets.getItemFromTypeID(ItemType.BACK, pEvent.data.id));
 		}
 
 		public function buttonBackHandClickAfter(pEvent:Event):void {

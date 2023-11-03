@@ -113,10 +113,10 @@ package app.world.elements
 					
 					if(pParams.paw == "y") { _itemDataMap[ItemType.OBJECT] = GameAssets.extraObjectWand; }
 					if(pParams.back != null && pParams.back != "") {
-						if(pParams.back == "y" || pParams.back == GameAssets.extraFromage.id) {
-							_itemDataMap[ItemType.BACK] = GameAssets.extraFromage; }
-						if(pParams.back == GameAssets.extraFromagePumpkin.id) {
-							_itemDataMap[ItemType.BACK] = GameAssets.extraFromagePumpkin; }
+						if(pParams.back == "y") pParams.back = GameAssets.extraBack[0].id;
+						for each(var itemData:ItemData in GameAssets.extraBack) {
+							if(pParams.back == itemData.id) _itemDataMap[ItemType.BACK] = itemData;
+						}
 					}
 					if(pParams.pawb == "y") { _itemDataMap[ItemType.PAW_BACK] = GameAssets.extraBackHand; }
 					
@@ -215,7 +215,7 @@ package app.world.elements
 			
 			if(getItemData(ItemType.OBJECT)) { tParms.paw = "y"; }
 			if(getItemData(ItemType.BACK)) {
-				tParms.back = getItemData(ItemType.BACK).id == GameAssets.extraFromage.id ? "y" : getItemData(ItemType.BACK).id;
+				tParms.back = getItemData(ItemType.BACK).id == GameAssets.extraBack[0].id ? "y" : getItemData(ItemType.BACK).id;
 			}
 			if(getItemData(ItemType.PAW_BACK)) { tParms.pawb = "y"; }
 			
