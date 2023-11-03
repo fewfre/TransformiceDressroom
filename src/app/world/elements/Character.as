@@ -8,6 +8,7 @@ package app.world.elements
 	import flash.geom.*;
 	import flash.net.*;
 	import flash.utils.Dictionary;
+	import com.fewfre.utils.Fewf;
 
 	public class Character extends Sprite
 	{
@@ -25,6 +26,9 @@ package app.world.elements
 		public function set shamanColor(val:int) { _shamanColor = val; updatePose(); }
 		public function get disableSkillsMode():Boolean { return _disableSkillsMode; }
 		public function set disableSkillsMode(val:Boolean) { _disableSkillsMode = val; updatePose(); }
+		
+		private var _dragging:Boolean = false;
+		private var _dragBounds:Rectangle;
 
 		private var _itemDataMap:Dictionary;
 
@@ -38,8 +42,14 @@ package app.world.elements
 			isOutfit = pIsOutfit;
 
 			this.buttonMode = true;
-			this.addEventListener(MouseEvent.MOUSE_DOWN, function () { startDrag(); });
-			this.addEventListener(MouseEvent.MOUSE_UP, function () { stopDrag(); });
+			this.addEventListener(MouseEvent.MOUSE_DOWN, function (e:MouseEvent) {
+				_dragging = true;
+				var bounds:Rectangle = _dragBounds.clone();
+				bounds.x -= e.localX * scaleX;
+				bounds.y -= e.localY * scaleY;
+				startDrag(false, bounds);
+			});
+			Fewf.stage.addEventListener(MouseEvent.MOUSE_UP, function () { if(_dragging) { _dragging = false; stopDrag(); } });
 
 			/****************************
 			* Store Data
@@ -55,6 +65,11 @@ package app.world.elements
 		}
 		public function setXY(pX:Number, pY:Number) : Character { x = pX; y = pY; return this; }
 		public function appendTo(target:Sprite): Character { target.addChild(this); return this; }
+		
+		public function get dragBounds() : Rectangle { return _dragBounds; }
+		public function setDragBounds(pX:Number, pY:Number, pWidth:Number, pHeight:Number): Character {
+			_dragBounds =  new Rectangle(pX, pY, pWidth, pHeight); return this;
+		}
 
 		public function updatePose() {
 			var tScale = 3;

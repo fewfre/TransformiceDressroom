@@ -1,5 +1,9 @@
 == V1.27 - 2 November 2023 ==
 - Added stinky cheese back item
+- Mouse & color finder drag code tweaked
+	- Letting go of mouse outside of drag area no longer keeps it in drag mode
+	- The spot you grabbed can no longer leave the "safe area" / drag zone
+	- Changing the scale when the center of the mouse / item is outside the safe zone will clamp the center into the safe area to prevent it being scaled down to where it can no longer be clicked.
 
 
 == V1.26 - 8 October 2023 ==

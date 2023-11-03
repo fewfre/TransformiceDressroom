@@ -41,6 +41,7 @@ package app.ui.panes
 		private var _ignoreNextColorClick : Boolean = false;
 		private var _dragStartMouseX : Boolean;
 		private var _dragStartMouseY : Boolean;
+		private var _dragBounds : Rectangle;
 		
 		private const _bitmapData:BitmapData = new BitmapData(1, 1);
 		private const _matrix:Matrix = new Matrix();
@@ -84,14 +85,19 @@ package app.ui.panes
 			contentBack.graphics.drawRect(0, 0, _scrollPane.width, _scrollPane.height);
 			contentBack.graphics.endFill();
 			
+			var bPadding:Number = 8;
+			_dragBounds = new Rectangle(-_itemCont.x - _itemCont.parent.x + bPadding*0.5, -_itemCont.y - _itemCont.parent.y + bPadding*0.5, _scrollPane.width - bPadding, _scrollPane.height - bPadding);
 			_itemDragDrop = _itemCont.addChild(new MovieClip()) as MovieClip;
 			_itemDragDrop.buttonMode = true;
-			_itemDragDrop.addEventListener(MouseEvent.MOUSE_DOWN, function () {
+			_itemDragDrop.addEventListener(MouseEvent.MOUSE_DOWN, function (e:MouseEvent) {
 				_dragging = true;
 				_ignoreNextColorClick = false;
-				_itemDragDrop.startDrag();
+				var bounds:Rectangle = _dragBounds.clone();
+				bounds.x -= e.localX * _itemDragDrop.scaleX;
+				bounds.y -= e.localY * _itemDragDrop.scaleY;
+				_itemDragDrop.startDrag(false, bounds);
 			});
-			_itemDragDrop.addEventListener(MouseEvent.MOUSE_UP, function () { _dragging = false; _itemDragDrop.stopDrag(); });
+			Fewf.stage.addEventListener(MouseEvent.MOUSE_UP, function () { _dragging = false; _itemDragDrop.stopDrag(); });
 			
 			_item = _itemDragDrop.addChild(new MovieClip()) as MovieClip;
 			
@@ -294,14 +300,21 @@ package app.ui.panes
 			dispatchEvent(new Event(EVENT_EXIT));
 		}
 		
+		private function _clampCoordsToSafeArea() : void {
+			_itemDragDrop.x = Math.max(_dragBounds.x, Math.min(_dragBounds.right, _itemDragDrop.x));
+			_itemDragDrop.y = Math.max(_dragBounds.y, Math.min(_dragBounds.bottom, _itemDragDrop.y));
+		}
+		
 		private function _onSliderChange(e:Event) : void {
 			_itemDragDrop.scaleX = _itemDragDrop.scaleY = _scaleSlider.value;
 			_centerImageOrigin(_item);
+			_clampCoordsToSafeArea();
 		}
 
 		private function _onMouseWheel(pEvent:MouseEvent) : void {
 			_scaleSlider.updateViaMouseWheelDelta(pEvent.delta);
 			_itemDragDrop.scaleX = _itemDragDrop.scaleY = _scaleSlider.value;
+			_clampCoordsToSafeArea();
 		}
 		
 		private function _onFileSelect(e:Event) : void {

@@ -83,10 +83,10 @@ package app.world
 			}
 
 			this.character = new Character(new <ItemData>[ GameAssets.defaultSkin, GameAssets.defaultPose ], parms)
-				.setXY(180, 275).appendTo(this);
+				.setXY(180, 275).setDragBounds(0+4, 73+4, 375-8, Fewf.stage.stageHeight-73-8).appendTo(this);
 			this.character.doubleClickEnabled = true;
 			this.character.addEventListener(MouseEvent.DOUBLE_CLICK, function(e:MouseEvent){ _paneManager.openPane(WORN_ITEMS_PANE_ID); })
-
+			
 			/****************************
 			* Setup UI
 			*****************************/
@@ -240,6 +240,7 @@ package app.world
 			if(this.mouseX < this.shopTabs.x) {
 				_toolbox.scaleSlider.updateViaMouseWheelDelta(pEvent.delta);
 				character.scale = _toolbox.scaleSlider.value;
+				_clampCharacterCoordsToSafeArea();
 			}
 		}
 
@@ -326,6 +327,12 @@ package app.world
 
 		private function _onScaleSliderChange(pEvent:Event):void {
 			character.scale = _toolbox.scaleSlider.value;
+			_clampCharacterCoordsToSafeArea();
+		}
+		
+		private function _clampCharacterCoordsToSafeArea() : void {
+			character.x = Math.max(character.dragBounds.x, Math.min(character.dragBounds.right, character.x));
+			character.y = Math.max(character.dragBounds.y, Math.min(character.dragBounds.bottom, character.y));
 		}
 
 		private function _onShareCodeEntered(pCode:String, pProgressCallback:Function):void {
