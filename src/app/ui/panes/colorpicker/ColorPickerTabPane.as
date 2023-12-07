@@ -94,6 +94,7 @@ package app.ui.panes.colorpicker
 		public override function close() : void {
 			super.close();
 			_addRecentColor(); // Add here since we're exiting, and thus change is finalized
+			_recentColorsDisplay.toggleOffDeleteMode();
 			dispatchEvent(new FewfEvent(EVENT_PREVIEW_COLOR, null));
 		}
 		
@@ -199,6 +200,7 @@ package app.ui.panes.colorpicker
 			_colorSwatches[pNum].select();
 			
 			_psColorPick.setCursor(_colorSwatches[pNum].color);
+			_recentColorsDisplay.toggleOffDeleteMode();
 		}
 		
 		private function changeColor(color:uint, pSkipColorSwatch:Boolean=false, pSkipSetSursor:Boolean=false) {
@@ -252,6 +254,7 @@ package app.ui.panes.colorpicker
 			_colorSwatches[_selectedSwatch].select();
 			_psColorPick.setCursor(_colorSwatches[_selectedSwatch].color);
 			_untrackRecentColor();
+			_recentColorsDisplay.toggleOffDeleteMode();
 			dispatchEvent(new FewfEvent(EVENT_COLOR_PICKED, { randomizedAll:true, color:_colorSwatches[_selectedSwatch].color }));
 		}
 		
@@ -295,6 +298,7 @@ package app.ui.panes.colorpicker
 		private function _onColorPickChanged(pEvent:DataEvent) : void {
 			// Skip cursor set since otherwise the top color bar gets updated when just dragging cursor around
 			changeColor(uint(pEvent.data), false, true);
+			_recentColorsDisplay.toggleOffDeleteMode();
 		}
 		
 		private function _onRecentColorBtnClicked(pEvent:FewfEvent) : void {

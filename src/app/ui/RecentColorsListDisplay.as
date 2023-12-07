@@ -94,10 +94,24 @@ package app.ui
 				var color:int = RECENTS[i];
 				
 				var btn = new ColorButton({ x:tX + (i*(tBtnWidth+tSpacingX)), width:tBtnWidth, height:17, color:color });
+				if(isDeleteModeOn) {
+					(function(btn){
+						var nou:MovieClip = new $No();
+						nou.scaleX = nou.scaleY = 0.2;
+						nou.alpha = 0;
+						btn.addChild(nou);
+						btn.addEventListener(ButtonBase.OVER, function(){ nou.alpha = 0.5 });
+						btn.addEventListener(ButtonBase.OUT, function(){ nou.alpha = 0 });
+					})(btn);
+				}
 				btn.addEventListener(ButtonBase.CLICK, _onRecentColorBtnClicked);
 				addChild(btn);
 				_recentColorButtons.push(btn);
 			}
+		}
+		
+		public function toggleOffDeleteMode() : void {
+			_toggleDeleteMode(false);
 		}
 		
 		/****************************
@@ -148,6 +162,8 @@ class DeleteButton extends PushButton
 		override protected function _renderUp() : void {
 			if (this.pushed == false) {
 				_bg.draw(0xeb9d9e, 5, 0xFF0000);
+			} else {
+				_bg.draw(0xFF0000, 5, 0x780f11);
 			}
 		}
 		

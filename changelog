@@ -1,3 +1,7 @@
+== V1.27b - 8 December 2023 ==
+- Fixed bug causing color history to stay in delete mode when it shouldn't.
+
+
 == V1.27 - 2 November 2023 ==
 - Added stinky cheese back item
 - Mouse & color finder drag code tweaked
