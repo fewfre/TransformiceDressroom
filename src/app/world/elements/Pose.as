@@ -85,6 +85,7 @@ package app.world.elements
 				tPoseBone = _pose.getChildAt(i) as MovieClip;
 				if(!tPoseBone) continue;
 				tBoneName = tPoseBone.name;
+				_pose[tBoneName] = tPoseBone; // Needed for inline scripts (ex: Tail 69)
 				
 				// First add skin to bone
 				if(tSkinData) {
@@ -247,6 +248,9 @@ package app.world.elements
 				tChild = part.getChildAt(i);
 				if(tChild.name.indexOf("slot_") == 0) {
 					tAccessoires.push(tChild);
+				}
+				if(tChild is MovieClip) {
+					tAccessoires = tAccessoires.concat(getMcItemSubAccessories(tChild as MovieClip))
 				}
 			}
 			return tAccessoires;
