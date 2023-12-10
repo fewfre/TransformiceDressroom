@@ -82,7 +82,7 @@ package app.ui.screens
 		
 		private function _getFlagImage(pLangData:Object) : MovieClip {
 			var tImage = new MovieClip();
-			var tFlag = tImage.addChild(new (Fewf.assets.getLoadedClass(pLangData.flags_swf_linkage))());
+			var tFlag = tImage.addChild(Fewf.assets.getLoadedMovieClip(pLangData.flags_swf_linkage));
 			tFlag.x -= tFlag.width*0.5;
 			tFlag.y -= tFlag.height*0.5;
 			return tImage;
