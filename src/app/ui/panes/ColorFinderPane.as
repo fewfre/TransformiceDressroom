@@ -186,6 +186,11 @@ package app.ui.panes
 			_recentColorsDisplay.render();
 		}
 		
+		public override function close() : void {
+			super.close();
+			_recentColorsDisplay.toggleOffDeleteMode();
+		}
+		
 		/****************************
 		* Public
 		*****************************/
