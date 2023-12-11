@@ -1,23 +1,20 @@
 package com.fewfre.utils
 {
 	import com.fewfre.events.FewfEvent;
-	import flash.display.Loader;
-	import flash.display.MovieClip;
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
 	import flash.events.ProgressEvent;
-	import flash.events.EventDispatcher;
-	import flash.external.ExternalInterface;
-	import flash.net.*;
-	import flash.system.ApplicationDomain;
-	import flash.system.LoaderContext;
-	import flash.utils.Dictionary;
-	import flash.utils.setTimeout;
-	import flash.net.URLLoader;
 	import flash.events.ErrorEvent;
+	import flash.events.EventDispatcher;
+	import flash.net.*;
+	import flash.display.Loader;
+	import flash.display.MovieClip;
 	import flash.display.Bitmap;
 	import flash.display.LoaderInfo;
 	import flash.display.BitmapData;
+	import flash.utils.Dictionary;
+	import flash.utils.setTimeout;
+	import flash.external.ExternalInterface;
 	
 	public class AssetManager extends EventDispatcher
 	{

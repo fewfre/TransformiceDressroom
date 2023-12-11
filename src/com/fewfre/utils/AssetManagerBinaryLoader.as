@@ -1,21 +1,17 @@
 package com.fewfre.utils
 {
 	import com.fewfre.events.FewfEvent;
-	import flash.display.Loader;
-	import flash.display.MovieClip;
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
 	import flash.events.ProgressEvent;
+	import flash.events.SecurityErrorEvent;
+	import flash.events.ErrorEvent;
 	import flash.events.EventDispatcher;
-	import flash.external.ExternalInterface;
+	import flash.display.Loader;
 	import flash.net.*;
 	import flash.system.ApplicationDomain;
 	import flash.system.LoaderContext;
 	import flash.utils.Dictionary;
-	import flash.utils.setTimeout;
-	import flash.net.URLLoader;
-	import flash.events.SecurityErrorEvent;
-	import flash.events.ErrorEvent;
 	import flash.utils.ByteArray;
 
 	[Event(name="complete", type="flash.events.Event")]
