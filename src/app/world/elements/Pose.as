@@ -5,6 +5,7 @@ package app.world.elements
 	import app.world.data.*;
 	import flash.display.*;
 	import flash.geom.*;
+	import flash.events.Event;
 	
 	public class Pose extends MovieClip
 	{
@@ -63,7 +64,7 @@ package app.world.elements
 		}
 		
 		// pData = { ?removeBlanks:Boolean=false }
-		public function apply(items:Vector.<ItemData>, shamanMode:ShamanMode, shamanColor:uint=0x95D9D6, disableSkillsMode:Boolean=false, removeBlanks:Boolean=false) : MovieClip {
+		public function apply(items:Vector.<ItemData>, shamanMode:ShamanMode, shamanColor:uint=0x95D9D6, disableSkillsMode:Boolean=false, pFlagWavingCode:String="", removeBlanks:Boolean=false) : MovieClip {
 			if(!items) items = new Vector.<ItemData>();
 			
 			var tSkinDataIndex = FewfUtils.getIndexFromVectorWithKeyVal(items, "type", ItemType.SKIN);
@@ -119,6 +120,10 @@ package app.world.elements
 						_colorSkinPart(part, -1, shamanColor);
 						
 					}
+				}
+				
+				if(_poseData.id == "Drapeau" && pFlagWavingCode && pFlagWavingCode.length >= 2 && tBoneName == 'x_d') {
+					tPoseBone.addChild(_getFlagImage(pFlagWavingCode));
 				}
 				
 				// Next add equipped items to current bone if they need to be
@@ -277,6 +282,39 @@ package app.world.elements
 			part.rotation = -10;
 			_colorSkinPart(part, -1, pShamanColor);
 			return part;
+		}
+		private function _getFlagImage(pCode:String) : Bitmap {
+			var codeIsUrl:Boolean = pCode.indexOf("http") == 0;
+			var x_d:Bitmap;
+			if(codeIsUrl) {
+				var x_d:Bitmap = Fewf.assets.lazyLoadImageUrlAsBitmap(pCode);
+				// Flag images are a 24x24 square, but have a 4x1 whitespace padding; so we resize any custom images to the -actual- flag size
+				var tWidth:Number = 22, tHeight:Number = 16;
+				x_d.width = tWidth;
+				x_d.height = tHeight;
+				x_d.addEventListener(Event.COMPLETE, function(){
+					// This refreshes bitmap data - since setting the bitmap size to 24x24 before it loads seems to cause issues
+					var tOrigBmd =  x_d.bitmapData;
+					x_d.bitmapData = null;
+					x_d.bitmapData = tOrigBmd;
+					x_d.width = tWidth;
+					x_d.height = tHeight;
+				});
+				x_d.y = -28+4;
+				x_d.x = 1;
+			} else {
+				pCode = pCode.indexOf("/f ") === 0 ? pCode.slice(3) : pCode;
+				pCode = pCode.toUpperCase();
+				pCode = pCode == "LGBT" ? "RB" :
+						pCode == "RAINBOW" ? "RB" :
+						pCode == "GAY" ? "RB" :
+						pCode;
+				pCode = pCode.slice(0, 2);
+				var flagImagePath:String = "x_divers/x_drapeaux/" + pCode + ".png";
+				x_d = Fewf.assets.lazyLoadImageUrlAsBitmap(flagImagePath);
+				x_d.y = -28;
+			}
+			return x_d;
 		}
 	}
 }

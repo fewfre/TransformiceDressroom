@@ -27,6 +27,10 @@ package app.world.elements
 		public function get disableSkillsMode():Boolean { return _disableSkillsMode; }
 		public function set disableSkillsMode(val:Boolean) { _disableSkillsMode = val; updatePose(); }
 		
+		public var _flagWavingCode:String;
+		public function get flagWavingCode():String { return _flagWavingCode; }
+		public function set flagWavingCode(val:String) { _flagWavingCode = val; updatePose(); }
+		
 		private var _dragging:Boolean = false;
 		private var _dragBounds:Rectangle;
 
@@ -99,7 +103,8 @@ package app.world.elements
 				],
 				_shamanMode,
 				_shamanColor,
-				_disableSkillsMode
+				_disableSkillsMode,
+				_flagWavingCode
 			);
 			if(animatePose) outfit.play(); else outfit.stopAtLastFrame();
 		}
@@ -143,6 +148,7 @@ package app.world.elements
 						}
 					}
 					_disableSkillsMode = pParams.ds == 'y';
+					_flagWavingCode = pParams.fw;
 					
 				} catch (error:Error) { return false; };
 			} else {
@@ -239,6 +245,9 @@ package app.world.elements
 			}
 			if(_disableSkillsMode) {
 				tParms.ds = 'y';
+			}
+			if(_flagWavingCode && getItemData(ItemType.POSE).id == "Drapeau") {
+				tParms.fw = _flagWavingCode;
 			}
 
 			return tParms.toString().replace(/%3B/g, ";");

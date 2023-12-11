@@ -222,6 +222,7 @@ package app.world
 			var tPane:ShopCategoryPane = new ShopCategoryPane(pType);
 			tPane.addEventListener(ShopCategoryPane.ITEM_TOGGLED, _onItemToggled);
 			tPane.addEventListener(ShopCategoryPane.DEFAULT_SKIN_COLOR_BTN_CLICKED, function(){ _colorButtonClicked(pType); });
+			tPane.addEventListener(ShopCategoryPane.FLAG_WAVE_CODE_CHANGED, function(e:FewfEvent){ character.flagWavingCode = e.data.code; });
 			
 			tPane.infoBar.colorWheel.addEventListener(ButtonBase.CLICK, function(){ _colorButtonClicked(pType); });
 			tPane.infoBar.removeItemOverlay.addEventListener(MouseEvent.CLICK, function(){ _removeItem(pType); });
@@ -401,6 +402,7 @@ package app.world
 				// Based on what the character is wearing at start, toggle on the appropriate buttons.
 				tPane.toggleGridButtonWithData( character.getItemData(tType) );
 			}
+			getTabByType(ItemType.POSE).flagWaveInput.text = character.flagWavingCode;
 		}
 
 		private function _onItemToggled(pEvent:FewfEvent) : void {

@@ -15,6 +15,9 @@ package com.fewfre.utils
 	import flash.utils.setTimeout;
 	import flash.net.URLLoader;
 	import flash.events.ErrorEvent;
+	import flash.display.Bitmap;
+	import flash.display.LoaderInfo;
+	import flash.display.BitmapData;
 	
 	public class AssetManager extends EventDispatcher
 	{
@@ -184,6 +187,56 @@ package com.fewfre.utils
 		public function getLoadedMovieClip(pName:String, pDontReturnNull:Boolean=false, pTrace:Boolean=false) : MovieClip {
 			var tClass:Class = getLoadedClass(pName, pTrace);
 			return tClass ? new tClass() : (pDontReturnNull ? new MovieClip() : null);
+		}
+		
+		/****************************
+		* Bitmap Loader
+		*****************************/
+		public static const _DICT_getLoadedBitmapFromUrl:Dictionary = new Dictionary();
+		public static const _DICT_bitmapsNeedingToBeDrawnAfterImageLoaded:Dictionary = new Dictionary();
+		
+		public function lazyLoadImageUrlAsBitmap(pFilePath:String) : Bitmap {
+			var url:String = pFilePath.indexOf("http") == 0 ? pFilePath : ((Fewf.swfUrlBase || "https://projects.fewfre.com/a801/transformice/dressroom/")+"resources/" + pFilePath);
+			var tBitmap:Bitmap = new Bitmap();
+			if(_DICT_getLoadedBitmapFromUrl[url]) {
+				tBitmap.bitmapData = _DICT_getLoadedBitmapFromUrl[url];
+			} else {
+				if(_DICT_bitmapsNeedingToBeDrawnAfterImageLoaded[url]) {
+					_DICT_bitmapsNeedingToBeDrawnAfterImageLoaded[url].push(tBitmap);
+				} else {
+					_DICT_bitmapsNeedingToBeDrawnAfterImageLoaded[url] = new Array(tBitmap);
+					_createBitmapLoader(url);
+				}
+			}
+			return tBitmap;
+		}
+		
+		private function _createBitmapLoader(pUrl:String) : void {
+			try {
+				var tLoader:Loader = new Loader();
+				tLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, _onBitmapLazyLoaded);
+				// tLoader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, _onError_bitmapLazyLoader);
+				tLoader.load(new URLRequest(pUrl));
+			} catch(err:Error) {}
+		}
+		
+		private function _onBitmapLazyLoaded(e:Event) : void {
+			try {
+				var tLoader:Loader = null;
+				tLoader = (e.currentTarget as LoaderInfo).loader;
+				var tBitmapData:BitmapData = Bitmap(tLoader.content).bitmapData;
+				var tUrl:String = (e.currentTarget as LoaderInfo).url; // NOTE: future me, remember that this only works if not using cache breaker
+				_DICT_getLoadedBitmapFromUrl[tUrl] = tBitmapData;
+				
+				var tBitmapsNeedingDrawing:Array = _DICT_bitmapsNeedingToBeDrawnAfterImageLoaded[tUrl];
+				if(tBitmapsNeedingDrawing) {
+					delete _DICT_bitmapsNeedingToBeDrawnAfterImageLoaded[tUrl];
+					for(var i:int = 0; i < tBitmapsNeedingDrawing.length; i++) {
+						(tBitmapsNeedingDrawing[i] as Bitmap).bitmapData = tBitmapData;
+						(tBitmapsNeedingDrawing[i] as Bitmap).dispatchEvent(new Event(Event.COMPLETE));
+					}
+				}
+			} catch(err:Error) {}
 		}
 	}
 }
