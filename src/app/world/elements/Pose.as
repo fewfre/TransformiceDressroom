@@ -216,6 +216,7 @@ package app.world.elements
 							else {
 								tBoneMC.addChild(accMC);
 							}
+							break;
 						}
 					}
 				}

@@ -6,6 +6,7 @@
 - Added bitmap lazy loading
 - Add the ability to set the flag used in flag animation
 	- Fewf style share codes now include flag code if there is one
+- Fixed position/layer bug with Tail 67 (these tails hate me)
 
 
 == V1.27 - 2 November 2023 ==

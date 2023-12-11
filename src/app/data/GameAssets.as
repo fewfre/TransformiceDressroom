@@ -78,7 +78,8 @@ package app.data
 			accessorySlotBones[8]   = new <String>["Gant_1"];
 			accessorySlotBones[9]   = new <String>["Arme_1"];
 			accessorySlotBones[10]  = new <String>["Bouclier_1"];
-			accessorySlotBones[11]  = new <String>["CuisseD_1"];
+			accessorySlotBones[11]  = new <String>["CuisseD_1","CuisseG_1"];
+			accessorySlotBones[12]  = new <String>["Queue_1"];
 			accessorySlotBones[101] = new <String>["OreilleG_1"];
 
 			skins = new Vector.<ItemData>();
