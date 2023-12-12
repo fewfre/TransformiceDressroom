@@ -9,6 +9,7 @@
 - Fixed position/layer bug with Tail 67 (these tails hate me)
 - "Defaults" button on color picker now respects locks
 - [Cpde] Made `GameAssets.init` asynchronous to prevent a bit of the freeze-up during app initialization phase
+- [Bug] Fixed share code success/invalid message not being correct (2 bugs in 1!)
 
 
 == V1.27 - 2 November 2023 ==

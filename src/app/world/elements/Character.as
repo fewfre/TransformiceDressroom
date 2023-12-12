@@ -27,7 +27,7 @@ package app.world.elements
 		public function get disableSkillsMode():Boolean { return _disableSkillsMode; }
 		public function set disableSkillsMode(val:Boolean) { _disableSkillsMode = val; updatePose(); }
 		
-		public var _flagWavingCode:String;
+		public var _flagWavingCode:String = "";
 		public function get flagWavingCode():String { return _flagWavingCode; }
 		public function set flagWavingCode(val:String) { _flagWavingCode = val; updatePose(); }
 		
@@ -110,64 +110,88 @@ package app.world.elements
 		}
 
 		public function parseParams(pCode:String) : Boolean {
-			trace("(parseParams) ", pCode);
+			if(!isOutfit) trace("(parseParams) ", pCode);
 			
 			// Url param code
 			if(pCode.indexOf("=") > -1) {
-				try {
-					var pParams = new flash.net.URLVariables();
-					pParams.decode(pCode);
-					
-					_setParamToType(pParams, ItemType.SKIN, "s", false);
-					_setParamToType(pParams, ItemType.HAIR, "d");
-					_setParamToType(pParams, ItemType.HEAD, "h");
-					_setParamToType(pParams, ItemType.EARS, "e");
-					_setParamToType(pParams, ItemType.EYES, "y");
-					_setParamToType(pParams, ItemType.MOUTH, "m");
-					_setParamToType(pParams, ItemType.NECK, "n");
-					_setParamToType(pParams, ItemType.TAIL, "t");
-					_setParamToType(pParams, ItemType.CONTACTS, "c");
-					_setParamToType(pParams, ItemType.HAND, "hd");
-					_setParamToType(pParams, ItemType.TATTOO, "tt");
-					_setParamToType(pParams, ItemType.POSE, "p", false);
-					
-					if(pParams.paw == "y") { _itemDataMap[ItemType.OBJECT] = GameAssets.extraObjectWand; }
-					if(pParams.back != null && pParams.back != "") {
-						if(pParams.back == "y") pParams.back = GameAssets.extraBack[0].id;
-						for each(var itemData:ItemData in GameAssets.extraBack) {
-							if(pParams.back == itemData.id) _itemDataMap[ItemType.BACK] = itemData;
-						}
-					}
-					if(pParams.pawb == "y") { _itemDataMap[ItemType.PAW_BACK] = GameAssets.extraBackHand; }
-					
-					if(pParams["sh"] && pParams["sh"] != "") {
-						var tColor = _splitOnUrlColorSeperator(pParams["sh"]);
-						_shamanMode = ShamanMode.fromInt( parseInt(tColor.splice(0, 1)[0]) );
-						if(tColor.length > 0) {
-							_shamanColor = _hexToInt(tColor[0]);
-						}
-					}
-					_disableSkillsMode = pParams.ds == 'y';
-					_flagWavingCode = pParams.fw;
-					
-				} catch (error:Error) { return false; };
-			} else {
-				// Official TFM /dressing params
-				try {
-					var arr = pCode.split(";");
-					// Check for wierd syntax where fur id isn't included (old account, or maybe haven't bought one yet?)
-					if(arr[0].indexOf(",") >= 0) {
-						arr = [ "1", arr[0] ];
-					}
-					_setParamToTypeTfmOfficialSyntax(ItemType.SKIN, arr[2] && arr[0]==1 ? arr[0]+"_"+arr[2] : arr[0], false);
-					
-					arr = arr[1].split(",");
-					var tTypes:Vector.<ItemType> = ItemType.LOOK_CODE_ITEM_ORDER;
-					for(var i:int = 0; i < tTypes.length; i++) {
-						_setParamToTypeTfmOfficialSyntax(tTypes[i], arr[i]);
-					}
-				} catch(error:Error) { return false; };
+				return _parseParamsFewfreSyntax(pCode);
 			}
+			else { // Official TFM /dressing params
+				return _parseParamsTfmOfficialSyntax(pCode);
+			}
+			return true;
+		}
+		
+		private function _parseParamsFewfreSyntax(pCode:String) : Boolean {
+			try {
+				var pParams = new flash.net.URLVariables();
+				pParams.decode(pCode);
+				
+				_setParamToType(pParams, ItemType.SKIN, "s", false);
+				_setParamToType(pParams, ItemType.HAIR, "d");
+				_setParamToType(pParams, ItemType.HEAD, "h");
+				_setParamToType(pParams, ItemType.EARS, "e");
+				_setParamToType(pParams, ItemType.EYES, "y");
+				_setParamToType(pParams, ItemType.MOUTH, "m");
+				_setParamToType(pParams, ItemType.NECK, "n");
+				_setParamToType(pParams, ItemType.TAIL, "t");
+				_setParamToType(pParams, ItemType.CONTACTS, "c");
+				_setParamToType(pParams, ItemType.HAND, "hd");
+				_setParamToType(pParams, ItemType.TATTOO, "tt");
+				_setParamToType(pParams, ItemType.POSE, "p", false);
+				
+				if(pParams.paw == "y") { _itemDataMap[ItemType.OBJECT] = GameAssets.extraObjectWand; }
+				if(pParams.back != null && pParams.back != "") {
+					if(pParams.back == "y") pParams.back = GameAssets.extraBack[0].id;
+					for each(var itemData:ItemData in GameAssets.extraBack) {
+						if(pParams.back == itemData.id) _itemDataMap[ItemType.BACK] = itemData;
+					}
+				}
+				if(pParams.pawb == "y") { _itemDataMap[ItemType.PAW_BACK] = GameAssets.extraBackHand; }
+				
+				if(pParams["sh"] && pParams["sh"] != "") {
+					var tColor = _splitOnUrlColorSeperator(pParams["sh"]);
+					_shamanMode = ShamanMode.fromInt( parseInt(tColor.splice(0, 1)[0]) );
+					if(tColor.length > 0) {
+						_shamanColor = _hexToInt(tColor[0]);
+					}
+				}
+				_disableSkillsMode = pParams.ds == 'y';
+				_flagWavingCode = pParams.fw;
+			}
+			catch (error:Error) { return false; };
+			return true;
+		}
+		private function _setParamToType(pParams:URLVariables, pType:ItemType, pParam:String, pAllowNull:Boolean=true) {
+			// try {
+				var tData:ItemData = null, tID = pParams[pParam], tColors;
+				if(tID != null && tID != "") {
+					tColors = _splitOnUrlColorSeperator(tID); // Get a list of all the colors (ID is first); ex: 5;ffffff;abcdef;169742
+					tID = tColors.splice(0, 1)[0]; // Remove first item and store it as the ID.
+					tData = GameAssets.getItemFromTypeID(pType, tID);
+					if(isOutfit) tData = tData.copy();
+					if(tColors.length > 0) { tData.colors = _hexArrayToIntList(tColors, tData.defaultColors); }
+					else if(tID == 1 || tID == "1") { tData.setColorsToDefault(); }
+				}
+				_itemDataMap[pType] = pAllowNull ? tData : ( tData == null ? _itemDataMap[pType] : tData );
+			// } catch (error:Error) { };
+		}
+		
+		private function _parseParamsTfmOfficialSyntax(pCode:String) : Boolean {
+			try {
+				var arr = pCode.split(";");
+				// Check for wierd syntax where fur id isn't included (old account, or maybe haven't bought one yet?)
+				if(arr[0].indexOf(",") >= 0) {
+					arr = [ "1", arr[0] ];
+				}
+				_setParamToTypeTfmOfficialSyntax(ItemType.SKIN, arr[2] && arr[0]==1 ? arr[0]+"_"+arr[2] : arr[0], false);
+				
+				arr = arr[1].split(",");
+				var tTypes:Vector.<ItemType> = ItemType.LOOK_CODE_ITEM_ORDER;
+				for(var i:int = 0; i < tTypes.length; i++) {
+					_setParamToTypeTfmOfficialSyntax(tTypes[i], arr[i]);
+				}
+			} catch(error:Error) { return false; };
 			return true;
 		}
 		private function _setParamToTypeTfmOfficialSyntax(pType:ItemType, pParamVal:String, pAllowNull:Boolean=true) {
@@ -181,20 +205,6 @@ package app.world.elements
 						tID = "color"+GameAssets.FUR_COLORS.indexOf(_hexToInt(tColors[0]));
 						tColors = [];
 					}
-					tData = GameAssets.getItemFromTypeID(pType, tID);
-					if(isOutfit) tData = tData.copy();
-					if(tColors.length > 0) { tData.colors = _hexArrayToIntList(tColors, tData.defaultColors); }
-					else if(tID == 1 || tID == "1") { tData.setColorsToDefault(); }
-				}
-				_itemDataMap[pType] = pAllowNull ? tData : ( tData == null ? _itemDataMap[pType] : tData );
-			} catch (error:Error) { };
-		}
-		private function _setParamToType(pParams:URLVariables, pType:ItemType, pParam:String, pAllowNull:Boolean=true) {
-			try {
-				var tData:ItemData = null, tID = pParams[pParam], tColors;
-				if(tID != null && tID != "") {
-					tColors = _splitOnUrlColorSeperator(tID); // Get a list of all the colors (ID is first); ex: 5;ffffff;abcdef;169742
-					tID = tColors.splice(0, 1)[0]; // Remove first item and store it as the ID.
 					tData = GameAssets.getItemFromTypeID(pType, tID);
 					if(isOutfit) tData = tData.copy();
 					if(tColors.length > 0) { tData.colors = _hexArrayToIntList(tColors, tData.defaultColors); }

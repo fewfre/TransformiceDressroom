@@ -337,17 +337,17 @@ package app.world
 			if(!pCode || pCode == "") { return; pProgressCallback("placeholder"); }
 			
 			try {
-				_useShareCode(pCode);
+				var parseSuccess:Boolean = _useShareCode(pCode);
 				
 				// Now tell code box that we are done
-				pProgressCallback("success");
+				pProgressCallback(parseSuccess ? "success" : "invalid");
 			}
 			catch (error:Error) {
 				pProgressCallback("invalid");
 			};
 		}
 		
-		private function _useShareCode(pCode:String):void {
+		private function _useShareCode(pCode:String) : Boolean {
 			if(pCode.indexOf("?") > -1) {
 				pCode = pCode.substr(pCode.indexOf("?") + 1, pCode.length);
 			}
@@ -358,7 +358,7 @@ package app.world
 			_removeItem(ItemType.POSE);
 			
 			// Now update pose
-			character.parseParams(pCode);
+			var parseSuccess:Boolean = character.parseParams(pCode);
 			character.updatePose();
 			
 			for each(var tType:ItemType in ItemType.TYPES_WITH_SHOP_PANES) { _refreshButtonCustomizationForItemData(character.getItemData(tType)); }
@@ -366,6 +366,8 @@ package app.world
 			// now update the infobars
 			_updateUIBasedOnCharacter();
 			(_paneManager.getPane(TAB_OTHER) as OtherTabPane).updateButtonsBasedOnCurrentData();
+			
+			return parseSuccess;
 		}
 
 		private function _onPlayerAnimationToggle(pEvent:Event):void {
@@ -399,7 +401,7 @@ package app.world
 				// Based on what the character is wearing at start, toggle on the appropriate buttons.
 				tPane.toggleGridButtonWithData( character.getItemData(tType) );
 			}
-			getTabByType(ItemType.POSE).flagWaveInput.text = character.flagWavingCode;
+			getTabByType(ItemType.POSE).flagWaveInput.text = character.flagWavingCode || "";
 		}
 
 		private function _onItemToggled(pEvent:FewfEvent) : void {
