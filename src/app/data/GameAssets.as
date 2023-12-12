@@ -8,6 +8,7 @@ package app.data
 	import flash.display.*;
 	import flash.geom.*;
 	import flash.utils.Dictionary;
+	import flash.utils.setTimeout;
 
 	public class GameAssets
 	{
@@ -44,28 +45,72 @@ package app.data
 		public static function get defaultSkin() : ItemData { return skins[defaultSkinIndex]; }
 		public static function get defaultPose() : ItemData { return poses[defaultPoseIndex]; }
 
-		public static function init() : void {
-			var i:int;
+		public static function init(pOnInitComplete:Function) : void {
+			_doInitSteps(new <Function>[
+function(){ head = _setupCostumeList(ItemType.HEAD, "$Costume_0_", { itemClassToClassMap:"Tete_1" }); },
+function(){ eyes = _setupCostumeList(ItemType.EYES, "$Costume_1_", { itemClassToClassMap:["Oeil_1", "OeilVide_1", "Oeil2_1", "Oeil3_1", "Oeil4_1"] }); },
+function(){ ears = _setupCostumeList(ItemType.EARS, "$Costume_2_", { itemClassToClassMap:"OreilleD_1" }); },
+function(){ mouth = _setupCostumeList(ItemType.MOUTH, "$Costume_3_", { itemClassToClassMap:"Tete_1" }); },
+function(){ neck = _setupCostumeList(ItemType.NECK, "$Costume_4_", { itemClassToClassMap:"Tete_1" }); },
+function(){ hair = _setupCostumeList(ItemType.HAIR, "$Costume_5_", { itemClassToClassMap:"Tete_1" }); },
+function(){ tail = _setupCostumeList(ItemType.TAIL, "$Costume_6_", { itemClassToClassMap:"Boule_1" }); },
+function(){ contacts = _setupCostumeList(ItemType.CONTACTS, "$Costume_7_", { itemClassToClassMap:["Oeil_1", "OeilVide_1"] }); },
+function(){ hands = _setupCostumeList(ItemType.HAND, "$Costume_8_", { itemClassToClassMap:"Gant_1" }); },
+function(){ tattoo = _setupCostumeList(ItemType.TATTOO, "$Costume_11_", { itemClassToClassMap:"CuisseD_1" }); },
+function(){
+	extraObjectWand = new ItemData(ItemType.OBJECT, null, { itemClass:Fewf.assets.getLoadedClass("$Costume_9_1"), classMap:{ Arme_1:Fewf.assets.getLoadedClass("$Costume_9_1") } });
+	extraBackHand = new ItemData(ItemType.PAW_BACK, null, { itemClass:$HandButtonShield, classMap:{ PatteG_1:$HandButtonShield } });
+	extraBack = new <ItemData>[
+		new ItemData(ItemType.BACK, 'frm', { itemClass:Fewf.assets.getLoadedClass("FromageSouris"), classMap:{ ClipGrosse:Fewf.assets.getLoadedClass("FromageSouris") } }),
+		new ItemData(ItemType.BACK, 'stnk', { itemClass:$FromageStinky, classMap:{ ClipGrosse:$FromageStinky } }),
+		new ItemData(ItemType.BACK, 'cit', { itemClass:$FromageSourisCitrouille, classMap:{ ClipGrosse:$FromageSourisCitrouille } })
+	];
+},
+function(){
+	skins = new Vector.<ItemData>();
+	
+	var i:int;
+	for(i = 0; i < FUR_COLORS.length; i++) {
+		skins.push( new SkinData({ id:"color"+i, assetID:1, color:FUR_COLORS[i], isSkinColor:true }) );
+	}
+	
+	skins.push( new SkinData({ id:1, assetID:1, color:DEFAULT_FUR_COLOR, type:ItemType.SKIN }) );
+	for(i = 2; i < _MAX_COSTUMES_TO_CHECK_TO; i++) {
+		if(Fewf.assets.getLoadedClass( "_Corps_2_"+i+"_1" ) != null) {
+			skins.push( new SkinData({ id:i }) );
+		}
+	}
+	defaultSkinIndex = 7;//FewfUtils.getIndexFromVectorWithKeyVal(skins, "id", ConstantsApp.DEFAULT_SKIN_ID);
 
-			head = _setupCostumeList(ItemType.HEAD, "$Costume_0_", { itemClassToClassMap:"Tete_1" });
-			eyes = _setupCostumeList(ItemType.EYES, "$Costume_1_", { itemClassToClassMap:["Oeil_1", "OeilVide_1", "Oeil2_1", "Oeil3_1", "Oeil4_1"] });
-			ears = _setupCostumeList(ItemType.EARS, "$Costume_2_", { itemClassToClassMap:"OreilleD_1" });
-			mouth = _setupCostumeList(ItemType.MOUTH, "$Costume_3_", { itemClassToClassMap:"Tete_1" });
-			neck = _setupCostumeList(ItemType.NECK, "$Costume_4_", { itemClassToClassMap:"Tete_1" });
-			hair = _setupCostumeList(ItemType.HAIR, "$Costume_5_", { itemClassToClassMap:"Tete_1" });
-			tail = _setupCostumeList(ItemType.TAIL, "$Costume_6_", { itemClassToClassMap:"Boule_1" });
-			contacts = _setupCostumeList(ItemType.CONTACTS, "$Costume_7_", { itemClassToClassMap:["Oeil_1", "OeilVide_1"] });
-			hands = _setupCostumeList(ItemType.HAND, "$Costume_8_", { itemClassToClassMap:"Gant_1" });
-			tattoo = _setupCostumeList(ItemType.TATTOO, "$Costume_11_", { itemClassToClassMap:"CuisseD_1" });
+	/*for(var i = 0; i < 7; i++) {
+		furs.push( new FurData( i, ItemType.COLOR ).initColor() );
+	}
 
-			extraObjectWand = new ItemData(ItemType.OBJECT, null, { itemClass:Fewf.assets.getLoadedClass("$Costume_9_1"), classMap:{ Arme_1:Fewf.assets.getLoadedClass("$Costume_9_1") } });
-			extraBackHand = new ItemData(ItemType.PAW_BACK, null, { itemClass:$HandButtonShield, classMap:{ PatteG_1:$HandButtonShield } });
-			extraBack = new <ItemData>[
-				new ItemData(ItemType.BACK, 'frm', { itemClass:Fewf.assets.getLoadedClass("FromageSouris"), classMap:{ ClipGrosse:Fewf.assets.getLoadedClass("FromageSouris") } }),
-				new ItemData(ItemType.BACK, 'stnk', { itemClass:$FromageStinky, classMap:{ ClipGrosse:$FromageStinky } }),
-				new ItemData(ItemType.BACK, 'cit', { itemClass:$FromageSourisCitrouille, classMap:{ ClipGrosse:$FromageSourisCitrouille } })
-			];
-			
+	furs.push( new FurData( 1, ItemType.FUR ).initColor(FurData.DEFAULT_COLOR) );
+	for(var i = 2; i < _MAX_COSTUMES_TO_CHECK_TO; i++) {
+		if(Fewf.assets.getLoadedClass( "_Corps_2_"+i+"_1" ) != null) {
+			//furs.push( new Fur().initFur( i, _setupFur(i) ) );
+			furs.push( new FurData( i, ItemType.FUR ).initFur() );
+		}
+	}*/
+},
+function(){
+	poses = new Vector.<ItemData>();
+	var tPoseClasses = [
+		"Statique", "Course", "Duck", "Sleep", "Sit", "Mad", "Laugh", "Kiss", "Facepalm", "Danse", "Cry", "Confetti", "Clap",
+		"Rondoudou", "Selfie", "Zelda", "Plumes", "Langue", "Drapeau",
+		"StatiqueBalai", "CourseBalai", "Peche", "Neige", "Marshmallow", "PreInvoc", "Invoc", "Cadeau", "Attaque",
+		"Hi5_1", "Hi5_2", "Calin_1", "Calin_2", "Bisou_1", "Bisou_2",
+	];
+	// Unused: Calin,
+	for(var i:int = 0; i < tPoseClasses.length; i++) {
+		poses.push(new ItemData(ItemType.POSE, tPoseClasses[i], { itemClass:Fewf.assets.getLoadedClass( "Anim"+tPoseClasses[i] ) }));
+	}
+	defaultPoseIndex = 0;//FewfUtils.getIndexFromVectorWithKeyVal(poses, "id", ConstantsApp.DEFAULT_POSE_ID);
+},
+pOnInitComplete
+			]);
+
 			accessorySlotBones = new Dictionary();
 			accessorySlotBones[0]   = new <String>["Tete_1"];
 			accessorySlotBones[1]   = new <String>["OeilVide_1","Oeil2_1","Oeil3_1","Oeil4_1"];
@@ -81,45 +126,13 @@ package app.data
 			accessorySlotBones[11]  = new <String>["CuisseD_1","CuisseG_1"];
 			accessorySlotBones[12]  = new <String>["Queue_1"];
 			accessorySlotBones[101] = new <String>["OreilleG_1"];
-
-			skins = new Vector.<ItemData>();
-			
-			for(i = 0; i < FUR_COLORS.length; i++) {
-				skins.push( new SkinData({ id:"color"+i, assetID:1, color:FUR_COLORS[i], isSkinColor:true }) );
-			}
-			
-			skins.push( new SkinData({ id:1, assetID:1, color:DEFAULT_FUR_COLOR, type:ItemType.SKIN }) );
-			for(i = 2; i < _MAX_COSTUMES_TO_CHECK_TO; i++) {
-				if(Fewf.assets.getLoadedClass( "_Corps_2_"+i+"_1" ) != null) {
-					skins.push( new SkinData({ id:i }) );
-				}
-			}
-			defaultSkinIndex = 7;//FewfUtils.getIndexFromVectorWithKeyVal(skins, "id", ConstantsApp.DEFAULT_SKIN_ID);
-
-			/*for(var i = 0; i < 7; i++) {
-				furs.push( new FurData( i, ItemType.COLOR ).initColor() );
-			}
-
-			furs.push( new FurData( 1, ItemType.FUR ).initColor(FurData.DEFAULT_COLOR) );
-			for(var i = 2; i < _MAX_COSTUMES_TO_CHECK_TO; i++) {
-				if(Fewf.assets.getLoadedClass( "_Corps_2_"+i+"_1" ) != null) {
-					//furs.push( new Fur().initFur( i, _setupFur(i) ) );
-					furs.push( new FurData( i, ItemType.FUR ).initFur() );
-				}
-			}*/
-
-			poses = new Vector.<ItemData>();
-			var tPoseClasses = [
-				"Statique", "Course", "Duck", "Sleep", "Sit", "Mad", "Laugh", "Kiss", "Facepalm", "Danse", "Cry", "Confetti", "Clap",
-				"Rondoudou", "Selfie", "Zelda", "Plumes", "Langue", "Drapeau",
-				"StatiqueBalai", "CourseBalai", "Peche", "Neige", "Marshmallow", "PreInvoc", "Invoc", "Cadeau", "Attaque",
-				"Hi5_1", "Hi5_2", "Calin_1", "Calin_2", "Bisou_1", "Bisou_2",
-			];
-			// Unused: Calin,
-			for(i = 0; i < tPoseClasses.length; i++) {
-				poses.push(new ItemData(ItemType.POSE, tPoseClasses[i], { itemClass:Fewf.assets.getLoadedClass( "Anim"+tPoseClasses[i] ) }));
-			}
-			defaultPoseIndex = 0;//FewfUtils.getIndexFromVectorWithKeyVal(poses, "id", ConstantsApp.DEFAULT_POSE_ID);
+		}
+		
+		private static function _doInitSteps(steps:Vector.<Function>) : void {
+			setTimeout(function(){
+				steps.shift()();
+				if(steps.length > 0) _doInitSteps(steps);
+			}, 0);
 		}
 
 		// pData = { after:String, pad:int, itemClassToClassMap:String OR Array }

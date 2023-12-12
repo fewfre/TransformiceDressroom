@@ -3,11 +3,12 @@
 - Fixed layering bug with slots/accessories in child elements
 - Tweaked code to support items with embedded scripts that remove/replace mouse parts (Tail 69)
 - Rewrote `AssetManager` to be more inline with in-game (to fix another issue with Tail 69)
-- Added bitmap lazy loading
+- [Code] Added bitmap lazy loading
 - Add the ability to set the flag used in flag animation
 	- Fewf style share codes now include flag code if there is one
 - Fixed position/layer bug with Tail 67 (these tails hate me)
 - "Defaults" button on color picker now respects locks
+- [Cpde] Made `GameAssets.init` asynchronous to prevent a bit of the freeze-up during app initialization phase
 
 
 == V1.27 - 2 November 2023 ==

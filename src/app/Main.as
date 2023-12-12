@@ -94,6 +94,10 @@ package app
 		}
 		
 		private function _onLoadComplete() : void {
+			GameAssets.init(_onGameAssetsInitComplete);
+		}
+		
+		private function _onGameAssetsInitComplete() : void {
 			_loaderDisplay.destroy();
 			removeChild( _loaderDisplay );
 			_loaderDisplay = null;

@@ -66,8 +66,6 @@ package app.world
 		}
 		
 		private function _buildWorld(pStage:Stage) {
-			GameAssets.init();
-			
 			/****************************
 			* Create Character
 			*****************************/
