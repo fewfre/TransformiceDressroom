@@ -196,7 +196,6 @@ package app.world
 			// Color Picker Pane
 			tPane = _paneManager.addPane(COLOR_PANE_ID, new ColorPickerTabPane({}));
 			tPane.addEventListener(ColorPickerTabPane.EVENT_COLOR_PICKED, _onColorPickChanged);
-			tPane.addEventListener(ColorPickerTabPane.EVENT_DEFAULT_CLICKED, _onDefaultsButtonClicked);
 			tPane.addEventListener(ColorPickerTabPane.EVENT_PREVIEW_COLOR, _onColorPickHoverPreview);
 			tPane.addEventListener(ColorPickerTabPane.EVENT_EXIT, _onColorPickerBackClicked);
 			tPane.infoBar.removeItemOverlay.addEventListener(MouseEvent.CLICK, function(e){
@@ -613,22 +612,13 @@ package app.world
 		//}END Get TabPane data
 
 		//{REGION Color Tab
-			private function _onColorPickChanged(pEvent:FewfEvent):void {
-				var color:uint = uint(pEvent.data.color);
-				var pane = _paneManager.getPane(COLOR_PANE_ID) as ColorPickerTabPane;
-				if(pEvent.data.randomizedAll) {
-					this.character.getItemData(this.currentlyColoringType).colors = pane.getAllColors();
+			private function _onColorPickChanged(e:FewfEvent):void {
+				if(e.data.allUpdated) {
+					this.character.getItemData(this.currentlyColoringType).colors = e.data.allColors;
 				} else {
-					this.character.getItemData(this.currentlyColoringType).colors[pane.selectedSwatch] = color;
+					this.character.getItemData(this.currentlyColoringType).colors[e.data.colorIndex] = uint(e.data.color);
 				}
 				_refreshSelectedItemColor(this.currentlyColoringType);
-			}
-
-			private function _onDefaultsButtonClicked(pEvent:Event) : void {
-				this.character.getItemData(this.currentlyColoringType).setColorsToDefault();
-				_refreshSelectedItemColor(this.currentlyColoringType);
-				var pane = _paneManager.getPane(COLOR_PANE_ID) as ColorPickerTabPane;
-				pane.setupSwatches( this.character.getColors(this.currentlyColoringType) );
 			}
 
 			private function _onColorPickHoverPreview(pEvent:FewfEvent) : void {
@@ -692,7 +682,7 @@ package app.world
 				var tData:ItemData = getInfoBarByType(pType).data;
 				_paneManager.getPane(COLOR_PANE_ID).infoBar.addInfo( tData, GameAssets.getItemImage(tData) );
 				this.currentlyColoringType = pType;
-				(_paneManager.getPane(COLOR_PANE_ID) as ColorPickerTabPane).setupSwatches( this.character.getColors(pType) );
+				(_paneManager.getPane(COLOR_PANE_ID) as ColorPickerTabPane).init( tData.colors, tData.defaultColors );
 				_paneManager.openPane(COLOR_PANE_ID);
 				_refreshSelectedItemColor(pType);
 			}
@@ -718,8 +708,7 @@ package app.world
 			}
 
 			private function _onConfigColorPickChanged(pEvent:FewfEvent):void {
-				var tVal:uint = uint(pEvent.data.color);
-				_setConfigShamanColor(tVal);
+				_setConfigShamanColor(uint(pEvent.data.color));
 			}
 			
 			private function _setConfigShamanColor(val:uint) : void {
@@ -730,7 +719,7 @@ package app.world
 
 			private function _shamanColorButtonClicked(/*pType:String, pColor:int*/) : void {
 				/*this.configCurrentlyColoringType = pType;*/
-				(_paneManager.getPane(CONFIG_COLOR_PANE_ID) as ColorPickerTabPane).setupSwatches( new <uint>[ character.shamanColor ] );
+				(_paneManager.getPane(CONFIG_COLOR_PANE_ID) as ColorPickerTabPane).init( new <uint>[ character.shamanColor ], null );
 				_paneManager.openPane(CONFIG_COLOR_PANE_ID);
 			}
 		//}END Color Tab

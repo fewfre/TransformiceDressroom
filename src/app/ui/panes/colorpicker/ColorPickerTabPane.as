@@ -16,7 +16,6 @@ package app.ui.panes.colorpicker
 	{
 		// Constants
 		public static const EVENT_SWATCH_CHANGED	: String = "event_swatch_changed";
-		public static const EVENT_DEFAULT_CLICKED	: String = "event_default_clicked";
 		public static const EVENT_COLOR_PICKED		: String = "event_color_picked";
 		public static const EVENT_PREVIEW_COLOR		: String = "event_preview_color";
 		public static const EVENT_EXIT				: String = "event_exit";
@@ -26,6 +25,7 @@ package app.ui.panes.colorpicker
 		private var _selectedSwatch            : int=0;
 		private var _psColorPick               : ColorPicker;
 		
+		private var _defaultColors             : Vector.<uint>;
 		private var _lastColorChangeValue      : int;
 		private var _dontTrackNextRecentChange : Boolean;
 		
@@ -65,7 +65,7 @@ package app.ui.panes.colorpicker
 			if(!pData.hide_default) {
 				var defaults_btn:SpriteButton;
 				defaults_btn = this.addItem( new SpriteButton({ text:"btn_color_defaults", x:6, y:15, width:100, height:22, obj:new MovieClip() }) ) as SpriteButton;
-				defaults_btn.addEventListener(ButtonBase.CLICK, _onDefaultButtonClicked);
+				defaults_btn.addEventListener(ButtonBase.CLICK, function(){ _defaultAllColors(); });
 			}
 			
 			_randomizeButton = this.addItem(new SpriteButton({ x:ConstantsApp.PANE_WIDTH - 24 - 11, y:14, width:24, height:24, obj_scale:0.8, obj:new $Dice() })) as SpriteButton;
@@ -101,7 +101,34 @@ package app.ui.panes.colorpicker
 		/****************************
 		* Public
 		*****************************/
-		public function setupSwatches(pSwatches:Vector.<uint>) : void {
+		public function init(pColors:Vector.<uint>, pDefaults:Vector.<uint>) : void {
+			_setupSwatches(pColors);
+			_defaultColors = pDefaults ? pDefaults.concat() : null;
+		}
+		
+		public function renderRecents() : void {
+			_recentColorsDisplay.render();
+		}
+		
+		public function getAllColors() : Vector.<uint> {
+			var colors:Vector.<uint> = new Vector.<uint>();
+			for(var i:int = 0; i < _colorSwatches.length; i++){
+				colors.push( _colorSwatches[i].color );
+			}
+			return colors;
+		}
+		
+		public function nextSwatch(pForward:Boolean=true) : void {
+			var newSwatchI:int = _selectedSwatch + (pForward ? 1 : -1);
+			// Force index to loop in both directions
+			newSwatchI = (newSwatchI + _colorSwatches.length) % _colorSwatches.length;
+			_selectSwatch(newSwatchI);
+		}
+		
+		/****************************
+		* Private
+		*****************************/
+		public function _setupSwatches(pSwatches:Vector.<uint>) : void {
 			for each(var btn:ColorSwatch in _colorSwatches) {
 				this.removeItem(btn);
 			}
@@ -127,28 +154,6 @@ package app.ui.panes.colorpicker
 			renderRecents();
 		}
 		
-		public function renderRecents() : void {
-			_recentColorsDisplay.render();
-		}
-		
-		public function getAllColors() : Vector.<uint> {
-			var colors:Vector.<uint> = new Vector.<uint>();
-			for(var i:int = 0; i < _colorSwatches.length; i++){
-				colors.push( _colorSwatches[i].color );
-			}
-			return colors;
-		}
-		
-		public function nextSwatch(pForward:Boolean=true) : void {
-			var newSwatchI:int = _selectedSwatch + (pForward ? 1 : -1);
-			// Force index to loop in both directions
-			newSwatchI = (newSwatchI + _colorSwatches.length) % _colorSwatches.length;
-			_selectSwatch(newSwatchI);
-		}
-		
-		/****************************
-		* Private
-		*****************************/
 		private function _createColorSwatch(pNum:int, pX:int, pY:int) : ColorSwatch {
 			var swatch:ColorSwatch = new ColorSwatch();
 			swatch.addEventListener(ColorSwatch.USER_MODIFIED_TEXT, function(){
@@ -208,7 +213,7 @@ package app.ui.panes.colorpicker
 			if(!pSkipColorSwatch) _colorSwatches[_selectedSwatch].color = color;
 			if(!pSkipSetSursor) _psColorPick.setCursor(color);
 			_trackRecentColor(color);
-			dispatchEvent(new FewfEvent(EVENT_COLOR_PICKED, { color:color }));
+			_dispatchColorUpdate(color, _selectedSwatch, false);
 		}
 		
 		private function _trackRecentColor(color:uint) {
@@ -241,21 +246,34 @@ package app.ui.panes.colorpicker
 			_untrackRecentColor();
 		}
 		
-		private function _randomizeAllColors() {
+		private function _updateColors(pColors:Vector.<uint>, pRespectLocks:Boolean=true) : void {
 			for(var i = 0; i < _colorSwatches.length; i++) {
 				_colorSwatches[i].unselect();
-				if(_colorSwatches[i].locked == false) {
-					var randomColor = uint(Math.random() * 0xFFFFFF);
-					_colorSwatches[i].color = randomColor;
+				if(!pRespectLocks || _colorSwatches[i].locked == false) {
+					_colorSwatches[i].color = pColors[i];
 					_colorSwatches[i].padCodeIfNeeded();
-					_addHistory(randomColor, i);
+					_addHistory(pColors[i], i);
 				}
 			}
 			_colorSwatches[_selectedSwatch].select();
 			_psColorPick.setCursor(_colorSwatches[_selectedSwatch].color);
+		}
+		
+		private function _randomizeAllColors() {
+			var newColors:Vector.<uint> = new Vector.<uint>(_colorSwatches.length).map(function(){ return uint(Math.random() * 0xFFFFFF) });
+			_updateColors(newColors, true);
+			
 			_untrackRecentColor();
 			_recentColorsDisplay.toggleOffDeleteMode();
-			dispatchEvent(new FewfEvent(EVENT_COLOR_PICKED, { randomizedAll:true, color:_colorSwatches[_selectedSwatch].color }));
+			_dispatchColorUpdate(_colorSwatches[_selectedSwatch].color, _selectedSwatch, true);
+		}
+		
+		private function _defaultAllColors() {
+			_updateColors(_defaultColors.concat(), true);
+			
+			_untrackRecentColor();
+			_recentColorsDisplay.toggleOffDeleteMode();
+			_dispatchColorUpdate(_colorSwatches[_selectedSwatch].color, _selectedSwatch, true);
 		}
 		
 		/****************************
@@ -313,14 +331,17 @@ package app.ui.panes.colorpicker
 			_addRecentColor();
 		}
 		
-		private function _onDefaultButtonClicked(pEvent:Event) : void {
-			_untrackRecentColor();
-			_dontTrackNextRecentChange = true;
-			dispatchEvent(new Event(EVENT_DEFAULT_CLICKED));
-		}
-		
 		private function _onColorPickerBackClicked(pEvent:Event) : void {
 			dispatchEvent(new Event(EVENT_EXIT));
+		}
+		
+		private function _dispatchColorUpdate(pColor:uint, pColorIndex:int, pAllUpdated:Boolean=false) : void {
+			dispatchEvent(new FewfEvent(EVENT_COLOR_PICKED, {
+				color: pColor,
+				colorIndex: pColorIndex,
+				allUpdated: pAllUpdated,
+				allColors: getAllColors()
+			}));
 		}
 	}
 }

@@ -20,7 +20,6 @@ package app.ui.panes
 	{
 		// Constants
 		public static const EVENT_SWATCH_CHANGED	: String = "event_swatch_changed";
-		public static const EVENT_DEFAULT_CLICKED	: String = "event_default_clicked";
 		public static const EVENT_COLOR_PICKED		: String = "event_color_picked";
 		public static const EVENT_EXIT				: String = "event_exit";
 		
