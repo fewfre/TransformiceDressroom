@@ -82,7 +82,7 @@ package app.ui.panes
 			
 			// Grid
 			yy += 15; xx = 15;
-			var grid:Grid = this.addItem( new Grid(385, 5).setXY(xx,yy) ) as Grid;
+			var grid:Grid = this.addItem( new Grid(385, GameAssets.extraBack.length).setXY(xx,yy) ) as Grid;
 			
 			this.buttons_back = new Vector.<PushButton>();
 			for each(var itemData:ItemData in GameAssets.extraBack) {
@@ -94,6 +94,8 @@ package app.ui.panes
 				}
 			}
 
+			yy = grid.y + grid.cellSize + 5;
+			grid = this.addItem( new Grid(385, 5).setXY(xx,yy) ) as Grid;
 			this.button_hand = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:new GameAssets.extraObjectWand.itemClass(), obj_scale:1.5, id:i++ });
 			grid.add(this.button_hand);
 			if(character.getItemData(ItemType.OBJECT)) { this.button_hand.toggleOn(); }

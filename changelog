@@ -1,3 +1,8 @@
+== V1.27c - 16 December 2023 ==
+- Ice cheese added
+- Cheese now has has the row to itself, with wand/shield moved to it's own row
+
+
 == V1.27b - 6 December 2023 ==
 - Fixed bug causing color history to stay in delete mode when it shouldn't.
 - Fixed layering bug with slots/accessories in child elements

@@ -62,8 +62,9 @@ function(){
 	extraBackHand = new ItemData(ItemType.PAW_BACK, null, { itemClass:$HandButtonShield, classMap:{ PatteG_1:$HandButtonShield } });
 	extraBack = new <ItemData>[
 		new ItemData(ItemType.BACK, 'frm', { itemClass:Fewf.assets.getLoadedClass("FromageSouris"), classMap:{ ClipGrosse:Fewf.assets.getLoadedClass("FromageSouris") } }),
-		new ItemData(ItemType.BACK, 'stnk', { itemClass:$FromageStinky, classMap:{ ClipGrosse:$FromageStinky } }),
-		new ItemData(ItemType.BACK, 'cit', { itemClass:$FromageSourisCitrouille, classMap:{ ClipGrosse:$FromageSourisCitrouille } })
+		new ItemData(ItemType.BACK, 'stnk', { itemClass:$FromageSourisPasFrais, classMap:{ ClipGrosse:$FromageSourisPasFrais } }),
+		new ItemData(ItemType.BACK, 'cit', { itemClass:$FromageSourisCitrouille, classMap:{ ClipGrosse:$FromageSourisCitrouille } }),
+		new ItemData(ItemType.BACK, 'glace', { itemClass:$FromageSourisGlace, classMap:{ ClipGrosse:$FromageSourisGlace } }),
 	];
 },
 function(){
