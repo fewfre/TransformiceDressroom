@@ -29,7 +29,6 @@ package app.ui.panes
 		
 		public var characterHead	: Character;
 		public var webpButton		: GameButton;
-		public var outfitsButton	: SpriteButton;
 		
 		// Constructor
 		public function OtherTabPane(pCharacter:Character) {
@@ -117,8 +116,6 @@ package app.ui.panes
 				webpButton.addChild(webpText);
 				webpButton.addEventListener(MouseEvent.CLICK, _onSaveAsWebpClicked);
 			}
-			
-			outfitsButton = addItem(new SpriteButton({ x:15, y:310, width:70, height:70, obj:new $Outfit(), obj_scale:0.85 })) as SpriteButton;
 			
 			UpdatePane();
 		}
