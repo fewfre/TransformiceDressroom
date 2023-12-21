@@ -57,6 +57,15 @@ package app.ui
 			}
 			return null;
 		}
+		
+		public function getSelectedTabEventName() : String {
+			for(var i:int = 0; i < tabs.length; i++) {
+				if (tabs[i].pushed) {
+					return tabs[i].data.event.toString();
+				}
+			}
+			return null;
+		}
 
 		private function untoggle(pTab:PushButton=null, pEvent:String=null) : void {
 			if (pTab != null && pTab.pushed) { return; }

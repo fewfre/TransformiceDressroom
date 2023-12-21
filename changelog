@@ -2,6 +2,7 @@
 - Ice cheese added
 - Cheese now has has the row to itself, with wand/shield moved to it's own row
 - Outfits button moved to below toolbar for easier access / to match shaman items app
+- (21 Dec) Small tweak to "back" behavior on "outfits" pane.
 
 
 == V1.27b - 6 December 2023 ==
@@ -14,7 +15,7 @@
 	- Fewf style share codes now include flag code if there is one
 - Fixed position/layer bug with Tail 67 (these tails hate me)
 - "Defaults" button on color picker now respects locks
-- [Cpde] Made `GameAssets.init` asynchronous to prevent a bit of the freeze-up during app initialization phase
+- [Code] Made `GameAssets.init` asynchronous to prevent a bit of the freeze-up during app initialization phase
 - [Bug] Fixed share code success/invalid message not being correct (2 bugs in 1!)
 
 
