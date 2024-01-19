@@ -179,7 +179,7 @@ package app.world.elements
 		
 		private function _parseParamsTfmOfficialSyntax(pCode:String) : Boolean {
 			try {
-				var arr = pCode.split(";");
+				var arr:Array = pCode.split(";");
 				// Check for wierd syntax where fur id isn't included (old account, or maybe haven't bought one yet?)
 				if(arr[0].indexOf(",") >= 0) {
 					arr = [ "1", arr[0] ];
@@ -187,8 +187,11 @@ package app.world.elements
 				_setParamToTypeTfmOfficialSyntax(ItemType.SKIN, arr[2] && arr[0]==1 ? arr[0]+"_"+arr[2] : arr[0], false);
 				
 				arr = arr[1].split(",");
+				// Add the `0` categories if an older shorter code
+				if(arr.length <= 10) { arr.splice(9, 0, "0"); arr.splice(10, 0, "0"); }
 				var tTypes:Vector.<ItemType> = ItemType.LOOK_CODE_ITEM_ORDER;
 				for(var i:int = 0; i < tTypes.length; i++) {
+					if(tTypes[i] === null) { continue; }
 					_setParamToTypeTfmOfficialSyntax(tTypes[i], arr[i]);
 				}
 			} catch(error:Error) { return false; };
@@ -271,6 +274,8 @@ package app.world.elements
 			var tTypes = ItemType.LOOK_CODE_ITEM_ORDER;
 			var tIds = [];
 			for(var i:int = 0; i < tTypes.length; i++) {
+				if(tTypes[i] === null) { tIds.push(0); continue; }
+				
 				var tData:ItemData = getItemData(tTypes[i]);
 				if(tData) {
 					var tColors:Vector.<uint> = getColors(tTypes[i]);

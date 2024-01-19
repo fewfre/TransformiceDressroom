@@ -28,7 +28,7 @@ package app.data
 			HEAD, HAIR, EARS, EYES, MOUTH, NECK, TAIL, CONTACTS, HAND, TATTOO, SKIN, POSE ];
 		
 		public static const LOOK_CODE_ITEM_ORDER : Vector.<ItemType> = new <ItemType>[
-			HEAD, EYES, EARS, MOUTH, NECK, HAIR, TAIL, CONTACTS, HAND, TATTOO]
+			HEAD, EYES, EARS, MOUTH, NECK, HAIR, TAIL, CONTACTS, HAND, null, null, TATTOO];
 		
 		// Enum Storage + Constructor
 		private var _value: String;
