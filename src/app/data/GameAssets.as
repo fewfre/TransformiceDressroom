@@ -61,10 +61,11 @@ function(){
 	extraObjectWand = new ItemData(ItemType.OBJECT, null, { itemClass:Fewf.assets.getLoadedClass("$Costume_9_1"), classMap:{ Arme_1:Fewf.assets.getLoadedClass("$Costume_9_1") } });
 	extraBackHand = new ItemData(ItemType.PAW_BACK, null, { itemClass:$HandButtonShield, classMap:{ PatteG_1:$HandButtonShield } });
 	extraBack = new <ItemData>[
-		new ItemData(ItemType.BACK, 'frm', { itemClass:Fewf.assets.getLoadedClass("FromageSouris"), classMap:{ ClipGrosse:Fewf.assets.getLoadedClass("FromageSouris") } }),
-		new ItemData(ItemType.BACK, 'stnk', { itemClass:$FromageSourisPasFrais, classMap:{ ClipGrosse:$FromageSourisPasFrais } }),
-		new ItemData(ItemType.BACK, 'cit', { itemClass:$FromageSourisCitrouille, classMap:{ ClipGrosse:$FromageSourisCitrouille } }),
-		new ItemData(ItemType.BACK, 'glace', { itemClass:$FromageSourisGlace, classMap:{ ClipGrosse:$FromageSourisGlace } }),
+		new ItemData(ItemType.BACK, 'frm', { itemClass:FromageSouris, classMap:{ ClipGrosse:FromageSouris } }),
+		new ItemData(ItemType.BACK, 'stnk', { itemClass:FromageSourisPasFrais, classMap:{ ClipGrosse:FromageSourisPasFrais } }),
+		new ItemData(ItemType.BACK, 'cit', { itemClass:FromageSourisCitrouille, classMap:{ ClipGrosse:FromageSourisCitrouille } }),
+		new ItemData(ItemType.BACK, 'glace', { itemClass:FromageSourisGlace, classMap:{ ClipGrosse:FromageSourisGlace } }),
+		new ItemData(ItemType.BACK, 'nounours', { itemClass:FromageSourisNounours, classMap:{ ClipGrosse:FromageSourisNounours } }),
 	];
 },
 function(){

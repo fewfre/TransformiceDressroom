@@ -2,8 +2,9 @@
 - Ice cheese added
 - Cheese now has has the row to itself, with wand/shield moved to it's own row
 - Outfits button moved to below toolbar for easier access / to match shaman items app
-- (21 Dec) Small tweak to "back" behavior on "outfits" pane.
-- (18 Jan) TFM share codes update to include missing values.
+- (21 Dec) Small tweak to "back" behavior on "outfits" pane
+- (18 Jan) TFM share codes update to include missing values
+- (15 Feb) Added new cheese + split cheese into a separate swc file
 
 
 == V1.27b - 6 December 2023 ==
