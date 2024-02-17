@@ -31,8 +31,8 @@ package app.data
 		
 		public static var accessorySlotBones:Dictionary;
 
-		public static var defaultSkinIndex:int;
-		public static var defaultPoseIndex:int;
+		private static var _defaultSkinIndex:int;
+		private static var _defaultPoseIndex:int;
 
 		public static var extraObjectWand:ItemData;
 		public static var extraBackHand:ItemData;
@@ -41,8 +41,8 @@ package app.data
 		// { type:ItemType, id:String, colorI:int }
 		public static var swatchHoverPreviewData:Object = null;
 
-		public static function get defaultSkin() : ItemData { return skins[defaultSkinIndex]; }
-		public static function get defaultPose() : ItemData { return poses[defaultPoseIndex]; }
+		public static function get defaultSkin() : ItemData { return skins[_defaultSkinIndex]; }
+		public static function get defaultPose() : ItemData { return poses[_defaultPoseIndex]; }
 
 		public static function init() : void {
 			var i:int;
@@ -93,7 +93,7 @@ package app.data
 					skins.push( new SkinData({ id:i }) );
 				}
 			}
-			defaultSkinIndex = 7;//FewfUtils.getIndexFromVectorWithKeyVal(skins, "id", ConstantsApp.DEFAULT_SKIN_ID);
+			_defaultSkinIndex = 7;//FewfUtils.getIndexFromVectorWithKeyVal(skins, "id", ConstantsApp.DEFAULT_SKIN_ID);
 
 			/*for(var i = 0; i < 7; i++) {
 				furs.push( new FurData( i, ItemType.COLOR ).initColor() );
@@ -118,7 +118,7 @@ package app.data
 			for(i = 0; i < tPoseClasses.length; i++) {
 				poses.push(new ItemData(ItemType.POSE, tPoseClasses[i], { itemClass:Fewf.assets.getLoadedClass( "Anim"+tPoseClasses[i] ) }));
 			}
-			defaultPoseIndex = 0;//FewfUtils.getIndexFromVectorWithKeyVal(poses, "id", ConstantsApp.DEFAULT_POSE_ID);
+			_defaultPoseIndex = 0;//FewfUtils.getIndexFromVectorWithKeyVal(poses, "id", ConstantsApp.DEFAULT_POSE_ID);
 		}
 
 		// pData = { after:String, pad:int, itemClassToClassMap:String OR Array }
@@ -342,8 +342,8 @@ package app.data
 
 		// pData = { ?pose:ItemData, ?skin:SkinData }
 		public static function getDefaultPoseSetup(pData:Object) : Pose {
-			var tPoseData = pData.pose ? pData.pose : poses[defaultPoseIndex];
-			var tSkinData = pData.skin ? pData.skin : skins[defaultSkinIndex];
+			var tPoseData = pData.pose ? pData.pose : defaultPose;
+			var tSkinData = pData.skin ? pData.skin : defaultSkin;
 
 			var tPose:Pose = new Pose(tPoseData);
 			tPose.apply(new <ItemData>[ tSkinData ], ShamanMode.OFF);

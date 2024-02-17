@@ -350,6 +350,7 @@ package app.world
 		}
 		
 		private function _useShareCode(pCode:String):void {
+			pCode = pCode.replace(/^\s+|\s+$/g, ''); // trim whitespace
 			if(pCode.indexOf("?") > -1) {
 				pCode = pCode.substr(pCode.indexOf("?") + 1, pCode.length);
 			}
@@ -360,7 +361,14 @@ package app.world
 			_removeItem(ItemType.POSE);
 			
 			// Now update pose
-			character.parseParams(pCode);
+			if(pCode.indexOf('ITEMFILTER') == 0) {
+				_parseItemFilteringShareCode(pCode);
+				// Remove everything again to make sure "defaults" are correctly selected
+				for each(var tType:ItemType in ItemType.LAYERING) { _removeItem(tType); }
+				_removeItem(ItemType.POSE);
+			} else {
+				character.parseParams(pCode);
+			}
 			character.updatePose();
 			
 			for each(var tType:ItemType in ItemType.TYPES_WITH_SHOP_PANES) { _refreshButtonCustomizationForItemData(character.getItemData(tType)); }
@@ -368,6 +376,17 @@ package app.world
 			// now update the infobars
 			_updateUIBasedOnCharacter();
 			(_paneManager.getPane(TAB_OTHER) as OtherTabPane).updateButtonsBasedOnCurrentData();
+		}
+		
+		private function _parseItemFilteringShareCode(pCode:String) : void {
+			var pParams = new URLVariables();
+			pParams.decode(pCode);
+			for each(var tType:ItemType in ItemType.TYPES_WITH_SHOP_PANES) {
+				var typeParamKey:String = tType.toString(), paramVal:String = pParams[typeParamKey];
+				if(paramVal != null) {
+					getTabByType(tType).filterItemIds(paramVal == '' ? [] : paramVal.split(','));
+				}
+			}
 		}
 
 		private function _onPlayerAnimationToggle(pEvent:Event):void {
@@ -405,22 +424,21 @@ package app.world
 
 		private function _onItemToggled(pEvent:FewfEvent) : void {
 			var tType:ItemType = pEvent.data.type;
-			var tItemList:Vector.<ItemData> = GameAssets.getItemDataListByType(tType);
 			var tInfoBar:ShopInfoBar = getInfoBarByType(tType);
 
 			// De-select all buttons that aren't the clicked one.
-			var tButtons:Array = getButtonArrayByType(tType);
+			var tPane:ShopCategoryPane = getTabByType(tType);
+			var tButtons:Array = tPane.buttons;
 			for(var i:int = 0; i < tButtons.length; i++) {
-				if(tButtons[i].data.id != pEvent.data.id) {
+				if(tButtons[i].data.itemID != pEvent.data.itemID) {
 					if (tButtons[i].pushed) { tButtons[i].toggleOff(); }
 				}
 			}
 
-			var tButton:PushButton = tButtons[pEvent.data.id];
-			var tData:ItemData;
+			var tButton:PushButton = tPane.getButtonWithItemData(pEvent.data.itemData);
 			// If clicked button is toggled on, equip it. Otherwise remove it.
 			if(tButton.pushed) {
-				tData = tItemList[pEvent.data.id];
+				var tData:ItemData = GameAssets.getItemFromTypeID(tType, pEvent.data.itemID);
 				setCurItemID(tType, tButton.id);
 				this.character.setItemData(tData);
 
@@ -458,13 +476,12 @@ package app.world
 			if(pType == ItemType.BACK || pType == ItemType.PAW_BACK || pType == ItemType.OBJECT) {
 				this.character.removeItem(pType);
 			}
-			var tTabPane = getTabByType(pType);
+			var tTabPane:ShopCategoryPane = getTabByType(pType);
 			if(!tTabPane || tTabPane.infoBar.hasData == false) { return; }
 
 			// If item has a default value, toggle it on. otherwise remove item.
-			if(pType == ItemType.SKIN || pType == ItemType.POSE) {
-				var tDefaultIndex = (pType == ItemType.POSE ? GameAssets.defaultPoseIndex : GameAssets.defaultSkinIndex);
-				tTabPane.buttons[tDefaultIndex].toggleOn();
+			if(!!tTabPane.defaultItemData) {
+				tTabPane.getButtonWithItemData(tTabPane.defaultItemData).toggleOn();
 			} else {
 				this.character.removeItem(pType);
 				tTabPane.infoBar.removeInfo();
@@ -485,8 +502,8 @@ package app.world
 		}
 
 		private function _randomItemOfType(pType:ItemType, pSetToDefault:Boolean=false) : void {
-			var pane:TabPane = getTabByType(pType);
-			if(pane.infoBar.isRefreshLocked) { return; }
+			var pane:ShopCategoryPane = getTabByType(pType);
+			if(pane.infoBar.isRefreshLocked || !pane.buttons.length) { return; }
 			
 			if(!pSetToDefault) {
 				var tLength = pane.buttons.length;
@@ -496,11 +513,8 @@ package app.world
 			} else {
 				_removeItem(pType);
 				// Set to default values for required types
-				if(pType == ItemType.SKIN) {
-					if(pane.flagOpen) pane.scrollItemIntoView(pane.buttons[GameAssets.defaultSkinIndex]);
-				}
-				else if(pType == ItemType.POSE) {
-					if(pane.flagOpen) pane.scrollItemIntoView(pane.buttons[GameAssets.defaultPoseIndex]);
+				if(!!pane.defaultItemData) {
+					if(pane.flagOpen) pane.scrollItemIntoView(pane.getButtonWithItemData(pane.defaultItemData));
 				}
 			}
 		}

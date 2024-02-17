@@ -81,7 +81,7 @@ package app.ui
 			rioIcon.scaleX = rioIcon.scaleY = 0.75;
 			
 			removeItemOverlay.addEventListener(MouseEvent.MOUSE_OVER, function():void{
-				if(hasData && GameAssets.skins[GameAssets.defaultSkinIndex] != data && GameAssets.poses[GameAssets.defaultPoseIndex]) {
+				if(hasData && !GameAssets.defaultSkin.matches(data) && GameAssets.defaultPose.matches(data)) {
 					rioVisual.alpha = 1;
 				}
 			});
