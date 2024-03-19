@@ -5,6 +5,7 @@
 - (21 Dec) Small tweak to "back" behavior on "outfits" pane
 - (18 Jan) TFM share codes update to include missing values
 - (15 Feb) Added new cheese + split cheese into a separate swc file
+- (19 Mar 2024) Fixed contact using eyelash as a fallback attachment
 
 
 == V1.27b - 6 December 2023 ==

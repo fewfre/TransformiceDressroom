@@ -54,7 +54,7 @@ function(){ mouth = _setupCostumeList(ItemType.MOUTH, "$Costume_3_", { itemClass
 function(){ neck = _setupCostumeList(ItemType.NECK, "$Costume_4_", { itemClassToClassMap:"Tete_1" }); },
 function(){ hair = _setupCostumeList(ItemType.HAIR, "$Costume_5_", { itemClassToClassMap:"Tete_1" }); },
 function(){ tail = _setupCostumeList(ItemType.TAIL, "$Costume_6_", { itemClassToClassMap:"Boule_1" }); },
-function(){ contacts = _setupCostumeList(ItemType.CONTACTS, "$Costume_7_", { itemClassToClassMap:["Oeil_1", "OeilVide_1"] }); },
+function(){ contacts = _setupCostumeList(ItemType.CONTACTS, "$Costume_7_", { itemClassToClassMap:["Oeil_1"] }); },
 function(){ hands = _setupCostumeList(ItemType.HAND, "$Costume_8_", { itemClassToClassMap:"Gant_1" }); },
 function(){ tattoo = _setupCostumeList(ItemType.TATTOO, "$Costume_11_", { itemClassToClassMap:"CuisseD_1" }); },
 function(){
