@@ -278,7 +278,7 @@ package com.fewfre.utils
 		
 		public static function saveAsSpriteSheet(mc:MovieClip, pName:String, scale:Number=1) {
 			var sheetData = convertMovieClipToSpriteSheet(mc, scale);
-			saveImageDataToDevice(sheetData.bitmapData, pName, 'png');
+			saveImageDataToDevice(sheetData.bitmapData, pName+"_"+sheetData.frameWidth+"x"+sheetData.frameHeight+"_"+sheetData.framesCount+"frames", 'png');
 		}
 		
 		// Converts the image to a PNG bitmap and prompts the user to save.
