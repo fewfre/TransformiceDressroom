@@ -87,8 +87,11 @@ package app.ui.buttons
 		}
 		
 		override protected function _onMouseUp(pEvent:MouseEvent) : void {
-			if(!_flagEnabled || (!this.allowToggleOff && this.pushed)) { return; }
-			toggle();
+			if(!_flagEnabled) { return; }
+			var pOn = null;
+			// if toggle off enabled, then still allow clicking the button again to refire event
+			if(!this.allowToggleOff && this.pushed) { pOn = true; }
+			toggle(pOn);
 			super._onMouseUp(pEvent);
 		}
 		

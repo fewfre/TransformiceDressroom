@@ -24,8 +24,12 @@ package app.data
 			// SKIN, NECK, HAIR, MOUTH, HEAD, EARS, CONTACTS, EYES, TAIL, HAND, OBJECT, BACK, PAW_BACK ];
 			SKIN, TATTOO, HEAD, MOUTH, HAIR, NECK, EARS, CONTACTS, EYES, TAIL, HAND, OBJECT, BACK, PAW_BACK ];
 		
+		// Which ones have panes, and the order the tabs appear in
 		public static const TYPES_WITH_SHOP_PANES : Vector.<ItemType> = new <ItemType>[
-			HEAD, HAIR, EARS, EYES, MOUTH, NECK, TAIL, CONTACTS, HAND, TATTOO, SKIN, POSE ];
+			SKIN, HEAD, EARS, EYES, MOUTH, NECK, TAIL, HAIR, CONTACTS, TATTOO, HAND, POSE ];
+		
+		public static const TYPES_WITH_SHARE_FILTER_PANES : Vector.<ItemType> = new <ItemType>[
+			HEAD, HAIR, EARS, EYES, MOUTH, NECK, TAIL, CONTACTS, HAND, TATTOO, SKIN ];
 		
 		public static const LOOK_CODE_ITEM_ORDER : Vector.<ItemType> = new <ItemType>[
 			HEAD, EYES, EARS, MOUTH, NECK, HAIR, TAIL, CONTACTS, HAND, TATTOO]

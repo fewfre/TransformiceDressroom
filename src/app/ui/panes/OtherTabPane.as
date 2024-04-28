@@ -30,6 +30,7 @@ package app.ui.panes
 		public var characterHead	: Character;
 		public var webpButton		: GameButton;
 		public var outfitsButton	: SpriteButton;
+		public var itemFilterButton	: SpriteButton;
 		
 		// Constructor
 		public function OtherTabPane(pCharacter:Character) {
@@ -117,6 +118,7 @@ package app.ui.panes
 			}
 			
 			outfitsButton = addItem(new SpriteButton({ x:15, y:310, width:70, height:70, obj:new $Outfit(), obj_scale:0.85 })) as SpriteButton;
+			itemFilterButton = addItem(new SpriteButton({ x:90, y:310, width:70, height:70, obj:new $Lock(), obj_scale:0.85 })) as SpriteButton;
 			
 			UpdatePane();
 		}

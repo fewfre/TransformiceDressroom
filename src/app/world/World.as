@@ -30,27 +30,30 @@ package app.world
 	public class World extends MovieClip
 	{
 		// Storage
-		internal var character		: Character;
-		internal var _paneManager	: PaneManager;
+		private var character		: Character;
+		private var _paneManager	: PaneManager;
 
-		internal var shopTabs		: ShopTabList;
-		internal var _toolbox		: Toolbox;
-		internal var linkTray		: LinkTray;
-		internal var trashConfirmScreen	: TrashConfirmScreen;
-		internal var _langScreen	: LangScreen;
+		private var shopTabs		: ShopTabList;
+		private var _toolbox		: Toolbox;
+		private var linkTray		: LinkTray;
+		private var trashConfirmScreen	: TrashConfirmScreen;
+		private var _langScreen	: LangScreen;
 
-		internal var button_hand	: PushButton;
-		internal var button_back	: PushButton;
-		internal var button_backHand: PushButton;
+		private var button_hand	: PushButton;
+		private var button_back	: PushButton;
+		private var button_backHand: PushButton;
 
-		internal var currentlyColoringType:ItemType=null;
-		internal var configCurrentlyColoringType:String;
+		private var currentlyColoringType:ItemType=null;
+		private var configCurrentlyColoringType:String;
+		private var _itemFilteringShowTab:Boolean = false;
+		private var _itemFilteringSelectionModeOn:Boolean = false;
 		
 		// Constants
 		public static const COLOR_PANE_ID:String = "colorPane";
 		public static const TAB_OTHER:String = "other";
 		public static const TAB_CONFIG:String = "config";
 		public static const TAB_OUTFITS:String = "outfits";
+		public static const TAB_ITEM_FILTERING:String = "filtering";
 		public static const CONFIG_COLOR_PANE_ID:String = "configColorPane";
 		public static const COLOR_FINDER_PANE_ID:String = "colorFinderPane";
 		public static const WORN_ITEMS_PANE_ID:String = "WORN_ITEMS_PANE_ID";
@@ -67,6 +70,7 @@ package app.world
 		
 		private function _buildWorld(pStage:Stage) {
 			GameAssets.init();
+			ShareCodeFilteringData.init();
 			
 			/****************************
 			* Create Character
@@ -94,26 +98,9 @@ package app.world
 				.appendTo(this).drawAsTray();
 			_paneManager = tShop.addChild(new PaneManager()) as PaneManager;
 			
-			var tabs:Vector.<Object> = new <Object>[
-				{ text:"tab_furs", event:ItemType.SKIN.toString() },
-				{ text:"tab_head", event:ItemType.HEAD.toString() },
-				{ text:"tab_ears", event:ItemType.EARS.toString() },
-				{ text:"tab_eyes", event:ItemType.EYES.toString() },
-				{ text:"tab_mouth", event:ItemType.MOUTH.toString() },
-				{ text:"tab_neck", event:ItemType.NECK.toString() },
-				{ text:"tab_tail", event:ItemType.TAIL.toString() },
-				{ text:"tab_hair", event:ItemType.HAIR.toString() },
-				{ text:"tab_contacts", event:ItemType.CONTACTS.toString() },
-				{ text:"tab_tattoo", event:ItemType.TATTOO.toString() },
-				{ text:"tab_hand", event:ItemType.HAND.toString() },
-				{ text:"tab_poses", event:ItemType.POSE.toString() },
-				{ text:"tab_other", event:TAB_OTHER }
-			];
-			if(ConstantsApp.CONFIG_TAB_ENABLED) {
-				tabs.unshift({ text:"tab_config", event:TAB_CONFIG });
-			}
-			this.shopTabs = new ShopTabList(70, ConstantsApp.APP_HEIGHT, tabs).setXY(375, 10).appendTo(this);
+			this.shopTabs = new ShopTabList(70, ConstantsApp.APP_HEIGHT).setXY(375, 10).appendTo(this);
 			this.shopTabs.addEventListener(ShopTabList.TAB_CLICKED, _onTabClicked);
+			_populateShopTabs();
 
 			// Toolbox
 			_toolbox = new Toolbox({
@@ -146,6 +133,9 @@ package app.world
 			*****************************/
 			for each(var tType:ItemType in ItemType.TYPES_WITH_SHOP_PANES) {
 				_paneManager.addPane(tType.toString(), _setupItemPane(tType));
+				if(tType != ItemType.POSE) {
+					_paneManager.addPane("filter_"+tType.toString(), _setupItemPaneForFiltering(tType));
+				}
 				// Based on what the character is wearing at start, toggle on the appropriate buttons.
 				getTabByType(tType).toggleGridButtonWithData( character.getItemData(tType) );
 			}
@@ -173,6 +163,9 @@ package app.world
 			tPaneOther.shamanColorBlueButton.addEventListener(ButtonBase.CLICK, function(pEvent:Event){ _setConfigShamanColor(0x95D9D6); });
 			tPaneOther.shamanColorPinkButton.addEventListener(ButtonBase.CLICK, function(pEvent:Event){ _setConfigShamanColor(0xFCA6F1); });
 			tPaneOther.outfitsButton.addEventListener(ButtonBase.CLICK, function(pEvent:Event){ _paneManager.openPane(TAB_OUTFITS); });
+			tPaneOther.itemFilterButton.addEventListener(ButtonBase.CLICK, function(pEvent:Event){
+				_getAndOpenItemFilteringPane().initFilterSelectionMode();
+			});
 			tPaneOther = null;
 			
 			var tPane:TabPane = null;
@@ -193,6 +186,22 @@ package app.world
 			tPane = _paneManager.addPane(WORN_ITEMS_PANE_ID, new WornItemsPane(character, _goToItem));
 			tPane.infoBar.colorWheel.addEventListener(MouseEvent.MOUSE_UP, function(pEvent:Event){ _paneManager.openPane(TAB_OTHER); });
 			
+			// Item Filtering Pane
+			tPane = _paneManager.addPane(TAB_ITEM_FILTERING, new ItemFilteringPane());
+			tPane.addEventListener(ItemFilteringPane.EVENT_FILTER_MODE, function(pEvent:FewfEvent){
+				_itemFilteringSelectionModeOn = pEvent.data.filterModeOn;
+				_populateShopTabs();
+				if(!_itemFilteringSelectionModeOn) _updateAllShopPaneFilters();
+				_getAndOpenItemFilteringPane();
+			});
+			tPane.addEventListener(ItemFilteringPane.EVENT_STOP_FILTERING, function(pEvent:FewfEvent){
+				_itemFilteringShowTab = false;
+				_itemFilteringSelectionModeOn = false;
+				_clearItemFiltering();
+				_populateShopTabs();
+				shopTabs.toggleTabOn(TAB_OTHER);
+			});
+			
 			// Color Picker Pane
 			tPane = _paneManager.addPane(COLOR_PANE_ID, new ColorPickerTabPane({}));
 			tPane.addEventListener(ColorPickerTabPane.EVENT_COLOR_PICKED, _onColorPickChanged);
@@ -205,7 +214,7 @@ package app.world
 			});
 			
 			// Color Finder Pane
-			tPane = _paneManager.addPane(COLOR_FINDER_PANE_ID, new ColorFinderPane({ }));
+			tPane = _paneManager.addPane(COLOR_FINDER_PANE_ID, new ColorFinderPane({}));
 			tPane.addEventListener(ColorFinderPane.EVENT_EXIT, _onColorFinderBackClicked);
 			tPane.infoBar.removeItemOverlay.addEventListener(MouseEvent.CLICK, function(e){
 				_onColorFinderBackClicked(e);
@@ -234,6 +243,58 @@ package app.world
 				tPane.infoBar.eyeDropButton.addEventListener(ButtonBase.CLICK, function(){ _eyeDropButtonClicked(pType); });
 			}
 			return tPane;
+		}
+
+		private function _setupItemPaneForFiltering(pType:ItemType) : ShopCategoryPaneForFiltering {
+			var tPane:ShopCategoryPaneForFiltering = new ShopCategoryPaneForFiltering(pType);
+			tPane.addEventListener(ShopCategoryPane.ITEM_TOGGLED, _onItemToggled);
+			tPane.addEventListener(ShopCategoryPane.DEFAULT_SKIN_COLOR_BTN_CLICKED, function(){ _colorButtonClicked(pType); });
+			
+			// Grid Management Events
+			tPane.infoBar.randomizeButton.addEventListener(ButtonBase.CLICK, function(){ _randomItemOfType(pType); });
+			tPane.infoBar.rightItemButton.addEventListener(ButtonBase.CLICK, function(){ _traversePaneButtonGrid(tPane, true); });
+			tPane.infoBar.leftItemButton.addEventListener(ButtonBase.CLICK, function(){ _traversePaneButtonGrid(tPane, false); });
+			return tPane;
+		}
+		
+		private function _shouldShowShopTab(type:ItemType) : Boolean {
+			// Skin & pose have defaults, so always show - also need to list before other check since poses don't have filtering
+			return type == ItemType.POSE || type == ItemType.SKIN
+				|| !_itemFilteringShowTab || ShareCodeFilteringData.getSelectedIds(type).length > 0;
+		}
+		
+		private function _populateShopTabs() {
+			var tabs:Vector.<Object>;
+			if(_itemFilteringSelectionModeOn) {
+				tabs = new <Object>[
+					{ text:"tab_filtering", event:TAB_ITEM_FILTERING },
+					{ text:"tab_furs", event:"filter_"+ItemType.SKIN.toString() },
+					{ text:"tab_head", event:"filter_"+ItemType.HEAD.toString() },
+					{ text:"tab_ears", event:"filter_"+ItemType.EARS.toString() },
+					{ text:"tab_eyes", event:"filter_"+ItemType.EYES.toString() },
+					{ text:"tab_mouth", event:"filter_"+ItemType.MOUTH.toString() },
+					{ text:"tab_neck", event:"filter_"+ItemType.NECK.toString() },
+					{ text:"tab_tail", event:"filter_"+ItemType.TAIL.toString() },
+					{ text:"tab_hair", event:"filter_"+ItemType.HAIR.toString() },
+					{ text:"tab_contacts", event:"filter_"+ItemType.CONTACTS.toString() },
+					{ text:"tab_tattoo", event:"filter_"+ItemType.TATTOO.toString() },
+					{ text:"tab_hand", event:"filter_"+ItemType.HAND.toString() }
+				];
+			} else {
+				tabs = new Vector.<Object>();
+				if(_itemFilteringShowTab)           tabs.push({ text:"tab_filtering", event:TAB_ITEM_FILTERING });
+				if(ConstantsApp.CONFIG_TAB_ENABLED) tabs.push({ text:"tab_config", event:TAB_CONFIG });
+				
+				for each(var type:ItemType in ItemType.TYPES_WITH_SHOP_PANES) {
+					if(!_shouldShowShopTab(type)) continue;
+					// Some i18n ids don't match the type string, so manually handling it here
+					var i18nStr : String = type == ItemType.SKIN ? 'furs' : type == ItemType.HAND ? 'hand' : type == ItemType.POSE ? 'poses' : type.toString();
+					tabs.push({ text:"tab_"+i18nStr, event:type.toString() });
+				}
+				tabs.push({ text:"tab_other", event:TAB_OTHER });
+			}
+			
+			this.shopTabs.populate(tabs);
 		}
 
 		private function _onMouseWheel(pEvent:MouseEvent) : void {
@@ -361,11 +422,10 @@ package app.world
 			_removeItem(ItemType.POSE);
 			
 			// Now update pose
-			if(pCode.indexOf('ITEMFILTER') == 0) {
-				_parseItemFilteringShareCode(pCode);
-				// Remove everything again to make sure "defaults" are correctly selected
-				for each(var tType:ItemType in ItemType.LAYERING) { _removeItem(tType); }
-				_removeItem(ItemType.POSE);
+			if(pCode.indexOf(ShareCodeFilteringData.PREFIX) == 0) {
+				ShareCodeFilteringData.parseShareCode(pCode);
+				_updateAllShopPaneFilters();
+				_getAndOpenItemFilteringPane().initWithShareCode();
 			} else {
 				character.parseParams(pCode);
 			}
@@ -378,14 +438,17 @@ package app.world
 			(_paneManager.getPane(TAB_OTHER) as OtherTabPane).updateButtonsBasedOnCurrentData();
 		}
 		
-		private function _parseItemFilteringShareCode(pCode:String) : void {
-			var pParams = new URLVariables();
-			pParams.decode(pCode);
+		private function _updateAllShopPaneFilters() : void {
+			for each(var tType:ItemType in ItemType.TYPES_WITH_SHARE_FILTER_PANES) {
+				getTabByType(tType).filterItemIds(ShareCodeFilteringData.getSelectedIds(tType));
+				// Remove everything again to make sure "defaults" are correctly selected (ex: if fur 0 isn't a selected one)
+				_removeItem(tType);
+			}
+		}
+		
+		private function _clearItemFiltering() : void {
 			for each(var tType:ItemType in ItemType.TYPES_WITH_SHOP_PANES) {
-				var typeParamKey:String = tType.toString(), paramVal:String = pParams[typeParamKey];
-				if(paramVal != null) {
-					getTabByType(tType).filterItemIds(paramVal == '' ? [] : paramVal.split(','));
-				}
+				getTabByType(tType).filterItemIds(null);
 			}
 		}
 
@@ -443,7 +506,14 @@ package app.world
 				this.character.setItemData(tData);
 
 				tInfoBar.addInfo( tData, GameAssets.getColoredItemImage(tData) );
-				tInfoBar.showColorWheel(GameAssets.getNumOfCustomColors(tButton.Image as MovieClip) > 0);
+				var showColorWheel : Boolean = false;
+				if(GameAssets.getNumOfCustomColors(tButton.Image as MovieClip) > 0) {
+					showColorWheel = true;
+					if(_itemFilteringShowTab) {
+						showColorWheel = ShareCodeFilteringData.isCustomizable(tType, tData.id);
+					}
+				}
+				tInfoBar.showColorWheel(showColorWheel);
 			} else {
 				_removeItem(tType);
 			}
@@ -523,7 +593,7 @@ package app.world
 			var itemType:ItemType = pItemData.type;
 			
 			shopTabs.UnpressAll();
-			shopTabs.getTabButton(itemType.toString()).toggleOn(true);
+			shopTabs.toggleTabOn(itemType.toString());
 			var tPane:ShopCategoryPane = getTabByType(itemType);
 			var itemBttn:PushButton = tPane.toggleGridButtonWithData( character.getItemData(itemType) );
 			tPane.scrollItemIntoView(itemBttn);
@@ -623,6 +693,15 @@ package app.world
 				getTabByType(pType).selectedButtonIndex = pID;
 			}
 		//}END Get TabPane data
+		
+		//{REGION ItemFiltering Tab
+			private function _getAndOpenItemFilteringPane() : ItemFilteringPane {
+				_itemFilteringShowTab = true;
+				_populateShopTabs();
+				shopTabs.toggleTabOn(TAB_ITEM_FILTERING);
+				return _paneManager.getPane(TAB_ITEM_FILTERING) as ItemFilteringPane;
+			}
+		//}END ItemFiltering Tab
 
 		//{REGION Color Tab
 			private function _onColorPickChanged(pEvent:FewfEvent):void {

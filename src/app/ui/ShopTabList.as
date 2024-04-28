@@ -11,30 +11,35 @@ package app.ui
 		public static const TAB_CLICKED			: String = "shop_tab_clicked";
 
 		// Storage
-		public var tabs: Vector.<PushButton>;
+		private var _bg: RoundedRectangle;
+		public var tabs: Vector.<PushButton> = new Vector.<PushButton>();
 
 		// Constructor
 		// pTabDataList = Vector.<{ text:String, event:String }> }
-		public function ShopTabList(pWidth:Number, pHeight:Number, pTabDataList:Vector.<Object>) {
-			// Background
-			new RoundedRectangle({ width:pWidth, height:pHeight }).appendTo(this).drawAsTray();
-
-			// Tabs
+		public function ShopTabList(pWidth:Number, pHeight:Number) {
+			_bg = new RoundedRectangle({ width:pWidth, height:pHeight }).appendTo(this).drawAsTray();
+			
+			tabs = new Vector.<PushButton>();
+		}
+		public function setXY(pX:Number, pY:Number) : ShopTabList { x = pX; y = pY; return this; }
+		public function appendTo(target:Sprite): ShopTabList { target.addChild(this); return this; }
+		
+		// Array<{ text:String, event:String }
+		public function populate(pTabs:Vector.<Object>) : ShopTabList {
 			var tXMargin:Number = 5;
 			var tYMargin:Number = 5;
-			var tHeight:Number = Math.min(65, (pHeight - tYMargin) / pTabDataList.length - tYMargin);
-			var tWidth:Number = pWidth - (tXMargin * 2);
+			var tHeight:Number = Math.min(65, (_bg.Height - tYMargin) / pTabs.length - tYMargin);
+			var tWidth:Number = _bg.Width - (tXMargin * 2);
 			var tYSpacing:Number = tHeight + tYMargin;
 			var tX:Number = tXMargin;
 			var tY:Number = tYMargin - tYSpacing; // Go back one space for when for loop adds one space.
 
-			tabs = new Vector.<PushButton>();
-			for(var i:int = 0; i < pTabDataList.length; i++) {
-				_createTab(pTabDataList[i].text, tX, tY += tYSpacing, tWidth, tHeight, pTabDataList[i].event);
+			_clearAll();
+			for(var i = 0; i < pTabs.length; i++) {
+				_createTab(pTabs[i].text, tX, tY += tYSpacing, tWidth, tHeight, pTabs[i].event);
 			}
+			return this;
 		}
-		public function setXY(pX:Number, pY:Number) : ShopTabList { x = pX; y = pY; return this; }
-		public function appendTo(target:Sprite): ShopTabList { target.addChild(this); return this; }
 
 		private function _createTab(pText:String, pX:Number, pY:Number, pWidth:Number, pHeight:Number, pEvent:String) : PushButton {
 			var tBttn:PushButton = new PushButton({ x:pX, y:pY, width:pWidth, height:pHeight, text:pText, allowToggleOff:false, data:{ event:pEvent } });
@@ -44,9 +49,13 @@ package app.ui
 			tabs.push(tBttn);
 			return tBttn;
 		}
-
-		public function UnpressAll() : void {
-			untoggle();
+		
+		// Clear current tabs (if any)
+		private function _clearAll() : void {
+			for(var i = 0; i < tabs.length; i++) {
+				removeChild(tabs[i]);
+			}
+			tabs = new Vector.<PushButton>();
 		}
 		
 		public function getTabButton(pEventName:String) : PushButton {
@@ -57,9 +66,17 @@ package app.ui
 			}
 			return null;
 		}
+		
+		public function toggleTabOn(pEventName:String, pFireEvent:Boolean = true) : void {
+			getTabButton(pEventName).toggleOn(pFireEvent);
+		}
+
+		public function UnpressAll() : void {
+			untoggle();
+		}
 
 		private function untoggle(pTab:PushButton=null, pEvent:String=null) : void {
-			if (pTab != null && pTab.pushed) { return; }
+			// if (pTab != null && pTab.pushed) { return; }
 
 			for(var i:int = 0; i < tabs.length; i++) {
 				if (tabs[i].pushed && tabs[i] != pTab) {

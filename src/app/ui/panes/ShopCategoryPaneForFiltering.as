@@ -13,27 +13,32 @@ package app.ui.panes
 	import app.world.data.ItemData;
 	import com.fewfre.display.Grid;
 	import com.fewfre.utils.FewfUtils;
+	import app.data.ShareCodeFilteringData;
+	import flash.display.Sprite;
 
-	public class ShopCategoryPane extends TabPane
+	public class ShopCategoryPaneForFiltering extends TabPane
 	{
 		private var _type: ItemType;
 		private var _itemDataVector: Vector.<ItemData>;
-		private var _defaultItemData: ItemData;
+		private var _dirty : Boolean;
 		
-		private var _defaultSkinColorButton: ScaleButton;
+		private var _actionsGrid : Grid;
 		
 		public function get type():ItemType { return _type; }
-		public function get defaultItemData():ItemData { return _defaultItemData; }
 		
 		public static const ITEM_TOGGLED : String = 'ITEM_TOGGLED';
 		public static const DEFAULT_SKIN_COLOR_BTN_CLICKED : String = 'DEFAULT_SKIN_COLOR_BTN_CLICKED';
 		
 		// Constructor
-		public function ShopCategoryPane(pType:ItemType) {
+		public function ShopCategoryPaneForFiltering(pType:ItemType) {
 			super();
 			this._type = pType;
-			this.addInfoBar( new ShopInfoBar({ showEyeDropButton:_type!=ItemType.POSE, showGridManagementButtons:true }) );
-			_setupGrid(GameAssets.getItemDataListByType(_type));
+			this.addInfoBar( new ShopInfoBar({ showEyeDropButton:false, showGridManagementButtons:true }) );
+			this.infoBar.hideImageCont();
+			this.infoBar.colorWheel.visible = false;
+				_setupGrid(GameAssets.getItemDataListByType(_type));
+				
+			_actionsGrid = addItem(new Grid(grid.width, grid.columns).setXY(grid.x,grid.y)) as Grid;
 			
 			infoBar.reverseButton.addEventListener(ButtonBase.CLICK, _onReverseGrid);
 		}
@@ -58,7 +63,7 @@ package app.ui.panes
 			return null;
 		}
 		
-		public function filterItemIds(pIds:Vector.<String>) : void {
+		public function filterItemIds(pIds:Array) : void {
 			var list:Vector.<ItemData> = GameAssets.getItemDataListByType(_type);
 			if(pIds) { list = list.filter(function(data:ItemData, i, a){ return pIds.indexOf(data.id) >= 0 }) }
 			_setupGrid(list);
@@ -69,7 +74,6 @@ package app.ui.panes
 		*****************************/
 		private function _setupGrid(pItemList:Vector.<ItemData>) : void {
 			_itemDataVector = pItemList;
-			_setDefaultItemDataFromList(pItemList);
 			var buttonPerRow:int = 6;
 			var scale:Number = 1;
 			if(_type == ItemType.SKIN || _type == ItemType.POSE) {
@@ -78,82 +82,81 @@ package app.ui.panes
 			}
 
 			var grid:Grid = this.grid;
-			if(!grid) { grid = this.addGrid( new Grid(385, buttonPerRow) ).setXY(15, 5); }
+			if(!grid) {
+				grid = this.addGrid( new Grid(385, buttonPerRow) ).setXY(15, 5);
+				_actionsGrid = addItem(new Grid(385, grid.columns).setXY(grid.x,grid.y)) as Grid;
+			}
 			grid.reset();
+			_actionsGrid.reset();
 			buttons = [];
 
-			var itemData : ItemData, shopItem : MovieClip, shopItemButton : PushButton;
+			var itemData : ItemData, shopItem : MovieClip, shopItemButton : PushButton, customizeButton : Sprite;
 			for(var i:int = 0; i < pItemList.length; i++) {
 				itemData = pItemList[i];
 				shopItem = GameAssets.getItemImage(itemData);
 				shopItem.scaleX = shopItem.scaleY = scale;
+				
+				customizeButton = _addCustomizeButton(itemData);
+				_actionsGrid.add(customizeButton);
 
-				shopItemButton = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:shopItem, id:i, data:{ type:_type, id:i, itemID:itemData.id, itemData:itemData } });
+				shopItemButton = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:shopItem, id:i, data:{ type:_type, id:i, itemID:itemData.id, itemData:itemData, customizeButton:customizeButton } });
 				grid.add(shopItemButton);
+				
 				this.buttons.push(shopItemButton);
+				shopItemButton.alpha = 0.5;
+				customizeButton.visible = false;
+				if(ShareCodeFilteringData.hasId(_type, itemData.id)) {
+					shopItemButton.alpha = 1;
+					shopItemButton.toggleOn(false);
+					customizeButton.visible = true;
+				}
 				shopItemButton.addEventListener(PushButton.STATE_CHANGED_AFTER, _onItemToggled);
 			}
-			
-			if(_type !== ItemType.POSE) {
-				// Start these ones reversed by default
-				grid.reverse();
-			}
-			_addDefaultSkinColorButtonIfSkinPane();
+			grid.reverse();
+			_actionsGrid.reverse();
 			
 			this.UpdatePane();
-		}
-		private function _setDefaultItemDataFromList(list:Vector.<ItemData>) : void {
-			_defaultItemData = null;
-			if(_type == ItemType.SKIN) {
-				_defaultItemData = GameAssets.defaultSkin;
-			} else if(_type == ItemType.POSE) {
-				_defaultItemData = GameAssets.defaultPose;
-			}
-			// if filtering item & default item data is not in the current ItemData list, then pick a new one
-			if(_defaultItemData && list && !FewfUtils.vectorFind(list, function(d:ItemData){ return _defaultItemData.matches(d) })) {
-				_defaultItemData = list.length ? list[0] : null;
-			}
 		}
 		
 		private function _getButtonWithItemId(pId:String) : PushButton {
 			return FewfUtils.arrayFind(buttons, function(b:PushButton){ return b.data.itemID == pId });
 		}
 		
-		private function _addDefaultSkinColorButtonIfSkinPane() : void {
-			if(_defaultSkinColorButton) {
-				_defaultSkinColorButton.parent.removeChild(_defaultSkinColorButton);
+		private function _addCustomizeButton(data:ItemData) : Sprite {
+			if(!data.colors || data.colors.length == 0) { return new MovieClip(); }
+			
+			var btn : PushButton = new PushButton({ width:20, height:20, obj:new $ColorWheel(), data:{ itemData:data } });
+			btn.alpha = 0.35;
+			if(ShareCodeFilteringData.isCustomizable(data.type, data.id)) {
+				btn.alpha = 1;
+				btn.toggleOn(false);
 			}
-			_defaultSkinColorButton = null;
-			if(_type == ItemType.SKIN && !!_getButtonWithItemId(GameAssets.defaultSkin.id)) {
-				// Customizeable fur color button
-				// cannot attach to button due to main button eating mouse events
-				_defaultSkinColorButton = grid.addChild(new ScaleButton({ obj:new $ColorWheel(), obj_scale:0.5 })) as ScaleButton;
-				_defaultSkinColorButton.addEventListener(ButtonBase.CLICK, function():void{
-					var btn:PushButton = _getButtonWithItemId(GameAssets.defaultSkin.id);
-					btn.toggleOn();
-					dispatchEvent(new Event(DEFAULT_SKIN_COLOR_BTN_CLICKED));
-				});
-				_repositionDefaultSkinColorButtonIfExists();
-			}
-		}
-		private function _repositionDefaultSkinColorButtonIfExists() : void {
-			if(_defaultSkinColorButton) {
-				var tSkinButton = _getButtonWithItemId(GameAssets.defaultSkin.id);
-				_defaultSkinColorButton.x = tSkinButton.x + 60;
-				_defaultSkinColorButton.y = tSkinButton.y + 12;
-			}
+			btn.addEventListener(PushButton.STATE_CHANGED_AFTER, function(e:FewfEvent){
+				ShareCodeFilteringData.setCustomizable(data.type, data.id, (e.target as PushButton).pushed);
+				btn.alpha = ShareCodeFilteringData.isCustomizable(data.type, data.id) ? 1 : 0.35;
+			});
+			return btn;
 		}
 		
 		/****************************
 		* Events
 		*****************************/
 		private function _onItemToggled(e:FewfEvent) : void {
-			dispatchEvent(new FewfEvent(ITEM_TOGGLED, e.data));
+			var btn:PushButton = e.target as PushButton;
+			btn.alpha = btn.pushed ? 1 : 0.5;
+			if(btn.pushed) {
+				ShareCodeFilteringData.addId(btn.data.type, btn.data.itemID);
+				btn.data.customizeButton.visible = true;
+			} else {
+				ShareCodeFilteringData.removeId(btn.data.type, btn.data.itemID);
+				btn.data.customizeButton.visible = false;
+			}
+			// dispatchEvent(new FewfEvent(ITEM_TOGGLED, e.data));
 		}
 		
 		private function _onReverseGrid(e:Event) : void {
 			this.grid.reverse();
-			_repositionDefaultSkinColorButtonIfExists();
+			this._actionsGrid.reverse();
 		}
 	}
 }
