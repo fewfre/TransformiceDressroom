@@ -66,27 +66,31 @@ package app.data
 		////////////////////////////
 		// Share Code Methods
 		////////////////////////////
-		public static function parseShareCode(code:String) : void {
+		public static function parseShareCode(code:String) : Boolean {
 			reset();
 			code = code.replace(PREFIX, "");
 			
-			var pParams : URLVariables = new URLVariables();
-			pParams.decode(code);
-			for each(var type:ItemType in ItemType.TYPES_WITH_SHARE_FILTER_PANES) {
-				var paramVal:String = pParams[ type.toString() ];
-				if(paramVal != null) {
-					var paramIds : Array = paramVal == '' ? [] : paramVal.split(',');
-					for each(var val:String in paramIds) {
-						var id : String = val, customizable:Boolean = false;
-						if(id.indexOf(CUSTOMIZE_SYMBOL) > -1) {
-							id = id.replace(CUSTOMIZE_SYMBOL, '');
-							customizable = true;
+			try {
+				var pParams : URLVariables = new URLVariables();
+				pParams.decode(code);
+				for each(var type:ItemType in ItemType.TYPES_WITH_SHARE_FILTER_PANES) {
+					var paramVal:String = pParams[ type.toString() ];
+					if(paramVal != null) {
+						var paramIds : Array = paramVal == '' ? [] : paramVal.split(',');
+						for each(var val:String in paramIds) {
+							var id : String = val, customizable:Boolean = false;
+							if(id.indexOf(CUSTOMIZE_SYMBOL) > -1) {
+								id = id.replace(CUSTOMIZE_SYMBOL, '');
+								customizable = true;
+							}
+							addId(type, id);
+							setCustomizable(type, id, customizable);
 						}
-						addId(type, id);
-						setCustomizable(type, id, customizable);
 					}
 				}
 			}
+			catch (error:Error) { return false; };
+			return true;
 		}
 		
 		private static function _sortIds(a:String, b:String) : Number {

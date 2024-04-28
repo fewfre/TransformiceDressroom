@@ -1,21 +1,22 @@
 package com.fewfre.utils
 {
 	import com.fewfre.events.FewfEvent;
-	import flash.display.Loader;
-	import flash.display.MovieClip;
-	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
 	import flash.events.ProgressEvent;
-	import flash.external.ExternalInterface;
+	import flash.events.ErrorEvent;
+	import flash.events.EventDispatcher;
 	import flash.net.*;
-	import flash.system.ApplicationDomain;
-	import flash.system.LoaderContext;
+	import flash.display.Loader;
+	import flash.display.MovieClip;
+	import flash.display.Bitmap;
+	import flash.display.LoaderInfo;
+	import flash.display.BitmapData;
 	import flash.utils.Dictionary;
 	import flash.utils.setTimeout;
-	import flash.net.URLLoader;
+	import flash.external.ExternalInterface;
 	
-	public class AssetManager extends Sprite
+	public class AssetManager extends EventDispatcher
 	{
 		// Constants
 		public static const LOADING_FINISHED:String = "asset_loading_finished";
@@ -70,24 +71,18 @@ package com.fewfre.utils
 				if(_cacheBreaker && (Fewf.isExternallyLoaded ? true : ExternalInterface.call("eval", "window.location.href"))) {
 					pUrl += "?cb="+_cacheBreaker;
 				}
-				if(pOptions && pOptions.type) {
+				pOptions = pOptions || {};
+				if(pOptions.type) {
 					tType = pOptions.type;
 				}
 				switch(tType) {
 					case "swf":
 					case "swc":
-						var tLoader:Loader = new Loader();
-						tLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, function(e:Event):void{ _onAssetsLoaded(pIndex, e, arguments.callee); });//, _onAssetsLoaded);
-						tLoader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, function(e:Event):void{ _onLoadError(e as IOErrorEvent, arguments.callee); });//, _onLoadError);
-						tLoader.contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS, _onProgress);
-						var tRequest:URLRequest = new URLRequest(pUrl);
-						tRequest.requestHeaders.push(new URLRequestHeader("pragma", "no-cache"));
-						if(pOptions && pOptions.useCurrentDomain) {
-							var tLoaderContext:LoaderContext = new LoaderContext(false, ApplicationDomain.currentDomain);
-							tLoader.load(tRequest, tLoaderContext);
-						} else {
-							tLoader.load(tRequest);
-						}
+						var tLoader = new AssetManagerBinaryLoader();
+						tLoader.load(pUrl, pOptions.useCurrentDomain);
+						tLoader.addEventListener(Event.COMPLETE, function(e:Event):void{ _onAssetsLoaded(pIndex, tLoader, arguments.callee); });
+						tLoader.addEventListener(IOErrorEvent.IO_ERROR, _onLoadError);
+						tLoader.addEventListener(ProgressEvent.PROGRESS, _onProgress);
 						break;
 					case "json":
 						var tUrlLoader:URLLoader = new URLLoader();
@@ -116,10 +111,10 @@ package com.fewfre.utils
 				pLoader.removeEventListener(ProgressEvent.PROGRESS, _onProgress);
 			}
 			
-			private function _onAssetsLoaded(pIndex:int, e:Event, pOnComplete) : void {
+			private function _onAssetsLoaded(pIndex:int, l:AssetManagerBinaryLoader, pOnComplete) : void {
 				_loadedStuffCallbacks[pIndex] = function():void{
-					_applicationDomains.push( MovieClip(e.target.content).loaderInfo.applicationDomain );
-					_destroyAssetLoader(e.target.loader, pOnComplete);
+					_applicationDomains.push( l.applicationDomain );
+					l.destroy();
 				};
 				_checkIfLoadingDone();
 			}
@@ -132,15 +127,20 @@ package com.fewfre.utils
 				_checkIfLoadingDone();
 			}
 			
-			private function _onLoadError(e:IOErrorEvent, pOnComplete) : void {
-				trace("[AssetManager](_onLoadError) ERROR("+e.errorID+"): Was not able to load url: "+e.target.url);
-				_destroyAssetLoader(e.target.loader, pOnComplete);
+			private function _onLoadError(e:ErrorEvent) : void {
+				try {
+					trace("[AssetManager](_onLoadError) ERROR("+e.errorID+"): Was not able to load url: "+e.target.url);
+					Fewf.dispatcher.dispatchEvent(new ErrorEvent(ErrorEvent.ERROR, false, false, "["+e.type+":"+e.errorID+"] "+e.text));
+				} catch(err:Error) {}
+				// _destroyAssetLoader(e.target.loader, pOnComplete);
 				_checkIfLoadingDone();
 			}
 			
 			private function _onURLLoadError(e:IOErrorEvent, pUrl:String, pOnComplete) : void {
-				trace("[AssetManager](_onLoadError) ERROR("+e.errorID+"): Was not able to load url: "+pUrl);
-				_destroyURLLoader(e.target as URLLoader, pOnComplete);
+				try {
+					trace("[AssetManager](_onLoadError) ERROR("+e.errorID+"): Was not able to load url: "+pUrl);
+					_destroyURLLoader(e.target as URLLoader, pOnComplete);
+				} catch(err:Error) {}
 				_checkIfLoadingDone();
 			}
 			
@@ -168,18 +168,72 @@ package com.fewfre.utils
 		/****************************
 		* Access Assets
 		*****************************/
-			public function getData(pKey:String) : * {
-				return _loadedData[pKey];
+		public function getData(pKey:String) : * {
+			return _loadedData[pKey];
+		}
+		
+		public function getLoadedClass(pName:String, pTrace:Boolean=false) : Class {
+			for(var i:int = 0; i < _applicationDomains.length; i++) {
+				if(_applicationDomains[i].hasDefinition(pName)) {
+					return _applicationDomains[i].getDefinition( pName ) as Class;
+				}
 			}
-			
-			public function getLoadedClass(pName:String, pTrace:Boolean=false) : Class {
-				for(var i:int = 0; i < _applicationDomains.length; i++) {
-					if(_applicationDomains[i].hasDefinition(pName)) {
-						return _applicationDomains[i].getDefinition( pName ) as Class;
+			if(pTrace) { trace("[AssetManager](getLoadedClass) ERROR: No Linkage by name: "+pName); }
+			return null;
+		}
+		public function getLoadedMovieClip(pName:String, pDontReturnNull:Boolean=false, pTrace:Boolean=false) : MovieClip {
+			var tClass:Class = getLoadedClass(pName, pTrace);
+			return tClass ? new tClass() : (pDontReturnNull ? new MovieClip() : null);
+		}
+		
+		/****************************
+		* Bitmap Loader
+		*****************************/
+		public static const _DICT_getLoadedBitmapFromUrl:Dictionary = new Dictionary();
+		public static const _DICT_bitmapsNeedingToBeDrawnAfterImageLoaded:Dictionary = new Dictionary();
+		
+		public function lazyLoadImageUrlAsBitmap(pFilePath:String) : Bitmap {
+			var url:String = pFilePath.indexOf("http") == 0 ? pFilePath : ((Fewf.swfUrlBase || "https://projects.fewfre.com/a801/transformice/dressroom/")+"resources/" + pFilePath);
+			var tBitmap:Bitmap = new Bitmap();
+			if(_DICT_getLoadedBitmapFromUrl[url]) {
+				tBitmap.bitmapData = _DICT_getLoadedBitmapFromUrl[url];
+			} else {
+				if(_DICT_bitmapsNeedingToBeDrawnAfterImageLoaded[url]) {
+					_DICT_bitmapsNeedingToBeDrawnAfterImageLoaded[url].push(tBitmap);
+				} else {
+					_DICT_bitmapsNeedingToBeDrawnAfterImageLoaded[url] = new Array(tBitmap);
+					_createBitmapLoader(url);
+				}
+			}
+			return tBitmap;
+		}
+		
+		private function _createBitmapLoader(pUrl:String) : void {
+			try {
+				var tLoader:Loader = new Loader();
+				tLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, _onBitmapLazyLoaded);
+				// tLoader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, _onError_bitmapLazyLoader);
+				tLoader.load(new URLRequest(pUrl));
+			} catch(err:Error) {}
+		}
+		
+		private function _onBitmapLazyLoaded(e:Event) : void {
+			try {
+				var tLoader:Loader = null;
+				tLoader = (e.currentTarget as LoaderInfo).loader;
+				var tBitmapData:BitmapData = Bitmap(tLoader.content).bitmapData;
+				var tUrl:String = (e.currentTarget as LoaderInfo).url; // NOTE: future me, remember that this only works if not using cache breaker
+				_DICT_getLoadedBitmapFromUrl[tUrl] = tBitmapData;
+				
+				var tBitmapsNeedingDrawing:Array = _DICT_bitmapsNeedingToBeDrawnAfterImageLoaded[tUrl];
+				if(tBitmapsNeedingDrawing) {
+					delete _DICT_bitmapsNeedingToBeDrawnAfterImageLoaded[tUrl];
+					for(var i:int = 0; i < tBitmapsNeedingDrawing.length; i++) {
+						(tBitmapsNeedingDrawing[i] as Bitmap).bitmapData = tBitmapData;
+						(tBitmapsNeedingDrawing[i] as Bitmap).dispatchEvent(new Event(Event.COMPLETE));
 					}
 				}
-				if(pTrace) { trace("[AssetManager](getLoadedClass) ERROR: No Linkage by name: "+pName); }
-				return null;
-			}
+			} catch(err:Error) {}
+		}
 	}
 }

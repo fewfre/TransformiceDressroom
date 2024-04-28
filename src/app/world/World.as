@@ -69,7 +69,6 @@ package app.world
 		}
 		
 		private function _buildWorld(pStage:Stage) {
-			GameAssets.init();
 			ShareCodeFilteringData.init();
 			
 			/****************************
@@ -109,6 +108,9 @@ package app.world
 				onTrash:_onTrashButtonClicked, onShare:_onShareButtonClicked, onScale:_onScaleSliderChange,
 				onShareCodeEntered:_onShareCodeEntered
 			}).setXY(188, 28).appendTo(this);
+			
+			var tOutfitButton:ScaleButton = addChild(new ScaleButton({ x:_toolbox.x+167, y:_toolbox.y+12.5+21, width:25, height:25, origin:0.5, obj:new $Outfit(), obj_scale:0.4 })) as ScaleButton;
+			tOutfitButton.addEventListener(ButtonBase.CLICK, function(pEvent:Event){ _paneManager.openPane(TAB_OUTFITS); });
 			
 			var tLangButton:LangButton = addChild(new LangButton({ x:22, y:pStage.stageHeight-17, width:30, height:25, origin:0.5 })) as LangButton;
 			tLangButton.addEventListener(ButtonBase.CLICK, _onLangButtonClicked);
@@ -162,7 +164,6 @@ package app.world
 			tPaneOther.shamanColorPickerButton.addEventListener(ButtonBase.CLICK, function(pEvent:Event){ _shamanColorButtonClicked(); });
 			tPaneOther.shamanColorBlueButton.addEventListener(ButtonBase.CLICK, function(pEvent:Event){ _setConfigShamanColor(0x95D9D6); });
 			tPaneOther.shamanColorPinkButton.addEventListener(ButtonBase.CLICK, function(pEvent:Event){ _setConfigShamanColor(0xFCA6F1); });
-			tPaneOther.outfitsButton.addEventListener(ButtonBase.CLICK, function(pEvent:Event){ _paneManager.openPane(TAB_OUTFITS); });
 			tPaneOther.itemFilterButton.addEventListener(ButtonBase.CLICK, function(pEvent:Event){
 				_getAndOpenItemFilteringPane().initFilterSelectionMode();
 			});
@@ -171,7 +172,7 @@ package app.world
 			var tPane:TabPane = null;
 			// Outfit Pane
 			tPane = _paneManager.addPane(TAB_OUTFITS, new OutfitManagerTabPane(character, _useShareCode));
-			tPane.infoBar.colorWheel.addEventListener(MouseEvent.MOUSE_UP, function(pEvent:Event){ _paneManager.openPane(TAB_OTHER); });
+			tPane.infoBar.colorWheel.addEventListener(MouseEvent.MOUSE_UP, function(pEvent:Event){ _paneManager.openPane(shopTabs.getSelectedTabEventName()); });
 			// Grid Management Events
 			tPane.infoBar.rightItemButton.addEventListener(ButtonBase.CLICK, function(){ _traversePaneButtonGrid(_paneManager.getPane(TAB_OUTFITS), true); });
 			tPane.infoBar.leftItemButton.addEventListener(ButtonBase.CLICK, function(){ _traversePaneButtonGrid(_paneManager.getPane(TAB_OUTFITS), false); });
@@ -206,7 +207,6 @@ package app.world
 			// Color Picker Pane
 			tPane = _paneManager.addPane(COLOR_PANE_ID, new ColorPickerTabPane({}));
 			tPane.addEventListener(ColorPickerTabPane.EVENT_COLOR_PICKED, _onColorPickChanged);
-			tPane.addEventListener(ColorPickerTabPane.EVENT_DEFAULT_CLICKED, _onDefaultsButtonClicked);
 			tPane.addEventListener(ColorPickerTabPane.EVENT_PREVIEW_COLOR, _onColorPickHoverPreview);
 			tPane.addEventListener(ColorPickerTabPane.EVENT_EXIT, _onColorPickerBackClicked);
 			tPane.infoBar.removeItemOverlay.addEventListener(MouseEvent.CLICK, function(e){
@@ -232,6 +232,7 @@ package app.world
 			var tPane:ShopCategoryPane = new ShopCategoryPane(pType);
 			tPane.addEventListener(ShopCategoryPane.ITEM_TOGGLED, _onItemToggled);
 			tPane.addEventListener(ShopCategoryPane.DEFAULT_SKIN_COLOR_BTN_CLICKED, function(){ _colorButtonClicked(pType); });
+			tPane.addEventListener(ShopCategoryPane.FLAG_WAVE_CODE_CHANGED, function(e:FewfEvent){ character.flagWavingCode = e.data.code; });
 			
 			tPane.infoBar.colorWheel.addEventListener(ButtonBase.CLICK, function(){ _colorButtonClicked(pType); });
 			tPane.infoBar.removeItemOverlay.addEventListener(MouseEvent.CLICK, function(){ _removeItem(pType); });
@@ -401,18 +402,19 @@ package app.world
 			if(!pCode || pCode == "") { return; pProgressCallback("placeholder"); }
 			
 			try {
-				_useShareCode(pCode);
+				var parseSuccess:Boolean = _useShareCode(pCode);
 				
 				// Now tell code box that we are done
-				pProgressCallback("success");
+				pProgressCallback(parseSuccess ? "success" : "invalid");
 			}
 			catch (error:Error) {
 				pProgressCallback("invalid");
 			};
 		}
 		
-		private function _useShareCode(pCodeIn:String):void {
-			var pCode : String = pCodeIn.replace(/^\s+|\s+$/g, ''); // trim whitespace
+		private function _useShareCode(pCodeIn:String) : Boolean {
+			pCodeIn = pCodeIn.replace(/^\s+|\s+$/g, ''); // trim whitespace
+			var pCode : String = pCodeIn;
 			if(pCode.indexOf("?") > -1) {
 				pCode = pCode.substr(pCode.indexOf("?") + 1, pCode.length);
 			}
@@ -423,12 +425,13 @@ package app.world
 			_removeItem(ItemType.POSE);
 			
 			// Now update pose
+			var parseSuccess:Boolean = false;
 			if(pCodeIn.indexOf(ShareCodeFilteringData.PREFIX) == 0) {
 				ShareCodeFilteringData.parseShareCode(pCodeIn);
 				_updateAllShopPaneFilters();
 				_getAndOpenItemFilteringPane().initWithShareCode();
 			} else {
-				character.parseParams(pCode);
+				parseSuccess = character.parseParams(pCode);
 			}
 			character.updatePose();
 			
@@ -437,6 +440,8 @@ package app.world
 			// now update the infobars
 			_updateUIBasedOnCharacter();
 			(_paneManager.getPane(TAB_OTHER) as OtherTabPane).updateButtonsBasedOnCurrentData();
+			
+			return parseSuccess;
 		}
 		
 		private function _updateAllShopPaneFilters() : void {
@@ -491,6 +496,7 @@ package app.world
 				// Based on what the character is wearing at start, toggle on the appropriate buttons.
 				tPane.toggleGridButtonWithData( character.getItemData(tType) );
 			}
+			getTabByType(ItemType.POSE).flagWaveInput.text = character.flagWavingCode || "";
 		}
 
 		private function _onItemToggled(pEvent:FewfEvent) : void {
@@ -712,22 +718,13 @@ package app.world
 		//}END ItemFiltering Tab
 
 		//{REGION Color Tab
-			private function _onColorPickChanged(pEvent:FewfEvent):void {
-				var color:uint = uint(pEvent.data.color);
-				var pane = _paneManager.getPane(COLOR_PANE_ID) as ColorPickerTabPane;
-				if(pEvent.data.randomizedAll) {
-					this.character.getItemData(this.currentlyColoringType).colors = pane.getAllColors();
+			private function _onColorPickChanged(e:FewfEvent):void {
+				if(e.data.allUpdated) {
+					this.character.getItemData(this.currentlyColoringType).colors = e.data.allColors;
 				} else {
-					this.character.getItemData(this.currentlyColoringType).colors[pane.selectedSwatch] = color;
+					this.character.getItemData(this.currentlyColoringType).colors[e.data.colorIndex] = uint(e.data.color);
 				}
 				_refreshSelectedItemColor(this.currentlyColoringType);
-			}
-
-			private function _onDefaultsButtonClicked(pEvent:Event) : void {
-				this.character.getItemData(this.currentlyColoringType).setColorsToDefault();
-				_refreshSelectedItemColor(this.currentlyColoringType);
-				var pane = _paneManager.getPane(COLOR_PANE_ID) as ColorPickerTabPane;
-				pane.setupSwatches( this.character.getColors(this.currentlyColoringType) );
 			}
 
 			private function _onColorPickHoverPreview(pEvent:FewfEvent) : void {
@@ -791,7 +788,7 @@ package app.world
 				var tData:ItemData = getInfoBarByType(pType).data;
 				_paneManager.getPane(COLOR_PANE_ID).infoBar.addInfo( tData, GameAssets.getItemImage(tData) );
 				this.currentlyColoringType = pType;
-				(_paneManager.getPane(COLOR_PANE_ID) as ColorPickerTabPane).setupSwatches( this.character.getColors(pType) );
+				(_paneManager.getPane(COLOR_PANE_ID) as ColorPickerTabPane).init( tData.colors, tData.defaultColors );
 				_paneManager.openPane(COLOR_PANE_ID);
 				_refreshSelectedItemColor(pType);
 			}
@@ -817,8 +814,7 @@ package app.world
 			}
 
 			private function _onConfigColorPickChanged(pEvent:FewfEvent):void {
-				var tVal:uint = uint(pEvent.data.color);
-				_setConfigShamanColor(tVal);
+				_setConfigShamanColor(uint(pEvent.data.color));
 			}
 			
 			private function _setConfigShamanColor(val:uint) : void {
@@ -829,7 +825,7 @@ package app.world
 
 			private function _shamanColorButtonClicked(/*pType:String, pColor:int*/) : void {
 				/*this.configCurrentlyColoringType = pType;*/
-				(_paneManager.getPane(CONFIG_COLOR_PANE_ID) as ColorPickerTabPane).setupSwatches( new <uint>[ character.shamanColor ] );
+				(_paneManager.getPane(CONFIG_COLOR_PANE_ID) as ColorPickerTabPane).init( new <uint>[ character.shamanColor ], null );
 				_paneManager.openPane(CONFIG_COLOR_PANE_ID);
 			}
 		//}END Color Tab

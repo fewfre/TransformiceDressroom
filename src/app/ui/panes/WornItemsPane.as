@@ -54,6 +54,7 @@ package app.ui.panes
 			
 			_addItemButton( _character.getItemData(ItemType.SKIN) );
 			for each(var itemType:ItemType in ItemType.LOOK_CODE_ITEM_ORDER) {
+				if(itemType === null) { continue; }
 				_addItemButton( _character.getItemData(itemType) );
 			}
 			

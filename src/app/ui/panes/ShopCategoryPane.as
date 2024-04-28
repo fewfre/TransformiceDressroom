@@ -1,6 +1,7 @@
 package app.ui.panes
 {
 	
+	import app.ui.common.FancyInput;
 	import app.ui.ShopInfoBar;
 	import app.data.ItemType;
 	import app.data.GameAssets;
@@ -8,11 +9,15 @@ package app.ui.panes
 	import app.ui.buttons.PushButton;
 	import com.fewfre.events.FewfEvent;
 	import com.fewfre.display.ButtonBase;
+	import com.fewfre.utils.FewfUtils;
 	import app.ui.buttons.ScaleButton;
 	import flash.events.Event;
 	import app.world.data.ItemData;
 	import com.fewfre.display.Grid;
-	import com.fewfre.utils.FewfUtils;
+	import flash.events.TextEvent;
+	import flash.events.KeyboardEvent;
+	import flash.events.FocusEvent;
+	import flash.text.TextFormat;
 
 	public class ShopCategoryPane extends TabPane
 	{
@@ -21,12 +26,15 @@ package app.ui.panes
 		private var _defaultItemData: ItemData;
 		
 		private var _defaultSkinColorButton: ScaleButton;
+		private var _flagWaveInput: FancyInput;
+		public function get flagWaveInput() : FancyInput { return _flagWaveInput; }
 		
 		public function get type():ItemType { return _type; }
 		public function get defaultItemData():ItemData { return _defaultItemData; }
 		
 		public static const ITEM_TOGGLED : String = 'ITEM_TOGGLED';
 		public static const DEFAULT_SKIN_COLOR_BTN_CLICKED : String = 'DEFAULT_SKIN_COLOR_BTN_CLICKED';
+		public static const FLAG_WAVE_CODE_CHANGED : String = 'FLAG_WAVE_CODE_CHANGED';
 		
 		// Constructor
 		public function ShopCategoryPane(pType:ItemType) {
@@ -135,12 +143,46 @@ package app.ui.panes
 				});
 				_repositionDefaultSkinColorButtonIfExists();
 			}
+			if(_type == ItemType.POSE) {
+				// Flag waving code text field
+				// cannot attach to button due to main button eating mouse events
+				_flagWaveInput = new FancyInput({ width:grid.cellSize-8, height:16, padding:2 });
+				
+				// Placeholder
+				_flagWaveInput.placeholderTextBase.setUntranslatedText('/f __');
+				_flagWaveInput.placeholderTextBase.x += 14;
+				
+				// Center Text
+				var tFormat:TextFormat = new TextFormat();
+				tFormat.align = 'center';
+				_flagWaveInput.field.defaultTextFormat = tFormat;
+				
+				grid.addChild(_flagWaveInput);
+				_flagWaveInput.field.addEventListener(KeyboardEvent.KEY_UP, function(e):void{
+					dispatchEvent(new FewfEvent(FLAG_WAVE_CODE_CHANGED, { code:_flagWaveInput.text }));
+				});
+				// paste support
+				_flagWaveInput.field.addEventListener(TextEvent.TEXT_INPUT, function(e):void{
+					if(e.text.length <= 1) return;
+					dispatchEvent(new FewfEvent(FLAG_WAVE_CODE_CHANGED, { code:e.text }));
+				});
+				// select pose if textbox clicked
+				_flagWaveInput.field.addEventListener(FocusEvent.FOCUS_IN, function():void{
+					buttons[18].toggleOn();
+				});
+				_repositionDefaultSkinColorButtonIfExists();
+			}
 		}
 		private function _repositionDefaultSkinColorButtonIfExists() : void {
 			if(_defaultSkinColorButton) {
 				var tSkinButton = _getButtonWithItemId(GameAssets.defaultSkin.id);
 				_defaultSkinColorButton.x = tSkinButton.x + 60;
 				_defaultSkinColorButton.y = tSkinButton.y + 12;
+			}
+			if(_flagWaveInput) {
+				var tPoseButton = buttons[18];
+				_flagWaveInput.x = tPoseButton.x + grid.cellSize/2 + 0.5;
+				_flagWaveInput.y = tPoseButton.y + 12;
 			}
 		}
 		

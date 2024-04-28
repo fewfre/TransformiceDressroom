@@ -1,5 +1,25 @@
+== V1.27c - 16 December 2023 ==
+- Ice cheese added
+- Cheese now has has the row to itself, with wand/shield moved to it's own row
+- Outfits button moved to below toolbar for easier access / to match shaman items app
+- (21 Dec) Small tweak to "back" behavior on "outfits" pane
+- (18 Jan) TFM share codes update to include missing values
+- (15 Feb) Added new cheese + split cheese into a separate swc file
+- (19 Mar 2024) Fixed contact using eyelash as a fallback attachment
+
+
 == V1.27b - 6 December 2023 ==
 - Fixed bug causing color history to stay in delete mode when it shouldn't.
+- Fixed layering bug with slots/accessories in child elements
+- Tweaked code to support items with embedded scripts that remove/replace mouse parts (Tail 69)
+- Rewrote `AssetManager` to be more inline with in-game (to fix another issue with Tail 69)
+- [Code] Added bitmap lazy loading
+- Add the ability to set the flag used in flag animation
+	- Fewf style share codes now include flag code if there is one
+- Fixed position/layer bug with Tail 67 (these tails hate me)
+- "Defaults" button on color picker now respects locks
+- [Code] Made `GameAssets.init` asynchronous to prevent a bit of the freeze-up during app initialization phase
+- [Bug] Fixed share code success/invalid message not being correct (2 bugs in 1!)
 
 
 == V1.27 - 2 November 2023 ==

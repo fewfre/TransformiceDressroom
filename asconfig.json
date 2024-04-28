@@ -9,6 +9,7 @@
 		"library-path": [
 			"fla/interface.swc",
 			"fla/assets.swc",
+			"fla/cheese.swc",
 			"C:/Program Files (x86)/Adobe/Adobe Flash CS6/Common/Configuration/ActionScript 3.0/libs",
 			"C:/Program Files (x86)/Adobe/Adobe Flash CS6/Common/Configuration/ActionScript 3.0/libs/flash.swc",
 			"C:/Program Files (x86)/Adobe/Adobe Flash CS6/Common/Configuration/ActionScript 3.0/libs/11.0/textLayout.swc"
