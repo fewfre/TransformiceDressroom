@@ -128,7 +128,7 @@ package app.ui.panes
 		}
 		
 		private function _addDefaultSkinColorButtonIfSkinPane() : void {
-			if(_defaultSkinColorButton) {
+			if(_defaultSkinColorButton && _defaultSkinColorButton.parent) {
 				_defaultSkinColorButton.parent.removeChild(_defaultSkinColorButton);
 			}
 			_defaultSkinColorButton = null;

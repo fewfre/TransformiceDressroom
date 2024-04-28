@@ -118,7 +118,8 @@ package app.ui.panes
 				webpButton.addEventListener(MouseEvent.CLICK, _onSaveAsWebpClicked);
 			}
 			
-			itemFilterButton = addItem(new SpriteButton({ x:90, y:310, width:70, height:70, obj:new $Lock(), obj_scale:0.85 })) as SpriteButton;
+			itemFilterButton = addItem(new SpriteButton({ x:xx, y:310, width:70, height:70, obj:new $Lock(), obj_scale:0.85 })) as SpriteButton;
+			itemFilterButton.alpha = 0;
 			
 			UpdatePane();
 		}

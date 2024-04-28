@@ -1,3 +1,8 @@
+== V1.28 - ?? 2024 ==
+- Added first draft of item filtering share code logic.
+	- Button for making a new one currently invisible on "Other" pane
+
+
 == V1.27c - 16 December 2023 ==
 - Ice cheese added
 - Cheese now has has the row to itself, with wand/shield moved to it's own row
