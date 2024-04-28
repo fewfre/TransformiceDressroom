@@ -6,6 +6,7 @@ package app.data
 	public final class ShareCodeFilteringData
 	{
 		public static const PREFIX:String = "ITEMFILTER?";
+		public static const CUSTOMIZE_SYMBOL:String = "¤";
 		
 		private static var _itemFilterMap:Dictionary;
 		private static var _itemCustomizableMap:Dictionary;
@@ -72,13 +73,13 @@ package app.data
 			var pParams : URLVariables = new URLVariables();
 			pParams.decode(code);
 			for each(var type:ItemType in ItemType.TYPES_WITH_SHARE_FILTER_PANES) {
-				var typeParamKey:String = type.toString(), paramVal:String = pParams[typeParamKey];
+				var paramVal:String = pParams[ type.toString() ];
 				if(paramVal != null) {
-					var arr : Array = paramVal == '' ? [] : paramVal.split(',');
-					for each(var val:String in arr) {
+					var paramIds : Array = paramVal == '' ? [] : paramVal.split(',');
+					for each(var val:String in paramIds) {
 						var id : String = val, customizable:Boolean = false;
-						if(id.indexOf('_c') > -1) {
-							id = id.replace('_c', '');
+						if(id.indexOf(CUSTOMIZE_SYMBOL) > -1) {
+							id = id.replace(CUSTOMIZE_SYMBOL, '');
 							customizable = true;
 						}
 						addId(type, id);
@@ -98,7 +99,7 @@ package app.data
 			for each(var tType:ItemType in ItemType.TYPES_WITH_SHARE_FILTER_PANES) {
 				var ids : Vector.<String> = getSelectedIds(tType).sort(_sortIds);
 				if(!!ids && ids.length > 0) {
-					pParams.push(pParams.toString()+"="+ids.map(function(id){ return id+(isCustomizable(tType, id) ? "_c" : '') }).join(','));
+					pParams.push(tType.toString()+"="+ids.map(function(id){ return id+(isCustomizable(tType, id) ? CUSTOMIZE_SYMBOL : '') }).join(','));
 				}
 			}
 			return pParams.length > 0 ? PREFIX + pParams.join('&') : '';

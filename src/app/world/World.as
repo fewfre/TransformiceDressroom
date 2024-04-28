@@ -197,6 +197,7 @@ package app.world
 			tPane.addEventListener(ItemFilteringPane.EVENT_STOP_FILTERING, function(pEvent:FewfEvent){
 				_itemFilteringShowTab = false;
 				_itemFilteringSelectionModeOn = false;
+				ShareCodeFilteringData.reset();
 				_clearItemFiltering();
 				_populateShopTabs();
 				shopTabs.toggleTabOn(TAB_OTHER);
@@ -410,8 +411,8 @@ package app.world
 			};
 		}
 		
-		private function _useShareCode(pCode:String):void {
-			pCode = pCode.replace(/^\s+|\s+$/g, ''); // trim whitespace
+		private function _useShareCode(pCodeIn:String):void {
+			var pCode : String = pCodeIn.replace(/^\s+|\s+$/g, ''); // trim whitespace
 			if(pCode.indexOf("?") > -1) {
 				pCode = pCode.substr(pCode.indexOf("?") + 1, pCode.length);
 			}
@@ -422,8 +423,8 @@ package app.world
 			_removeItem(ItemType.POSE);
 			
 			// Now update pose
-			if(pCode.indexOf(ShareCodeFilteringData.PREFIX) == 0) {
-				ShareCodeFilteringData.parseShareCode(pCode);
+			if(pCodeIn.indexOf(ShareCodeFilteringData.PREFIX) == 0) {
+				ShareCodeFilteringData.parseShareCode(pCodeIn);
 				_updateAllShopPaneFilters();
 				_getAndOpenItemFilteringPane().initWithShareCode();
 			} else {
@@ -440,7 +441,14 @@ package app.world
 		
 		private function _updateAllShopPaneFilters() : void {
 			for each(var tType:ItemType in ItemType.TYPES_WITH_SHARE_FILTER_PANES) {
-				getTabByType(tType).filterItemIds(ShareCodeFilteringData.getSelectedIds(tType));
+				// Remove encase existing item is a filtered one
+				_removeItem(tType);
+				
+				var ids : Vector.<String> = ShareCodeFilteringData.getSelectedIds(tType).concat();
+				if(tType == ItemType.SKIN && ids.length == 0) {
+					ids.push(GameAssets.defaultSkin.id);
+				}
+				getTabByType(tType).filterItemIds(ids);
 				// Remove everything again to make sure "defaults" are correctly selected (ex: if fur 0 isn't a selected one)
 				_removeItem(tType);
 			}
