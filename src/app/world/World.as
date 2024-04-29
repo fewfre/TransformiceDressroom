@@ -62,7 +62,7 @@ package app.world
 		public function World(pStage:Stage) {
 			super();
 			ConstantsApp.CONFIG_TAB_ENABLED = !!Fewf.assets.getData("config").username_lookup_url;
-			ConstantsApp.ANIMATION_DOWNLOAD_ENABLED = !!Fewf.assets.getData("config").spritesheet2gif_url && (Fewf.isExternallyLoaded || ExternalInterface.call("eval", "window.location.href") == null);
+			ConstantsApp.ANIMATION_DOWNLOAD_ENABLED = !!Fewf.assets.getData("config").spritesheet2gif_url && (Fewf.isExternallyLoaded || (ExternalInterface.available && ExternalInterface.call("eval", "window.location.href") == null));
 			_buildWorld(pStage);
 			pStage.addEventListener(MouseEvent.MOUSE_WHEEL, _onMouseWheel);
 			pStage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyDownListener);
@@ -427,7 +427,7 @@ package app.world
 			// Now update pose
 			var parseSuccess:Boolean = false;
 			if(pCodeIn.indexOf(ShareCodeFilteringData.PREFIX) == 0) {
-				ShareCodeFilteringData.parseShareCode(pCodeIn);
+				parseSuccess = ShareCodeFilteringData.parseShareCode(pCodeIn);
 				_updateAllShopPaneFilters();
 				_getAndOpenItemFilteringPane().initWithShareCode();
 			} else {
@@ -658,10 +658,9 @@ package app.world
 				
 				// Reset customizations
 				if(tItem != ItemType.POSE) {
-					var buttons = pane.buttons;
-					var dataList = GameAssets.getItemDataListByType(tItem);
+					var dataList:Vector.<ItemData> = GameAssets.getItemDataListByType(tItem);
 					
-					for(var i:int = 0; i < buttons.length; i++){
+					for(var i:int = 0; i < dataList.length; i++){
 						if(dataList[i].hasModifiedColors()) {
 							dataList[i].setColorsToDefault();
 							_refreshButtonCustomizationForItemData(dataList[i]);
@@ -773,12 +772,14 @@ package app.world
 				if(!data || data.type == ItemType.POSE) { return; }
 				
 				var pane:ShopCategoryPane = getTabByType(data.type);
-				var i:int = GameAssets.getItemIndexFromTypeID(data.type, data.id);
+				var btn:PushButton = pane.getButtonWithItemData(data);
+				
+				
 				if(data.type != ItemType.SKIN) {
 					var tItem:MovieClip = GameAssets.getColoredItemImage(data);
-					GameAssets.copyColor(tItem, pane.buttons[i].Image );
+					GameAssets.copyColor(tItem, btn.Image as MovieClip );
 				} else {
-					_replaceImageWithNewImage(pane.buttons[i], GameAssets.getColoredItemImage(data));
+					_replaceImageWithNewImage(btn, GameAssets.getColoredItemImage(data));
 				}
 			}
 
