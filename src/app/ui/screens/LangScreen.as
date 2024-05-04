@@ -65,18 +65,7 @@ package app.ui.screens
 			/****************************
 			* Close Button
 			*****************************/
-			var tCloseIcon = new MovieClip();
-			var tSize:Number = 10;
-			tCloseIcon.graphics.beginFill(0x000000, 0);
-			tCloseIcon.graphics.drawRect(-tSize*2, -tSize*2, tSize*4, tSize*4);
-			tCloseIcon.graphics.endFill();
-			tCloseIcon.graphics.lineStyle(8, 0xFFFFFF, 1, true);
-			tCloseIcon.graphics.moveTo(-tSize, -tSize);
-			tCloseIcon.graphics.lineTo(tSize, tSize);
-			tCloseIcon.graphics.moveTo(tSize, -tSize);
-			tCloseIcon.graphics.lineTo(-tSize, tSize);
-			
-			var tCloseButton:ScaleButton = addChild(new ScaleButton({ x:tWidth*0.5 - 5, y:-tHeight*0.5 + 5, obj:tCloseIcon })) as ScaleButton;
+			var tCloseButton:ScaleButton = addChild(new ScaleButton({ x:tWidth*0.5 - 5, y:-tHeight*0.5 + 5, obj:new $WhiteX() })) as ScaleButton;
 			tCloseButton.addEventListener(ButtonBase.CLICK, _onCloseClicked);
 		}
 		

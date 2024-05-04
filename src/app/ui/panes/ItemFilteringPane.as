@@ -25,13 +25,11 @@ package app.ui.panes
 	public class ItemFilteringPane extends TabPane
 	{
 		// Constants
-		public static const EVENT_FILTER_MODE	 : String = "event_filter_mode";
+		public static const EVENT_PREVIEW_ENABLED : String = "event_preview_enabled";
 		public static const EVENT_STOP_FILTERING : String = "event_stop_filtering";
+		public static const EVENT_RESET_FILTERING : String = "event_reset_filtering";
 		
 		// Storage
-		private var _modeButtonNormal:PushButton;
-		private var _modeButtonFilter:PushButton;
-		
 		private var _textCopyField		: TextField;
 		private var _textCopiedMessage	: TextBase;
 		private var _textCopyTween		: Tween;
@@ -41,25 +39,35 @@ package app.ui.panes
 			super();
 			var i:int = 0, xx:Number = 0, yy:Number = 5, tButton:GameButton, sizex:Number, sizey:Number, spacingx:Number;
 			
-			// Paste share code
-			xx = ConstantsApp.PANE_WIDTH/2; yy += 50; sizex = ConstantsApp.PANE_WIDTH * 0.6; sizey = 35;
-			_modeButtonNormal = addItem(new PushButton({ x:xx, y:yy, width:sizex, height:sizey, origin:0.5, text:"Use Filtered Items", data:{ filterModeOn:false }, allowToggleOff:false })) as PushButton;
-			yy += sizey + 15;
-			_modeButtonFilter = addItem(new PushButton({ x:xx, y:yy, width:sizex, height:sizey, origin:0.5, text:"Add Items To Filter", data:{ filterModeOn:true }, allowToggleOff:false })) as PushButton;
+			// Preview Button
+			xx = ConstantsApp.PANE_WIDTH/2; yy += 50; sizex = ConstantsApp.PANE_WIDTH * 0.9; sizey = 35;
+			new SpriteButton({ width:sizex, height:sizey, origin:0.5, text:"filtermode_preview_btn" })
+				.setXY(xx,yy).appendTo(this).on(ButtonBase.CLICK, _onPreviewButtonClicked);
 			
-			_modeButtonFilter.toggleOn(false);
-			_modeButtonNormal.addEventListener(PushButton.STATE_CHANGED_BEFORE, _onModeButtonClicked);
-			_modeButtonFilter.addEventListener(PushButton.STATE_CHANGED_BEFORE, _onModeButtonClicked);
+			// Description
+			yy = 125; xx = 2 + 5;
+			var desc:TextBase = new TextBase({ text:"filtermode_description", x:xx, y:yy, origin:0 });
+			desc.field.width = ConstantsApp.PANE_WIDTH - 5*2;
+			desc.field.wordWrap = true;
+			addChild(desc);
 			
-			yy += 55;
+			// Share code textbox
 			_addNewCopySection(ConstantsApp.APP_HEIGHT - 165);
 			
 			// Stop Filtering Button
-			sizex = ConstantsApp.PANE_WIDTH-20;
+			sizex = ConstantsApp.PANE_WIDTH/2 - 10;
 			sizey = 40;
 			yy = ConstantsApp.APP_HEIGHT - sizey/2 - 15;
-			var stopBtn = new DeleteButton({ x:10+sizex/2, y:yy, origin:0.5, width:sizex, height:sizey, obj:_newXIcon() });
+			xx = 10+sizex/2;
+			var stopBtn = new SpriteButton({ x:xx, y:yy, origin:0.5, width:sizex, height:sizey, obj:new $WhiteX() });
 			stopBtn.addEventListener(MouseEvent.CLICK, function(e):void{ dispatchEvent(new FewfEvent(EVENT_STOP_FILTERING)); });
+			addChild(stopBtn);
+			
+			// Trash Changes Button
+			yy = ConstantsApp.APP_HEIGHT - sizey/2 - 15;
+			xx += sizex/2+10+sizex/2;
+			var stopBtn = new DeleteButton({ x:xx, y:yy, origin:0.5, width:sizex, height:sizey, obj:new $Trash(), obj_scale:0.6 });
+			stopBtn.addEventListener(MouseEvent.CLICK, function(e):void{ dispatchEvent(new FewfEvent(EVENT_RESET_FILTERING)); });
 			addChild(stopBtn);
 			
 			UpdatePane();
@@ -118,34 +126,10 @@ package app.ui.panes
 		}
 		
 		/****************************
-		* Public
-		*****************************/
-		public function initFilterSelectionMode() : void {
-			_modeButtonFilter.toggleOn();
-		}
-		public function initWithShareCode() : void {
-			_modeButtonNormal.toggleOn();
-		}
-		
-		/****************************
 		* Private
 		*****************************/
-		private function _newXIcon(pSize:Number=10, pColor:uint=0xFFFFFF) : Sprite {
-			var tCloseIcon:Sprite = new Sprite();
-			tCloseIcon.graphics.beginFill(0x000000, 0);
-			tCloseIcon.graphics.drawRect(-pSize*2, -pSize*2, pSize*4, pSize*4);
-			tCloseIcon.graphics.endFill();
-			tCloseIcon.graphics.lineStyle(pSize*0.8, pColor, 1, true);
-			tCloseIcon.graphics.moveTo(-pSize, -pSize);
-			tCloseIcon.graphics.lineTo(pSize, pSize);
-			tCloseIcon.graphics.moveTo(pSize, -pSize);
-			tCloseIcon.graphics.lineTo(-pSize, pSize);
-			return tCloseIcon;
-		}
-		
-		private function _onModeButtonClicked(e:FewfEvent) : void {
-			_untoggle(new <PushButton>[_modeButtonNormal, _modeButtonFilter], e.target as PushButton);
-			dispatchEvent(new FewfEvent(EVENT_FILTER_MODE, { filterModeOn:e.data.filterModeOn }));
+		private function _onPreviewButtonClicked(e:Event) : void {
+			dispatchEvent(new FewfEvent(EVENT_PREVIEW_ENABLED));
 		}
 
 		private function _untoggle(pList:Vector.<PushButton>, pButton:PushButton=null) : void {

@@ -86,7 +86,13 @@ package app.ui.panes
 			}
 
 			var grid:Grid = this.grid;
-			if(!grid) { grid = this.addGrid( new Grid(385, buttonPerRow) ).setXY(15, 5); }
+			if(!grid) {
+				grid = this.addGrid( new Grid(385, buttonPerRow) ).setXY(15, 5);
+				if(_type !== ItemType.POSE) {
+					// Start these ones reversed by default
+					grid.reverse();
+				}
+			}
 			grid.reset();
 			buttons = [];
 
@@ -102,10 +108,6 @@ package app.ui.panes
 				shopItemButton.addEventListener(PushButton.STATE_CHANGED_AFTER, _onItemToggled);
 			}
 			
-			if(_type !== ItemType.POSE) {
-				// Start these ones reversed by default
-				grid.reverse();
-			}
 			_addDefaultSkinColorButtonIfSkinPane();
 			
 			this.UpdatePane();

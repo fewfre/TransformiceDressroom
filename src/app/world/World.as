@@ -45,8 +45,10 @@ package app.world
 
 		private var currentlyColoringType:ItemType=null;
 		private var configCurrentlyColoringType:String;
-		private var _itemFilteringShowTab:Boolean = false;
-		private var _itemFilteringSelectionModeOn:Boolean = false;
+		
+		private var _itemFiltering_filterEnabled : Boolean = false;
+		private var _itemFiltering_selectionModeOn : Boolean = false;
+		private var _giantFilterIcon : Sprite;
 		
 		// Constants
 		public static const COLOR_PANE_ID:String = "colorPane";
@@ -84,7 +86,13 @@ package app.world
 					parms = urlPath;
 				} catch (error:Error) { };
 			}
-
+			
+			_giantFilterIcon = new $FilterIcon();
+			_giantFilterIcon.scaleX = _giantFilterIcon.scaleY = 4;
+			_giantFilterIcon.x = 180; _giantFilterIcon.y = 180 + 50;
+			addChild(_giantFilterIcon);
+			_giantFilterIcon.visible = false;
+			
 			this.character = new Character(new <ItemData>[ GameAssets.defaultSkin, GameAssets.defaultPose ], parms)
 				.setXY(180, 275).setDragBounds(0+4, 73+4, 375-8, Fewf.stage.stageHeight-73-8).appendTo(this);
 			this.character.doubleClickEnabled = true;
@@ -106,7 +114,7 @@ package app.world
 				character:character,
 				onSave:_onSaveClicked, onAnimate:_onPlayerAnimationToggle, onRandomize:_onRandomizeDesignClicked,
 				onTrash:_onTrashButtonClicked, onShare:_onShareButtonClicked, onScale:_onScaleSliderChange,
-				onShareCodeEntered:_onShareCodeEntered
+				onShareCodeEntered:_onShareCodeEntered, onItemFilterClosed:_onExitItemFilteringMode
 			}).setXY(188, 28).appendTo(this);
 			
 			var tOutfitButton:ScaleButton = addChild(new ScaleButton({ x:_toolbox.x+167, y:_toolbox.y+12.5+21, width:25, height:25, origin:0.5, obj:new $Outfit(), obj_scale:0.4 })) as ScaleButton;
@@ -164,9 +172,7 @@ package app.world
 			tPaneOther.shamanColorPickerButton.addEventListener(ButtonBase.CLICK, function(pEvent:Event){ _shamanColorButtonClicked(); });
 			tPaneOther.shamanColorBlueButton.addEventListener(ButtonBase.CLICK, function(pEvent:Event){ _setConfigShamanColor(0x95D9D6); });
 			tPaneOther.shamanColorPinkButton.addEventListener(ButtonBase.CLICK, function(pEvent:Event){ _setConfigShamanColor(0xFCA6F1); });
-			tPaneOther.itemFilterButton.addEventListener(ButtonBase.CLICK, function(pEvent:Event){
-				_getAndOpenItemFilteringPane().initFilterSelectionMode();
-			});
+			tPaneOther.itemFilterButton.addEventListener(ButtonBase.CLICK, function(pEvent:Event){ _getAndOpenItemFilteringPane(); });
 			tPaneOther = null;
 			
 			var tPane:TabPane = null;
@@ -189,20 +195,9 @@ package app.world
 			
 			// Item Filtering Pane
 			tPane = _paneManager.addPane(TAB_ITEM_FILTERING, new ItemFilteringPane());
-			tPane.addEventListener(ItemFilteringPane.EVENT_FILTER_MODE, function(pEvent:FewfEvent){
-				_itemFilteringSelectionModeOn = pEvent.data.filterModeOn;
-				_populateShopTabs();
-				if(!_itemFilteringSelectionModeOn) _updateAllShopPaneFilters();
-				_getAndOpenItemFilteringPane();
-			});
-			tPane.addEventListener(ItemFilteringPane.EVENT_STOP_FILTERING, function(pEvent:FewfEvent){
-				_itemFilteringShowTab = false;
-				_itemFilteringSelectionModeOn = false;
-				ShareCodeFilteringData.reset();
-				_clearItemFiltering();
-				_populateShopTabs();
-				shopTabs.toggleTabOn(TAB_OTHER);
-			});
+			tPane.addEventListener(ItemFilteringPane.EVENT_PREVIEW_ENABLED, function(pEvent:FewfEvent){ _enableFilterMode(); });
+			tPane.addEventListener(ItemFilteringPane.EVENT_STOP_FILTERING, function(pEvent:FewfEvent){ _closeItemFilteringPane(); });
+			tPane.addEventListener(ItemFilteringPane.EVENT_RESET_FILTERING, function(pEvent:FewfEvent){ _resetItemFilteringPane(); });
 			
 			// Color Picker Pane
 			tPane = _paneManager.addPane(COLOR_PANE_ID, new ColorPickerTabPane({}));
@@ -262,12 +257,12 @@ package app.world
 		private function _shouldShowShopTab(type:ItemType) : Boolean {
 			// Skin & pose have defaults, so always show - also need to list before other check since poses don't have filtering
 			return type == ItemType.POSE || type == ItemType.SKIN
-				|| !_itemFilteringShowTab || ShareCodeFilteringData.getSelectedIds(type).length > 0;
+				|| !_itemFiltering_filterEnabled || ShareCodeFilteringData.getSelectedIds(type).length > 0;
 		}
 		
 		private function _populateShopTabs() {
 			var tabs:Vector.<Object>;
-			if(_itemFilteringSelectionModeOn) {
+			if(_itemFiltering_selectionModeOn && !_itemFiltering_filterEnabled) {
 				tabs = new <Object>[
 					{ text:"tab_filtering", event:TAB_ITEM_FILTERING },
 					{ text:"tab_furs", event:"filter_"+ItemType.SKIN.toString() },
@@ -284,8 +279,7 @@ package app.world
 				];
 			} else {
 				tabs = new Vector.<Object>();
-				if(_itemFilteringShowTab)           tabs.push({ text:"tab_filtering", event:TAB_ITEM_FILTERING });
-				if(ConstantsApp.CONFIG_TAB_ENABLED) tabs.push({ text:"tab_config", event:TAB_CONFIG });
+				if(ConstantsApp.CONFIG_TAB_ENABLED && !_itemFiltering_filterEnabled) tabs.push({ text:"tab_config", event:TAB_CONFIG });
 				
 				for each(var type:ItemType in ItemType.TYPES_WITH_SHOP_PANES) {
 					if(!_shouldShowShopTab(type)) continue;
@@ -427,9 +421,9 @@ package app.world
 			// Now update pose
 			var parseSuccess:Boolean = false;
 			if(pCodeIn.indexOf(ShareCodeFilteringData.PREFIX) == 0) {
+				_closeItemFilteringPane(); // If selection mode is active, end it
 				parseSuccess = ShareCodeFilteringData.parseShareCode(pCodeIn);
-				_updateAllShopPaneFilters();
-				_getAndOpenItemFilteringPane().initWithShareCode();
+				_enableFilterMode();
 			} else {
 				parseSuccess = character.parseParams(pCode);
 			}
@@ -442,6 +436,28 @@ package app.world
 			(_paneManager.getPane(TAB_OTHER) as OtherTabPane).updateButtonsBasedOnCurrentData();
 			
 			return parseSuccess;
+		}
+		
+		// Enables it using data already in ShareCodeFilteringData
+		private function _enableFilterMode() : void {
+			_itemFiltering_filterEnabled = true;
+			_toolbox.showItemFilterBanner();
+			_populateShopTabs();
+			_updateAllShopPaneFilters();
+			_showOrHideGiantFilterIcon();
+			// Select first tab available
+			shopTabs.tabs[0].toggleOn();
+		}
+		
+		private function _onExitItemFilteringMode(e:Event) : void { _exitFilterMode(); };
+		private function _exitFilterMode() : void {
+			_itemFiltering_filterEnabled = false;
+			_toolbox.hideItemFilterBanner();
+			_populateShopTabs();
+			_clearItemFiltering();
+			_showOrHideGiantFilterIcon();
+			// Select first tab available (needed since tabs repopulated)
+			shopTabs.tabs[0].toggleOn();
 		}
 		
 		private function _updateAllShopPaneFilters() : void {
@@ -463,6 +479,18 @@ package app.world
 			for each(var tType:ItemType in ItemType.TYPES_WITH_SHOP_PANES) {
 				getTabByType(tType).filterItemIds(null);
 			}
+		}
+		
+		private function _dirtyAllItemFilteringPanes() : void {
+			for each(var tType:ItemType in ItemType.TYPES_WITH_SHARE_FILTER_PANES) {
+				var pane:ShopCategoryPaneForFiltering = _paneManager.getPane("filter_"+tType.toString()) as ShopCategoryPaneForFiltering;
+				pane.dirtyMe();
+			}
+		}
+		
+		private function _showOrHideGiantFilterIcon() : void {
+			_giantFilterIcon.visible = _itemFiltering_selectionModeOn && !_itemFiltering_filterEnabled;
+			character.visible = !_giantFilterIcon.visible;
 		}
 
 		private function _onPlayerAnimationToggle(pEvent:Event):void {
@@ -523,7 +551,7 @@ package app.world
 				var showColorWheel : Boolean = false;
 				if(GameAssets.getNumOfCustomColors(tButton.Image as MovieClip) > 0) {
 					showColorWheel = true;
-					if(_itemFilteringShowTab) {
+					if(_itemFiltering_filterEnabled) {
 						showColorWheel = ShareCodeFilteringData.isCustomizable(tType, tData.id);
 					}
 				}
@@ -708,11 +736,25 @@ package app.world
 		//}END Get TabPane data
 		
 		//{REGION ItemFiltering Tab
-			private function _getAndOpenItemFilteringPane() : ItemFilteringPane {
-				_itemFilteringShowTab = true;
+			private function _getAndOpenItemFilteringPane() : void {
+				_itemFiltering_selectionModeOn = true;
+				_exitFilterMode(); // If user is in filter mode but filter pane (thus going into selection mode), then exit filter mode
 				_populateShopTabs();
+				_dirtyAllItemFilteringPanes();
+				_showOrHideGiantFilterIcon();
 				shopTabs.toggleTabOn(TAB_ITEM_FILTERING);
-				return _paneManager.getPane(TAB_ITEM_FILTERING) as ItemFilteringPane;
+			}
+			private function _closeItemFilteringPane() : void {
+				_itemFiltering_selectionModeOn = false;
+				_clearItemFiltering();
+				_populateShopTabs();
+				_showOrHideGiantFilterIcon();
+				shopTabs.toggleTabOn(TAB_OTHER);
+			}
+			private function _resetItemFilteringPane() : void {
+				ShareCodeFilteringData.reset();
+				_clearItemFiltering();
+				_getAndOpenItemFilteringPane();
 			}
 		//}END ItemFiltering Tab
 

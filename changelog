@@ -1,4 +1,15 @@
-== V1.28 - ?? 2024 ==
+== V1.28b - 4 May 2024 ==
+- When item filtering is on, the filter tab is no longer shown and instead a banner appears over share code input
+- When filter tab is on, you are now always in selection mode - preview button now puts you in a different mode
+- New filter icon added for button in "Other" pane
+- In filter selection mode, a giant filter icon is shown instead of the mouse to make it clearer what mode you are in
+- Text added for filter mode stuff
+- Filters tab "x" button split into 2 - one for closing selection mode, and the other for trashing filters
+- Finally moved White "X" icon to interface.swc instead of programmatically drawing it
+- Fixed issue with lists getting reversed again every time they are redrawn (causing it to flip between reversed and not reversed)
+
+
+== V1.28 - 28 April 2024 ==
 - Added first draft of item filtering share code logic.
 	- Button for making a new one currently invisible on "Other" pane
 

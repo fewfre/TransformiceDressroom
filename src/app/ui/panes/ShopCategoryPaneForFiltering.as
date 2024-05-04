@@ -15,6 +15,7 @@ package app.ui.panes
 	import com.fewfre.utils.FewfUtils;
 	import app.data.ShareCodeFilteringData;
 	import flash.display.Sprite;
+	import flash.utils.setTimeout;
 
 	public class ShopCategoryPaneForFiltering extends TabPane
 	{
@@ -36,9 +37,9 @@ package app.ui.panes
 			this.addInfoBar( new ShopInfoBar({ showEyeDropButton:false, showGridManagementButtons:true }) );
 			this.infoBar.hideImageCont();
 			this.infoBar.colorWheel.visible = false;
-				_setupGrid(GameAssets.getItemDataListByType(_type));
+			_dirty = true;
 				
-			_actionsGrid = addItem(new Grid(grid.width, grid.columns).setXY(grid.x,grid.y)) as Grid;
+			// _actionsGrid = addItem(new Grid(grid.width, grid.columns).setXY(grid.x,grid.y)) as Grid;
 			
 			infoBar.reverseButton.addEventListener(ButtonBase.CLICK, _onReverseGrid);
 		}
@@ -48,6 +49,14 @@ package app.ui.panes
 		*****************************/
 		public override function open() : void {
 			super.open();
+			if(_dirty) {
+				_setupGrid(GameAssets.getItemDataListByType(_type));
+				_dirty = false;
+			}
+		}
+		
+		public function dirtyMe() : void {
+			_dirty = true;
 		}
 		
 		public function getButtonWithItemData(itemData:ItemData) : PushButton {
@@ -61,12 +70,6 @@ package app.ui.panes
 				return btn;
 			}
 			return null;
-		}
-		
-		public function filterItemIds(pIds:Array) : void {
-			var list:Vector.<ItemData> = GameAssets.getItemDataListByType(_type);
-			if(pIds) { list = list.filter(function(data:ItemData, i, a){ return pIds.indexOf(data.id) >= 0 }) }
-			_setupGrid(list);
 		}
 		
 		/****************************
@@ -85,37 +88,40 @@ package app.ui.panes
 			if(!grid) {
 				grid = this.addGrid( new Grid(385, buttonPerRow) ).setXY(15, 5);
 				_actionsGrid = addItem(new Grid(385, grid.columns).setXY(grid.x,grid.y)) as Grid;
+				// We want them to start reversed
+				grid.reverse();
+				_actionsGrid.reverse();
 			}
 			grid.reset();
 			_actionsGrid.reset();
 			buttons = [];
 
-			var itemData : ItemData, shopItem : MovieClip, shopItemButton : PushButton, customizeButton : Sprite;
 			for(var i:int = 0; i < pItemList.length; i++) {
-				itemData = pItemList[i];
-				shopItem = GameAssets.getItemImage(itemData);
-				shopItem.scaleX = shopItem.scaleY = scale;
-				
-				customizeButton = _addCustomizeButton(itemData);
-				_actionsGrid.add(customizeButton);
-
-				shopItemButton = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:shopItem, id:i, data:{ type:_type, id:i, itemID:itemData.id, itemData:itemData, customizeButton:customizeButton } });
-				grid.add(shopItemButton);
-				
-				this.buttons.push(shopItemButton);
-				shopItemButton.alpha = 0.5;
-				customizeButton.visible = false;
-				if(ShareCodeFilteringData.hasId(_type, itemData.id)) {
-					shopItemButton.alpha = 1;
-					shopItemButton.toggleOn(false);
-					customizeButton.visible = true;
-				}
-				shopItemButton.addEventListener(PushButton.STATE_CHANGED_AFTER, _onItemToggled);
+				_addButton(pItemList[i], scale, i);
 			}
-			grid.reverse();
-			_actionsGrid.reverse();
 			
 			this.UpdatePane();
+		}
+		
+		private function _addButton(itemData:ItemData, pScale:Number, i:int) {
+			var shopItem : MovieClip = GameAssets.getItemImage(itemData);
+			shopItem.scaleX = shopItem.scaleY = pScale;
+			
+			var customizeButton : Sprite = _addCustomizeButton(itemData);
+			_actionsGrid.add(customizeButton);
+
+			var shopItemButton : PushButton = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:shopItem, id:i, data:{ type:_type, id:i, itemID:itemData.id, itemData:itemData, customizeButton:customizeButton } });
+			grid.add(shopItemButton);
+			
+			this.buttons.push(shopItemButton);
+			shopItemButton.alpha = 0.5;
+			customizeButton.visible = false;
+			if(ShareCodeFilteringData.hasId(_type, itemData.id)) {
+				shopItemButton.alpha = 1;
+				shopItemButton.toggleOn(false);
+				customizeButton.visible = true;
+			}
+			shopItemButton.addEventListener(PushButton.STATE_CHANGED_AFTER, _onItemToggled);
 		}
 		
 		private function _getButtonWithItemId(pId:String) : PushButton {
