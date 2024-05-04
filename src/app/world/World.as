@@ -421,7 +421,10 @@ package app.world
 			// Now update pose
 			var parseSuccess:Boolean = false;
 			if(pCodeIn.indexOf(ShareCodeFilteringData.PREFIX) == 0) {
-				_closeItemFilteringPane(); // If selection mode is active, end it
+				// If selection mode is active, end it
+				_itemFiltering_selectionModeOn = false;
+				_showOrHideGiantFilterIcon();
+				// Parse actual code
 				parseSuccess = ShareCodeFilteringData.parseShareCode(pCodeIn);
 				_enableFilterMode();
 			} else {
