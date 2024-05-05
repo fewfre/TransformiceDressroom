@@ -156,7 +156,7 @@ package app.world
 			if(ConstantsApp.CONFIG_TAB_ENABLED) {
 				_paneManager.addPane(TAB_CONFIG, new ConfigTabPane({
 					onShareCodeEntered:_onShareCodeEntered,
-					onUserLookClicked:_useShareCode
+					onUserLookClicked:_useOutfitShareCode
 				}));
 			}
 			
@@ -177,7 +177,7 @@ package app.world
 			
 			var tPane:TabPane = null;
 			// Outfit Pane
-			tPane = _paneManager.addPane(TAB_OUTFITS, new OutfitManagerTabPane(character, _useShareCode));
+			tPane = _paneManager.addPane(TAB_OUTFITS, new OutfitManagerTabPane(character, _useOutfitShareCode));
 			tPane.infoBar.colorWheel.addEventListener(MouseEvent.MOUSE_UP, function(pEvent:Event){ _paneManager.openPane(shopTabs.getSelectedTabEventName()); });
 			// Grid Management Events
 			tPane.infoBar.rightItemButton.addEventListener(ButtonBase.CLICK, function(){ _traversePaneButtonGrid(_paneManager.getPane(TAB_OUTFITS), true); });
@@ -392,44 +392,42 @@ package app.world
 			character.y = Math.max(character.dragBounds.y, Math.min(character.dragBounds.bottom, character.y));
 		}
 
-		private function _onShareCodeEntered(pCode:String, pProgressCallback:Function):void {
-			if(!pCode || pCode == "") { return; pProgressCallback("placeholder"); }
+		private function _onShareCodeEntered(code:String, pProgressCallback:Function):void {
+			if(!code || code == "") { return; pProgressCallback("placeholder"); }
 			
 			try {
-				var parseSuccess:Boolean = _useShareCode(pCode);
-				
-				// Now tell code box that we are done
-				pProgressCallback(parseSuccess ? "success" : "invalid");
+				pProgressCallback("loading");
+				_useUnknownShareCode(code, function(parseSuccess){
+					// Now tell code box that we are done
+					pProgressCallback(parseSuccess ? "success" : "invalid");
+				});
 			}
 			catch (error:Error) {
 				pProgressCallback("invalid");
 			};
 		}
-		
-		private function _useShareCode(pCodeIn:String) : Boolean {
-			pCodeIn = pCodeIn.replace(/^\s+|\s+$/g, ''); // trim whitespace
-			var pCode : String = pCodeIn;
-			if(pCode.indexOf("?") > -1) {
-				pCode = pCode.substr(pCode.indexOf("?") + 1, pCode.length);
+		private function _useUnknownShareCode(code:String, callback:Function) : void {
+			code = FewfUtils.trim(code);
+			if(ShareCodeFilteringData.isValidCode(code)) {
+				_useItemFilterShareCode(code, callback);
+			} else {
+				callback( _useOutfitShareCode(code) );
 			}
-			
+		}
+		
+		private function _useOutfitShareCode(code:String) : Boolean {
+			code = FewfUtils.trim(code);
+			if(code.indexOf("?") > -1) {
+				code = code.substr(code.indexOf("?") + 1, code.length);
+			}
+		
 			// First remove old stuff to prevent conflicts
 			character.shamanMode = ShamanMode.OFF;
 			for each(var tType:ItemType in ItemType.LAYERING) { _removeItem(tType); }
 			_removeItem(ItemType.POSE);
 			
-			// Now update pose
-			var parseSuccess:Boolean = false;
-			if(pCodeIn.indexOf(ShareCodeFilteringData.PREFIX) == 0) {
-				// If selection mode is active, end it
-				_itemFiltering_selectionModeOn = false;
-				_showOrHideGiantFilterIcon();
-				// Parse actual code
-				parseSuccess = ShareCodeFilteringData.parseShareCode(pCodeIn);
-				_enableFilterMode();
-			} else {
-				parseSuccess = character.parseParams(pCode);
-			}
+			var parseSuccess:Boolean = character.parseParams(code);
+			
 			character.updatePose();
 			
 			for each(var tType:ItemType in ItemType.TYPES_WITH_SHOP_PANES) { _refreshButtonCustomizationForItemData(character.getItemData(tType)); }
@@ -439,6 +437,47 @@ package app.world
 			(_paneManager.getPane(TAB_OTHER) as OtherTabPane).updateButtonsBasedOnCurrentData();
 			
 			return parseSuccess;
+		}
+		
+		private function _useItemFilterShareCode(code:String, callback:Function) : void {
+			code = FewfUtils.trim(code);
+			
+			var pastebinKey = ShareCodeFilteringData.checkIfPastebin(code);
+			if(pastebinKey) {
+				var fetchpastebin_url:String = Fewf.assets.getData("config").fetchpastebin_url;
+				if(!fetchpastebin_url) { callback(false); return; }
+				
+				var url:String = fetchpastebin_url+"?key="+pastebinKey;
+				Fewf.assets.loadWithCallback([ [url, { type:"txt", name:pastebinKey }] ], function():void{
+					_useItemFilterShareCode(Fewf.assets.getData(pastebinKey), callback);
+				});
+				return;
+			}
+		
+			// First remove old stuff to prevent conflicts
+			character.shamanMode = ShamanMode.OFF;
+			for each(var tType:ItemType in ItemType.LAYERING) { _removeItem(tType); }
+			_removeItem(ItemType.POSE);
+			
+			// If selection mode is active, end it
+			_itemFiltering_selectionModeOn = false;
+			_showOrHideGiantFilterIcon();
+			
+			// Parse actual code
+			var parseSuccess:Boolean = ShareCodeFilteringData.parseShareCode(code);
+			if(parseSuccess) {
+				_enableFilterMode();
+				
+				character.updatePose();
+				
+				for each(var tType:ItemType in ItemType.TYPES_WITH_SHOP_PANES) { _refreshButtonCustomizationForItemData(character.getItemData(tType)); }
+				
+				// now update the infobars
+				_updateUIBasedOnCharacter();
+				(_paneManager.getPane(TAB_OTHER) as OtherTabPane).updateButtonsBasedOnCurrentData();
+			}
+			
+			callback(parseSuccess);
 		}
 		
 		// Enables it using data already in ShareCodeFilteringData

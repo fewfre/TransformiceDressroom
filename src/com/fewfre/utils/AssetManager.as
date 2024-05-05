@@ -45,6 +45,20 @@ package com.fewfre.utils
 		/****************************
 		* Loading
 		*****************************/
+			// options ?= { cacheBreaker?:Boolean }
+			public function loadWithCallback(pURLs:Array, pCallback:Function, options:Object=null) : void {
+				options = options || {};
+				load(pURLs, options.cacheBreaker);
+				addEventListener(AssetManager.LOADING_FINISHED, function fDone(event:Event){
+					removeEventListener(AssetManager.LOADING_FINISHED, fDone);
+					pCallback(null);
+				});
+				addEventListener(ErrorEvent.ERROR, function fDone(event:ErrorEvent){
+					removeEventListener(AssetManager.LOADING_FINISHED, fDone);
+					pCallback("error");
+				});
+			}
+			
 			public function load(pURLs:Array, pCacheBreaker:String=null) : void {
 				_urlsToLoad = pURLs;
 				_itemsLeftToLoad = _urlsToLoad.length;
@@ -72,9 +86,8 @@ package com.fewfre.utils
 					pUrl += "?cb="+_cacheBreaker;
 				}
 				pOptions = pOptions || {};
-				if(pOptions.type) {
-					tType = pOptions.type;
-				}
+				if(pOptions.type) { tType = pOptions.type; }
+				if(pOptions.name) { tName = pOptions.name; }
 				switch(tType) {
 					case "swf":
 					case "swc":
@@ -84,9 +97,10 @@ package com.fewfre.utils
 						tLoader.addEventListener(IOErrorEvent.IO_ERROR, _onLoadError);
 						tLoader.addEventListener(ProgressEvent.PROGRESS, _onProgress);
 						break;
+					case "txt":
 					case "json":
 						var tUrlLoader:URLLoader = new URLLoader();
-						tUrlLoader.addEventListener(Event.COMPLETE, function(e:Event):void{ _onJsonLoaded(pIndex, e, tName, arguments.callee); });
+						tUrlLoader.addEventListener(Event.COMPLETE, function(e:Event):void{ _onTextLoaded(pIndex, e, tName, tType, arguments.callee); });
 						tUrlLoader.addEventListener(IOErrorEvent.IO_ERROR, function(e:Event):void{ _onURLLoadError(e as IOErrorEvent, pUrl, arguments.callee); });
 						tUrlLoader.addEventListener(ProgressEvent.PROGRESS, _onProgress);
 						var tRequest2:URLRequest = new URLRequest(pUrl);
@@ -119,9 +133,9 @@ package com.fewfre.utils
 				_checkIfLoadingDone();
 			}
 			
-			private function _onJsonLoaded(pIndex:int, e:Event, pKey:String, pOnComplete) : void {
+			private function _onTextLoaded(pIndex:int, e:Event, pKey:String, pType:String, pOnComplete) : void {
 				_loadedStuffCallbacks[pIndex] = function():void{
-					_loadedData[pKey] = JSON.parse(e.target.data);
+					_loadedData[pKey] = pType === "json" ? JSON.parse(e.target.data) : e.target.data;
 					_destroyURLLoader(e.target as URLLoader, pOnComplete);
 				};
 				_checkIfLoadingDone();

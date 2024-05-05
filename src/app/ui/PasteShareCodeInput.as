@@ -91,6 +91,11 @@ package app.ui
 					_placeholderText.color = 0x666666;
 					break;
 				}
+				case "loading": {
+					_placeholderText.setUntranslatedText('...');
+					_placeholderText.color = 0x666666;
+					break;
+				}
 				case "success": {
 					_placeholderText.setText("share_paste_success");
 					_placeholderText.color = 0x01910d;

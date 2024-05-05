@@ -81,5 +81,9 @@ package com.fewfre.utils
 				ret = pad + ret;
 			return ret;
 		}
+		
+		public static function trim(str:String) : String {
+			return !str ? str : str.replace(/^\s+|\s+$/g, ''); // trim whitespace
+		}
 	}
 }

@@ -5,6 +5,7 @@
 - In filter selection mode, a giant filter icon is shown instead of the mouse to make it clearer what mode you are in
 - Text added for filter mode stuff
 - Filters tab "x" button split into 2 - one for closing selection mode, and the other for trashing filters
+- Added a "pastebin" feature that grabs an item filter code from a pastebin. Ex: `ITEMFILTER?pastebin=i7b5v800`
 - Finally moved White "X" icon to interface.swc instead of programmatically drawing it
 - Fixed issue with lists getting reversed again every time they are redrawn (causing it to flip between reversed and not reversed)
 

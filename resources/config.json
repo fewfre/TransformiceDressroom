@@ -26,6 +26,7 @@
 	
 	"username_lookup_url_DISABLED": "https://projects.fewfre.com/a801/transformice/dressroom/resources/fetchlook/fetchlooknickname.php?nickname=$1",
 	"spritesheet2gif_url": "https://projects.fewfre.com/a801/transformice/dressroom/resources/spritesheet2gif/spritesheet2gif.php",
+	"fetchpastebin_url": "https://projects.fewfre.com/a801/transformice/dressroom/resources/fetchpastebin/fetchpastebin.php",
 	
 	"packs": {
 		"items": [

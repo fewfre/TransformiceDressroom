@@ -48,6 +48,14 @@ package app.data
 			}
 		}
 		
+		public static function idCount() : Number {
+			var count : Number = 0;
+			for each(var vector:Vector.<String> in _itemFilterMap) {
+				count += vector.length;
+			}
+			return count;
+		}
+		
 		////////////////////////////
 		// Customizable Methods
 		////////////////////////////
@@ -66,10 +74,14 @@ package app.data
 		////////////////////////////
 		// Share Code Methods
 		////////////////////////////
+		public static function isValidCode(code:String) : Boolean {
+			return code.indexOf(ShareCodeFilteringData.PREFIX) == 0
+		}
+		
 		public static function parseShareCode(code:String) : Boolean {
 			reset();
+			if(!isValidCode(code)) return false;
 			code = code.replace(PREFIX, "");
-			
 			try {
 				var pParams : URLVariables = new URLVariables();
 				pParams.decode(code);
@@ -90,7 +102,19 @@ package app.data
 				}
 			}
 			catch (error:Error) { return false; };
-			return true;
+			return idCount();
+		}
+		
+		public static function checkIfPastebin(code:String) : * {
+			if(!isValidCode(code)) return false;
+			code = code.replace(PREFIX, "");
+			try {
+				var pParams : URLVariables = new URLVariables();
+				pParams.decode(code);
+				return pParams.pastebin || false;
+			}
+			catch (error:Error) { return false; };
+			return false;
 		}
 		
 		private static function _sortIds(a:String, b:String) : Number {
