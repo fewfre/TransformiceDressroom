@@ -1,0 +1,48 @@
+{
+  "defaultFont": "Verdana",
+  "defaultScale": 1,
+  "strings": {
+    "loading_progress":        { "text":"{0}" },
+    "infobar_id":              { "text":"ID: {0}" },
+    
+    "loading":                 { "text":"Stavke su ostavljene za preuzimanje: {0}" },
+    "loading_finished":        { "text":"Preuzimanje je završeno. Inicijalizacija..." },
+    "btn_color_defaults":      { "text":"Podrazumevano" },
+    "share_header":            { "text":"Podelite svoj rad!" },
+    "share_link_copied":       { "text":"Veza je kopirana u međuspremnik! Umetnite za upotrebu.", "scale":0.6 },
+    "share_copy":              { "text":"Kopiraj", "scale":0.95 },
+    "share_tfm_syntax":        { "text":"TFM /dressing Syntax (Poza & Drugi nije sačuvan)" },
+    "share_fewfre_syntax":     { "text":"Fewfre Syntax (Potpuna podrška)" },
+    "share_paste":             { "text":"Ovde nalepite kod / url svoje odeće" },
+    "share_paste_success":     { "text":"Uspešno!" },
+    "share_paste_invalid":     { "text":"Pogrešan zahtev!" },
+    "share_filter_banner":     { "text":"Aktiviran režim filtriranja stvari" },
+    "filtermode_preview_btn":  { "text":"Pregled filtera sa odabranim stvarima" },
+    "filtermode_description":  { "text":"Ovo je način izbora filtera stvari. Možete odabrati stvar pomoću kartica sa leve strane, pregledati kako će filtrirane stvari izgledati drugim korisnicima klikom na dugme za pregled i deliti filtrirane stvari pomoću koda u polju za unos ispod (nalepite u polje za deljenje koda)." },
+    "version":                 { "text":"Verzija: {0}" },
+    "translated_by":           { "text":"Prevedeno: Nielqel" },
+    "user_lookup_title":       { "text":"Pretraživanje po korisničkom imenu" },
+    "user_lookup_placeholder": { "text":"Username#0000" },
+    "user_lookup_details":     { "text":"Sve interne promene u igri zahtevaju neko vreme,\nda se manifestuje..\nRezultati mogu biti stari nekoliko sati.", "scale":0.9 },
+      
+    "btn_normal_mode":         { "text":"Normalno", "scale":0.75 },
+    "btn_hard_mode":           { "text":"Komplex", "scale":0.9 },
+    "btn_divine_mode":         { "text":"Božanski", "scale":0.75 },
+    "btn_no_skills_mode":      { "text":"Onemogućite veštine" },
+    "tab_config":              { "text":"Konfigu\n-racije", "scale":0.8 },
+    "tab_head":                { "text":"Glava" },
+    "tab_hair":                { "text":"Frizure", "scale":0.9 },
+    "tab_ears":                { "text":"Uši" },
+    "tab_eyes":                { "text":"Oči" },
+    "tab_mouth":               { "text":"Usta" },
+    "tab_neck":                { "text":"Vrat" },
+    "tab_tail":                { "text":"Rep" },
+    "tab_contacts":            { "text":"Sočiva" },
+    "tab_hand":                { "text":"Šape" },
+    "tab_tattoo":              { "text":"Tetovaža" },
+    "tab_furs":                { "text":"Мех" },
+    "tab_poses":               { "text":"Poza" },
+    "tab_other":               { "text":"Ostalo" }
+  }
+}
+
