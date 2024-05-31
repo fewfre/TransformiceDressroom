@@ -20,7 +20,8 @@
 			{ "code":"fi", "name":"Suomi", "flags_swf_linkage":"$FI" },
 			{ "code":"it", "name":"italiano", "flags_swf_linkage":"$IT" },
 			{ "code":"sk", "name":"Slovak", "flags_swf_linkage":"$SK" },
-			{ "code":"cz", "name":"Czech", "flags_swf_linkage":"$CZ" }
+			{ "code":"cz", "name":"Czech", "flags_swf_linkage":"$CZ" },
+			{ "code":"rs", "name":"српски", "flags_swf_linkage":"$RS" }
 		]
 	},
 	
