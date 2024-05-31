@@ -42,6 +42,7 @@
     "tab_tattoo":              { "text":"Tetoválás", "scale":0.95 },
     "tab_furs":                { "text":"Bunda" },
     "tab_poses":               { "text":"Póz" },
-    "tab_other":               { "text":"Egyéb" }
+    "tab_other":               { "text":"Egyéb" },
+    "tab_filtering":           { "text":"Filter" }
   }
 }

@@ -42,6 +42,7 @@
     "tab_tattoo":              { "text":"Tattoo" },
     "tab_furs":                { "text":"Krzna" },
     "tab_poses":               { "text":"Poza" },
-    "tab_other":               { "text":"Ostalo" }
+    "tab_other":               { "text":"Ostalo" },
+    "tab_filtering":           { "text":"Filter" }
   }
 }

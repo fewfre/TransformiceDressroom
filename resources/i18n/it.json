@@ -42,6 +42,7 @@
     "tab_tattoo":              { "text":"Tattoo" },
     "tab_furs":                { "text":"Pellicce" },
     "tab_poses":               { "text":"Pose" },
-    "tab_other":               { "text":"Altro" }
+    "tab_other":               { "text":"Altro" },
+    "tab_filtering":           { "text":"Filter" }
   }
   }

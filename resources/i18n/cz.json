@@ -49,6 +49,7 @@
     "tab_tattoo":              { "text":"Tattoo" },
     "tab_furs":                { "text":"Srst" },
     "tab_poses":               { "text":"Póza" },
-    "tab_other":               { "text":"Jiné" }
+    "tab_other":               { "text":"Jiné" },
+    "tab_filtering":           { "text":"Filter" }
   }
 }

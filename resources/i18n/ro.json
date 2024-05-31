@@ -42,6 +42,7 @@
     "tab_tattoo":              { "text":"Tatuaj" },
     "tab_furs":                { "text":"Blană" },
     "tab_poses":               { "text":"Poziție" },
-    "tab_other":               { "text":"Altele" }
+    "tab_other":               { "text":"Altele" },
+    "tab_filtering":           { "text":"Filter" }
   }
 }

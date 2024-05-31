@@ -42,6 +42,7 @@
     "tab_tattoo":              { "text":"الوشم" },
     "tab_furs":                { "text":"الفراء" },
     "tab_poses":               { "text":"الوضعية" },
-    "tab_other":               { "text":"آخر" }
+    "tab_other":               { "text":"آخر" },
+    "tab_filtering":           { "text":"Filter" }
   }
 }

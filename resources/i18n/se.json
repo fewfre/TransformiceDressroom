@@ -42,6 +42,7 @@
     "tab_tattoo":              { "text":"Tattoo" },
     "tab_furs":                { "text":"Pälsar" },
     "tab_poses":               { "text":"Positioner", "scale":0.9 },
-    "tab_other":               { "text":"Annat" }
+    "tab_other":               { "text":"Annat" },
+    "tab_filtering":           { "text":"Filter" }
   }
 }

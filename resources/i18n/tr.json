@@ -42,6 +42,7 @@
     "tab_tattoo":              { "text":"Tattoo" },
     "tab_furs":                { "text":"Kürkler" },
     "tab_poses":               { "text":"Poz" },
-    "tab_other":               { "text":"Diğer" }
+    "tab_other":               { "text":"Diğer" },
+    "tab_filtering":           { "text":"Filter" }
   }
 }

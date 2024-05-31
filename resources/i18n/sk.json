@@ -49,6 +49,7 @@
     "tab_tattoo":              { "text":"Tattoo" },
     "tab_furs":                { "text":"Kožušiny" },
     "tab_poses":               { "text":"Póza" },
-    "tab_other":               { "text":"Iné" }
+    "tab_other":               { "text":"Iné" },
+    "tab_filtering":           { "text":"Filter" }
   }
 }

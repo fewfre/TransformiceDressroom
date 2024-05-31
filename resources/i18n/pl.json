@@ -42,6 +42,7 @@
     "tab_tattoo":              { "text":"Tatuaż" },
     "tab_furs":                { "text":"Futerka" },
     "tab_poses":               { "text":"Poza" },
-    "tab_other":               { "text":"Inne" }
+    "tab_other":               { "text":"Inne" },
+    "tab_filtering":           { "text":"Filter" }
   }
 }

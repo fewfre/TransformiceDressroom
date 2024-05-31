@@ -42,6 +42,7 @@
     "tab_tattoo":              { "text":"Tattoo" },
     "tab_furs":                { "text":"Kažoks" },
     "tab_poses":               { "text":"Poza" },
-    "tab_other":               { "text":"Citi" }
+    "tab_other":               { "text":"Citi" },
+    "tab_filtering":           { "text":"Filter" }
   }
 }

@@ -42,6 +42,7 @@
     "tab_tattoo":              { "text":"Tattoo" },
     "tab_furs":                { "text":"Turkit" },
     "tab_poses":               { "text":"Poseeraus", "scale":0.85 },
-    "tab_other":               { "text":"Muu" }
+    "tab_other":               { "text":"Muu" },
+    "tab_filtering":           { "text":"Filter" }
   }
 }
