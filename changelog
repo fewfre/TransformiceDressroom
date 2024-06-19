@@ -9,7 +9,8 @@
 - Finally moved White "X" icon to interface.swc instead of programmatically drawing it
 - Fixed issue with lists getting reversed again every time they are redrawn (causing it to flip between reversed and not reversed)
 - (23 May) Split up asset loader code a bit
-- (31 May) +rs / српски / Serbian 
+- (31 May) +rs / српски / Serbian
+- (19 Jun) `BitmapLoaderManager` updated to correctly use local images when not run in app
 
 
 == V1.28 - 28 April 2024 ==

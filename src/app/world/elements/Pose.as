@@ -311,7 +311,7 @@ package app.world.elements
 						pCode == "GAY" ? "RB" :
 						pCode;
 				pCode = pCode.slice(0, 2);
-				var flagImagePath:String = "x_divers/x_drapeaux/" + pCode + ".png";
+				var flagImagePath:String = "resources/x_divers/x_drapeaux/" + pCode + ".png";
 				x_d = Fewf.assets.lazyLoadImageUrlAsBitmap(flagImagePath);
 				x_d.y = -28;
 			}

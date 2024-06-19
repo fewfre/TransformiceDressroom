@@ -34,22 +34,28 @@ package app.ui.buttons
 			}
 			
 			if(pArgs.obj) {
-				var tBounds:Rectangle = pArgs.obj.getBounds(pArgs.obj);
-				var tOffset:Point = tBounds.topLeft;
-				
-				var tScale:Number = pArgs.obj_scale ? pArgs.obj_scale : 1;
-				this.Image = pArgs.obj;
-				FewfDisplayUtils.fitWithinBounds(this.Image, pArgs.width * 0.9, pArgs.height * 0.9, pArgs.width * 0.5, pArgs.height * 0.5);
-				this.Image.x = pArgs.width / 2 - (tBounds.width / 2 + tOffset.x)*tScale * this.Image.scaleX;
-				this.Image.y = pArgs.height / 2 - (tBounds.height / 2 + tOffset.y)*tScale * this.Image.scaleY;
-				this.Image.scaleX *= tScale;
-				this.Image.scaleY *= tScale;
-				addChild(this.Image);
+				ChangeImage(pArgs.obj, pArgs.obj_scale || -1);
 			}
 			
 			this.allowToggleOff = pArgs.allowToggleOff == null ? true : pArgs.allowToggleOffs;
 			this.pushed = false;
 			_renderUnpressed();
+		}
+
+		public function ChangeImage(pMC:DisplayObject, pScale:Number=-1) : void
+		{
+			if(this.Image != null) { removeChild(this.Image); }
+			pScale = pScale >= 0 ? pScale : 1;
+			
+			var tBounds:Rectangle = pMC.getBounds(pMC);
+			var tOffset:Point = tBounds.topLeft;
+			
+			FewfDisplayUtils.fitWithinBounds(pMC, this.Width * 0.9, this.Height * 0.9, this.Width * 0.5, this.Height * 0.5);
+			pMC.x = this.Width / 2 - (tBounds.width / 2 + tOffset.x)*pScale * pMC.scaleX;
+			pMC.y = this.Height / 2 - (tBounds.height / 2 + tOffset.y)*pScale * pMC.scaleY;
+			pMC.scaleX *= pScale;
+			pMC.scaleY *= pScale;
+			addChild(this.Image = pMC);
 		}
 		
 		protected function _renderUnpressed() : void
