@@ -8,6 +8,8 @@
 - Filters tab "x" button split into 2 - one for closing selection mode, and the other for trashing filters
 - Finally moved White "X" icon to interface.swc instead of programmatically drawing it
 - Fixed issue with lists getting reversed again every time they are redrawn (causing it to flip between reversed and not reversed)
+- (23 May) Split up asset loader code a bit
+- (31 May) +rs / српски / Serbian 
 
 
 == V1.28 - 28 April 2024 ==

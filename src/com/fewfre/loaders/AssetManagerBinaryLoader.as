@@ -1,4 +1,4 @@
-package com.fewfre.utils
+package com.fewfre.loaders
 {
 	import com.fewfre.events.FewfEvent;
 	import flash.events.Event;
