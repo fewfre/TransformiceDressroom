@@ -26,6 +26,7 @@ package app.world
 	import app.ui.panes.colorpicker.ColorPickerTabPane;
 	import flash.display.MovieClip;
 	import flash.ui.Keyboard;
+	import app.ui.panes.colorpicker.LockHistoryMap;
 	
 	public class World extends MovieClip
 	{
@@ -740,6 +741,7 @@ package app.world
 				
 			}
 			(_paneManager.getPane(TAB_OTHER) as OtherTabPane).updateButtonsBasedOnCurrentData();
+			LockHistoryMap.deleteAllLockHistory();
 		}
 
 		private function _onTrashConfirmScreenClosed(pEvent:Event) : void {
@@ -873,7 +875,7 @@ package app.world
 				var tData:ItemData = getInfoBarByType(pType).data;
 				_paneManager.getPane(COLOR_PANE_ID).infoBar.addInfo( tData, GameAssets.getItemImage(tData) );
 				this.currentlyColoringType = pType;
-				(_paneManager.getPane(COLOR_PANE_ID) as ColorPickerTabPane).init( tData.colors, tData.defaultColors );
+				(_paneManager.getPane(COLOR_PANE_ID) as ColorPickerTabPane).init( tData.uniqId(), tData.colors, tData.defaultColors );
 				_paneManager.openPane(COLOR_PANE_ID);
 				_refreshSelectedItemColor(pType);
 			}
@@ -910,7 +912,7 @@ package app.world
 
 			private function _shamanColorButtonClicked(/*pType:String, pColor:int*/) : void {
 				/*this.configCurrentlyColoringType = pType;*/
-				(_paneManager.getPane(CONFIG_COLOR_PANE_ID) as ColorPickerTabPane).init( new <uint>[ character.shamanColor ], null );
+				(_paneManager.getPane(CONFIG_COLOR_PANE_ID) as ColorPickerTabPane).init( 'shamancolor', new <uint>[ character.shamanColor ], null );
 				_paneManager.openPane(CONFIG_COLOR_PANE_ID);
 			}
 		//}END Color Tab

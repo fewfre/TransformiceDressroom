@@ -37,8 +37,13 @@ package app.world.data
 		public function copy() : ItemData {
 			return new ItemData(type, id, { itemClass:itemClass, classMap:classMap });
 		}
+		
 		public function matches(compare:ItemData) : Boolean {
 			return type == compare.type && id == compare.id;
+		}
+		
+		public function uniqId() : String {
+			return this.type + '--' + this.id;
 		}
 		
 		public function isSkin() : Boolean { return type == ItemType.SKIN; }

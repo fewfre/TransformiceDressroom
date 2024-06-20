@@ -34,6 +34,8 @@ package app.ui.panes.colorpicker
 		
 		private var _colorHistory              : ColorHistoryOverlay;
 		
+		private static const _lockHistory       : LockHistoryMap = new LockHistoryMap();
+		
 		// Properties
 		public function get selectedSwatch():int { return _selectedSwatch; }
 		
@@ -101,7 +103,9 @@ package app.ui.panes.colorpicker
 		/****************************
 		* Public
 		*****************************/
-		public function init(pColors:Vector.<uint>, pDefaults:Vector.<uint>) : void {
+		public function init(pId:String, pColors:Vector.<uint>, pDefaults:Vector.<uint>) : void {
+			_lockHistory.init(pId, pColors.length);
+			
 			_setupSwatches(pColors);
 			_defaultColors = pDefaults ? pDefaults.concat() : null;
 		}
@@ -136,7 +140,7 @@ package app.ui.panes.colorpicker
 			
 			var swatch:ColorSwatch;
 			for(var i:int = 0; i < pSwatches.length; i++) {
-				swatch = _createColorSwatch(i, 5, 45 + (i * 27));
+				swatch = _createColorSwatch(i, 5, 45 + (i * 27), _lockHistory.getLockHistory(i));
 				swatch.color = pSwatches[i];
 				_colorSwatches.push(swatch);
 				if(_getHistoryColors(i).length == 0) {
@@ -154,7 +158,7 @@ package app.ui.panes.colorpicker
 			renderRecents();
 		}
 		
-		private function _createColorSwatch(pNum:int, pX:int, pY:int) : ColorSwatch {
+		private function _createColorSwatch(pNum:int, pX:int, pY:int, pLocked:Boolean=false) : ColorSwatch {
 			var swatch:ColorSwatch = new ColorSwatch();
 			swatch.addEventListener(ColorSwatch.USER_MODIFIED_TEXT, function(){
 				_selectSwatch(pNum);
@@ -192,7 +196,11 @@ package app.ui.panes.colorpicker
 			swatch.historyButton.addEventListener(MouseEvent.CLICK, function(){ _showHistory(pNum); });
 			swatch.lockIcon.addEventListener(MouseEvent.CLICK, function(){
 				swatch.locked ? swatch.unlock() : swatch.lock();
+				_updateLockHistoryFromCurrentState();
 			});
+			if(pLocked) {
+				swatch.lock();
+			}
 			
 			return swatch;
 		}
@@ -269,6 +277,9 @@ package app.ui.panes.colorpicker
 		}
 		
 		private function _defaultAllColors() {
+			_lockHistory.clearLockHistory();
+			_updateLocksToMatchHistory();
+			
 			_updateColors(_defaultColors.concat(), true);
 			
 			_untrackRecentColor();
@@ -307,6 +318,23 @@ package app.ui.panes.colorpicker
 		private function _showHistoryButtonIfValid(swatchI:int) {
 			if(_getHistoryColors(swatchI).length > 1) {
 				_colorSwatches[swatchI].showHistoryButton();
+			}
+		}
+		
+		/****************************
+		* Lock History
+		*****************************/
+		private function _updateLockHistoryFromCurrentState() : void {
+			_lockHistory.clearLockHistory();
+			for(var i:int = 0; i < _colorSwatches.length; i++) {
+				_lockHistory.setLockHistory(i, _colorSwatches[i].locked);
+			}
+		}
+		private function _updateLocksToMatchHistory() : void {
+			for(var i:int = 0; i < _colorSwatches.length; i++) {
+				var locked:Boolean = _lockHistory.getLockHistory(i);
+				if(locked && !_colorSwatches[i].locked) _colorSwatches[i].lock();
+				else if(!locked && _colorSwatches[i].locked) _colorSwatches[i].unlock();
 			}
 		}
 		
