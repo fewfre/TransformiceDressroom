@@ -49,7 +49,7 @@ package app.ui.panes.colorpicker
 			if(pData.hide_imagecont) this.infoBar.hideImageCont();
 			this.infoBar.removeItemOverlay.addEventListener(MouseEvent.CLICK, function(e){ dispatchEvent(new Event(EVENT_ITEM_ICON_CLICKED)); });
 			
-			var tClickOffDetector = addChild(new Sprite()) as Sprite;
+			var tClickOffDetector = addChildAt(new Sprite(), 0) as Sprite;
 			tClickOffDetector.graphics.beginFill( 0xFFFFFF );
 			tClickOffDetector.graphics.drawRect( 0, 0, 115, 325 );
 			tClickOffDetector.alpha = 0;
