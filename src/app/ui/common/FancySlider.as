@@ -1,10 +1,11 @@
 package app.ui.common
 {
-	import flash.display.*;
-	import flash.events.*;
-	import fl.events.SliderEvent;
-	import fl.controls.Slider;
 	import com.fewfre.utils.Fewf;
+	import fl.controls.Slider;
+	import fl.events.SliderEvent;
+	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
 	
 	public class FancySlider extends Slider
 	{

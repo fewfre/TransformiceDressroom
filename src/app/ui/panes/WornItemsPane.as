@@ -16,8 +16,9 @@ package app.ui.panes
 	import flash.net.FileFilter;
 	import flash.utils.setTimeout;
 	import app.world.data.ItemData;
+	import app.ui.panes.base.ButtonGridSidePane;
 	
-	public class WornItemsPane extends TabPane
+	public class WornItemsPane extends ButtonGridSidePane
 	{
 		// Storage
 		private var _character : Character;
@@ -25,15 +26,16 @@ package app.ui.panes
 		
 		// Constructor
 		public function WornItemsPane(pCharacter:Character, pOnItemClicked:Function) {
-			super();
+			super(4);
 			_character = pCharacter;
 			_onItemClicked = pOnItemClicked;
 			
 			this.addInfoBar( new ShopInfoBar({ showBackButton:true, showGridManagementButtons:false }) );
-			this.addGrid( new Grid(385, 4).setXY(15,5) );
 			this.infoBar.hideImageCont();
 			
-			UpdatePane();
+			this.infoBar.colorWheel.addEventListener(MouseEvent.MOUSE_UP, function(pEvent:Event){
+				dispatchEvent(new Event(Event.CLOSE));
+			});
 		}
 		
 		/****************************
@@ -49,16 +51,13 @@ package app.ui.panes
 		* Private
 		*****************************/
 		private function _renderItems() : void {
-			grid.reset();
-			buttons = [];
+			clearButtons();
 			
 			_addItemButton( _character.getItemData(ItemType.SKIN) );
 			for each(var itemType:ItemType in ItemType.LOOK_CODE_ITEM_ORDER) {
 				if(itemType === null) { continue; }
 				_addItemButton( _character.getItemData(itemType) );
 			}
-			
-			UpdatePane();
 		}
 		
 		public function _addItemButton(itemData:ItemData) : void {
@@ -67,8 +66,7 @@ package app.ui.panes
 			shopItem.scaleX = shopItem.scaleY = 2;
 
 			var shopItemButton : PushButton = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:shopItem, data:itemData });
-			grid.add(shopItemButton);
-			this.buttons.push(shopItemButton);
+			addButton(shopItemButton);
 			shopItemButton.addEventListener(PushButton.STATE_CHANGED_AFTER, function(e:FewfEvent){ _onItemClicked(e.data); });
 		}
 	}

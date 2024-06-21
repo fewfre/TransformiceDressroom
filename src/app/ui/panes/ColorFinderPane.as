@@ -15,13 +15,12 @@ package app.ui.panes
 	import flash.net.FileReference;
 	import flash.net.FileFilter;
 	import flash.net.URLRequest;
+	import app.ui.panes.base.GridSidePane;
 	
-	public class ColorFinderPane extends TabPane
+	public class ColorFinderPane extends GridSidePane
 	{
 		// Constants
-		public static const EVENT_SWATCH_CHANGED	: String = "event_swatch_changed";
-		public static const EVENT_COLOR_PICKED		: String = "event_color_picked";
-		public static const EVENT_EXIT				: String = "event_exit";
+		public static const EVENT_ITEM_ICON_CLICKED : String = "event_item_icon_clicked";
 		
 		// Storage
 		private var _tray : MovieClip;
@@ -49,10 +48,10 @@ package app.ui.panes
 		// Constructor
 		public function ColorFinderPane(pData:Object)
 		{
-			super();
+			super(1);
 			this.addInfoBar( new ShopInfoBar({ showBackButton:true }) );
 			this.infoBar.colorWheel.addEventListener(MouseEvent.MOUSE_UP, _onBackClicked);
-			this.UpdatePane(false);
+			this.infoBar.removeItemOverlay.addEventListener(MouseEvent.CLICK, function(e){ dispatchEvent(new Event(EVENT_ITEM_ICON_CLICKED)); });
 			
 			_tray = addChild(new MovieClip()) as MovieClip;
 			_tray.x = ConstantsApp.PANE_WIDTH * 0.5;
@@ -74,18 +73,18 @@ package app.ui.panes
 			// addItem (NOT addChild) adds this to the ScrollPane in the parent class
 			// we then also hijack the scrollpane and turn off the scrollbars
 			// this now lets the image be dragged around without it overflowing out of the container
-			addItem(_itemCont);
-			_scrollPane.horizontalScrollPolicy = "off";
-			_scrollPane.verticalScrollPolicy = "off";
+			_scrollbox.add(_itemCont);
+			_scrollbox.scrollPane.horizontalScrollPolicy = "off";
+			_scrollbox.scrollPane.verticalScrollPolicy = "off";
 			// Also steal the scrollpane's `contentBack` and size it to be full width/height
 			// so we can use it to detect scroll event
-			contentBack.graphics.clear();
-			contentBack.graphics.beginFill(0, 0);
-			contentBack.graphics.drawRect(0, 0, _scrollPane.width, _scrollPane.height);
-			contentBack.graphics.endFill();
+			_scrollbox.contentHitbox.graphics.clear();
+			_scrollbox.contentHitbox.graphics.beginFill(0, 0);
+			_scrollbox.contentHitbox.graphics.drawRect(0, 0, _scrollbox.scrollPane.width, _scrollbox.scrollPane.height);
+			_scrollbox.contentHitbox.graphics.endFill();
 			
 			var bPadding:Number = 8;
-			_dragBounds = new Rectangle(-_itemCont.x - _itemCont.parent.x + bPadding*0.5, -_itemCont.y - _itemCont.parent.y + bPadding*0.5, _scrollPane.width - bPadding, _scrollPane.height - bPadding);
+			_dragBounds = new Rectangle(-_itemCont.x - _itemCont.parent.x + bPadding*0.5, -_itemCont.y - _itemCont.parent.y + bPadding*0.5, _scrollbox.scrollPane.width - bPadding, _scrollbox.scrollPane.height - bPadding);
 			_itemDragDrop = _itemCont.addChild(new MovieClip()) as MovieClip;
 			_itemDragDrop.buttonMode = true;
 			_itemDragDrop.addEventListener(MouseEvent.MOUSE_DOWN, function (e:MouseEvent) {
@@ -112,7 +111,7 @@ package app.ui.panes
 			
 			// Attach scroll event to back to detect scroll anywhere on pane
 			// and also attach to item since it ignores the other scroll event if mouse over it
-			this.contentBack.addEventListener(MouseEvent.MOUSE_WHEEL, _onMouseWheel);
+			_scrollbox.contentHitbox.addEventListener(MouseEvent.MOUSE_WHEEL, _onMouseWheel);
 			_itemCont.addEventListener(MouseEvent.MOUSE_WHEEL, _onMouseWheel);
 			
 			/********************
@@ -301,7 +300,7 @@ package app.ui.panes
 		}
 		
 		private function _onBackClicked(e:Event) : void {
-			dispatchEvent(new Event(EVENT_EXIT));
+			dispatchEvent(new Event(Event.CLOSE));
 		}
 		
 		private function _clampCoordsToSafeArea() : void {

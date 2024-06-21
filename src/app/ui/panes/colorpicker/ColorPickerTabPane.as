@@ -10,15 +10,15 @@ package app.ui.panes.colorpicker
 	import flash.events.*;
 	import flash.utils.Dictionary;
 	import ext.ParentApp;
-	import app.ui.panes.TabPane;
+	import app.ui.panes.base.GridSidePane;
 	
-	public class ColorPickerTabPane extends TabPane
+	public class ColorPickerTabPane extends GridSidePane
 	{
 		// Constants
 		public static const EVENT_SWATCH_CHANGED	: String = "event_swatch_changed";
 		public static const EVENT_COLOR_PICKED		: String = "event_color_picked";
 		public static const EVENT_PREVIEW_COLOR		: String = "event_preview_color";
-		public static const EVENT_EXIT				: String = "event_exit";
+		public static const EVENT_ITEM_ICON_CLICKED : String = "event_item_icon_clicked";
 		
 		// Storage
 		private var _colorSwatches             : Vector.<ColorSwatch>;
@@ -40,12 +40,14 @@ package app.ui.panes.colorpicker
 		public function get selectedSwatch():int { return _selectedSwatch; }
 		
 		// Constructor
-		public function ColorPickerTabPane(pData:Object)
-		{
-			super();
+		// pData = { hide_default:bool, hide_imagecont:bool }
+		public function ColorPickerTabPane(pData:Object) {
+			super(1);
 			
 			this.addInfoBar( new ShopInfoBar({ showBackButton:true }) );
 			this.infoBar.colorWheel.addEventListener(MouseEvent.MOUSE_UP, _onColorPickerBackClicked);
+			if(pData.hide_imagecont) this.infoBar.hideImageCont();
+			this.infoBar.removeItemOverlay.addEventListener(MouseEvent.CLICK, function(e){ dispatchEvent(new Event(EVENT_ITEM_ICON_CLICKED)); });
 			
 			var tClickOffDetector = addChild(new Sprite()) as Sprite;
 			tClickOffDetector.graphics.beginFill( 0xFFFFFF );
@@ -83,7 +85,7 @@ package app.ui.panes.colorpicker
 			_colorHistory.y = _psColorPick.y + 40 + historySize*0.5;
 			_colorHistory.addEventListener(ColorHistoryOverlay.EVENT_COLOR_PICKED, _onHistoryColorClicked);
 			
-			this.UpdatePane(false);
+			// this.UpdatePane(false);
 		}
 		
 		public override function open() : void {
@@ -132,6 +134,13 @@ package app.ui.panes.colorpicker
 		/****************************
 		* Private
 		*****************************/
+		private function addItem(pItem:DisplayObject) : DisplayObject {
+			return _scrollbox.add(pItem);
+		}
+		private function removeItem(pItem:DisplayObject) : DisplayObject {
+			return _scrollbox.remove(pItem);
+		}
+		
 		public function _setupSwatches(pSwatches:Vector.<uint>) : void {
 			for each(var btn:ColorSwatch in _colorSwatches) {
 				this.removeItem(btn);
@@ -313,7 +322,7 @@ package app.ui.panes.colorpicker
 			addItem(_colorHistory);
 		}
 		private function _hideHistory() {
-			if(containsItem(_colorHistory)) removeItem(_colorHistory);
+			if(_scrollbox.contains(_colorHistory)) removeItem(_colorHistory);
 		}
 		private function _showHistoryButtonIfValid(swatchI:int) {
 			if(_getHistoryColors(swatchI).length > 1) {
@@ -360,7 +369,7 @@ package app.ui.panes.colorpicker
 		}
 		
 		private function _onColorPickerBackClicked(pEvent:Event) : void {
-			dispatchEvent(new Event(EVENT_EXIT));
+			dispatchEvent(new Event(Event.CLOSE));
 		}
 		
 		private function _dispatchColorUpdate(pColor:uint, pColorIndex:int, pAllUpdated:Boolean=false) : void {

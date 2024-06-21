@@ -11,8 +11,9 @@ package app.ui.panes
 	import flash.events.*;
 	import flash.display.MovieClip;
 	import app.world.data.ItemData;
+	import app.ui.panes.base.SidePane;
 	
-	public class OtherTabPane extends TabPane
+	public class OtherTabPane extends SidePane
 	{
 		// Storage
 		public var character:Character;
@@ -36,25 +37,25 @@ package app.ui.panes
 			super();
 			character = pCharacter;
 			
-			var i:int = 0, xx:Number = 15, yy:Number = 15, tButton:GameButton, sizex:Number, sizey:Number, spacingx:Number;
+			var i:int = 0, xx:Number = 20, yy:Number = 20, tButton:GameButton, sizex:Number, sizey:Number, spacingx:Number;
 			
 			// Shaman options
-			sizex = 80; sizey = 40; spacingx = sizex + 10; xx = 5 - spacingx;
+			sizex = 80; sizey = 40; spacingx = sizex + 10; xx = 10 - spacingx;
 			
 			shamanButtons = new Vector.<PushButton>();
-			var icon = addItem(new $ShamFeather()); icon.x = (xx += spacingx) + sizex*0.5; icon.y = yy + sizey*0.5; icon.scaleX = icon.scaleY = 2;
+			var icon = addChild(new $ShamFeather()); icon.x = (xx += spacingx) + sizex*0.5; icon.y = yy + sizey*0.5; icon.scaleX = icon.scaleY = 2;
 			icon.addEventListener(MouseEvent.CLICK, _onNoShamanButtonClicked);
 			xx -= 5;
 			yy -= 10;
-			shamanButtons.push(tButton = addItem(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextBase({ text:"btn_normal_mode", text:"Normal" }), id:ShamanMode.NORMAL.toInt() })) as PushButton);
-			shamanButtons.push(tButton = addItem(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextBase({ text:"btn_hard_mode", text:"Hard" }), id:ShamanMode.HARD.toInt() })) as PushButton);
-			shamanButtons.push(tButton = addItem(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextBase({ text:"btn_divine_mode", text:"Divine" }), id:ShamanMode.DIVINE.toInt() })) as PushButton);
+			shamanButtons.push(tButton = addChild(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextBase({ text:"btn_normal_mode", text:"Normal" }), id:ShamanMode.NORMAL.toInt() })) as PushButton);
+			shamanButtons.push(tButton = addChild(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextBase({ text:"btn_hard_mode", text:"Hard" }), id:ShamanMode.HARD.toInt() })) as PushButton);
+			shamanButtons.push(tButton = addChild(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextBase({ text:"btn_divine_mode", text:"Divine" }), id:ShamanMode.DIVINE.toInt() })) as PushButton);
 			if(character.shamanMode != ShamanMode.OFF) {
 				shamanButtons[character.shamanMode.toInt()-2].toggleOn();
 			}
 			_registerClickHandler(shamanButtons, _onShamanButtonClicked);
 			
-			disableSkillsModeButton = addItem(new PushButton({ x:5 + sizex*1.5 + spacingx - 180/2, y:yy + sizey + 5, width:180, height:20, obj:new TextBase({ text:"btn_no_skills_mode", text:"Divine" }) })) as PushButton;
+			disableSkillsModeButton = addChild(new PushButton({ x:10 + sizex*1.5 + spacingx - 180/2, y:yy + sizey + 5, width:180, height:20, obj:new TextBase({ text:"btn_no_skills_mode", text:"Divine" }) })) as PushButton;
 			if(character.disableSkillsMode) {
 				disableSkillsModeButton.toggleOn();
 			}
@@ -64,25 +65,25 @@ package app.ui.panes
 			yy += 10;
 			sizex = 80; sizey = 50;
 			
-			addItem( shamanColorPickerButton = new ScaleButton({ x:xx += spacingx + 30, y:yy + sizey*0.5 - 10, obj:new $ColorWheel() }) );
+			addChild( shamanColorPickerButton = new ScaleButton({ x:xx += spacingx + 30, y:yy + sizey*0.5 - 10, obj:new $ColorWheel() }) );
 			
 			sizex = 26; sizey = 18;
 			
-			addItem( shamanColorBlueButton = new ColorButton({ color:0x95D9D6, x:xx - (sizex*0.5+3), y:yy + sizey*0.5 + 35, width:sizex, height:sizey }) );
-			// addItem( shamanColorBlueButton = new GameButton({ x:xx - (sizex*0.5+3), y:yy + sizey*0.5 + 35, width:sizex, height:sizey, origin:0.5 }) );
+			addChild( shamanColorBlueButton = new ColorButton({ color:0x95D9D6, x:xx - (sizex*0.5+3), y:yy + sizey*0.5 + 35, width:sizex, height:sizey }) );
+			// addChild( shamanColorBlueButton = new GameButton({ x:xx - (sizex*0.5+3), y:yy + sizey*0.5 + 35, width:sizex, height:sizey, origin:0.5 }) );
 			// shamanColorBlueButton.addChild(_colorSpriteBox({ color:0x95D9D6, size:12, x:-12*0.5, y:-12*0.5 }));
 			
-			addItem( shamanColorPinkButton = new ColorButton({ color:0xFCA6F1, x:xx + (sizex*0.5+3), y:yy + sizey*0.5 + 35, width:sizex, height:sizey }) );
-			// addItem( shamanColorPinkButton = new GameButton({ x:xx + (sizex*0.5+3), y:yy + sizey*0.5 + 35, width:sizex, height:sizey, origin:0.5 }) );
+			addChild( shamanColorPinkButton = new ColorButton({ color:0xFCA6F1, x:xx + (sizex*0.5+3), y:yy + sizey*0.5 + 35, width:sizex, height:sizey }) );
+			// addChild( shamanColorPinkButton = new GameButton({ x:xx + (sizex*0.5+3), y:yy + sizey*0.5 + 35, width:sizex, height:sizey, origin:0.5 }) );
 			// shamanColorPinkButton.addChild(_colorSpriteBox({ color:0xFCA6F1, size:12, x:-12*0.5, y:-12*0.5 }));
 			
 			// Line
 			yy += 50 + 10;
-			addChild( GameAssets.createHorizontalRule(5, yy, ConstantsApp.PANE_WIDTH - 10) );
+			addChild( GameAssets.createHorizontalRule(10, yy, ConstantsApp.PANE_WIDTH - 15) );
 			
 			// Grid
-			yy += 15; xx = 15;
-			var grid:Grid = this.addItem( new Grid(385, GameAssets.extraBack.length).setXY(xx,yy) ) as Grid;
+			yy += 15; xx = 20;
+			var grid:Grid = addChild( new Grid(385, GameAssets.extraBack.length).setXY(xx,yy) ) as Grid;
 			
 			this.buttons_back = new Vector.<PushButton>();
 			for each(var itemData:ItemData in GameAssets.extraBack) {
@@ -95,7 +96,7 @@ package app.ui.panes
 			}
 
 			yy = grid.y + grid.cellSize + 5;
-			grid = this.addItem( new Grid(385, 5).setXY(xx,yy) ) as Grid;
+			grid = addChild( new Grid(385, 5).setXY(xx,yy) ) as Grid;
 			this.button_hand = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:new GameAssets.extraObjectWand.itemClass(), obj_scale:1.5, id:i++ });
 			grid.add(this.button_hand);
 			if(character.getItemData(ItemType.OBJECT)) { this.button_hand.toggleOn(); }
@@ -106,22 +107,19 @@ package app.ui.panes
 			
 			// Bottom buttons
 			characterHead = new Character(new <ItemData>[ GameAssets.defaultSkin, GameAssets.defaultPose ]);
-			var saveHeadButton = addItem(new GameButton({ x:348, y:310, width:70, height:70 }));
+			var saveHeadButton = addChild(new GameButton({ x:353, y:315, width:70, height:70 }));
 			saveHeadButton.addChild(characterHead);
 			saveHeadButton.addEventListener(MouseEvent.CLICK, _onSaveMouseHeadClicked);
 			
 			if(ConstantsApp.ANIMATION_DOWNLOAD_ENABLED) {
-				webpButton = addItem(new GameButton({ x:348-70-5, y:310, width:70, height:70 })) as GameButton;
+				webpButton = addChild(new GameButton({ x:353-70-5, y:315, width:70, height:70 })) as GameButton;
 				var webpText:TextBase = new TextBase({ x:35, y:35, origin:0.5, size:16 });
 				webpText.setUntranslatedText('.webp');
 				webpButton.addChild(webpText);
 				webpButton.addEventListener(MouseEvent.CLICK, _onSaveAsWebpClicked);
 			}
 			
-			itemFilterButton = addItem(new SpriteButton({ x:xx, y:310, width:70, height:70, obj:new $FilterIcon(), obj_scale:0.85 })) as SpriteButton;
-			// itemFilterButton.alpha = 0;
-			
-			UpdatePane();
+			itemFilterButton = addChild(new SpriteButton({ x:xx, y:315, width:70, height:70, obj:new $FilterIcon(), obj_scale:0.85 })) as SpriteButton;
 		}
 		
 		/****************************

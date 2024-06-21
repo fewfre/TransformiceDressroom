@@ -1,9 +1,6 @@
-package app.ui.panes
+package app.ui.panes.base
 {
-	import app.data.*;
-	import app.ui.*;
-	import app.ui.buttons.*;
-	import flash.display.*;
+	import flash.display.Sprite;
 	import com.fewfre.utils.Fewf;
 
 	public class PaneManager extends Sprite
@@ -17,14 +14,16 @@ package app.ui.panes
 			_panes = {};
 		}
 		
-		public function addPane(pID:String, pPane:TabPane) : TabPane {
+		public function addPane(pID:String, pPane:SidePane) : SidePane {
 			_panes[pID] = pPane;
 			return pPane;
 		}
 		
 		public function openPane(pID:String) : void {
 			closeAllPanes();
-			(addChild(_panes[pID]) as TabPane).open();
+			var pane:SidePane = _panes[pID];
+			addChild(pane);
+			pane.open();
 			// This line is needed to fix a bug caused by clicking a button on a pane, changing panes
 			// (which removed it from display), and then trying to use a keyboard event (since the
 			// element we have focused was removed)
@@ -35,16 +34,17 @@ package app.ui.panes
 			_closePane(_panes[pID]);
 		}
 		
-		protected function _closePane(pPane:TabPane) : void {
+		protected function _closePane(pPane:SidePane) : void {
 			if(!pPane.flagOpen) { return; }
-			(removeChild(pPane) as TabPane).close();
+			removeChild(pPane);
+			pPane.close();
 		}
 		
-		public function getPane(pID:String) : TabPane {
+		public function getPane(pID:String) : SidePane {
 			return _panes[pID];
 		}
 		
-		public function getOpenPane() : TabPane {
+		public function getOpenPane() : SidePane {
 			for(var key in _panes) {
 				if(_panes[key].flagOpen) {
 					return _panes[key];

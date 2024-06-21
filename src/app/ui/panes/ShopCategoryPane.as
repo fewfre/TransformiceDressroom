@@ -18,12 +18,14 @@ package app.ui.panes
 	import flash.events.KeyboardEvent;
 	import flash.events.FocusEvent;
 	import flash.text.TextFormat;
+	import app.ui.panes.base.ButtonGridSidePane;
 
-	public class ShopCategoryPane extends TabPane
+	public class ShopCategoryPane extends ButtonGridSidePane
 	{
 		private var _type: ItemType;
 		private var _itemDataVector: Vector.<ItemData>;
 		private var _defaultItemData: ItemData;
+		public var selectedButtonIndex : int;
 		
 		private var _defaultSkinColorButton: ScaleButton;
 		private var _flagWaveInput: FancyInput;
@@ -38,8 +40,17 @@ package app.ui.panes
 		
 		// Constructor
 		public function ShopCategoryPane(pType:ItemType) {
-			super();
 			this._type = pType;
+			var buttonPerRow:int = 6;
+			if(_type == ItemType.SKIN || _type == ItemType.POSE) { buttonPerRow = 5; }
+			super(buttonPerRow);
+			
+			if(_type !== ItemType.POSE) {
+				// Start these ones reversed by default
+				grid.reverse();
+			}
+			
+			selectedButtonIndex = -1;
 			this.addInfoBar( new ShopInfoBar({ showEyeDropButton:_type!=ItemType.POSE, showGridManagementButtons:true }) );
 			_setupGrid(GameAssets.getItemDataListByType(_type));
 			
@@ -54,7 +65,7 @@ package app.ui.panes
 		}
 		
 		public function getButtonWithItemData(itemData:ItemData) : PushButton {
-			return FewfUtils.arrayFind(buttons, function(b:PushButton){ return itemData.matches(b.data.itemData) });
+			return FewfUtils.vectorFind(buttons, function(b:PushButton){ return itemData.matches(b.data.itemData) });
 		}
 		
 		public function toggleGridButtonWithData(pData:ItemData) : PushButton {
@@ -78,23 +89,9 @@ package app.ui.panes
 		private function _setupGrid(pItemList:Vector.<ItemData>) : void {
 			_itemDataVector = pItemList;
 			_setDefaultItemDataFromList(pItemList);
-			var buttonPerRow:int = 6;
 			var scale:Number = 1;
-			if(_type == ItemType.SKIN || _type == ItemType.POSE) {
-					buttonPerRow = 5;
-					scale = 1;
-			}
 
-			var grid:Grid = this.grid;
-			if(!grid) {
-				grid = this.addGrid( new Grid(385, buttonPerRow) ).setXY(15, 5);
-				if(_type !== ItemType.POSE) {
-					// Start these ones reversed by default
-					grid.reverse();
-				}
-			}
-			grid.reset();
-			buttons = [];
+			clearButtons();
 
 			var itemData : ItemData, shopItem : MovieClip, shopItemButton : PushButton;
 			for(var i:int = 0; i < pItemList.length; i++) {
@@ -103,14 +100,11 @@ package app.ui.panes
 				shopItem.scaleX = shopItem.scaleY = scale;
 
 				shopItemButton = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:shopItem, id:i, data:{ type:_type, id:i, itemID:itemData.id, itemData:itemData } });
-				grid.add(shopItemButton);
-				this.buttons.push(shopItemButton);
+				addButton(shopItemButton);
 				shopItemButton.addEventListener(PushButton.STATE_CHANGED_AFTER, _onItemToggled);
 			}
 			
 			_addDefaultSkinColorButtonIfSkinPane();
-			
-			this.UpdatePane();
 		}
 		private function _setDefaultItemDataFromList(list:Vector.<ItemData>) : void {
 			_defaultItemData = null;
@@ -126,7 +120,7 @@ package app.ui.panes
 		}
 		
 		private function _getButtonWithItemId(pId:String) : PushButton {
-			return FewfUtils.arrayFind(buttons, function(b:PushButton){ return b.data.itemID == pId });
+			return FewfUtils.vectorFind(buttons, function(b:PushButton){ return b.data.itemID == pId });
 		}
 		
 		private function _addDefaultSkinColorButtonIfSkinPane() : void {

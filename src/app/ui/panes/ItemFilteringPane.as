@@ -21,8 +21,9 @@ package app.ui.panes
 	import fl.transitions.Tween;
 	import fl.transitions.easing.Elastic;
 	import flash.system.System;
+	import app.ui.panes.base.SidePane;
 	
-	public class ItemFilteringPane extends TabPane
+	public class ItemFilteringPane extends SidePane
 	{
 		// Constants
 		public static const EVENT_PREVIEW_ENABLED : String = "event_preview_enabled";
@@ -69,8 +70,6 @@ package app.ui.panes
 			var stopBtn = new DeleteButton({ x:xx, y:yy, origin:0.5, width:sizex, height:sizey, obj:new $Trash(), obj_scale:0.6 });
 			stopBtn.addEventListener(MouseEvent.CLICK, function(e):void{ dispatchEvent(new FewfEvent(EVENT_RESET_FILTERING)); });
 			addChild(stopBtn);
-			
-			UpdatePane();
 		}
 		
 		public override function open() : void {

@@ -10,7 +10,6 @@ package app.ui.screens
 	{
 		// Constants
 		public static const CONFIRM : String= "confirm_tray_screen";
-		public static const CLOSE : String= "close_tray_screen";
 		
 		// Storage
 		private var _bg				: RoundedRectangle;
@@ -55,7 +54,7 @@ package app.ui.screens
 		}
 		
 		private function _onCloseClicked(pEvent:Event) : void {
-			dispatchEvent(new Event(CLOSE));
+			dispatchEvent(new Event(Event.CLOSE));
 		}
 	}
 }

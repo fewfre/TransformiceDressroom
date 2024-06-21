@@ -17,9 +17,6 @@ package app.ui.screens
 	
 	public class LinkTray extends MovieClip
 	{
-		// Constants
-		public static const CLOSE : String= "close_link_tray";
-		
 		// Storage
 		private var _bg					: RoundedRectangle;
 		
@@ -101,7 +98,7 @@ package app.ui.screens
 		}
 		
 		private function _onCloseClicked(pEvent:Event) : void {
-			dispatchEvent(new Event(CLOSE));
+			dispatchEvent(new Event(Event.CLOSE));
 		}
 		
 		private function _clearCopiedMessages() : void {

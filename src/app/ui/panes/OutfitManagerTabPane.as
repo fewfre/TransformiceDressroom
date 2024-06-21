@@ -16,8 +16,9 @@ package app.ui.panes
 	import flash.net.FileFilter;
 	import flash.utils.setTimeout;
 	import app.world.data.ItemData;
+	import app.ui.panes.base.ButtonGridSidePane;
 	
-	public class OutfitManagerTabPane extends TabPane
+	public class OutfitManagerTabPane extends ButtonGridSidePane
 	{
 		// Storage
 		private var _character : Character;
@@ -29,14 +30,14 @@ package app.ui.panes
 		
 		// Constructor
 		public function OutfitManagerTabPane(pCharacter:Character, pOnUserLookClicked:Function) {
-			super();
+			super(5);
 			_character = pCharacter;
 			_onUserLookClicked = pOnUserLookClicked;
 			
 			this.addInfoBar( new ShopInfoBar({ showBackButton:true, showGridManagementButtons:true }) );
-			this.addGrid( new Grid(385, 5).setXY(15,5) );
-			_deleteBtnGrid = addItem(new Grid(385, 5).setXY(15,5)) as Grid;
+			_deleteBtnGrid = _scrollbox.add(new Grid(385, 5).setXY(15,5)) as Grid;
 			this.infoBar.hideImageCont();
+			this.infoBar.colorWheel.addEventListener(MouseEvent.MOUSE_UP, function(pEvent:Event){ dispatchEvent(new Event(Event.CLOSE)); });
 			
 			this.grid.reverse(); // Start reversed so that new outfits get added to start of list
 			_deleteBtnGrid.reverse();
@@ -58,8 +59,6 @@ package app.ui.panes
 			_exportButton = new SpriteButton({ x:xx, y:yy, width:size, height:size, obj:new $SimpleDownload(), obj_scale:0.7 });
 			_exportButton.addEventListener(MouseEvent.CLICK, _onExportClicked);
 			addChild(_exportButton);
-			
-			UpdatePane();
 		}
 		
 		/****************************
@@ -106,9 +105,8 @@ package app.ui.panes
 				_exportButton.disable().alpha = 0;
 			}
 			
-			grid.reset();
+			clearButtons();
 			_deleteBtnGrid.reset();
-			buttons = [];
 			
 			if(!grid.reversed) { _addNewOutfitButton(); }
 			
@@ -118,8 +116,6 @@ package app.ui.panes
 			}
 			
 			if(grid.reversed) { _addNewOutfitButton(); }
-			
-			UpdatePane();
 		}
 		
 		public function _addLookButton(lookCode:String, i:int) : void {
@@ -131,8 +127,7 @@ package app.ui.panes
 				
 				_untoggleAll(buttons, btn);
 			});
-			buttons.push(btn);
-			grid.add(btn);
+			addButton(btn);
 			
 			// Corresponding Delete Button
 			var deleteBtnHolder = new Sprite(); deleteBtnHolder.alpha = 0;
@@ -156,7 +151,7 @@ package app.ui.panes
 			// this.buttons.push(tNewOutfitBtn);// DO NOT ADD TO BUTTONS! only add to grid; this avoids issue when clicking "random" button
 		}
 
-		private function _untoggleAll(pList:Array, pExcepotButton:PushButton=null) : void {
+		private function _untoggleAll(pList:Vector.<PushButton>, pExcepotButton:PushButton=null) : void {
 			for(var i:int = 0; i < pList.length; i++) {
 				if (pList[i].pushed && pList[i] != pExcepotButton) {
 					pList[i].toggleOff();

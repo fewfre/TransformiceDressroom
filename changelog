@@ -1,6 +1,7 @@
 == V1.29 - 19 June 2024 ==
 - Color locks are now remembered on a per-item basis until you close the app, hit "Defaults" button on color picker, or trash entire outfit
 - [Code] `BitmapLoaderManager` updated to correctly use local images when not run in app
+- [Code] Rewrote the `TabPane` (now `SidePane`) and scrollbox logic
 
 
 == V1.28b - 4 May 2024 ==

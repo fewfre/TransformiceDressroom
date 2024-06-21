@@ -1,10 +1,15 @@
 package com.fewfre.display
 {
-	import com.fewfre.events.*;
-	import com.fewfre.utils.*;
-	import flash.display.*;
-	import flash.text.*;
-	
+	import com.fewfre.events.FewfEvent;
+	import com.fewfre.utils.Fewf;
+	import com.fewfre.utils.FewfUtils;
+	import com.fewfre.utils.I18n;
+	import flash.display.Sprite;
+	import flash.text.TextField;
+	import flash.text.TextFieldAutoSize;
+	import flash.text.TextFormat;
+	import flash.text.TextFormatAlign;
+
 	public class TextBase extends Sprite
 	{
 		// Constants

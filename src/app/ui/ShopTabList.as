@@ -1,6 +1,6 @@
 package app.ui
 {
-	import app.ui.buttons.*;
+	import app.ui.buttons.PushButton;
 	import app.ui.common.RoundedRectangle;
 	import com.fewfre.events.FewfEvent;
 	import flash.display.Sprite;

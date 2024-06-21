@@ -1,6 +1,7 @@
 package com.fewfre.display
 {
-	import flash.display.*;
+	import flash.display.Sprite;
+	import flash.display.DisplayObject;
 
 	// Display items in a grid format.
 	public class Grid extends Sprite
@@ -22,18 +23,17 @@ package com.fewfre.display
 		public function get cellSize():Number { return _cellSize; }
 		public function get rows():Number { return Math.ceil(_list.length / _columns); }
 		public function get columns():uint { return _columns; }
+		public function set columns(pColumns:uint):void { _columns = pColumns; _calcCellSizeAndSpacing(); _repositionCells(); }
 
 		// Constructor
 		public function Grid(pWidth:Number, pColumns:uint, pMargin:Number=5) {
 			_width = pWidth;
 			_columns = pColumns;
 			_margin = pMargin;
+			_calcCellSizeAndSpacing();
 
 			_list = new Vector.<DisplayObject>();
 			_reversed = false;
-
-			_cellSize = Math.floor((_width - (_margin * (_columns-1))) / _columns);
-			_spacing = _cellSize + _margin;
 		}
 		public function setXY(pX:Number, pY:Number) : Grid { x = pX; y = pY; return this; }
 		
@@ -68,9 +68,29 @@ package com.fewfre.display
 			_repositionCells();
 		}
 		
+		// Dev helper method to visually see where the "origin" of the grid cells are
+		public function drawScaffolding() : void {
+			var tRows:Number = 3;
+			graphics.lineStyle(2, 0xFFFFFF);
+			graphics.drawRect(0, 0, _width, _spacing*tRows);
+			graphics.lineStyle(0);
+			
+			graphics.beginFill(0xFFFFFF);
+			for(var i:int = 0; i < _columns; i++) {
+				for(var j:int = 0; j < tRows; j++) {
+					graphics.drawCircle(i*_spacing, j*_spacing, 5);
+				}
+			}
+			graphics.endFill();
+		}
+		
 		/****************************
-		* Public
+		* Private
 		*****************************/
+		private function _calcCellSizeAndSpacing() : void {
+			_cellSize = Math.floor((_width - (_margin * (_columns-1))) / _columns);
+			_spacing = _cellSize + _margin;
+		}
 		private function _repositionCells() : void {
 			var tList:Vector.<DisplayObject> = reversed ? _list.concat().reverse() : _list;
 			var len:int = tList.length;

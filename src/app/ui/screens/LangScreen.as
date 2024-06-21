@@ -13,9 +13,6 @@ package app.ui.screens
 	
 	public class LangScreen extends MovieClip
 	{
-		// Constants
-		public static const CLOSE : String= "close_lang_screen";
-		
 		// Storage
 		private var _tray			: RoundedRectangle;
 		
@@ -86,7 +83,7 @@ package app.ui.screens
 		}
 		
 		private function _close() : void {
-			dispatchEvent(new Event(CLOSE));
+			dispatchEvent(new Event(Event.CLOSE));
 		}
 		
 		private function _onLanguageClicked(pEvent:FewfEvent) : void {

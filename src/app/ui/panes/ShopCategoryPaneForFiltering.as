@@ -16,12 +16,12 @@ package app.ui.panes
 	import app.data.ShareCodeFilteringData;
 	import flash.display.Sprite;
 	import flash.utils.setTimeout;
+	import app.ui.panes.base.ButtonGridSidePane;
 
-	public class ShopCategoryPaneForFiltering extends TabPane
+	public class ShopCategoryPaneForFiltering extends ButtonGridSidePane
 	{
 		private var _type: ItemType;
 		private var _itemDataVector: Vector.<ItemData>;
-		private var _dirty : Boolean;
 		
 		private var _actionsGrid : Grid;
 		
@@ -32,14 +32,20 @@ package app.ui.panes
 		
 		// Constructor
 		public function ShopCategoryPaneForFiltering(pType:ItemType) {
-			super();
 			this._type = pType;
+			var buttonPerRow:int = 6;
+			if(_type == ItemType.SKIN || _type == ItemType.POSE) { buttonPerRow = 5; }
+			super(buttonPerRow);
+			
 			this.addInfoBar( new ShopInfoBar({ showEyeDropButton:false, showGridManagementButtons:true }) );
 			this.infoBar.hideImageCont();
 			this.infoBar.colorWheel.visible = false;
-			_dirty = true;
 				
-			// _actionsGrid = addItem(new Grid(grid.width, grid.columns).setXY(grid.x,grid.y)) as Grid;
+			_actionsGrid = _scrollbox.add(new Grid(385, grid.columns).setXY(grid.x,grid.y)) as Grid;
+			
+			// We want them to start reversed
+			grid.reverse();
+			_actionsGrid.reverse();
 			
 			infoBar.reverseButton.addEventListener(ButtonBase.CLICK, _onReverseGrid);
 		}
@@ -47,20 +53,12 @@ package app.ui.panes
 		/****************************
 		* Public
 		*****************************/
-		public override function open() : void {
-			super.open();
-			if(_dirty) {
-				_setupGrid(GameAssets.getItemDataListByType(_type));
-				_dirty = false;
-			}
-		}
-		
-		public function dirtyMe() : void {
-			_dirty = true;
+		protected override function _onDirtyOpen() : void {
+			_setupGrid(GameAssets.getItemDataListByType(_type));
 		}
 		
 		public function getButtonWithItemData(itemData:ItemData) : PushButton {
-			return FewfUtils.arrayFind(buttons, function(b:PushButton){ return itemData.matches(b.data.itemData) });
+			return FewfUtils.vectorFind(buttons, function(b:PushButton){ return itemData.matches(b.data.itemData) });
 		}
 		
 		public function toggleGridButtonWithData(pData:ItemData) : PushButton {
@@ -77,30 +75,13 @@ package app.ui.panes
 		*****************************/
 		private function _setupGrid(pItemList:Vector.<ItemData>) : void {
 			_itemDataVector = pItemList;
-			var buttonPerRow:int = 6;
-			var scale:Number = 1;
-			if(_type == ItemType.SKIN || _type == ItemType.POSE) {
-					buttonPerRow = 5;
-					scale = 1;
-			}
 
-			var grid:Grid = this.grid;
-			if(!grid) {
-				grid = this.addGrid( new Grid(385, buttonPerRow) ).setXY(15, 5);
-				_actionsGrid = addItem(new Grid(385, grid.columns).setXY(grid.x,grid.y)) as Grid;
-				// We want them to start reversed
-				grid.reverse();
-				_actionsGrid.reverse();
-			}
-			grid.reset();
+			clearButtons();
 			_actionsGrid.reset();
-			buttons = [];
 
 			for(var i:int = 0; i < pItemList.length; i++) {
-				_addButton(pItemList[i], scale, i);
+				_addButton(pItemList[i], 1, i);
 			}
-			
-			this.UpdatePane();
 		}
 		
 		private function _addButton(itemData:ItemData, pScale:Number, i:int) {
@@ -111,9 +92,8 @@ package app.ui.panes
 			_actionsGrid.add(customizeButton);
 
 			var shopItemButton : PushButton = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:shopItem, id:i, data:{ type:_type, id:i, itemID:itemData.id, itemData:itemData, customizeButton:customizeButton } });
-			grid.add(shopItemButton);
+			addButton(shopItemButton);
 			
-			this.buttons.push(shopItemButton);
 			shopItemButton.alpha = 0.5;
 			customizeButton.visible = false;
 			if(ShareCodeFilteringData.hasId(_type, itemData.id)) {
@@ -125,7 +105,7 @@ package app.ui.panes
 		}
 		
 		private function _getButtonWithItemId(pId:String) : PushButton {
-			return FewfUtils.arrayFind(buttons, function(b:PushButton){ return b.data.itemID == pId });
+			return FewfUtils.vectorFind(buttons, function(b:PushButton){ return b.data.itemID == pId });
 		}
 		
 		private function _addCustomizeButton(data:ItemData) : Sprite {
