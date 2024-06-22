@@ -219,7 +219,7 @@ package app.world
 			tPane.addEventListener(Event.CLOSE, function(pEvent:Event){ _paneManager.openPane(TAB_OTHER); });
 			
 			// Worn Items Pane
-			tPane = _paneManager.addPane(WORN_ITEMS_PANE_ID, new WornItemsPane(character, _goToItem));
+			tPane = _paneManager.addPane(WORN_ITEMS_PANE_ID, new WornItemsPane(character, _goToItemColorPicker));
 			tPane.addEventListener(Event.CLOSE, function(pEvent:Event){ _paneManager.openPane(TAB_OTHER); });
 			
 			// Item Filtering Pane
@@ -671,6 +671,11 @@ package app.world
 			var tPane:ShopCategoryPane = getTabByType(itemType);
 			var itemBttn:PushButton = tPane.toggleGridButtonWithData( character.getItemData(itemType) );
 			tPane.scrollItemIntoView(itemBttn);
+		}
+		
+		private function _goToItemColorPicker(pItemData:ItemData) : void {
+			_goToItem(pItemData);
+			if(getTabByType(pItemData.type).infoBar.colorWheel.enabled) _colorButtonClicked(pItemData.type);
 		}
 		
 		private function _onShareButtonClicked(pEvent:Event) : void {

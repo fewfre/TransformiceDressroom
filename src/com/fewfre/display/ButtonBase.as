@@ -27,6 +27,7 @@ package com.fewfre.display
 		
 		// Properties
 		public function get data():Object { return _returnData; }
+		public function get enabled():Boolean { return _flagEnabled; }
 		
 		// Constructor
 		// pArgs = { x:Number, y:Number, ?data:* }
