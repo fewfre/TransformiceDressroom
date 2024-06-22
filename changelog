@@ -2,7 +2,7 @@
 - Added an animation control widget that allows for finer control over the animation of the puppet
 - The following poses now have a more helpful frame shown on poses tab pane:
 	- Kiss, Neige, Clap, Rondoudou, Attaque, Hi5_1, Hi5_2
-- Heart from kiss aniamtion no longer flashes on/off when animation paused
+- Heart from kiss animation no longer flashes on/off when animation paused
 
 
 == V1.29 - 19 June 2024 ==
