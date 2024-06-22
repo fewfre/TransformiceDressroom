@@ -37,7 +37,7 @@ package app.ui.buttons
 				ChangeImage(pArgs.obj, pArgs.obj_scale || -1);
 			}
 			
-			this.allowToggleOff = pArgs.allowToggleOff == null ? true : pArgs.allowToggleOffs;
+			this.allowToggleOff = pArgs.allowToggleOff == null ? true : pArgs.allowToggleOff;
 			this.pushed = false;
 			_renderUnpressed();
 		}
@@ -51,8 +51,8 @@ package app.ui.buttons
 			var tOffset:Point = tBounds.topLeft;
 			
 			FewfDisplayUtils.fitWithinBounds(pMC, this.Width * 0.9, this.Height * 0.9, this.Width * 0.5, this.Height * 0.5);
-			pMC.x = this.Width / 2 - (tBounds.width / 2 + tOffset.x)*pScale * pMC.scaleX;
-			pMC.y = this.Height / 2 - (tBounds.height / 2 + tOffset.y)*pScale * pMC.scaleY;
+			pMC.x = this.Width * (0.5 - _bg.originX) - (tBounds.width / 2 + tOffset.x)*pScale * pMC.scaleX;
+			pMC.y = this.Height * (0.5 - _bg.originY) - (tBounds.height / 2 + tOffset.y)*pScale * pMC.scaleY;
 			pMC.scaleX *= pScale;
 			pMC.scaleY *= pScale;
 			addChild(this.Image = pMC);

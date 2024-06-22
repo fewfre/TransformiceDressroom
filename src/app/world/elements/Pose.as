@@ -49,9 +49,26 @@ package app.world.elements
 			_pose.stop();
 		}
 		
+		private function _getBestPoseFrame() : uint {
+			return _poseData.id == 'Kiss' ? 20
+			     : _poseData.id == 'Neige' ? 12
+			     : _poseData.id == 'Clap' ? 26
+			     : _poseData.id == 'Rondoudou' ? 63
+			     : _poseData.id == 'Attaque' ? 1
+			     : _poseData.id == 'Hi5_1' ? 8
+			     : _poseData.id == 'Hi5_2' ? 8
+			     : 10000
+		}
+		
 		public function stopAtLastFrame() : void {
-			_pose.gotoAndPlay(10000);
+			_pose.gotoAndPlay(_getBestPoseFrame());
 			stop();
+			// Stop children from animating when stopped
+			if(_poseData.id == 'Kiss' || _poseData.id == 'Bisou_1' || _poseData.id == 'Bisou_2') {
+				for(var i:int = 0; i < _pose.numChildren; i++){
+					(_pose.getChildAt(i) as MovieClip).stop();
+				}
+			}
 		}
 		
 		public function poseNextFrame() : void {

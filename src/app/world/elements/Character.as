@@ -12,9 +12,12 @@ package app.world.elements
 
 	public class Character extends Sprite
 	{
+		// Constants
+		public static const POSE_UPDATED : String = "pose_updated";
+		
 		// Storage
 		public var outfit:Pose;
-		public var animatePose:Boolean;
+		// public var animatePose:Boolean;
 		public var isOutfit:Boolean;
 		
 		public var _shamanMode:ShamanMode = ShamanMode.OFF;
@@ -42,7 +45,7 @@ package app.world.elements
 		// Constructor
 		public function Character(pWornItems:Vector.<ItemData>=null, pParams:String=null, pIsOutfit:Boolean=false) {
 			super();
-			animatePose = false;
+			// animatePose = false;
 			isOutfit = pIsOutfit;
 
 			this.buttonMode = true;
@@ -106,7 +109,9 @@ package app.world.elements
 				_disableSkillsMode,
 				_flagWavingCode
 			);
-			if(animatePose) outfit.play(); else outfit.stopAtLastFrame();
+			// if(animatePose) outfit.play(); else outfit.stopAtLastFrame();
+			outfit.stopAtLastFrame();
+			dispatchEvent(new Event(POSE_UPDATED));
 		}
 
 		public function parseParams(pCode:String) : Boolean {

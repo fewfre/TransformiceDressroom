@@ -34,18 +34,15 @@ package app.world
 	public class World extends MovieClip
 	{
 		// Storage
-		private var character		: Character;
-		private var _paneManager	: PaneManager;
+		private var character    : Character;
+		private var _paneManager : PaneManager;
 
-		private var shopTabs		: ShopTabList;
-		private var _toolbox		: Toolbox;
-		private var linkTray		: LinkTray;
-		private var trashConfirmScreen	: TrashConfirmScreen;
-		private var _langScreen	: LangScreen;
-
-		private var button_hand	: PushButton;
-		private var button_back	: PushButton;
-		private var button_backHand: PushButton;
+		private var shopTabs           : ShopTabList;
+		private var _toolbox           : Toolbox;
+		private var linkTray           : LinkTray;
+		private var trashConfirmScreen : TrashConfirmScreen;
+		private var _langScreen        : LangScreen;
+		private var _animationControls : AnimationControls;
 
 		private var currentlyColoringType:ItemType=null;
 		private var configCurrentlyColoringType:String;
@@ -101,6 +98,7 @@ package app.world
 				.setXY(180, 275).setDragBounds(0+4, 73+4, 375-8, Fewf.stage.stageHeight-73-8).appendTo(this);
 			this.character.doubleClickEnabled = true;
 			this.character.addEventListener(MouseEvent.DOUBLE_CLICK, function(e:MouseEvent){ _paneManager.openPane(WORN_ITEMS_PANE_ID); })
+			this.character.addEventListener(Character.POSE_UPDATED, _onCharacterPoseUpdated);
 			
 			/****************************
 			* Setup UI
@@ -118,7 +116,7 @@ package app.world
 				character:character,
 				onSave:_onSaveClicked, onAnimate:_onPlayerAnimationToggle, onRandomize:_onRandomizeDesignClicked,
 				onTrash:_onTrashButtonClicked, onShare:_onShareButtonClicked, onScale:_onScaleSliderChange,
-				onShareCodeEntered:_onShareCodeEntered, onItemFilterClosed:_onExitItemFilteringMode
+				onShareCodeEntered:_onShareCodeEntered, onItemFilterClosed:_onExitItemFilteringMode, isCharacterAnimating:isCharacterAnimating
 			}).setXY(188, 28).appendTo(this);
 			
 			var tOutfitButton:ScaleButton = addChild(new ScaleButton({ x:_toolbox.x+167, y:_toolbox.y+12.5+21, width:25, height:25, origin:0.5, obj:new $Outfit(), obj_scale:0.4 })) as ScaleButton;
@@ -128,6 +126,9 @@ package app.world
 			tLangButton.addEventListener(ButtonBase.CLICK, _onLangButtonClicked);
 			
 			new AppInfoBox().setXY(tLangButton.x+(tLangButton.Width*0.5)+(25*0.5)+2, pStage.stageHeight-17).appendTo(this);
+			
+			_animationControls = new AnimationControls().setXY(78, 425 - 35/2 - 5).appendTo(this);
+			_animationControls.addEventListener(Event.CLOSE, function(e):void{ _toolbox.animateButton.toggleOff(true); });
 			
 			/****************************
 			* Screens
@@ -463,19 +464,25 @@ package app.world
 			_giantFilterIcon.visible = _itemFiltering_selectionModeOn && !_itemFiltering_filterEnabled;
 			character.visible = !_giantFilterIcon.visible;
 		}
+		
+		private function _onCharacterPoseUpdated(e:Event) : void {
+			_animationControls.setTargetMovieClip(character.outfit.pose);
+		}
 
 		private function _onPlayerAnimationToggle(pEvent:Event):void {
-			character.animatePose = !character.animatePose;
-			if(character.animatePose) {
-				character.outfit.play();
+			if(!_animationControls.visible) {
+				_animationControls.show();
+				_animationControls.setTargetMovieClip(character.outfit.pose);
 			} else {
-				character.outfit.stop();
+				_animationControls.hide();
 			}
-			_toolbox.toggleAnimateButtonAsset(character.animatePose);
+		}
+		public function isCharacterAnimating() : Boolean {
+			return _animationControls.visible;
 		}
 
 		private function _onSaveClicked(pEvent:Event) : void {
-			if(ConstantsApp.ANIMATION_DOWNLOAD_ENABLED && character.animatePose) {
+			if(ConstantsApp.ANIMATION_DOWNLOAD_ENABLED && isCharacterAnimating()) {
 				// FewfDisplayUtils.saveAsSpriteSheet(this.character.copy().outfit.pose, "spritesheet", this.character.outfit.scaleX);
 				_toolbox.downloadButton.disable();
 				FewfDisplayUtils.saveAsAnimatedGif(this.character.copy().outfit.pose, "character", this.character.outfit.scaleX, null, function(){

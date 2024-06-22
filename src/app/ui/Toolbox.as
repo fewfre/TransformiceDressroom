@@ -23,13 +23,14 @@ package app.ui
 		
 		public var scaleSlider		: FancySlider;
 		public var downloadButton	: ButtonBase;
-		public var animateButton	: SpriteButton;
+		public var animateButton	: PushButton;
 		public var imgurButton		: SpriteButton;
 		
 		private var _itemFilterBanner: RoundedRectangle;
 		
 		// Constructor
-		// pData = { character:Character, onSave:Function, onAnimate:Function, onRandomize:Function, onTrash:Function, onShare:Function, onScale:Function, onItemFilterClosed:Function }
+		// pData = { character:Character, onSave:Function, onAnimate:Function, onRandomize:Function, onTrash:Function,
+		//     onShare:Function, onScale:Function, onItemFilterClosed:Function, isCharacterAnimating:()=>bool }
 		public function Toolbox(pData:Object) {
 			_character = pData.character;
 			
@@ -75,7 +76,7 @@ package app.ui
 				btn = imgurButton = tTray.addChild(new SpriteButton({ x:tX+tButtonXInc*tButtonsOnLeft, y:yy, width:tButtonSize, height:tButtonSize, obj_scale:0.415, obj:new $CopyIcon(), origin:0.5 })) as SpriteButton;
 				btn.addEventListener(ButtonBase.CLICK, function(e:*){
 					try {
-						if(ConstantsApp.ANIMATION_DOWNLOAD_ENABLED && _character.animatePose) {
+						if(ConstantsApp.ANIMATION_DOWNLOAD_ENABLED && pData.isCharacterAnimating()) {
 							FewfDisplayUtils.copyToClipboardAnimatedGif(_character.copy().outfit.pose, 1, function(){
 								imgurButton.ChangeImage(new $No());
 							})
@@ -103,9 +104,19 @@ package app.ui
 			btn.addEventListener(ButtonBase.CLICK, pData.onRandomize);
 			tButtonOnRight++;
 			
-			animateButton = tTray.addChild(new SpriteButton({ x:tX-tButtonXInc*tButtonOnRight, y:yy, width:tButtonSize, height:tButtonSize, obj_scale:0.5, obj:new Sprite(), origin:0.5 })) as SpriteButton;
-			animateButton.addEventListener(ButtonBase.CLICK, pData.onAnimate);
-			toggleAnimateButtonAsset(_character.animatePose);
+			animateButton = tTray.addChild(new PushButton({ x:tX-tButtonXInc*tButtonOnRight, y:yy, width:tButtonSize, height:tButtonSize, obj_scale:0.65, obj:new $PlayButton(), origin:0.5 })) as PushButton;
+			animateButton.addEventListener(PushButton.STATE_CHANGED_AFTER, pData.onAnimate);
+			animateButton.addEventListener(PushButton.STATE_CHANGED_AFTER, function(e):void{
+				var icon:Sprite = new $PlayButton();
+				if(animateButton.pushed) {
+					icon = new Sprite();
+					icon.graphics.beginFill(0xFFFFFF);
+					icon.graphics.lineStyle(2, 0);
+					icon.graphics.drawRect(-18/2, -18/2, 18, 18);
+					icon.graphics.endFill();
+				}
+				animateButton.ChangeImage(icon, 0.65);
+			});
 			tButtonOnRight++;
 			
 			/********************
@@ -144,10 +155,6 @@ package app.ui
 		}
 		public function setXY(pX:Number, pY:Number) : Toolbox { x = pX; y = pY; return this; }
 		public function appendTo(target:Sprite): Toolbox { target.addChild(this); return this; }
-		
-		public function toggleAnimateButtonAsset(pOn:Boolean) : void {
-			animateButton.ChangeImage(pOn ? new $PauseButton() : new $PlayButton());
-		}
 		
 		public function showItemFilterBanner() : void {
 			_itemFilterBanner.appendTo(this);
