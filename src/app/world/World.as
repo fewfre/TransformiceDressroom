@@ -112,12 +112,17 @@ package app.world
 			_populateShopTabs();
 
 			// Toolbox
-			_toolbox = new Toolbox({
-				character:character,
-				onSave:_onSaveClicked, onAnimate:_onPlayerAnimationToggle, onRandomize:_onRandomizeDesignClicked,
-				onTrash:_onTrashButtonClicked, onShare:_onShareButtonClicked, onScale:_onScaleSliderChange,
-				onShareCodeEntered:_onShareCodeEntered, onItemFilterClosed:_onExitItemFilteringMode, isCharacterAnimating:isCharacterAnimating
-			}).setXY(188, 28).appendTo(this);
+			_toolbox = new Toolbox(character, _onShareCodeEntered).setXY(188, 28).appendTo(this)
+				.on(Toolbox.SAVE_CLICKED, _onSaveClicked)
+				.on(Toolbox.SHARE_CLICKED, _onShareButtonClicked)
+				.on(Toolbox.CLIPBOARD_CLICKED, _onClipboardButtonClicked).on(Toolbox.IMGUR_CLICKED, _onImgurButtonClicked)
+				
+				.on(Toolbox.SCALE_SLIDER_CHANGE, _onScaleSliderChange)
+				
+				.on(Toolbox.ANIMATION_TOGGLED, _onPlayerAnimationToggle)
+				.on(Toolbox.RANDOM_CLICKED, _onRandomizeDesignClicked)
+				.on(Toolbox.TRASH_CLICKED, _onTrashButtonClicked)
+				.on(Toolbox.FILTER_BANNER_CLOSED, _onExitItemFilteringMode);
 			
 			var tOutfitButton:ScaleButton = addChild(new ScaleButton({ x:_toolbox.x+167, y:_toolbox.y+12.5+21, width:25, height:25, origin:0.5, obj:new $Outfit(), obj_scale:0.4 })) as ScaleButton;
 			tOutfitButton.addEventListener(ButtonBase.CLICK, function(pEvent:Event){ _paneManager.openPane(TAB_OUTFITS); });
@@ -128,7 +133,7 @@ package app.world
 			new AppInfoBox().setXY(tLangButton.x+(tLangButton.Width*0.5)+(25*0.5)+2, pStage.stageHeight-17).appendTo(this);
 			
 			_animationControls = new AnimationControls().setXY(78, 425 - 35/2 - 5).appendTo(this);
-			_animationControls.addEventListener(Event.CLOSE, function(e):void{ _toolbox.animateButton.toggleOff(true); });
+			_animationControls.addEventListener(Event.CLOSE, function(e):void{ _toolbox.toggleAnimationButtonOffWithEvent(); });
 			
 			/****************************
 			* Screens
@@ -469,7 +474,7 @@ package app.world
 			_animationControls.setTargetMovieClip(character.outfit.pose);
 		}
 
-		private function _onPlayerAnimationToggle(pEvent:Event):void {
+		private function _onPlayerAnimationToggle(e:Event):void {
 			if(!_animationControls.visible) {
 				_animationControls.show();
 				_animationControls.setTargetMovieClip(character.outfit.pose);
@@ -484,13 +489,39 @@ package app.world
 		private function _onSaveClicked(pEvent:Event) : void {
 			if(ConstantsApp.ANIMATION_DOWNLOAD_ENABLED && isCharacterAnimating()) {
 				// FewfDisplayUtils.saveAsSpriteSheet(this.character.copy().outfit.pose, "spritesheet", this.character.outfit.scaleX);
-				_toolbox.downloadButton.disable();
+				_toolbox.downloadButtonEnable(false);
 				FewfDisplayUtils.saveAsAnimatedGif(this.character.copy().outfit.pose, "character", this.character.outfit.scaleX, null, function(){
-					_toolbox.downloadButton.enable();
+					_toolbox.downloadButtonEnable(true);
 				});
 			} else {
 				FewfDisplayUtils.saveAsPNG(this.character, "character");
 			}
+		}
+
+		private function _onClipboardButtonClicked(e:Event) : void {
+			try {
+				if(ConstantsApp.ANIMATION_DOWNLOAD_ENABLED && isCharacterAnimating()) {
+					FewfDisplayUtils.copyToClipboardAnimatedGif(character.copy().outfit.pose, 1, function(){
+						_toolbox.updateClipboardButton(false, false);
+					})
+				} {
+					FewfDisplayUtils.copyToClipboard(character);
+					_toolbox.updateClipboardButton(false, true);
+				}
+			} catch(e) {
+					_toolbox.updateClipboardButton(false, false);
+			}
+			setTimeout(function(){ _toolbox.updateClipboardButton(true); }, 750);
+		}
+
+		private function _onImgurButtonClicked(e:Event) : void {
+			Fewf.dispatcher.addEventListener(ImgurApi.EVENT_DONE, _onImgurDone);
+			ImgurApi.uploadImage(character);
+			_toolbox.imgurButtonEnable(false);
+		}
+		private function _onImgurDone(e:*) : void {
+			Fewf.dispatcher.removeEventListener(ImgurApi.EVENT_DONE, _onImgurDone);
+			_toolbox.imgurButtonEnable(true);
 		}
 
 		// Note: does not automatically de-select previous buttons / infobars; do that before calling this

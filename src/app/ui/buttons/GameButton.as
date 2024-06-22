@@ -14,10 +14,10 @@ package app.ui.buttons
 		public function get Height():Number { return _bg.Height; }
 		
 		// Constructor
-		// pData = { x:Number, y:Number, width:Number, height:Number, ?origin:Number, ?originX:Number, ?originY:Number }
+		// pData = { x:Number, y:Number, (width:Number, height:Number OR size:Number), ?origin:Number, ?originX:Number, ?originY:Number }
 		public function GameButton(pData:Object)
 		{
-			_bg = addChild(new RoundedRectangle({ x:0, y:0, width:pData.width, height:pData.height, origin:pData.origin, originX:pData.originX, originY:pData.originY })) as RoundedRectangle;
+			_bg = addChild(new RoundedRectangle({ x:0, y:0, width:pData.size || pData.width, height:pData.size || pData.height, origin:pData.origin, originX:pData.originX, originY:pData.originY })) as RoundedRectangle;
 			super(pData);
 		}
 

@@ -3,6 +3,8 @@
 - The following poses now have a more helpful frame shown on poses tab pane:
 	- Kiss, Neige, Clap, Rondoudou, Attaque, Hi5_1, Hi5_2
 - Heart from kiss animation no longer flashes on/off when animation paused
+- [Bug] Fixed "copy to clipboard" button being broken due to change from animation control widget
+- [Code] Cleaned up `Toolbox` and made it `Event` driven
 
 
 == V1.29 - 19 June 2024 ==

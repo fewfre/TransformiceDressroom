@@ -13,40 +13,50 @@ package app.ui
 	import com.fewfre.utils.FewfDisplayUtils;
 	import app.world.elements.Character;
 	import flash.utils.setTimeout;
+	import flash.events.Event;
 	
 	public class Toolbox extends Sprite
 	{
-		// Storage
-		private var _downloadTray	: FrameBase;
-		private var _bg				: RoundedRectangle;
-		private var _character		: Character;
+		// Constants
+		public static const SAVE_CLICKED         = "save_clicked";
 		
-		public var scaleSlider		: FancySlider;
-		public var downloadButton	: ButtonBase;
-		public var animateButton	: PushButton;
-		public var imgurButton		: SpriteButton;
+		public static const SHARE_CLICKED        = "share_clicked";
+		public static const CLIPBOARD_CLICKED    = "clipboard_clicked";
+		public static const IMGUR_CLICKED        = "imgur_clicked";
+		
+		public static const SCALE_SLIDER_CHANGE  = "scale_slider_change";
+		
+		public static const ANIMATION_TOGGLED    = "animation_toggled";
+		public static const RANDOM_CLICKED       = "random_clicked";
+		public static const TRASH_CLICKED        = "trash_clicked";
+		
+		public static const FILTER_BANNER_CLOSED = "filter_banner_closed";
+		
+		// Storage
+		private var _downloadTray    : FrameBase;
+		private var _bg              : RoundedRectangle;
+		
+		public var scaleSlider       : FancySlider;
+		private var _downloadButton  : ButtonBase;
+		private var _animateButton   : PushButton;
+		private var _imgurButton     : SpriteButton;
+		private var _clipboardButton : SpriteButton;
 		
 		private var _itemFilterBanner: RoundedRectangle;
 		
 		// Constructor
-		// pData = { character:Character, onSave:Function, onAnimate:Function, onRandomize:Function, onTrash:Function,
-		//     onShare:Function, onScale:Function, onItemFilterClosed:Function, isCharacterAnimating:()=>bool }
-		public function Toolbox(pData:Object) {
-			_character = pData.character;
-			
-			var btn:ButtonBase;
-			
-			_bg = addChild(new RoundedRectangle({ width:365, height:35, origin:0.5 })) as RoundedRectangle;
-			_bg.drawAsTray();
+		// onShareCodeEntered: (code, (state:String)=>void)=>void
+		public function Toolbox(pCharacter:Character, onShareCodeEntered:Function) {
+			_bg = new RoundedRectangle({ width:365, height:35, origin:0.5 }).drawAsTray().appendTo(this);
 			
 			/********************
 			* Download Button
 			*********************/
 			_downloadTray = addChild(new FrameBase({ x:-_bg.Width*0.5 + 33, y:9, width:66, height:66, origin:0.5 })) as FrameBase;
-			/*_downloadTray.drawAsTray();*/
 			
-			downloadButton = _downloadTray.addChild(new SpriteButton({ width:46, height:46, obj:new $LargeDownload(), origin:0.5 })) as ButtonBase;
-			downloadButton.addEventListener(ButtonBase.CLICK, pData.onSave);
+			_downloadButton = new SpriteButton({ size:46, obj:new $LargeDownload(), origin:0.5 })
+				.on(ButtonBase.CLICK, dispatchEventHandler(SAVE_CLICKED))
+				.appendTo(_downloadTray);
 			
 			/********************
 			* Toolbar Buttons
@@ -61,62 +71,47 @@ package app.ui
 			// ### Left Side Buttons ###
 			tX = -tTrayWidth*0.5 + tButtonSize*0.5 + tButtonSizeSpace;
 			
-			btn = tTray.addChild(new SpriteButton({ x:tX+tButtonXInc*tButtonsOnLeft, y:yy, width:tButtonSize, height:tButtonSize, obj_scale:0.45, obj:new $Link(), origin:0.5 })) as SpriteButton;
-			btn.addEventListener(ButtonBase.CLICK, pData.onShare);
+			new SpriteButton({ size:tButtonSize, obj_scale:0.45, obj:new $Link(), origin:0.5 }).appendTo(tTray)
+				.setXY(tX+tButtonXInc*tButtonsOnLeft, yy)
+				.on(ButtonBase.CLICK, dispatchEventHandler(SHARE_CLICKED));
 			tButtonsOnLeft++;
 			
 			if(!Fewf.isExternallyLoaded) {
-				btn = imgurButton = tTray.addChild(new SpriteButton({ x:tX+tButtonXInc*tButtonsOnLeft, y:yy, width:tButtonSize, height:tButtonSize, obj_scale:0.45, obj:new $ImgurIcon(), origin:0.5 })) as SpriteButton;
-				btn.addEventListener(ButtonBase.CLICK, function(e:*){
-					ImgurApi.uploadImage(_character);
-					imgurButton.disable();
-				});
+				_imgurButton = new SpriteButton({ size:tButtonSize, obj_scale:0.45, obj:new $ImgurIcon(), origin:0.5 })
+					.setXY(tX+tButtonXInc*tButtonsOnLeft, yy)
+					.on(ButtonBase.CLICK, dispatchEventHandler(IMGUR_CLICKED))
+					.appendTo(tTray) as SpriteButton;
 				tButtonsOnLeft++;
 			} else {
-				btn = imgurButton = tTray.addChild(new SpriteButton({ x:tX+tButtonXInc*tButtonsOnLeft, y:yy, width:tButtonSize, height:tButtonSize, obj_scale:0.415, obj:new $CopyIcon(), origin:0.5 })) as SpriteButton;
-				btn.addEventListener(ButtonBase.CLICK, function(e:*){
-					try {
-						if(ConstantsApp.ANIMATION_DOWNLOAD_ENABLED && pData.isCharacterAnimating()) {
-							FewfDisplayUtils.copyToClipboardAnimatedGif(_character.copy().outfit.pose, 1, function(){
-								imgurButton.ChangeImage(new $No());
-							})
-						} {
-							FewfDisplayUtils.copyToClipboard(_character);
-							imgurButton.ChangeImage(new $Yes());
-						}
-					} catch(e) {
-						imgurButton.ChangeImage(new $No());
-					}
-					setTimeout(function(){ imgurButton.ChangeImage(new $CopyIcon()); }, 750)
-				});
+				_clipboardButton = new SpriteButton({ size:tButtonSize, obj_scale:0.415, obj:new $CopyIcon(), origin:0.5 })
+					.setXY(tX+tButtonXInc*tButtonsOnLeft, yy)
+					.on(ButtonBase.CLICK, dispatchEventHandler(CLIPBOARD_CLICKED))
+					.appendTo(tTray) as SpriteButton;
 				tButtonsOnLeft++;
 			}
 			
 			// ### Right Side Buttons ###
 			tX = tTrayWidth*0.5-(tButtonSize*0.5 + tButtonSizeSpace);
 
-			btn = tTray.addChild(new SpriteButton({ x:tX-tButtonXInc*tButtonOnRight, y:yy, width:tButtonSize, height:tButtonSize, obj_scale:0.42, obj:new $Trash(), origin:0.5 })) as SpriteButton;
-			btn.addEventListener(ButtonBase.CLICK, pData.onTrash);
+			new SpriteButton({ size:tButtonSize, obj_scale:0.42, obj:new $Trash(), origin:0.5 }).appendTo(tTray)
+				.setXY(tX-tButtonXInc*tButtonOnRight, yy)
+				.on(ButtonBase.CLICK, dispatchEventHandler(TRASH_CLICKED));
 			tButtonOnRight++;
 
 			// Dice icon based on https://www.iconexperience.com/i_collection/icons/?icon=dice
-			btn = tTray.addChild(new SpriteButton({ x:tX-tButtonXInc*tButtonOnRight, y:yy, width:tButtonSize, height:tButtonSize, obj_scale:1, obj:new $Dice(), origin:0.5 })) as SpriteButton;
-			btn.addEventListener(ButtonBase.CLICK, pData.onRandomize);
+			new SpriteButton({ size:tButtonSize, obj_scale:1, obj:new $Dice(), origin:0.5 }).appendTo(tTray)
+				.setXY(tX-tButtonXInc*tButtonOnRight, yy)
+				.on(ButtonBase.CLICK, dispatchEventHandler(RANDOM_CLICKED));
 			tButtonOnRight++;
 			
-			animateButton = tTray.addChild(new PushButton({ x:tX-tButtonXInc*tButtonOnRight, y:yy, width:tButtonSize, height:tButtonSize, obj_scale:0.65, obj:new $PlayButton(), origin:0.5 })) as PushButton;
-			animateButton.addEventListener(PushButton.STATE_CHANGED_AFTER, pData.onAnimate);
-			animateButton.addEventListener(PushButton.STATE_CHANGED_AFTER, function(e):void{
-				var icon:Sprite = new $PlayButton();
-				if(animateButton.pushed) {
-					icon = new Sprite();
-					icon.graphics.beginFill(0xFFFFFF);
-					icon.graphics.lineStyle(2, 0);
-					icon.graphics.drawRect(-18/2, -18/2, 18, 18);
-					icon.graphics.endFill();
-				}
-				animateButton.ChangeImage(icon, 0.65);
-			});
+			_animateButton = new PushButton({ size:tButtonSize, obj_scale:0.65, obj:new $PlayButton(), origin:0.5 })
+				.setXY(tX-tButtonXInc*tButtonOnRight, yy)
+				.on(PushButton.STATE_CHANGED_AFTER, dispatchEventHandler(ANIMATION_TOGGLED))
+				.on(PushButton.STATE_CHANGED_AFTER, function(e):void{
+					var icon:Sprite = !_animateButton.pushed ? new $PlayButton() : newStopIcon();
+					_animateButton.ChangeImage(icon, 0.65);
+				})
+				.appendTo(tTray) as PushButton;
 			tButtonOnRight++;
 			
 			/********************
@@ -126,36 +121,42 @@ package app.ui
 			var tSliderWidth:Number = tTrayWidth - tButtonXInc*(tTotalButtons) - 20;
 			tX = -tSliderWidth*0.5+(tButtonXInc*((tButtonsOnLeft-tButtonOnRight)*0.5))-1;
 			scaleSlider = new FancySlider(tSliderWidth).setXY(tX, yy)
-				.setSliderParams(1, 8, _character.outfit.scaleX)
+				.setSliderParams(1, 8, pCharacter.outfit.scaleX)
 				.appendTo(tTray);
-			scaleSlider.addEventListener(FancySlider.CHANGE, pData.onScale);
+			scaleSlider.addEventListener(FancySlider.CHANGE, dispatchEventHandler(SCALE_SLIDER_CHANGE));
 			
 			
 			/********************
 			* Under Toolbox
 			*********************/
 			if(!ConstantsApp.CONFIG_TAB_ENABLED) {
-				addChild(new PasteShareCodeInput({ x:18, y:33, onChange:pData.onShareCodeEntered }));
+				addChild(new PasteShareCodeInput({ x:18, y:33, onChange:onShareCodeEntered }));
 			}
 			
 			// Item Filter Banner
-			var hh:Number = 30;
-			_itemFilterBanner = new RoundedRectangle({ width:260, height:30 }).setXY(-112, 18).draw(0xDDDDFF, 4, 0x0000FF);
-			yy = hh/2;
-			new TextBase({ text:"share_filter_banner", x:10, y:yy, originX:0, color:0x111111 }).appendTo(_itemFilterBanner);
-			new ScaleButton({ obj:new $No(), obj_scale:0.5 }).setXY(245, yy)
-				.appendTo(_itemFilterBanner).on(ButtonBase.CLICK, pData.onItemFilterClosed);
-			
-			/********************
-			* Events
-			*********************/
-			Fewf.dispatcher.addEventListener(ImgurApi.EVENT_DONE, _onImgurDone);
-			
-			pData = null;
+			// Don't append to anything until it should show up
+			_itemFilterBanner = _newItemFilterBanner().setXY(-112, 18)
+			_itemFilterBanner.addEventListener(Event.CLOSE, dispatchEventHandler(FILTER_BANNER_CLOSED));
 		}
 		public function setXY(pX:Number, pY:Number) : Toolbox { x = pX; y = pY; return this; }
 		public function appendTo(target:Sprite): Toolbox { target.addChild(this); return this; }
+		public function on(type:String, listener:Function): Toolbox { this.addEventListener(type, listener); return this; }
+		public function off(type:String, listener:Function): Toolbox { this.removeEventListener(type, listener); return this; }
 		
+		private function _newItemFilterBanner() : RoundedRectangle {
+			var hh:Number = 30, yy:Number = hh/2;
+			// Don't append to anything until it should show up
+			var tray : RoundedRectangle = new RoundedRectangle({ width:260, height:30 }).draw(0xDDDDFF, 4, 0x0000FF);
+			new TextBase({ text:"share_filter_banner", x:10, y:yy, originX:0, color:0x111111 }).appendTo(tray);
+			new ScaleButton({ obj:new $No(), obj_scale:0.5 }).setXY(245, yy).appendTo(tray)
+				.on(ButtonBase.CLICK, function(e):void{ tray.dispatchEvent(new Event(Event.CLOSE)); });
+				
+			return tray;
+		}
+		
+		///////////////////////
+		// Public
+		///////////////////////
 		public function showItemFilterBanner() : void {
 			_itemFilterBanner.appendTo(this);
 		}
@@ -164,8 +165,36 @@ package app.ui
 			if(_itemFilterBanner.parent) _itemFilterBanner.parent.removeChild(_itemFilterBanner);
 		}
 		
-		private function _onImgurDone(e:*) : void {
-			imgurButton.enable();
+		public function downloadButtonEnable(pOn:Boolean) : void {
+			if(pOn) _downloadButton.enable(); else _downloadButton.disable();
+		}
+		
+		public function imgurButtonEnable(pOn:Boolean) : void {
+			if(pOn) _imgurButton.enable(); else _imgurButton.disable();
+		}
+		
+		public function toggleAnimationButtonOffWithEvent() : void {
+			_animateButton.toggleOff(true);
+		}
+		
+		public function updateClipboardButton(normal:Boolean, elseYes:Boolean=true) : void {
+			if(!_clipboardButton) return;
+			_clipboardButton.ChangeImage(normal ? new $CopyIcon() : elseYes ? new $Yes() : new $No());
+		}
+		
+		///////////////////////
+		// Private
+		///////////////////////
+		private function dispatchEventHandler(pEventName:String) : Function {
+			return function(e):void{ dispatchEvent(new Event(pEventName)); };
+		}
+		private function newStopIcon() : Sprite {
+			var icon:Sprite = new Sprite();
+			icon.graphics.beginFill(0xFFFFFF);
+			icon.graphics.lineStyle(2, 0);
+			icon.graphics.drawRect(-18/2, -18/2, 18, 18);
+			icon.graphics.endFill();
+			return icon;
 		}
 	}
 }

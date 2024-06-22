@@ -20,7 +20,7 @@ package app.ui
 		private var _placeholderTimeout	: Number;
 		
 		// Constructor
-		// pData = { x:Number, y:Number, width?:Number, onChange:Function }
+		// pData = { x:Number, y:Number, width?:Number, onChange:(code, (state:String)=>void)=>void }
 		public function PasteShareCodeInput(pData:Object) {
 			this.x = pData.x;
 			this.y = pData.y;

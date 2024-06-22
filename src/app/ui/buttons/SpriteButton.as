@@ -15,7 +15,7 @@ package app.ui.buttons
 		public var Text:TextBase;
 		
 		// Constructor
-		// pData = { x:Number, y:Number, width:Number, height:Number, ?obj:DisplayObject, ?obj_scale:Number, ?id:int, ?text:String, ?origin:Number, ?originX:Number, ?originY:Number }
+		// pData = { x:Number, y:Number, (width:Number, height:Number OR size:Number), ?obj:DisplayObject, ?obj_scale:Number, ?id:int, ?text:String, ?origin:Number, ?originX:Number, ?originY:Number }
 		public function SpriteButton(pData:Object)
 		{
 			super(pData);

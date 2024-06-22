@@ -23,7 +23,7 @@ package app.ui.buttons
 		public var Image:DisplayObject;
 		
 		// Constructor
-		// pArgs = { x:Number, y:Number, width:Number, height:Number, ?obj:DisplayObject, ?obj_scale:Number, ?text:String, ?id:int, ?allowToggleOff:Boolean=true }
+		// pArgs = { x:Number, y:Number, (width:Number, height:Number OR size:Number), ?obj:DisplayObject, ?obj_scale:Number, ?text:String, ?id:int, ?allowToggleOff:Boolean=true }
 		public function PushButton(pArgs:Object)
 		{
 			super(pArgs);
