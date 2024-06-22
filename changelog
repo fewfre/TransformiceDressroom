@@ -5,6 +5,8 @@
 - Heart from kiss animation no longer flashes on/off when animation paused
 - [Bug] Fixed "copy to clipboard" button being broken due to change from animation control widget
 - [Code] Cleaned up `Toolbox` and made it `Event` driven
+- Replaced bottom left github button/version text with a new button to a new "About" screen (where aforementioned content has been moved)
+	- Added a discord link button on new About screen
 
 
 == V1.29 - 19 June 2024 ==

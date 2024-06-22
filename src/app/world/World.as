@@ -30,6 +30,7 @@ package app.world
 	import app.ui.panes.base.PaneManager;
 	import app.ui.panes.base.SidePane;
 	import app.ui.panes.base.ButtonGridSidePane;
+	import ext.ParentApp;
 	
 	public class World extends MovieClip
 	{
@@ -39,10 +40,12 @@ package app.world
 
 		private var shopTabs           : ShopTabList;
 		private var _toolbox           : Toolbox;
-		private var linkTray           : LinkTray;
+		private var _animationControls : AnimationControls;
+		
+		private var _shareScreen       : LinkTray;
 		private var trashConfirmScreen : TrashConfirmScreen;
 		private var _langScreen        : LangScreen;
-		private var _animationControls : AnimationControls;
+		private var _aboutScreen       : AboutScreen;
 
 		private var currentlyColoringType:ItemType=null;
 		private var configCurrentlyColoringType:String;
@@ -111,7 +114,9 @@ package app.world
 			this.shopTabs.addEventListener(ShopTabList.TAB_CLICKED, _onTabClicked);
 			_populateShopTabs();
 
-			// Toolbox
+			/////////////////////////////
+			// Top Area
+			/////////////////////////////
 			_toolbox = new Toolbox(character, _onShareCodeEntered).setXY(188, 28).appendTo(this)
 				.on(Toolbox.SAVE_CLICKED, _onSaveClicked)
 				.on(Toolbox.SHARE_CLICKED, _onShareButtonClicked)
@@ -127,19 +132,34 @@ package app.world
 			var tOutfitButton:ScaleButton = addChild(new ScaleButton({ x:_toolbox.x+167, y:_toolbox.y+12.5+21, width:25, height:25, origin:0.5, obj:new $Outfit(), obj_scale:0.4 })) as ScaleButton;
 			tOutfitButton.addEventListener(ButtonBase.CLICK, function(pEvent:Event){ _paneManager.openPane(TAB_OUTFITS); });
 			
+			_animationControls = new AnimationControls().setXY(78, pStage.stageHeight - 35/2 - 5).appendTo(this);
+			_animationControls.addEventListener(Event.CLOSE, function(e):void{ _toolbox.toggleAnimationButtonOffWithEvent(); });
+			
+			/////////////////////////////
+			// Bottom Left Area
+			/////////////////////////////
 			var tLangButton:LangButton = addChild(new LangButton({ x:22, y:pStage.stageHeight-17, width:30, height:25, origin:0.5 })) as LangButton;
 			tLangButton.addEventListener(ButtonBase.CLICK, _onLangButtonClicked);
 			
-			new AppInfoBox().setXY(tLangButton.x+(tLangButton.Width*0.5)+(25*0.5)+2, pStage.stageHeight-17).appendTo(this);
+			// About Screen Button
+			var qMark:TextField = new TextField(); qMark.text = '?'; qMark.autoSize = TextFieldAutoSize.CENTER;
+			qMark.setTextFormat(new TextFormat('Arial', 22, 0xFFFFFF, 'bold'));
+			var aboutButton:SpriteButton = new SpriteButton({ size:25, origin:0.5, obj:qMark }).appendTo(this)
+				.setXY(tLangButton.x+(tLangButton.Width/2)+2+(25/2), pStage.stageHeight - 17)
+				.on(ButtonBase.CLICK, _onAboutButtonClicked) as SpriteButton;
+			qMark.x -= 9; qMark.y -= 15;
 			
-			_animationControls = new AnimationControls().setXY(78, 425 - 35/2 - 5).appendTo(this);
-			_animationControls.addEventListener(Event.CLOSE, function(e):void{ _toolbox.toggleAnimationButtonOffWithEvent(); });
+			if(!!(ParentApp.reopenSelectionLauncher())) {
+				new ScaleButton({ obj:new $BackArrow(), obj_scale:0.5, origin:0.5 }).appendTo(this)
+				.setXY(22, pStage.stageHeight-17-28)
+					.on(ButtonBase.CLICK, function():void{ ParentApp.reopenSelectionLauncher()(); });
+			}
 			
-			/****************************
-			* Screens
-			*****************************/
-			linkTray = new LinkTray({ x:pStage.stageWidth * 0.5, y:pStage.stageHeight * 0.5 });
-			linkTray.addEventListener(Event.CLOSE, _onShareTrayClosed);
+			/////////////////////////////
+			// Screens
+			/////////////////////////////
+			_shareScreen = new LinkTray({ x:pStage.stageWidth * 0.5, y:pStage.stageHeight * 0.5 });
+			_shareScreen.addEventListener(Event.CLOSE, _onShareScreenClosed);
 			
 			trashConfirmScreen = new TrashConfirmScreen({ x:337, y:65 });
 			trashConfirmScreen.addEventListener(TrashConfirmScreen.CONFIRM, _onTrashConfirmScreenConfirm);
@@ -147,6 +167,9 @@ package app.world
 			
 			_langScreen = new LangScreen({  });
 			_langScreen.addEventListener(Event.CLOSE, _onLangScreenClosed);
+			
+			_aboutScreen = new AboutScreen();
+			_aboutScreen.addEventListener(Event.CLOSE, _onAboutScreenClosed);
 
 			/****************************
 			* Create item panes
@@ -669,12 +692,12 @@ package app.world
 				tOfficialCode = "<error creating link>";
 			};
 
-			linkTray.open(tURL, tOfficialCode);
-			addChild(linkTray);
+			_shareScreen.open(tURL, tOfficialCode);
+			addChild(_shareScreen);
 		}
 
-		private function _onShareTrayClosed(pEvent:Event) : void {
-			removeChild(linkTray);
+		private function _onShareScreenClosed(pEvent:Event) : void {
+			removeChild(_shareScreen);
 		}
 
 		private function _onTrashButtonClicked(pEvent:Event) : void {
@@ -710,17 +733,26 @@ package app.world
 			LockHistoryMap.deleteAllLockHistory();
 		}
 
-		private function _onTrashConfirmScreenClosed(pEvent:Event) : void {
+		private function _onTrashConfirmScreenClosed(e:Event) : void {
 			removeChild(trashConfirmScreen);
 		}
 
-		private function _onLangButtonClicked(pEvent:Event) : void {
+		private function _onLangButtonClicked(e:Event) : void {
 			_langScreen.open();
 			addChild(_langScreen);
 		}
 
-		private function _onLangScreenClosed(pEvent:Event) : void {
+		private function _onLangScreenClosed(e:Event) : void {
 			removeChild(_langScreen);
+		}
+
+		private function _onAboutButtonClicked(e:Event) : void {
+			_aboutScreen.open();
+			addChild(_aboutScreen);
+		}
+
+		private function _onAboutScreenClosed(e:Event) : void {
+			removeChild(_aboutScreen);
 		}
 
 		//{REGION Get TabPane data

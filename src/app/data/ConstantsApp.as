@@ -14,6 +14,7 @@ package app.data
 		*****************************/
 		public static const VERSION					: String = "1.29b";
 		public static const SOURCE_URL				: String = "https://github.com/fewfre/TransformiceDressroom/blob/master/changelog";
+		public static const DISCORD_URL				: String = "https://discord.gg/DREPH9GqWw";
 		
 		public static const DEFAULT_SKIN_ID			: int = 0;
 		public static const DEFAULT_POSE_ID			: int = 0;

@@ -66,24 +66,37 @@ package app.ui.screens
 			tCloseButton.addEventListener(ButtonBase.CLICK, _onCloseClicked);
 		}
 		
+		private function _newScreenBacking() : Sprite {
+			var backing:Sprite = new Sprite(), size:Number = 10000;
+			backing.x = -size/2;
+			backing.y = -size/2;
+			backing.graphics.beginFill(0x000000, 0.2);
+			backing.graphics.drawRect(0, 0, size, size);
+			backing.graphics.endFill();
+			return backing;
+		}
+		
+		///////////////////////
+		// Public
+		///////////////////////
+		public function open() : void {
+			
+		}
+		
+		///////////////////////
+		// Private
+		///////////////////////
+		private function _close() : void {
+			dispatchEvent(new Event(Event.CLOSE));
+		}
+		private function _onCloseClicked(pEvent:Event) : void { _close(); }
+		
 		private function _getFlagImage(pLangData:Object) : MovieClip {
 			var tImage = new MovieClip();
 			var tFlag = tImage.addChild(Fewf.assets.getLoadedMovieClip(pLangData.flags_swf_linkage));
 			tFlag.x -= tFlag.width*0.5;
 			tFlag.y -= tFlag.height*0.5;
 			return tImage;
-		}
-		
-		public function open() : void {
-			
-		}
-		
-		private function _onCloseClicked(pEvent:Event) : void {
-			_close();
-		}
-		
-		private function _close() : void {
-			dispatchEvent(new Event(Event.CLOSE));
 		}
 		
 		private function _onLanguageClicked(pEvent:FewfEvent) : void {
