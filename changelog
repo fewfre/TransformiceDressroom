@@ -7,8 +7,10 @@
 - [Code] Cleaned up `Toolbox` and made it `Event` driven
 - Replaced bottom left github button/version text with a new button to a new "About" screen (where aforementioned content has been moved)
 	- Added a discord link button on new About screen
-- Clicking an item on the "Worn Items" pane will now open the item in the Color Picker (if it's customizable).
+- Clicking an item on the "Worn Items" pane will now open the item in the Color Picker (if it's customizable)
 - [Bug] If you pause an animation and change an item it no longer resets pause to default frame (this was happening before animation update too, long standing bug ;_;)
+- [Bug] Fixed lag caused by a recent update
+- Optimized Outfit Manager pane so list isn't fully re-rendered on outfit adding, deleting, or list reversing.
 
 
 == V1.29 - 19 June 2024 ==

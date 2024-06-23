@@ -58,6 +58,7 @@ package app.ui.panes
 				if(itemType === null) { continue; }
 				_addItemButton( _character.getItemData(itemType) );
 			}
+			refreshScrollbox();
 		}
 		
 		public function _addItemButton(itemData:ItemData) : void {

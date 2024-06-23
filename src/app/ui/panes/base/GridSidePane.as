@@ -32,12 +32,14 @@ package app.ui.panes.base
 
 		public function addToGrid(pItem:DisplayObject) : DisplayObject {
 			_grid.add(pItem);
-			_scrollbox.refresh();
 			return pItem;
 		}
 
 		public function resetGrid() : void {
 			_grid.reset();
+		}
+
+		public function refreshScrollbox() : void {
 			_scrollbox.refresh();
 		}
 

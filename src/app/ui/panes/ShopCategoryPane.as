@@ -105,6 +105,7 @@ package app.ui.panes
 			}
 			
 			_addDefaultSkinColorButtonIfSkinPane();
+			refreshScrollbox();
 		}
 		private function _setDefaultItemDataFromList(list:Vector.<ItemData>) : void {
 			_defaultItemData = null;

@@ -82,6 +82,7 @@ package app.ui.panes
 			for(var i:int = 0; i < pItemList.length; i++) {
 				_addButton(pItemList[i], 1, i);
 			}
+			refreshScrollbox();
 		}
 		
 		private function _addButton(itemData:ItemData, pScale:Number, i:int) {

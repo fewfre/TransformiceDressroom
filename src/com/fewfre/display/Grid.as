@@ -56,11 +56,20 @@ package com.fewfre.display
 			_repositionCells();
 		}
 		
-		public function add(pItem:DisplayObject) : DisplayObject {
-			_list.push( addChild(pItem) );
+		public function add(pItem:DisplayObject, addToStart:Boolean=false) : DisplayObject {
+			if(!addToStart) _list.push( addChild(pItem) ); else _list.unshift( addChildAt(pItem, 0) );
 			
 			_repositionCells();
 			return pItem;
+		}
+		
+		public function remove(pItem:DisplayObject) : DisplayObject {
+			var i:Number = _list.indexOf(pItem);
+			if(i == -1) return null;
+			var item:DisplayObject = removeChild(_list[i]);
+			_list.splice(i, 1);
+			_repositionCells();
+			return item;
 		}
 		
 		public function reverse() : void {
