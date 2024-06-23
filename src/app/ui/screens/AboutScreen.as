@@ -11,7 +11,7 @@ package app.ui.screens
 	import flash.net.navigateToURL;
 	import flash.net.URLRequest;
 	import app.data.ConstantsApp;
-	import com.fewfre.display.TextBase;
+	import com.fewfre.display.TextTranslated;
 	import com.fewfre.utils.I18n;
 	import com.fewfre.events.FewfEvent;
 	import flash.display.Bitmap;
@@ -19,7 +19,7 @@ package app.ui.screens
 	public class AboutScreen extends Sprite
 	{
 		// Storage
-		private var _translatedByText : TextBase;
+		private var _translatedByText : TextTranslated;
 		
 		// Constructor
 		public function AboutScreen() {
@@ -28,7 +28,7 @@ package app.ui.screens
 			this.y = Fewf.stage.stageHeight * 0.5;
 			
 			addChild(_newScreenBacking()).addEventListener(MouseEvent.CLICK, _onCloseClicked);
-			var bg:RoundedRectangle = new RoundedRectangle({ width:400, height:200, origin:0.5 }).drawAsTray().appendTo(this);
+			var bg:RoundedRectangle = new RoundedRectangle(400, 200, { origin:0.5 }).drawAsTray().appendTo(this);
 
 			var xx:Number = 0, yy:Number = 0;
 			
@@ -36,9 +36,9 @@ package app.ui.screens
 			// Version Info / Acknowledgements
 			///////////////////////
 			xx = -bg.Width*0.5 + 15; yy = -bg.Height*0.5 + 20;
-			new TextBase({ text:"version", originX:0, values:ConstantsApp.VERSION }).setXY(xx, yy).appendTo(this);
+			new TextTranslated({ text:"version", originX:0, values:ConstantsApp.VERSION }).setXY(xx, yy).appendTo(this);
 			yy += 20;
-			_translatedByText = new TextBase({ text:"translated_by", size:10, originX:0 }).setXY(xx, yy).appendTo(this)
+			_translatedByText = new TextTranslated({ text:"translated_by", size:10, originX:0 }).setXY(xx, yy).appendTo(this)
 			_updateTranslatedByText();
 			Fewf.dispatcher.addEventListener(I18n.FILE_UPDATED, _onFileUpdated);
 

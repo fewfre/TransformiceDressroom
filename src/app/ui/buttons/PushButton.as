@@ -19,7 +19,7 @@ package app.ui.buttons
 		public var id:int;
 		public var pushed:Boolean;
 		public var allowToggleOff:Boolean; // Only controls the behavior on internal click controls.
-		public var Text:TextBase;
+		public var Text:TextTranslated;
 		public var Image:DisplayObject;
 		
 		// Constructor
@@ -30,7 +30,7 @@ package app.ui.buttons
 			if(pArgs.id) { id = pArgs.id; }
 			
 			if(pArgs.text) {
-				this.Text = addChild(new TextBase({ text:pArgs.text, x:pArgs.width*(0.5 - _bg.originX), y:pArgs.height*(0.5 - _bg.originY) })) as TextBase;
+				this.Text = new TextTranslated({ text:pArgs.text, x:pArgs.width*(0.5 - _bg.originX), y:pArgs.height*(0.5 - _bg.originY) }).appendTo(this);
 			}
 			
 			if(pArgs.obj) {

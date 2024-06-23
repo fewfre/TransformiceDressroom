@@ -15,8 +15,10 @@
 	- Moved grid management logic to it's own component
 	- Grid management button groups can now be hidden individually, instead of all or nothing
 	- Hovering over item preview on infobar now properly shows a point cursor (to make it more obvious it's clickable)
-- Removed randomize and arrow button from toolbar item filter item selection screen
+- Removed randomize and arrow buttons from toolbar item filter item selection screen
 - Updated back button arrow and the red x (used for closing item filter banner) to have a larger hit area
+- [Code] Rewrote `RoundedRectangle` to have width/height as normal params
+- [Code] Renamed `TextBase` to `TextTranslated`, and then (next commit)
 
 
 == V1.29 - 19 June 2024 ==

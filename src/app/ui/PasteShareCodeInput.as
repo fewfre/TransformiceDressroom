@@ -1,6 +1,6 @@
 package app.ui
 {
-	import com.fewfre.display.TextBase;
+	import com.fewfre.display.TextTranslated;
 	import app.ui.common.RoundedRectangle;
 	import flash.display.MovieClip;
 	import flash.text.TextField;
@@ -15,7 +15,7 @@ package app.ui
 	{
 		// Storage
 		private var _textField			: TextField;
-		private var _placeholderText	: TextBase;
+		private var _placeholderText	: TextTranslated;
 		private var _placeholderState	: String;
 		private var _placeholderTimeout	: Number;
 		
@@ -28,8 +28,8 @@ package app.ui
 			
 			var tTFWidth:Number = pData.width ? pData.width : 250, tTFHeight:Number = 18, tTFPaddingX:Number = 5, tTFPaddingY:Number = 5;
 			// So much easier than doing it with those darn native text field options which have no padding.
-			var tTextBackground:RoundedRectangle = new RoundedRectangle({ width:tTFWidth+tTFPaddingX*2, height:tTFHeight+tTFPaddingY*2, origin:0.5 })
-				.appendTo(this).draw(0xdcdfea, 7, 0x444444);
+			var tTextBackground:RoundedRectangle = new RoundedRectangle(tTFWidth+tTFPaddingX*2, tTFHeight+tTFPaddingY*2, { origin:0.5 })
+				.draw(0xdcdfea, 7, 0x444444).appendTo(this);
 			
 			_textField = tTextBackground.addChild(new TextField()) as TextField;
 			_textField.type = TextFieldType.INPUT;
@@ -47,7 +47,7 @@ package app.ui
 				tOnShareCodeEntered(code, _setShareCodeProgress);
 				e.preventDefault();
 			});
-			_placeholderText = tTextBackground.addChild(new TextBase({ text:"share_paste", originX:0, x:_textField.x+4 })) as TextBase;
+			_placeholderText = new TextTranslated({ text:"share_paste", originX:0, x:_textField.x+4 }).appendTo(tTextBackground);
 			_placeholderText.mouseChildren = false;
 			_placeholderText.mouseEnabled = false;
 			_setShareCodeProgress("placeholder");

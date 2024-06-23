@@ -13,14 +13,16 @@ package app.ui.common
 		public var originY:Number;
 		
 		// Constructor
-		// pData = { x:Number, y:Number, width:Number, height:Number, ?origin:Number, ?originX:Number=0, ?originY:Number=0 }
-		public function RoundedRectangle(pData:Object) {
+		// pData = { x:Number, y:Number, ?origin:Number, ?originX:Number=0, ?originY:Number=0 }
+		public function RoundedRectangle(pWidth:Number, pHeight:Number, pData:Object=null) {
 			super();
+			pData = pData || {};
+
+			Width = pWidth;
+			Height = pHeight;
 			
 			this.x = pData.x;
 			this.y = pData.y;
-			Width = pData.width;
-			Height = pData.height;
 			originX = 0;
 			originY = 0;
 			if(pData.origin != null) {

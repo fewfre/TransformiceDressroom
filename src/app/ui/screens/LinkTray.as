@@ -1,6 +1,7 @@
 package app.ui.screens
 {
-	import com.fewfre.display.*;
+	import com.fewfre.display.TextTranslated;
+	import com.fewfre.display.ButtonBase;
 	import com.adobe.images.*;
 	import app.data.*;
 	import app.ui.buttons.*;
@@ -21,11 +22,11 @@ package app.ui.screens
 		private var _bg					: RoundedRectangle;
 		
 		public var _text				: TextField;
-		public var _textCopiedMessage	: TextBase;
+		public var _textCopiedMessage	: TextTranslated;
 		public var _textCopyTween		: Tween;
 		
 		public var _text2				: TextField;
-		public var _textCopiedMessage2	: TextBase;
+		public var _textCopiedMessage2	: TextTranslated;
 		public var _textCopyTween2		: Tween;
 		
 		// Constructor
@@ -49,40 +50,40 @@ package app.ui.screens
 			* Background
 			*****************************/
 			var tWidth:Number = 500, tHeight:Number = 300;
-			_bg = new RoundedRectangle({ width:tWidth, height:tHeight, origin:0.5 }).appendTo(this).drawAsTray();
+			_bg = new RoundedRectangle(tWidth, tHeight, { origin:0.5 }).appendTo(this).drawAsTray();
 			
 			/****************************
 			* Header
 			*****************************/
-			addChild(new TextBase({ text:"share_header", size:25, y:-110 }));
+			addChild(new TextTranslated({ text:"share_header", size:25, y:-110 }));
 			
 			/****************************
 			* #1 - Selectable text field + Copy Button and message
 			*****************************/
 			var tY:Number = 80;
 			
-			addChild(new TextBase({ text:"share_fewfre_syntax", size:15, y:tY-30 }));
+			addChild(new TextTranslated({ text:"share_fewfre_syntax", size:15, y:tY-30 }));
 			
 			_text = _newCopyInput({ x:0, y:tY }, this);
 			
 			var tCopyButton:SpriteButton = addChild(new SpriteButton({ x:tWidth*0.5-(80/2)-20, y:tY+39, text:"share_copy", width:80, height:25, origin:0.5 })) as SpriteButton;
 			tCopyButton.addEventListener(ButtonBase.CLICK, function():void{ _copyToClipboard(); });
 			
-			_textCopiedMessage = addChild(new TextBase({ text:"share_link_copied", size:17, originX:1, x:tCopyButton.x - tCopyButton.Width/2 - 10, y:tCopyButton.y, alpha:0 })) as TextBase;
+			_textCopiedMessage = new TextTranslated({ text:"share_link_copied", size:17, originX:1, x:tCopyButton.x - tCopyButton.Width/2 - 10, y:tCopyButton.y, alpha:0 }).appendTo(this);
 			
 			/****************************
 			* #2 - Selectable text field + Copy Button and message
 			*****************************/
 			tY = -35;
 			
-			addChild(new TextBase({ text:"share_tfm_syntax", size:15, y:tY-30 }));
+			new TextTranslated({ text:"share_tfm_syntax", size:15, y:tY-30 }).appendTo(this);
 			
 			_text2 = _newCopyInput({ x:0, y:tY }, this);
 			
 			var tCopyButton2:SpriteButton = addChild(new SpriteButton({ x:tWidth*0.5-(80/2)-20, y:tY+39, text:"share_copy", width:80, height:25, origin:0.5 })) as SpriteButton;
 			tCopyButton2.addEventListener(ButtonBase.CLICK, function():void{ _copyToClipboard2(); });
 			
-			_textCopiedMessage2 = addChild(new TextBase({ text:"share_link_copied", size:17, originX:1, x:tCopyButton2.x - tCopyButton2.Width/2 - 10, y:tCopyButton2.y, alpha:0 })) as TextBase;
+			_textCopiedMessage2 = new TextTranslated({ text:"share_link_copied", size:17, originX:1, x:tCopyButton2.x - tCopyButton2.Width/2 - 10, y:tCopyButton2.y, alpha:0 }).appendTo(this);
 			
 			/****************************
 			* Close Button
@@ -127,7 +128,7 @@ package app.ui.screens
 		
 		private function _newCopyInput(pData:Object, pParent:Sprite) : TextField {
 			var tTFWidth:Number = _bg.width-50, tTFHeight:Number = 18, tTFPaddingX:Number = 5, tTFPaddingY:Number = 5;
-			var tTextBackground:RoundedRectangle = new RoundedRectangle({ x:pData.x, y:pData.y, width:tTFWidth+tTFPaddingX*2, height:tTFHeight+tTFPaddingY*2, origin:0.5 })
+			var tTextBackground:RoundedRectangle = new RoundedRectangle(tTFWidth+tTFPaddingX*2, tTFHeight+tTFPaddingY*2, { origin:0.5 }).setXY(pData.x, pData.y)
 				.appendTo(pParent).draw(0xFFFFFF, 7, 0x444444);
 			
 			var tTextField:TextField = tTextBackground.addChild(new TextField()) as TextField;

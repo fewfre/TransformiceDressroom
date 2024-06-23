@@ -1,7 +1,7 @@
 package app.ui.buttons
 {
 	import com.fewfre.display.ButtonBase;
-	import com.fewfre.display.TextBase;
+	import com.fewfre.display.TextTranslated;
 	import app.ui.*;
 	import flash.display.*;
 	import flash.text.*;
@@ -12,7 +12,7 @@ package app.ui.buttons
 		// Storage
 		public var id:int;
 		public var Image:flash.display.DisplayObject;
-		public var Text:TextBase;
+		public var Text:TextTranslated;
 		
 		// Constructor
 		// pData = { x:Number, y:Number, (width:Number, height:Number OR size:Number), ?obj:DisplayObject, ?obj_scale:Number, ?id:int, ?text:String, ?origin:Number, ?originX:Number, ?originY:Number }
@@ -30,7 +30,7 @@ package app.ui.buttons
 			}
 			
 			if(pData.text) {
-				this.Text = addChild(new TextBase({ text:pData.text, size:11, x:this.Width * (0.5 - _bg.originX) - 2, y:this.Height * (0.5 - _bg.originY) - 2 })) as TextBase;
+				this.Text = new TextTranslated({ text:pData.text, size:11, x:this.Width * (0.5 - _bg.originX) - 2, y:this.Height * (0.5 - _bg.originY) - 2 }).appendTo(this);
 			}
 		}
 

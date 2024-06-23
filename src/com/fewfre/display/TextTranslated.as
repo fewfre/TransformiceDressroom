@@ -10,7 +10,7 @@ package com.fewfre.display
 	import flash.text.TextFormat;
 	import flash.text.TextFormatAlign;
 
-	public class TextBase extends Sprite
+	public class TextTranslated extends Sprite
 	{
 		// Constants
 		public static const DEFAULT_SIZE : Number = 12;
@@ -45,7 +45,7 @@ package com.fewfre.display
 		// Constructor
 		// pArgs = { x:Number, y:Number, ?text:String, ?font:String, ?size:Number, ?color:int, ?origin:Number=0.5,
 		//			?originX:Number=0.5, ?originY:Number=0.5, ?alpha:Number=1, ?values:*|Array }
-		public function TextBase(pArgs:Object) {
+		public function TextTranslated(pArgs:Object) {
 			super();
 			this.x = pArgs.x != null ? pArgs.x : 0;
 			this.y = pArgs.y != null ? pArgs.y : 0;
@@ -78,8 +78,8 @@ package com.fewfre.display
 			
 			_addEventListeners();
 		}
-		public function setXY(pX:Number, pY:Number) : TextBase { x = pX; y = pY; return this; }
-		public function appendTo(target:Sprite): TextBase { target.addChild(this); return this; }
+		public function setXY(pX:Number, pY:Number) : TextTranslated { x = pX; y = pY; return this; }
+		public function appendTo(target:Sprite): TextTranslated { target.addChild(this); return this; }
 
 		/****************************
 		* Render

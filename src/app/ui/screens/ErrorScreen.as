@@ -15,7 +15,7 @@ package app.ui.screens
 	{
 		// Storage
 		private var _tray			: RoundedRectangle;
-		private var _text			: TextBase;
+		private var _text			: TextTranslated;
 		private var _string			: String;
 		
 		// Constructor
@@ -39,16 +39,15 @@ package app.ui.screens
 			* Background
 			*****************************/
 			var tWidth:Number = 500, tHeight:Number = 200;
-			_tray = new RoundedRectangle({ width:tWidth, height:tHeight, origin:0.5 }).appendTo(this).draw(0xFFDDDD, 25, 0xFF0000);
+			_tray = new RoundedRectangle(tWidth, tHeight, { origin:0.5 }).appendTo(this).draw(0xFFDDDD, 25, 0xFF0000);
 
 			/****************************
 			* Message
 			*****************************/
 			// We manually x center the text since we're using wordWrap which uses width instead of textWidth
-			_text = new TextBase({ color:0x330000, originX:0, originY:0.5, x:-(_tray.Width - 20) / 2 });
+			_text = new TextTranslated({ color:0x330000, originX:0, originY:0.5, x:-(_tray.Width - 20) / 2 }).appendTo(this);
 			_text.field.width = _tray.Width - 20;
 			_text.field.wordWrap = true;
-			addChild(_text);
 			
 			/****************************
 			* Close Button

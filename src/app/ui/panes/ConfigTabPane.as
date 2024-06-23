@@ -25,7 +25,7 @@ package app.ui.panes
 		// Storage
 		public var userOutfitsGrid		: Grid;
 		public var usernameInput		: FancyInput;
-		public var usernameErrorText	: TextBase;
+		public var usernameErrorText	: TextTranslated;
 		public var onUserLookClicked	: Function;
 		public var _loadingUser			: Boolean;
 		
@@ -52,7 +52,7 @@ package app.ui.panes
 				// User look fetcher - Title
 				sizey = 20;
 				xx = 15-2; yy += sizey*0.5;
-				addChild(new TextBase({ text:"user_lookup_title", x:xx, y:yy-3, originX:0, size:14 }));
+				new TextTranslated({ text:"user_lookup_title", x:xx, y:yy-3, originX:0, size:14 }).appendTo(this);
 				yy += sizey*0.5 + 3;
 				
 				// User look fetcher - Search
@@ -75,7 +75,7 @@ package app.ui.panes
 				
 				// Since we want this to disappear after a search anyways, coop the error text variable
 				yy += 2;
-				usernameErrorText = addChild(new TextBase({ text:"user_lookup_details", color:0xAAAAAA, x:xx-2, y:yy, originX:0, originY:0, align:TextFormatAlign.LEFT })) as TextBase;
+				usernameErrorText = new TextTranslated({ text:"user_lookup_details", color:0xAAAAAA, x:xx-2, y:yy, originX:0, originY:0, align:TextFormatAlign.LEFT }).appendTo(this);
 			}
 		}
 		
@@ -83,7 +83,7 @@ package app.ui.panes
 		private function _addTextField(pData) : TextField {
 			var tTFWidth:Number = pData.width, tTFHeight:Number = pData.height, tTFPaddingX:Number = 5, tTFPaddingY:Number = 5;
 			// So much easier than doing it with those darn native text field options which have no padding.
-			var tTextBackground:RoundedRectangle = addChild(new RoundedRectangle({ x:pData.x, y:pData.y, width:tTFWidth+tTFPaddingX*2, height:tTFHeight+tTFPaddingY*2, origin:0.5 })) as RoundedRectangle;
+			var tTextBackground:RoundedRectangle = new RoundedRectangle(tTFWidth+tTFPaddingX*2, tTFHeight+tTFPaddingY*2, { origin:0.5 }).setXY(pData.x, pData.y).appendTo(this);
 			tTextBackground.draw(0xdcdfea, 7, 0x444444);
 			
 			var tTextField = tTextBackground.addChild(new TextField()) as TextField;
@@ -153,7 +153,7 @@ package app.ui.panes
 		}
 		
 		private function _setFetchUserError(message:String) {
-			usernameErrorText = addChild(new TextBase({ color:0xFF0000, x:5+ConstantsApp.PANE_WIDTH*0.5, y:userOutfitsGrid.y+25 })) as TextBase;
+			usernameErrorText = new TextTranslated({ color:0xFF0000, x:5+ConstantsApp.PANE_WIDTH*0.5, y:userOutfitsGrid.y+25 }).appendTo(this);
 			usernameErrorText.setUntranslatedText(message);
 		}
 		

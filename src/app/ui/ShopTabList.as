@@ -17,7 +17,7 @@ package app.ui
 		// Constructor
 		// pTabDataList = Vector.<{ text:String, event:String }> }
 		public function ShopTabList(pWidth:Number, pHeight:Number) {
-			_bg = new RoundedRectangle({ width:pWidth, height:pHeight }).appendTo(this).drawAsTray();
+			_bg = new RoundedRectangle(pWidth, pHeight).appendTo(this).drawAsTray();
 			
 			tabs = new Vector.<PushButton>();
 		}

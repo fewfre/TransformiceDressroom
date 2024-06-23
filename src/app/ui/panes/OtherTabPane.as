@@ -47,15 +47,15 @@ package app.ui.panes
 			icon.addEventListener(MouseEvent.CLICK, _onNoShamanButtonClicked);
 			xx -= 5;
 			yy -= 10;
-			shamanButtons.push(tButton = addChild(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextBase({ text:"btn_normal_mode", text:"Normal" }), id:ShamanMode.NORMAL.toInt() })) as PushButton);
-			shamanButtons.push(tButton = addChild(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextBase({ text:"btn_hard_mode", text:"Hard" }), id:ShamanMode.HARD.toInt() })) as PushButton);
-			shamanButtons.push(tButton = addChild(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextBase({ text:"btn_divine_mode", text:"Divine" }), id:ShamanMode.DIVINE.toInt() })) as PushButton);
+			shamanButtons.push(tButton = addChild(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextTranslated({ text:"btn_normal_mode", text:"Normal" }), id:ShamanMode.NORMAL.toInt() })) as PushButton);
+			shamanButtons.push(tButton = addChild(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextTranslated({ text:"btn_hard_mode", text:"Hard" }), id:ShamanMode.HARD.toInt() })) as PushButton);
+			shamanButtons.push(tButton = addChild(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextTranslated({ text:"btn_divine_mode", text:"Divine" }), id:ShamanMode.DIVINE.toInt() })) as PushButton);
 			if(character.shamanMode != ShamanMode.OFF) {
 				shamanButtons[character.shamanMode.toInt()-2].toggleOn();
 			}
 			_registerClickHandler(shamanButtons, _onShamanButtonClicked);
 			
-			disableSkillsModeButton = addChild(new PushButton({ x:10 + sizex*1.5 + spacingx - 180/2, y:yy + sizey + 5, width:180, height:20, obj:new TextBase({ text:"btn_no_skills_mode", text:"Divine" }) })) as PushButton;
+			disableSkillsModeButton = addChild(new PushButton({ x:10 + sizex*1.5 + spacingx - 180/2, y:yy + sizey + 5, width:180, height:20, obj:new TextTranslated({ text:"btn_no_skills_mode", text:"Divine" }) })) as PushButton;
 			if(character.disableSkillsMode) {
 				disableSkillsModeButton.toggleOn();
 			}
@@ -113,9 +113,8 @@ package app.ui.panes
 			
 			if(ConstantsApp.ANIMATION_DOWNLOAD_ENABLED) {
 				webpButton = addChild(new GameButton({ x:353-70-5, y:315, width:70, height:70 })) as GameButton;
-				var webpText:TextBase = new TextBase({ x:35, y:35, origin:0.5, size:16 });
+				var webpText:TextTranslated = new TextTranslated({ x:35, y:35, origin:0.5, size:16 }).appendTo(webpButton);
 				webpText.setUntranslatedText('.webp');
-				webpButton.addChild(webpText);
 				webpButton.addEventListener(MouseEvent.CLICK, _onSaveAsWebpClicked);
 			}
 			

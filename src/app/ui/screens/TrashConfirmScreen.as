@@ -35,7 +35,7 @@ package app.ui.screens
 			* Background
 			*****************************/
 			var tWidth:Number = 66, tHeight:Number = 34;
-			_bg = new RoundedRectangle({ width:tWidth, height:tHeight, origin:0.5 }).appendTo(this).drawAsTray();
+			_bg = new RoundedRectangle(tWidth, tHeight, { origin:0.5 }).appendTo(this).drawAsTray();
 			
 			/****************************
 			* Buttons

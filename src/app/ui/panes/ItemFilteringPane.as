@@ -32,7 +32,7 @@ package app.ui.panes
 		
 		// Storage
 		private var _textCopyField		: TextField;
-		private var _textCopiedMessage	: TextBase;
+		private var _textCopiedMessage	: TextTranslated;
 		private var _textCopyTween		: Tween;
 		
 		// Constructor
@@ -47,10 +47,9 @@ package app.ui.panes
 			
 			// Description
 			yy = 125; xx = 2 + 5;
-			var desc:TextBase = new TextBase({ text:"filtermode_description", x:xx, y:yy, origin:0 });
+			var desc:TextTranslated = new TextTranslated({ text:"filtermode_description", x:xx, y:yy, origin:0 }).appendTo(this);
 			desc.field.width = ConstantsApp.PANE_WIDTH - 5*2;
 			desc.field.wordWrap = true;
-			addChild(desc);
 			
 			// Share code textbox
 			_addNewCopySection(ConstantsApp.APP_HEIGHT - 165);
@@ -87,8 +86,7 @@ package app.ui.panes
 			var tCopyButton:SpriteButton = addChild(new SpriteButton({ x:-_textCopyField.x+tWidth*0.5-(80/2)+13, y:pY+39, text:"share_copy", width:80, height:25, origin:0.5 })) as SpriteButton;
 			tCopyButton.addEventListener(ButtonBase.CLICK, function():void{ _copyToClipboard(); });
 			
-			_textCopiedMessage = addChild(new TextBase({ text:"share_link_copied", size:15, originX:1, x:tCopyButton.x - tCopyButton.Width/2 - 10, y:tCopyButton.y-2, alpha:0 })) as TextBase;
-			
+			_textCopiedMessage = new TextTranslated({ text:"share_link_copied", size:15, originX:1, x:tCopyButton.x - tCopyButton.Width/2 - 10, y:tCopyButton.y-2, alpha:0 }).appendTo(this);
 		}
 		
 		private function _clearCopiedMessages() : void {
@@ -107,7 +105,7 @@ package app.ui.panes
 		
 		private function _newCopyInput(pData:Object, pParent:Sprite) : TextField {
 			var tTFWidth:Number = pData.width, tTFHeight:Number = 18, tTFPaddingX:Number = 5, tTFPaddingY:Number = 5;
-			var tTextBackground:RoundedRectangle = new RoundedRectangle({ x:pData.x, y:pData.y, width:tTFWidth+tTFPaddingX*2, height:tTFHeight+tTFPaddingY*2, origin:0.5 })
+			var tTextBackground:RoundedRectangle = new RoundedRectangle(tTFWidth+tTFPaddingX*2, tTFHeight+tTFPaddingY*2, { origin:0.5 }).setXY(pData.x, pData.y)
 				.appendTo(pParent).draw(0xFFFFFF, 7, 0x444444);
 			
 			var tTextField:TextField = tTextBackground.addChild(new TextField()) as TextField;

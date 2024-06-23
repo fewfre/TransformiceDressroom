@@ -125,8 +125,8 @@ package app.ui.panes
 			*****************************/
 			var tTFWidth:Number = 65, tTFHeight:Number = 18, tTFPaddingX:Number = 5, tTFPaddingY:Number = 5;
 			// So much easier than doing it with those darn native text field options which have no padding.
-			var tTextBackground:RoundedRectangle = new RoundedRectangle({ x:15, y:170, width:tTFWidth+tTFPaddingX*2, height:tTFHeight+tTFPaddingY*2, origin:0.5 })
-				.appendTo(_tray).draw(0xFFFFFF, 7, 0x444444);
+			var tTextBackground:RoundedRectangle = new RoundedRectangle(tTFWidth+tTFPaddingX*2, tTFHeight+tTFPaddingY*2, { origin:0.5 })
+				.setXY(15, 170).appendTo(_tray).draw(0xFFFFFF, 7, 0x444444);
 			
 			_text = tTextBackground.addChild(new TextField()) as TextField;
 			_text.type = TextFieldType.DYNAMIC;
@@ -138,17 +138,12 @@ package app.ui.panes
 			_text.addEventListener(MouseEvent.CLICK, function(pEvent:Event){ _text.setSelection(0, _text.text.length); });
 			
 			var tSize = tTextBackground.Height;
-			_textColorBox = _tray.addChild(new RoundedRectangle({
-				x:tTextBackground.x - (tTextBackground.Width*0.5) - (tSize*0.5) - 5,
-				y:tTextBackground.y, width: tSize, height: tSize, origin:0.5
-			})) as RoundedRectangle;
+			_textColorBox = new RoundedRectangle(tSize, tSize, { origin:0.5 }).appendTo(_tray)
+				.setXY(tTextBackground.x - (tTextBackground.Width*0.5) - (tSize*0.5) - 5, tTextBackground.y);
 			
-			_hoverColorBox = _tray.addChild(new RoundedRectangle({
-				/*x:ConstantsApp.PANE_WIDTH*0.5-5, y:-122,*/ width:35, height:35, originX:0, originY:1
-			})) as RoundedRectangle;
+			_hoverColorBox = new RoundedRectangle(35, 35, { originX:0, originY:1 }).appendTo(_tray);//.setXY(ConstantsApp.PANE_WIDTH*0.5-5, -122);
 			_hoverColorBox.visible = false;
-			/*var tHoverTextBackground = _hoverColorBox.addChild(new RoundedRectangle({ x:-_hoverColorBox.Width*0.5, y:_hoverColorBox.Height+20,
-				width:_hoverColorBox.Width+8, height:20, originX:0.5, originY:1 }));
+			/*var tHoverTextBackground:RoundedRectangle = new RoundedRectangle(_hoverColorBox.Width+8, 20, { originX:0.5, originY:1 }).setXY(-_hoverColorBox.Width*0.5, _hoverColorBox.Height+20).appendTo(_hoverColorBox);
 			tHoverTextBackground.draw(0xFFFFFF, 5, 0xDDDDDD, 0xDDDDDD, 0xDDDDDD);
 			tHoverTextBackground.alpha = 0.75;
 			_hoverText = _hoverColorBox.addChild(new TextField());

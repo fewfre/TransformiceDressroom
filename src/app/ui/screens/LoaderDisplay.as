@@ -1,6 +1,6 @@
 package app.ui.screens
 {
-	import com.fewfre.display.*;
+	import com.fewfre.display.TextTranslated;
 	import com.fewfre.utils.*;
 	import com.fewfre.events.FewfEvent;
 	import app.data.*;
@@ -13,17 +13,14 @@ package app.ui.screens
 	public class LoaderDisplay extends RoundedRectangle
 	{
 		private var _loadingSpinner	: LoadingSpinner;
-		private var _leftToLoadText	: TextBase;
-		private var _loadProgressText: TextBase;
+		private var _leftToLoadText	: TextTranslated;
+		private var _loadProgressText: TextTranslated;
 		
 		// Constructor
 		// pData = { x:Number, y:Number }
-		public function LoaderDisplay(pData:Object)
-		{
-			pData.width = 500;
-			pData.height = 200;
+		public function LoaderDisplay(pData:Object) {
 			pData.origin = 0.5;
-			super(pData);
+			super(500, 200, pData);
 			this.drawAsTray();
 			
 			Fewf.assets.addEventListener(ProgressEvent.PROGRESS, _onLoadProgress);
@@ -31,8 +28,8 @@ package app.ui.screens
 			
 			_loadingSpinner = addChild(new LoadingSpinner({ y:-45, scale:2 })) as LoadingSpinner;
 			
-			_leftToLoadText = addChild(new TextBase({ text:"loading", values:"", size:18, x:0, y:10 })) as TextBase;
-			_loadProgressText = addChild(new TextBase({ text:"loading_progress", values:"", size:18, x:0, y:35 })) as TextBase;
+			_leftToLoadText = new TextTranslated({ text:"loading", values:"", size:18, x:0, y:10 }).appendTo(this);
+			_loadProgressText = new TextTranslated({ text:"loading_progress", values:"", size:18, x:0, y:35 }).appendTo(this);
 		}
 		
 		public function destroy():void {

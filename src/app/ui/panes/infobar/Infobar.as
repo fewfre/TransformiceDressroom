@@ -9,7 +9,7 @@ package app.ui.panes.infobar
 	import app.ui.panes.infobar.GridManagementWidget;
 	import app.world.data.ItemData;
 	import com.fewfre.display.ButtonBase;
-	import com.fewfre.display.TextBase;
+	import com.fewfre.display.TextTranslated;
 	import com.fewfre.utils.Fewf;
 	import com.fewfre.utils.FewfDisplayUtils;
 	import flash.display.DisplayObject;
@@ -41,7 +41,7 @@ package app.ui.panes.infobar
 		private var _backButton          : ScaleButton;
 		private var _colorWheel          : ScaleButton;
 		private var _leftButtonsTray     : Sprite;
-		private var _idText              : TextBase;
+		private var _idText              : TextTranslated;
 		private var _eyeDropperButton    : SpriteButton;
 		
 		private var _downloadButton      : SpriteButton;
@@ -68,8 +68,8 @@ package app.ui.panes.infobar
 			/********************
 			* Active Item
 			*********************/
-			_imageCont = addChild(new RoundedRectangle({ x:0, y:0, width:50, height:50 })) as RoundedRectangle;
-			_imageCont.draw(ConstantsApp.APP_BG_COLOR, 15, 0x5d7d90, 0x11171c, 0x3c5064);
+			_imageCont = new RoundedRectangle(50, 50).appendTo(this)
+				.draw(ConstantsApp.APP_BG_COLOR, 15, 0x5d7d90, 0x11171c, 0x3c5064);
 			
 			_setNoItemImage();
 			
@@ -85,7 +85,7 @@ package app.ui.panes.infobar
 			rioVisual.x = rioVisual.y = _imageCont.Width*0.5;
 			rioVisual.alpha = 0;
 			
-			var rioBackdrop:RoundedRectangle = rioVisual.addChild(new RoundedRectangle({ origin:0.5, width:50, height:50 })) as RoundedRectangle;
+			var rioBackdrop:RoundedRectangle = new RoundedRectangle(50, 50, { origin:0.5 }).appendTo(rioVisual);
 			rioBackdrop.draw(0x000000, 15, 0x000000);
 			rioBackdrop.alpha = 0.1;
 			
@@ -124,7 +124,7 @@ package app.ui.panes.infobar
 			/********************
 			* Text
 			*********************/
-			_idText = new TextBase({ text:"infobar_id", x:0, y:0, size:18, origin:0, alpha:0 }).appendTo(_leftButtonsTray);
+			_idText = new TextTranslated({ text:"infobar_id", x:0, y:0, size:18, origin:0, alpha:0 }).appendTo(_leftButtonsTray);
 			if(pData.showBackButton) {
 				_idText.y = 13;
 			}

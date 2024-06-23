@@ -1,7 +1,7 @@
 package app.ui
 {
 	import com.fewfre.display.ButtonBase;
-	import com.fewfre.display.TextBase;
+	import com.fewfre.display.TextTranslated;
 	import com.fewfre.utils.Fewf;
 	import com.fewfre.utils.ImgurApi;
 	import app.data.ConstantsApp;
@@ -47,7 +47,7 @@ package app.ui
 		// Constructor
 		// onShareCodeEntered: (code, (state:String)=>void)=>void
 		public function Toolbox(pCharacter:Character, onShareCodeEntered:Function) {
-			_bg = new RoundedRectangle({ width:365, height:35, origin:0.5 }).drawAsTray().appendTo(this);
+			_bg = new RoundedRectangle(365, 35, { origin:0.5 }).drawAsTray().appendTo(this);
 			
 			/********************
 			* Download Button
@@ -146,8 +146,8 @@ package app.ui
 		private function _newItemFilterBanner() : RoundedRectangle {
 			var hh:Number = 30, yy:Number = hh/2;
 			// Don't append to anything until it should show up
-			var tray : RoundedRectangle = new RoundedRectangle({ width:260, height:30 }).draw(0xDDDDFF, 4, 0x0000FF);
-			new TextBase({ text:"share_filter_banner", x:10, y:yy, originX:0, color:0x111111 }).appendTo(tray);
+			var tray : RoundedRectangle = new RoundedRectangle(260, 30).draw(0xDDDDFF, 4, 0x0000FF);
+			new TextTranslated({ text:"share_filter_banner", x:10, y:yy, originX:0, color:0x111111 }).appendTo(tray);
 			new ScaleButton({ obj:new $No(), obj_scale:0.5 }).setXY(245, yy).appendTo(tray)
 				.on(ButtonBase.CLICK, function(e):void{ tray.dispatchEvent(new Event(Event.CLOSE)); });
 				

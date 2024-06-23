@@ -6,7 +6,7 @@ package app.ui
 	import app.ui.*;
 	import app.ui.buttons.*;
 	import flash.display.*;
-	import flash.text.*;
+	import flash.text.TextTranslated;
 	import flash.events.MouseEvent;
 	import app.ui.common.RoundedRectangle;
 	import flash.events.Event;
@@ -25,7 +25,7 @@ package app.ui
 		public var _loopButton : SpriteButton;
 		public var _speedButtons : Vector.<PushButton>;
 		public var _nextFrameButton : SpriteButton;
-		public var _framesText : TextBase;
+		public var _framesText : TextTranslated;
 		
 		public var _timelineSlider : FancySlider;
 		
@@ -41,7 +41,7 @@ package app.ui
 		public function AnimationControls() {
 			super();
 			if(ORIGINAL_FRAMERATE == -1) ORIGINAL_FRAMERATE = Fewf.stage.frameRate;
-			_bg = new RoundedRectangle({ width:220, height:35, originY:0.5 }).draw(0x444444, 3, 0x222222).appendTo(this);
+			_bg = new RoundedRectangle(220, 35, { originY:0.5 }).draw(0x444444, 3, 0x222222).appendTo(this);
 			
 			_animating = false;
 			_looping = true;
@@ -111,7 +111,7 @@ package app.ui
 			_nextFrameButton = new SpriteButton({ x:xx-tButtonXInc*tButtonsOnLeft, y:yy, width:bsize, height:bsize, obj_scale:0.5, obj:new Sprite(), origin:0.5 }).appendTo(this) as SpriteButton;
 			_nextFrameButton.addEventListener(ButtonBase.CLICK, _onNextFrameClicked);
 			tButtonOnRight++;
-			_framesText = new TextBase({ size:8 }).setXY(_nextFrameButton.x, _nextFrameButton.y).appendTo(this);
+			_framesText = new TextTranslated({ size:8 }).setXY(_nextFrameButton.x, _nextFrameButton.y).appendTo(this);
 			_framesText.setUntranslatedText('');
 			_framesText.mouseEnabled = false;
 			_framesText.mouseChildren = false;

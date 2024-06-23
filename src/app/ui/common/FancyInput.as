@@ -1,6 +1,6 @@
 package app.ui.common
 {
-	import com.fewfre.display.TextBase;
+	import com.fewfre.display.TextTranslated;
 	import flash.display.MovieClip;
 	import flash.text.TextField;
 	import flash.text.TextFieldType;
@@ -11,13 +11,13 @@ package app.ui.common
 	{
 		// Storage
 		private var _textField			: TextField;
-		private var _placeholderText	: TextBase;
+		private var _placeholderText	: TextTranslated;
 		
 		// Properties
 		public function get text() : String { return _textField.text; }
 		public function set text(pVal:String) : void { setText(pVal); }
 		public function get field() : TextField { return _textField; }
-		public function get placeholderTextBase() : TextBase { return _placeholderText; }
+		public function get placeholderTextBase() : TextTranslated { return _placeholderText; }
 		
 		// Constructor
 		// pData = { text?:String, placeholder?:String, x:Number, y:Number, width?:Number, height?:Number=18, padding?:Number=5 }
@@ -29,7 +29,7 @@ package app.ui.common
 			var tTFWidth:Number = pData.width ? pData.width : 250;
 			var tTFHeight:Number = pData.height ? pData.height : 18;
 			// So much easier than doing it with those darn native text field options which have no padding.
-			var tTextBackground:RoundedRectangle = new RoundedRectangle({ width:tTFWidth+padding*2, height:tTFHeight+padding*2, origin:0.5 })
+			var tTextBackground:RoundedRectangle = new RoundedRectangle(tTFWidth+padding*2, tTFHeight+padding*2, { origin:0.5 })
 				.appendTo(this).draw(0xdcdfea, 7, 0x444444);
 			
 			_textField = tTextBackground.addChild(new TextField()) as TextField;
@@ -40,7 +40,7 @@ package app.ui.common
 			_textField.x = padding - tTextBackground.Width*0.5;
 			_textField.y = padding - tTextBackground.Height*0.5;
 			
-			_placeholderText = tTextBackground.addChild(new TextBase({ text:pData.placeholder, originX:0, x:_textField.x+4, color:0x666666 })) as TextBase;
+			_placeholderText = new TextTranslated({ text:pData.placeholder, originX:0, x:_textField.x+4, color:0x666666 }).appendTo(tTextBackground);
 			_placeholderText.mouseChildren = false;
 			_placeholderText.mouseEnabled = false;
 			

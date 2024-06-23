@@ -49,7 +49,7 @@ package app.ui
 			addChild(_deleteToggleButton);
 			
 			// Add BG
-			_bg = new RoundedRectangle({ x:-deleteWidth*0.5+2, width:bgWidth, height:bgHeight, origin:0.5 });
+			_bg = new RoundedRectangle(bgWidth, bgHeight, { x:-deleteWidth*0.5+2, origin:0.5 });
 			addChild(_bg);
 			
 			_verticalRule = new Shape();

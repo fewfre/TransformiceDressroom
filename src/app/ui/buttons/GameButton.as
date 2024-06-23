@@ -15,9 +15,8 @@ package app.ui.buttons
 		
 		// Constructor
 		// pData = { x:Number, y:Number, (width:Number, height:Number OR size:Number), ?origin:Number, ?originX:Number, ?originY:Number }
-		public function GameButton(pData:Object)
-		{
-			_bg = addChild(new RoundedRectangle({ x:0, y:0, width:pData.size || pData.width, height:pData.size || pData.height, origin:pData.origin, originX:pData.originX, originY:pData.originY })) as RoundedRectangle;
+		public function GameButton(pData:Object) {
+			_bg = new RoundedRectangle(pData.size || pData.width, pData.size || pData.height, { origin:pData.origin, originX:pData.originX, originY:pData.originY }).appendTo(this);
 			super(pData);
 		}
 
