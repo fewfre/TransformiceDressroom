@@ -2,7 +2,6 @@ package app.ui.panes
 {
 	
 	import app.ui.common.FancyInput;
-	import app.ui.ShopInfoBar;
 	import app.data.ItemType;
 	import app.data.GameAssets;
 	import flash.display.MovieClip;
@@ -19,6 +18,7 @@ package app.ui.panes
 	import flash.events.FocusEvent;
 	import flash.text.TextFormat;
 	import app.ui.panes.base.ButtonGridSidePane;
+	import app.ui.panes.infobar.Infobar;
 
 	public class ShopCategoryPane extends ButtonGridSidePane
 	{
@@ -51,10 +51,8 @@ package app.ui.panes
 			}
 			
 			selectedButtonIndex = -1;
-			this.addInfoBar( new ShopInfoBar({ showEyeDropButton:_type!=ItemType.POSE, showGridManagementButtons:true }) );
+			this.addInfoBar( new Infobar({ showEyeDropper:_type!=ItemType.POSE, gridManagement:true }) );
 			_setupGrid(GameAssets.getItemDataListByType(_type));
-			
-			infoBar.reverseButton.addEventListener(ButtonBase.CLICK, _onReverseGrid);
 		}
 		
 		/****************************
@@ -190,7 +188,7 @@ package app.ui.panes
 			dispatchEvent(new FewfEvent(ITEM_TOGGLED, e.data));
 		}
 		
-		private function _onReverseGrid(e:Event) : void {
+		protected override function _onInfobarReverseGridClicked(e:Event) : void {
 			this.grid.reverse();
 			_repositionDefaultSkinColorButtonIfExists();
 		}

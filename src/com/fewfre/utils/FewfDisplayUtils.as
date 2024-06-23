@@ -58,6 +58,32 @@ package com.fewfre.utils
 			return pObj;
 		}
 		
+		/**
+		 * If an origin is set to null, it won't be touched
+		 */
+		public static function alignChildrenAroundAnchor(pSprite:Sprite, originX:Object=0.5, originY:Object=0.5, pDrawScaffolding:Boolean=false) : Sprite {
+			var rect:Rectangle = pSprite.getBounds(pSprite);
+			var offsetX:Number = originX != null ? -rect.width*(originX as Number) - rect.x : 0;
+			var offsetY:Number = originY != null ? -rect.height*(originY as Number) - rect.y : 0;
+			
+			for(var i:int = 0; i < pSprite.numChildren; i++) {
+				if(originX) pSprite.getChildAt(i).x += offsetX;
+				if(originY) pSprite.getChildAt(i).y += offsetY;
+			}
+			
+			if(pDrawScaffolding) {
+				trace(rect.toString());
+				pSprite.graphics.beginFill(0xFFFFFF);
+				pSprite.graphics.lineStyle(1, 0xFFFFFF)
+				pSprite.graphics.drawCircle(0, 0, 4);
+				pSprite.graphics.moveTo(0, -32); pSprite.graphics.lineTo(0, 32);
+				pSprite.graphics.moveTo(-32, 0); pSprite.graphics.lineTo(32, 0);
+				pSprite.graphics.endFill();
+			}
+			
+			return pSprite;
+		}
+		
 		public static function handleErrorMessage(e:Error) : void {
 			// var text:TextBase = new TextBase({ color:0xFF0000, x:Fewf.stage.stageWidth*0.25, y:Fewf.stage.stageHeight-25 });
 			// text.setUntranslatedText("["+e.name+":"+e.errorID+"] "+e.message);

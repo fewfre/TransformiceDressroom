@@ -1,7 +1,5 @@
 package app.ui.panes
 {
-	
-	import app.ui.ShopInfoBar;
 	import app.data.ItemType;
 	import app.data.GameAssets;
 	import flash.display.MovieClip;
@@ -17,6 +15,7 @@ package app.ui.panes
 	import flash.display.Sprite;
 	import flash.utils.setTimeout;
 	import app.ui.panes.base.ButtonGridSidePane;
+	import app.ui.panes.infobar.Infobar;
 
 	public class ShopCategoryPaneForFiltering extends ButtonGridSidePane
 	{
@@ -37,17 +36,14 @@ package app.ui.panes
 			if(_type == ItemType.SKIN || _type == ItemType.POSE) { buttonPerRow = 5; }
 			super(buttonPerRow);
 			
-			this.addInfoBar( new ShopInfoBar({ showEyeDropButton:false, showGridManagementButtons:true }) );
-			this.infoBar.hideImageCont();
-			this.infoBar.colorWheel.visible = false;
+			this.addInfoBar( new Infobar({ showEyeDropper:false, hideItemPreview:true, gridManagement:{ hideRandomize:true, hideArrows:true } }) );
+			this.infoBar.showColorWheel(false);
 				
 			_actionsGrid = _scrollbox.add(new Grid(385, grid.columns).setXY(grid.x,grid.y)) as Grid;
 			
 			// We want them to start reversed
 			grid.reverse();
 			_actionsGrid.reverse();
-			
-			infoBar.reverseButton.addEventListener(ButtonBase.CLICK, _onReverseGrid);
 		}
 		
 		/****************************
@@ -141,7 +137,7 @@ package app.ui.panes
 			// dispatchEvent(new FewfEvent(ITEM_TOGGLED, e.data));
 		}
 		
-		private function _onReverseGrid(e:Event) : void {
+		protected override function _onInfobarReverseGridClicked(e:Event) : void {
 			this.grid.reverse();
 			this._actionsGrid.reverse();
 		}

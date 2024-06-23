@@ -18,6 +18,8 @@ package app.ui.panes
 	import app.world.data.ItemData;
 	import app.ui.panes.base.ButtonGridSidePane;
 	import com.fewfre.utils.FewfUtils;
+	import app.ui.panes.infobar.GridManagementWidget;
+	import app.ui.panes.infobar.Infobar;
 	
 	public class OutfitManagerTabPane extends ButtonGridSidePane
 	{
@@ -38,22 +40,17 @@ package app.ui.panes
 			_character = pCharacter;
 			_onUserLookClicked = pOnUserLookClicked;
 			
-			this.addInfoBar( new ShopInfoBar({ showBackButton:true, showGridManagementButtons:true }) );
+			this.addInfoBar( new Infobar({ showBackButton:true, hideItemPreview:true, gridManagement:true }) )
+				.on(Infobar.BACK_CLICKED, function(e):void{ dispatchEvent(new Event(Event.CLOSE)); });
+			
 			_deleteBtnGrid = _scrollbox.add(new Grid(385, 5).setXY(15,5)) as Grid;
-			this.infoBar.hideImageCont();
-			this.infoBar.colorWheel.addEventListener(MouseEvent.MOUSE_UP, function(pEvent:Event){ dispatchEvent(new Event(Event.CLOSE)); });
 			
 			this.grid.reverse(); // Start reversed so that new outfits get added to start of list
 			_deleteBtnGrid.reverse();
-			this.infoBar.randomizeButton.addEventListener(ButtonBase.CLICK, function(){ selectRandomOutfit(); });
-			this.infoBar.reverseButton.addEventListener(ButtonBase.CLICK, function(){
-				grid.reverse(); _deleteBtnGrid.reverse();
-				_updateNewOutfitButton();
-				refreshScrollbox();
-			});
+			this.infoBar.on(GridManagementWidget.RANDOMIZE_CLICKED, function(){ selectRandomOutfit(); });
 			
 			// Custom infobar buttons
-			var size = 40, xx = ConstantsApp.PANE_WIDTH - size - 5, yy = 6;
+			var size = 40, xx = ConstantsApp.PANE_WIDTH - size, yy = 11;
 			
 			_importButton = new SpriteButton({ x:xx, y:yy, width:size, height:size, obj:new $Folder() });
 			_importButton.addEventListener(MouseEvent.CLICK, _onImportClicked);
@@ -84,7 +81,7 @@ package app.ui.panes
 			// Add it to grid - do it manually to avoid re-rendering whole list
 			toggleExportButton(looks.length > 0);
 			_addLookButton(lookCode, looks.length-1);
-			_updateNewOutfitButton();
+			_addNewOutfitButton();
 			refreshScrollbox();
 		}
 		
@@ -137,7 +134,7 @@ package app.ui.panes
 				_addLookButton(look, i);
 			}
 			
-			_addNewOutfitButton(!grid.reversed);
+			_addNewOutfitButton();
 			refreshScrollbox();
 		}
 		
@@ -166,22 +163,19 @@ package app.ui.panes
 			btn.addEventListener(MouseEvent.MOUSE_OUT, function(e){ deleteBtnHolder.alpha = 0; });
 		}
 		
-		private function _addNewOutfitButton(pAddToTopOfList:Boolean) : void {
+		private function _addNewOutfitButton() : void {
+			var tAddToTopOfList:Boolean = !grid.reversed;
+			if(_addOutfitButtonHolder) _grid.remove(_addOutfitButtonHolder);
+			if(_addOutfitDeleteButton) _deleteBtnGrid.remove(_addOutfitDeleteButton);
 			var holder = new Sprite();
 			new ScaleButton({ x:grid.cellSize*0.5, y:grid.cellSize*0.5, width:grid.cellSize, height:grid.cellSize, obj:new $OutfitAdd() })
 			.appendTo(holder).on(MouseEvent.CLICK, function(e){ addNewLook(_character.getParamsTfmOfficialSyntax()) });
 			
 			_addOutfitButtonHolder = holder;
 			_addOutfitDeleteButton = new Sprite();
-			this.grid.add(_addOutfitButtonHolder, pAddToTopOfList);
-			_deleteBtnGrid.add(_addOutfitDeleteButton, pAddToTopOfList); // empty spot since no delete button for this
+			this.grid.add(_addOutfitButtonHolder, tAddToTopOfList);
+			_deleteBtnGrid.add(_addOutfitDeleteButton, tAddToTopOfList); // empty spot since no delete button for this
 			// this.buttons.push(tNewOutfitBtn);// DO NOT ADD TO BUTTONS! only add to grid; this avoids issue when clicking "random" button
-		}
-		// Moved the button to where it should be - used in cases such as list being reversed, or new items added/removed
-		private function _updateNewOutfitButton() : void {
-			_grid.remove(_addOutfitButtonHolder);
-			_deleteBtnGrid.remove(_addOutfitDeleteButton);
-			_addNewOutfitButton(!grid.reversed);
 		}
 
 		private function _untoggleAll(pList:Vector.<PushButton>, pExcepotButton:PushButton=null) : void {
@@ -245,6 +239,12 @@ package app.ui.panes
 					_importButton.ChangeImage(new $Folder());
 				}, 2000);
 			}
+		}
+		
+		protected override function _onInfobarReverseGridClicked(e:Event) : void {
+			grid.reverse(); _deleteBtnGrid.reverse();
+			_addNewOutfitButton();
+			refreshScrollbox();
 		}
 	}
 }

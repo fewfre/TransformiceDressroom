@@ -30,6 +30,11 @@ package app.data
 		public static const SHARED_OBJECT_KEY_OUTFITS: String = 'saved-outfits';
 		
 		/****************************
+		* Global Events
+		*****************************/
+		public static const DOWNLOAD_ITEM_DATA_IMAGE : String = "download_item_data_image"; // FewfEvent<ItemData>
+		
+		/****************************
 		* Colors
 		*****************************/
 		public static const APP_BG_COLOR					: int = 0x6A7495;

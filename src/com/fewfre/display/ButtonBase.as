@@ -138,13 +138,19 @@ package com.fewfre.display
 			return this;
 		}
 
-		/**********************************************************
-		@description
-		 **********************************************************/
 		public function disable() : ButtonBase {
 			_flagEnabled = false;
 			_renderDisabled();
 			return this;
+		}
+		
+		/**
+		 * If nothing or "null" is passed in, it will flip the current state - otherwise treats it as a boolean and sets
+		 * current enabled state based on that
+		 */
+		public function enableToggle(pOn:Object=null) : ButtonBase {
+			var newStateOn = pOn == null ? !enabled : Boolean(pOn);
+			return newStateOn ? enable() : disable();
 		}
 	}
 }

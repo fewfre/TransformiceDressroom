@@ -17,6 +17,7 @@ package app.ui.panes
 	import flash.utils.setTimeout;
 	import app.world.data.ItemData;
 	import app.ui.panes.base.ButtonGridSidePane;
+	import app.ui.panes.infobar.Infobar;
 	
 	public class WornItemsPane extends ButtonGridSidePane
 	{
@@ -30,12 +31,8 @@ package app.ui.panes
 			_character = pCharacter;
 			_onItemClicked = pOnItemClicked;
 			
-			this.addInfoBar( new ShopInfoBar({ showBackButton:true, showGridManagementButtons:false }) );
-			this.infoBar.hideImageCont();
-			
-			this.infoBar.colorWheel.addEventListener(MouseEvent.MOUSE_UP, function(pEvent:Event){
-				dispatchEvent(new Event(Event.CLOSE));
-			});
+			this.addInfoBar( new Infobar({ showBackButton:true, hideItemPreview:true, gridManagement:false }) )
+				.on(Infobar.BACK_CLICKED, function(e):void{ dispatchEvent(new Event(Event.CLOSE)); });
 		}
 		
 		/****************************

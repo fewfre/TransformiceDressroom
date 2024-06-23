@@ -16,6 +16,7 @@ package app.ui.panes
 	import flash.net.FileFilter;
 	import flash.net.URLRequest;
 	import app.ui.panes.base.GridSidePane;
+	import app.ui.panes.infobar.Infobar;
 	
 	public class ColorFinderPane extends GridSidePane
 	{
@@ -46,12 +47,11 @@ package app.ui.panes
 		private const _clipRect:Rectangle = new Rectangle(0, 0, 1, 1);
 		
 		// Constructor
-		public function ColorFinderPane(pData:Object)
-		{
+		public function ColorFinderPane(pData:Object) {
 			super(1);
-			this.addInfoBar( new ShopInfoBar({ showBackButton:true }) );
-			this.infoBar.colorWheel.addEventListener(MouseEvent.MOUSE_UP, _onBackClicked);
-			this.infoBar.removeItemOverlay.addEventListener(MouseEvent.CLICK, function(e){ dispatchEvent(new Event(EVENT_ITEM_ICON_CLICKED)); });
+			this.addInfoBar( new Infobar({ showBackButton:true }) )
+				.on(Infobar.BACK_CLICKED, _onBackClicked)
+				.on(Infobar.ITEM_PREVIEW_CLICKED, function(e){ dispatchEvent(new Event(EVENT_ITEM_ICON_CLICKED)); });
 			
 			_tray = addChild(new MovieClip()) as MovieClip;
 			_tray.x = ConstantsApp.PANE_WIDTH * 0.5;
@@ -172,7 +172,7 @@ package app.ui.panes
 			fileRef.addEventListener(Event.SELECT, function(){ fileRef.load(); });
 			fileRef.addEventListener(Event.COMPLETE, _onFileSelect);
 			
-			var selectImageBtn = new ScaleButton({ x:ConstantsApp.PANE_WIDTH*0.5 - 30, y: -_tray.y + 60 + 20, obj:new $Folder(), obj_scale:1 });
+			var selectImageBtn = new ScaleButton({ x:ConstantsApp.PANE_WIDTH*0.5 - 25, y: -_tray.y + 60 + 25, obj:new $Folder(), obj_scale:1 });
 			selectImageBtn.addEventListener(ButtonBase.CLICK, function(){
 				fileRef.browse([new FileFilter("Images", "*.jpg;*.jpeg;*.gif;*.png")]);
 			});

@@ -11,6 +11,7 @@ package app.ui.panes.colorpicker
 	import flash.utils.Dictionary;
 	import ext.ParentApp;
 	import app.ui.panes.base.GridSidePane;
+	import app.ui.panes.infobar.Infobar;
 	
 	public class ColorPickerTabPane extends GridSidePane
 	{
@@ -40,14 +41,13 @@ package app.ui.panes.colorpicker
 		public function get selectedSwatch():int { return _selectedSwatch; }
 		
 		// Constructor
-		// pData = { hide_default:bool, hide_imagecont:bool }
+		// pData = { hide_default:bool, hideItemPreview:bool }
 		public function ColorPickerTabPane(pData:Object) {
 			super(1);
 			
-			this.addInfoBar( new ShopInfoBar({ showBackButton:true }) );
-			this.infoBar.colorWheel.addEventListener(MouseEvent.MOUSE_UP, _onColorPickerBackClicked);
-			if(pData.hide_imagecont) this.infoBar.hideImageCont();
-			this.infoBar.removeItemOverlay.addEventListener(MouseEvent.CLICK, function(e){ dispatchEvent(new Event(EVENT_ITEM_ICON_CLICKED)); });
+			this.addInfoBar( new Infobar({ showBackButton:true, hideItemPreview:pData.hideItemPreview }) )
+				.on(Infobar.BACK_CLICKED, _onColorPickerBackClicked)
+				.on(Infobar.ITEM_PREVIEW_CLICKED, function(e){ dispatchEvent(new Event(EVENT_ITEM_ICON_CLICKED)); });
 			
 			var tClickOffDetector = addChildAt(new Sprite(), 0) as Sprite;
 			tClickOffDetector.graphics.beginFill( 0xFFFFFF );
@@ -184,16 +184,16 @@ package app.ui.panes.colorpicker
 				_selectSwatch(pNum);
 			});
 			swatch.swatch.addEventListener(MouseEvent.MOUSE_OVER, function(){
-				if(!!infoBar.data) {
-					dispatchEvent(new FewfEvent(EVENT_PREVIEW_COLOR, { type:infoBar.data.type, id:infoBar.data.id, colorI:pNum }));
+				if(!!infoBar.itemData) {
+					dispatchEvent(new FewfEvent(EVENT_PREVIEW_COLOR, { type:infoBar.itemData.type, id:infoBar.itemData.id, colorI:pNum }));
 				}
 			});
 			swatch.swatch.addEventListener(MouseEvent.MOUSE_OUT, function(){
 				dispatchEvent(new FewfEvent(EVENT_PREVIEW_COLOR, null));
 			});
 			swatch.swatch.addEventListener(MouseEvent.MOUSE_DOWN, function(){
-				if(!!infoBar.data) {
-					dispatchEvent(new FewfEvent(EVENT_PREVIEW_COLOR, { type:infoBar.data.type, id:infoBar.data.id, colorI:pNum }));
+				if(!!infoBar.itemData) {
+					dispatchEvent(new FewfEvent(EVENT_PREVIEW_COLOR, { type:infoBar.itemData.type, id:infoBar.itemData.id, colorI:pNum }));
 				}
 			});
 			swatch.swatch.addEventListener(MouseEvent.MOUSE_UP, function(){
@@ -301,7 +301,7 @@ package app.ui.panes.colorpicker
 		*****************************/
 		// Return a key unique to both this item and this swatch
 		private function _getHistoryDictKey(swatchI:int) {
-			return !infoBar.data ? ["misc", swatchI].join('_') : [infoBar.data.type, infoBar.data.id, swatchI].join('_');
+			return !infoBar.itemData ? ["misc", swatchI].join('_') : [infoBar.itemData.type, infoBar.itemData.id, swatchI].join('_');
 		}
 		private function _addHistory(color:int, swatchI:int) {
 			var itemID = _getHistoryDictKey(swatchI);

@@ -11,6 +11,12 @@
 - [Bug] If you pause an animation and change an item it no longer resets pause to default frame (this was happening before animation update too, long standing bug ;_;)
 - [Bug] Fixed lag caused by a recent update
 - Optimized Outfit Manager pane so list isn't fully re-rendered on outfit adding, deleting, or list reversing.
+- [Code] `ShopInfobar` rewrite (and renamed to `Infobar`)
+	- Moved grid management logic to it's own component
+	- Grid management button groups can now be hidden individually, instead of all or nothing
+	- Hovering over item preview on infobar now properly shows a point cursor (to make it more obvious it's clickable)
+- Removed randomize and arrow button from toolbar item filter item selection screen
+- Updated back button arrow and the red x (used for closing item filter banner) to have a larger hit area
 
 
 == V1.29 - 19 June 2024 ==
