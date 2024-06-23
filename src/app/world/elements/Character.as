@@ -79,7 +79,7 @@ package app.world.elements
 		}
 
 		public function updatePose() {
-			var tScale = 3;
+			var tScale = 3, tOldPose:Pose = outfit;
 			if(outfit != null) { tScale = outfit.scaleX; removeChild(outfit); }
 			outfit = addChild(new Pose(getItemData(ItemType.POSE))) as Pose;
 			outfit.scaleX = outfit.scaleY = tScale;
@@ -111,6 +111,7 @@ package app.world.elements
 			);
 			// if(animatePose) outfit.play(); else outfit.stopAtLastFrame();
 			outfit.stopAtLastFrame();
+			outfit.goToPreviousFrameIfPoseHasntChanged(tOldPose);
 			dispatchEvent(new Event(POSE_UPDATED));
 		}
 

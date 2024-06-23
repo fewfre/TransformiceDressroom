@@ -8,6 +8,8 @@
 - Replaced bottom left github button/version text with a new button to a new "About" screen (where aforementioned content has been moved)
 	- Added a discord link button on new About screen
 - Clicking an item on the "Worn Items" pane will now open the item in the Color Picker (if it's customizable).
+- [Bug] If you pause an animation and change an item it no longer resets pause to default frame (this was happening before animation update too, long standing bug ;_;)
+
 
 == V1.29 - 19 June 2024 ==
 - Color locks are now remembered on a per-item basis until you close the app, hit "Defaults" button on color picker, or trash entire outfit

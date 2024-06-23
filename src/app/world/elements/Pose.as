@@ -80,6 +80,15 @@ package app.world.elements
 			stop();
 		}
 		
+		public function goToPreviousFrameIfPoseHasntChanged(pOldPose:Pose) : void {
+			if(pOldPose && _poseData.matches(pOldPose._poseData)) {
+				_pose.gotoAndPlay(pOldPose.pose.currentFrame);
+				if(!pOldPose.pose.isPlaying) {
+					_pose.stop();
+				}
+			}
+		}
+		
 		// pData = { ?removeBlanks:Boolean=false }
 		public function apply(items:Vector.<ItemData>, shamanMode:ShamanMode, shamanColor:uint=0x95D9D6, disableSkillsMode:Boolean=false, pFlagWavingCode:String="", removeBlanks:Boolean=false) : MovieClip {
 			if(!items) items = new Vector.<ItemData>();
