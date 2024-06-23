@@ -36,9 +36,9 @@ package app.ui.screens
 			// Version Info / Acknowledgements
 			///////////////////////
 			xx = -bg.Width*0.5 + 15; yy = -bg.Height*0.5 + 20;
-			new TextTranslated({ text:"version", originX:0, values:ConstantsApp.VERSION }).setXY(xx, yy).appendTo(this);
+			new TextTranslated("version", { originX:0, values:ConstantsApp.VERSION }).setXY(xx, yy).appendTo(this);
 			yy += 20;
-			_translatedByText = new TextTranslated({ text:"translated_by", size:10, originX:0 }).setXY(xx, yy).appendTo(this)
+			_translatedByText = new TextTranslated("translated_by", { size:10, originX:0 }).setXYT(xx, yy).appendToT(this)
 			_updateTranslatedByText();
 			Fewf.dispatcher.addEventListener(I18n.FILE_UPDATED, _onFileUpdated);
 

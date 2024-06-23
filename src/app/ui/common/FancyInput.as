@@ -1,13 +1,13 @@
 package app.ui.common
 {
 	import com.fewfre.display.TextTranslated;
-	import flash.display.MovieClip;
+	import flash.display.Sprite;
 	import flash.text.TextField;
 	import flash.text.TextFieldType;
 	import flash.events.Event;
 	import flash.events.FocusEvent;
 	
-	public class FancyInput extends MovieClip
+	public class FancyInput extends Sprite
 	{
 		// Storage
 		private var _textField			: TextField;
@@ -40,7 +40,7 @@ package app.ui.common
 			_textField.x = padding - tTextBackground.Width*0.5;
 			_textField.y = padding - tTextBackground.Height*0.5;
 			
-			_placeholderText = new TextTranslated({ text:pData.placeholder, originX:0, x:_textField.x+4, color:0x666666 }).appendTo(tTextBackground);
+			_placeholderText = new TextTranslated(pData.placeholder, { originX:0, x:_textField.x+4, color:0x666666 }).appendToT(tTextBackground);
 			_placeholderText.mouseChildren = false;
 			_placeholderText.mouseEnabled = false;
 			
@@ -52,6 +52,8 @@ package app.ui.common
 			_textField.addEventListener(FocusEvent.KEY_FOCUS_CHANGE, _onFocusOut);
 			_textField.addEventListener(FocusEvent.MOUSE_FOCUS_CHANGE, _onFocusOut);
 		}
+		public function setXY(pX:Number, pY:Number) : FancyInput { x = pX; y = pY; return this; }
+		public function appendTo(target:Sprite): FancyInput { target.addChild(this); return this; }
 		
 		protected function _onFocusIn(event:Event):void {
 			_placeholderText.alpha = 0;

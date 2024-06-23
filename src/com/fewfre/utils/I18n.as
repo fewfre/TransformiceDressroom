@@ -42,20 +42,20 @@ package com.fewfre.utils
 			Fewf.dispatcher.dispatchEvent(new FewfEvent(FILE_UPDATED));
 		}
 		
-		public function getData(pKey:String) : Object {
+		public function getData(pKey:String, pSilenceLog:Boolean=false) : Object {
 			if(_data[pKey] != null) {
 				return _data[pKey];
 			} else {
-				trace("[I18n](getData) No key '"+pKey+"' exists.");
+				if(!pSilenceLog) trace("[I18n](getData) No key '"+pKey+"' exists.");
 				return null;
 			}
 		}
 		
-		public function getText(pKey:String) : String {
+		public function getText(pKey:String, pSilenceLog:Boolean=false) : String {
 			if(_data[pKey] != null) {
 				return _data[pKey].text;
 			} else {
-				trace("[I18n](getText) No key '"+pKey+"' exists.");
+				if(!pSilenceLog) trace("[I18n](getText) No key '"+pKey+"' exists.");
 				return null;
 			}
 		}

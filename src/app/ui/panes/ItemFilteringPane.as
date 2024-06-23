@@ -47,7 +47,7 @@ package app.ui.panes
 			
 			// Description
 			yy = 125; xx = 2 + 5;
-			var desc:TextTranslated = new TextTranslated({ text:"filtermode_description", x:xx, y:yy, origin:0 }).appendTo(this);
+			var desc:TextTranslated = new TextTranslated("filtermode_description", { x:xx, y:yy, origin:0 }).appendToT(this);
 			desc.field.width = ConstantsApp.PANE_WIDTH - 5*2;
 			desc.field.wordWrap = true;
 			
@@ -86,7 +86,7 @@ package app.ui.panes
 			var tCopyButton:SpriteButton = addChild(new SpriteButton({ x:-_textCopyField.x+tWidth*0.5-(80/2)+13, y:pY+39, text:"share_copy", width:80, height:25, origin:0.5 })) as SpriteButton;
 			tCopyButton.addEventListener(ButtonBase.CLICK, function():void{ _copyToClipboard(); });
 			
-			_textCopiedMessage = new TextTranslated({ text:"share_link_copied", size:15, originX:1, x:tCopyButton.x - tCopyButton.Width/2 - 10, y:tCopyButton.y-2, alpha:0 }).appendTo(this);
+			_textCopiedMessage = new TextTranslated("share_link_copied", { size:15, originX:1, x:tCopyButton.x - tCopyButton.Width/2 - 10, y:tCopyButton.y-2, alpha:0 }).appendToT(this);
 		}
 		
 		private function _clearCopiedMessages() : void {

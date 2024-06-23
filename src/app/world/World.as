@@ -146,12 +146,10 @@ package app.world
 			tLangButton.addEventListener(ButtonBase.CLICK, _onLangButtonClicked);
 			
 			// About Screen Button
-			var qMark:TextField = new TextField(); qMark.text = '?'; qMark.autoSize = TextFieldAutoSize.CENTER;
-			qMark.setTextFormat(new TextFormat('Arial', 22, 0xFFFFFF, 'bold'));
-			var aboutButton:SpriteButton = new SpriteButton({ size:25, origin:0.5, obj:qMark }).appendTo(this)
+			var aboutButton:SpriteButton = new SpriteButton({ size:25, origin:0.5 }).appendTo(this)
 				.setXY(tLangButton.x+(tLangButton.Width/2)+2+(25/2), pStage.stageHeight - 17)
 				.on(ButtonBase.CLICK, _onAboutButtonClicked) as SpriteButton;
-			qMark.x -= 9; qMark.y -= 15;
+			new TextBase("?", { size:22, color:0xFFFFFF, bold:true, origin:0.5 }).setXY(0, -1).appendTo(aboutButton)
 			
 			if(!!(ParentApp.reopenSelectionLauncher())) {
 				new ScaleButton({ obj:new $BackArrow(), obj_scale:0.5, origin:0.5 }).appendTo(this)

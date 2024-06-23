@@ -25,7 +25,7 @@ package app.ui
 		public var _loopButton : SpriteButton;
 		public var _speedButtons : Vector.<PushButton>;
 		public var _nextFrameButton : SpriteButton;
-		public var _framesText : TextTranslated;
+		public var _framesText : TextBase;
 		
 		public var _timelineSlider : FancySlider;
 		
@@ -111,8 +111,7 @@ package app.ui
 			_nextFrameButton = new SpriteButton({ x:xx-tButtonXInc*tButtonsOnLeft, y:yy, width:bsize, height:bsize, obj_scale:0.5, obj:new Sprite(), origin:0.5 }).appendTo(this) as SpriteButton;
 			_nextFrameButton.addEventListener(ButtonBase.CLICK, _onNextFrameClicked);
 			tButtonOnRight++;
-			_framesText = new TextTranslated({ size:8 }).setXY(_nextFrameButton.x, _nextFrameButton.y).appendTo(this);
-			_framesText.setUntranslatedText('');
+			_framesText = new TextBase('', { size:8 }).setXY(_nextFrameButton.x, _nextFrameButton.y).appendTo(this);
 			_framesText.mouseEnabled = false;
 			_framesText.mouseChildren = false;
 			
@@ -185,7 +184,7 @@ package app.ui
 			_nextFrameButton.visible = !_animating;
 			if(_animationTarget) {
 				_timelineSlider.value = _animationTarget.currentFrame;
-				_framesText.setUntranslatedText(_animationTarget.currentFrame+"/"+_animationTarget.totalFrames);
+				_framesText.text = _animationTarget.currentFrame+"/"+_animationTarget.totalFrames;
 			}
 		}
 		private function newNoLoopIcon() : Sprite {

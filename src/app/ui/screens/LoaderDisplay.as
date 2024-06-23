@@ -28,8 +28,8 @@ package app.ui.screens
 			
 			_loadingSpinner = addChild(new LoadingSpinner({ y:-45, scale:2 })) as LoadingSpinner;
 			
-			_leftToLoadText = new TextTranslated({ text:"loading", values:"", size:18, x:0, y:10 }).appendTo(this);
-			_loadProgressText = new TextTranslated({ text:"loading_progress", values:"", size:18, x:0, y:35 }).appendTo(this);
+			_leftToLoadText = new TextTranslated("loading", { values:"", size:18, x:0, y:10 }).appendToT(this);
+			_loadProgressText = new TextTranslated("loading_progress", { values:"", size:18, x:0, y:35 }).appendToT(this);
 		}
 		
 		public function destroy():void {
@@ -38,7 +38,7 @@ package app.ui.screens
 		}
 		
 		private function _onPackLoaded(e:FewfEvent) : void {
-			_leftToLoadText.setText("loading", e.data.itemsLeftToLoad);
+			_leftToLoadText.setTextWithValues("loading", e.data.itemsLeftToLoad);
 			if(e.data.itemsLeftToLoad <= 0) {
 				_leftToLoadText.text = "loading_finished";
 				_loadProgressText.text = "";

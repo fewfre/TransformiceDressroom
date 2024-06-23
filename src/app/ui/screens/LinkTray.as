@@ -55,35 +55,35 @@ package app.ui.screens
 			/****************************
 			* Header
 			*****************************/
-			addChild(new TextTranslated({ text:"share_header", size:25, y:-110 }));
+			new TextTranslated("share_header", { size:25, y:-110 }).appendToT(this);
 			
 			/****************************
 			* #1 - Selectable text field + Copy Button and message
 			*****************************/
 			var tY:Number = 80;
 			
-			addChild(new TextTranslated({ text:"share_fewfre_syntax", size:15, y:tY-30 }));
+			new TextTranslated("share_fewfre_syntax", { size:15, y:tY-30 }).appendToT(this);
 			
 			_text = _newCopyInput({ x:0, y:tY }, this);
 			
 			var tCopyButton:SpriteButton = addChild(new SpriteButton({ x:tWidth*0.5-(80/2)-20, y:tY+39, text:"share_copy", width:80, height:25, origin:0.5 })) as SpriteButton;
 			tCopyButton.addEventListener(ButtonBase.CLICK, function():void{ _copyToClipboard(); });
 			
-			_textCopiedMessage = new TextTranslated({ text:"share_link_copied", size:17, originX:1, x:tCopyButton.x - tCopyButton.Width/2 - 10, y:tCopyButton.y, alpha:0 }).appendTo(this);
+			_textCopiedMessage = new TextTranslated("share_link_copied", { size:17, originX:1, x:tCopyButton.x - tCopyButton.Width/2 - 10, y:tCopyButton.y, alpha:0 }).appendToT(this);
 			
 			/****************************
 			* #2 - Selectable text field + Copy Button and message
 			*****************************/
 			tY = -35;
 			
-			new TextTranslated({ text:"share_tfm_syntax", size:15, y:tY-30 }).appendTo(this);
+			new TextTranslated("share_tfm_syntax", { size:15, y:tY-30 }).appendTo(this);
 			
 			_text2 = _newCopyInput({ x:0, y:tY }, this);
 			
 			var tCopyButton2:SpriteButton = addChild(new SpriteButton({ x:tWidth*0.5-(80/2)-20, y:tY+39, text:"share_copy", width:80, height:25, origin:0.5 })) as SpriteButton;
 			tCopyButton2.addEventListener(ButtonBase.CLICK, function():void{ _copyToClipboard2(); });
 			
-			_textCopiedMessage2 = new TextTranslated({ text:"share_link_copied", size:17, originX:1, x:tCopyButton2.x - tCopyButton2.Width/2 - 10, y:tCopyButton2.y, alpha:0 }).appendTo(this);
+			_textCopiedMessage2 = new TextTranslated("share_link_copied", { size:17, originX:1, x:tCopyButton2.x - tCopyButton2.Width/2 - 10, y:tCopyButton2.y, alpha:0 }).appendToT(this);
 			
 			/****************************
 			* Close Button

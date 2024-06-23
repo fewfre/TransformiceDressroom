@@ -147,7 +147,7 @@ package app.ui
 			var hh:Number = 30, yy:Number = hh/2;
 			// Don't append to anything until it should show up
 			var tray : RoundedRectangle = new RoundedRectangle(260, 30).draw(0xDDDDFF, 4, 0x0000FF);
-			new TextTranslated({ text:"share_filter_banner", x:10, y:yy, originX:0, color:0x111111 }).appendTo(tray);
+			new TextTranslated("share_filter_banner", { x:10, y:yy, originX:0, color:0x111111 }).appendToT(tray);
 			new ScaleButton({ obj:new $No(), obj_scale:0.5 }).setXY(245, yy).appendTo(tray)
 				.on(ButtonBase.CLICK, function(e):void{ tray.dispatchEvent(new Event(Event.CLOSE)); });
 				

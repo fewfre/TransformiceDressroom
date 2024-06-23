@@ -30,7 +30,7 @@ package app.ui.buttons
 			}
 			
 			if(pData.text) {
-				this.Text = new TextTranslated({ text:pData.text, size:11, x:this.Width * (0.5 - _bg.originX) - 2, y:this.Height * (0.5 - _bg.originY) - 2 }).appendTo(this);
+				this.Text = new TextTranslated(pData.text, { size:11, x:this.Width * (0.5 - _bg.originX) - 2, y:this.Height * (0.5 - _bg.originY) - 2 }).appendToT(this);
 			}
 		}
 

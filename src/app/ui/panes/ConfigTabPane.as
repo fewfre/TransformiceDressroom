@@ -25,7 +25,7 @@ package app.ui.panes
 		// Storage
 		public var userOutfitsGrid		: Grid;
 		public var usernameInput		: FancyInput;
-		public var usernameErrorText	: TextTranslated;
+		public var usernameErrorText	: TextBase;
 		public var onUserLookClicked	: Function;
 		public var _loadingUser			: Boolean;
 		
@@ -52,7 +52,7 @@ package app.ui.panes
 				// User look fetcher - Title
 				sizey = 20;
 				xx = 15-2; yy += sizey*0.5;
-				new TextTranslated({ text:"user_lookup_title", x:xx, y:yy-3, originX:0, size:14 }).appendTo(this);
+				new TextTranslated("user_lookup_title", { x:xx, y:yy-3, originX:0, size:14 }).appendTo(this);
 				yy += sizey*0.5 + 3;
 				
 				// User look fetcher - Search
@@ -75,7 +75,7 @@ package app.ui.panes
 				
 				// Since we want this to disappear after a search anyways, coop the error text variable
 				yy += 2;
-				usernameErrorText = new TextTranslated({ text:"user_lookup_details", color:0xAAAAAA, x:xx-2, y:yy, originX:0, originY:0, align:TextFormatAlign.LEFT }).appendTo(this);
+				usernameErrorText = new TextTranslated("user_lookup_details", { color:0xAAAAAA, x:xx-2, y:yy, originX:0, originY:0, align:TextFormatAlign.LEFT }).appendToT(this);
 			}
 		}
 		
@@ -153,8 +153,7 @@ package app.ui.panes
 		}
 		
 		private function _setFetchUserError(message:String) {
-			usernameErrorText = new TextTranslated({ color:0xFF0000, x:5+ConstantsApp.PANE_WIDTH*0.5, y:userOutfitsGrid.y+25 }).appendTo(this);
-			usernameErrorText.setUntranslatedText(message);
+			usernameErrorText = new TextBase(message, { color:0xFF0000, x:5+ConstantsApp.PANE_WIDTH*0.5, y:userOutfitsGrid.y+25 }).appendTo(this);
 		}
 		
 		private function _parseUser(pData:Object) {

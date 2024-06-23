@@ -124,7 +124,7 @@ package app.ui.panes.infobar
 			/********************
 			* Text
 			*********************/
-			_idText = new TextTranslated({ text:"infobar_id", x:0, y:0, size:18, origin:0, alpha:0 }).appendTo(_leftButtonsTray);
+			_idText = new TextTranslated("infobar_id", { x:0, y:0, size:18, origin:0, alpha:0 }).appendToT(_leftButtonsTray);
 			if(pData.showBackButton) {
 				_idText.y = 13;
 			}
@@ -215,7 +215,7 @@ package app.ui.panes.infobar
 		private function _updateID() : void {
 			var tText:String = _itemData.id;
 			if(_itemData.type == ItemType.POSE) {
-				tText = Fewf.i18n.getText(("pose_"+_itemData.id).toLowerCase());
+				tText = Fewf.i18n.getText(("pose_"+_itemData.id).toLowerCase(), true);
 				if(tText == null) { tText = _itemData.id; }
 			}
 			_idText.setValues(tText);
