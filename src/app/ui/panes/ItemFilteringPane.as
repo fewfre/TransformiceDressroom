@@ -59,16 +59,14 @@ package app.ui.panes
 			sizey = 40;
 			yy = ConstantsApp.APP_HEIGHT - sizey/2 - 15;
 			xx = 10+sizex/2;
-			var stopBtn = new SpriteButton({ x:xx, y:yy, origin:0.5, width:sizex, height:sizey, obj:new $WhiteX() });
-			stopBtn.addEventListener(MouseEvent.CLICK, function(e):void{ dispatchEvent(new FewfEvent(EVENT_STOP_FILTERING)); });
-			addChild(stopBtn);
+			new SpriteButton({ x:xx, y:yy, origin:0.5, width:sizex, height:sizey, obj:new $WhiteX() }).appendTo(this)
+				.on(MouseEvent.CLICK, function(e):void{ dispatchEvent(new FewfEvent(EVENT_STOP_FILTERING)); });
 			
 			// Trash Changes Button
 			yy = ConstantsApp.APP_HEIGHT - sizey/2 - 15;
 			xx += sizex/2+10+sizex/2;
-			var stopBtn = new DeleteButton({ x:xx, y:yy, origin:0.5, width:sizex, height:sizey, obj:new $Trash(), obj_scale:0.6 });
-			stopBtn.addEventListener(MouseEvent.CLICK, function(e):void{ dispatchEvent(new FewfEvent(EVENT_RESET_FILTERING)); });
-			addChild(stopBtn);
+			new DeleteButton({ x:xx, y:yy, origin:0.5, width:sizex, height:sizey, obj:new $Trash(), obj_scale:0.6 }).appendTo(this)
+				.on(MouseEvent.CLICK, function(e):void{ dispatchEvent(new FewfEvent(EVENT_RESET_FILTERING)); });
 		}
 		
 		public override function open() : void {

@@ -102,7 +102,7 @@ package app.data
 				}
 			}
 			catch (error:Error) { return false; };
-			return idCount();
+			return !!idCount();
 		}
 		
 		public static function checkIfPastebin(code:String) : * {

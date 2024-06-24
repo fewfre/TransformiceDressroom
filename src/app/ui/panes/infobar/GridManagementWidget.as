@@ -16,16 +16,16 @@ package app.ui.panes.infobar
 		public static const RIGHT_ARROW_CLICKED : String = "right_arrow_clicked";
 		
 		// Storage
-		private var _randomizeButton		: SpriteButton;
-		private var _randomizeLockButton	: PushButton;
-		private var _reverseButton		: SpriteButton;
-		private var _leftItemButton		: SpriteButton;
-		private var _rightItemButton		: SpriteButton;
+		private var _randomizeButton     : SpriteButton;
+		private var _randomizeLockButton : PushButton;
+		private var _reverseButton       : SpriteButton;
+		private var _leftItemButton      : SpriteButton;
+		private var _rightItemButton     : SpriteButton;
 		
-		public function get isRefreshLocked() : Boolean { return _randomizeLockButton.pushed; }
+		public function get isRefreshLocked() : Boolean { return !!_randomizeLockButton && _randomizeLockButton.pushed; }
 		
 		// Constructor
-		// pData = { hideRandomize:bool=false, hideReverse:bool=false, hideArrows:bool=false }
+		// pData = { hideRandomize:bool=false, hideRandomizeLock:bool=false, hideReverse:bool=false, hideArrows:bool=false }
 		public function GridManagementWidget(pData:Object) {
 			super();
 			var xx:Number = 0, yy:Number = 0, spacing:Number = 2, bsize:Number = 24;
@@ -36,9 +36,11 @@ package app.ui.panes.infobar
 				_randomizeButton.on(ButtonBase.CLICK, dispatchEventHandler(RANDOMIZE_CLICKED));
 				xx += bsize + spacing;
 				
-				_randomizeLockButton = new PushButton({ x:xx, y:yy, size:bsize, obj_scale:0.8, obj:new $Lock() }).appendTo(this) as PushButton;
-				_randomizeLockButton.addEventListener(PushButton.STATE_CHANGED_AFTER, function():void{ isRefreshLocked ? _randomizeButton.disable() : _randomizeButton.enable(); });
-				xx += bsize + spacing;
+				if(!pData.hideRandomizeLock) {
+					_randomizeLockButton = new PushButton({ x:xx, y:yy, size:bsize, obj_scale:0.8, obj:new $Lock() }).appendTo(this) as PushButton;
+					_randomizeLockButton.addEventListener(PushButton.STATE_CHANGED_AFTER, function():void{ isRefreshLocked ? _randomizeButton.disable() : _randomizeButton.enable(); });
+					xx += bsize + spacing;
+				}
 			}
 			
 			if(!pData.hideReverse) {

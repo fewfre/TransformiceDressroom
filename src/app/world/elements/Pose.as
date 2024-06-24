@@ -167,9 +167,9 @@ package app.world.elements
 				
 			if(removeBlanks) {
 				// If removing blanks, then loop through the bones again in reverse order (to prevent index errors)
-				for(var i:int = _pose.numChildren-1; i >= 0; i--) {
-					if(!!_pose.getChildAt(i) && (_pose.getChildAt(i) as MovieClip).numChildren == 0) {
-						_pose.removeChildAt(i);
+				for(var rbI:int = _pose.numChildren-1; rbI >= 0; rbI--) {
+					if(!!_pose.getChildAt(rbI) && (_pose.getChildAt(rbI) as MovieClip).numChildren == 0) {
+						_pose.removeChildAt(rbI);
 					}
 				}
 			}
@@ -314,7 +314,7 @@ package app.world.elements
 			var codeIsUrl:Boolean = pCode.indexOf("http") == 0;
 			var x_d:Bitmap;
 			if(codeIsUrl) {
-				var x_d:Bitmap = Fewf.assets.lazyLoadImageUrlAsBitmap(pCode);
+				x_d = Fewf.assets.lazyLoadImageUrlAsBitmap(pCode);
 				// Flag images are a 24x24 square, but have a 4x1 whitespace padding; so we resize any custom images to the -actual- flag size
 				var tWidth:Number = 22, tHeight:Number = 16;
 				x_d.width = tWidth;

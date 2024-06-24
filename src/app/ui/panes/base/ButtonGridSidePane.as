@@ -45,7 +45,7 @@ package app.ui.panes.base
 			}
 		}
 		
-		private function _traversePaneButtonGrid(pRight:Boolean):void {
+		protected function _traversePaneButtonGrid(pRight:Boolean):void {
 			var pane:ButtonGridSidePane = this;
 			if(pane && pane.grid && pane.buttons && pane.buttons.length > 0 && pane.buttons[0] is PushButton) {
 				var activeButtonIndex:int = _findIndexActivePushButton(buttons);
@@ -64,7 +64,7 @@ package app.ui.panes.base
 			}
 		}
 		
-		private function _traversePaneButtonGridVertically(pUp:Boolean):void {
+		protected function _traversePaneButtonGridVertically(pUp:Boolean):void {
 			var pane:ButtonGridSidePane = this;
 			if(pane && pane.grid && pane.buttons && pane.buttons.length > 0 && pane.buttons[0] is PushButton) {
 				var activeButtonIndex:int = _findIndexActivePushButton(buttons);
@@ -98,7 +98,7 @@ package app.ui.panes.base
 		}
 		
 		// Find the pressed button
-		private function _findIndexActivePushButton(pButtons:Vector.<PushButton>):int {
+		protected function _findIndexActivePushButton(pButtons:Vector.<PushButton>):int {
 			for(var i:int = 0; i < pButtons.length; i++){
 				if((pButtons[i] as PushButton).pushed){
 					return i;
