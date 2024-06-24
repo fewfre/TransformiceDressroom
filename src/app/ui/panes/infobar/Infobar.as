@@ -94,7 +94,7 @@ package app.ui.panes.infobar
 			rioIcon.scaleX = rioIcon.scaleY = 0.75;
 			
 			_removeItemOverlay.addEventListener(MouseEvent.MOUSE_OVER, function():void{
-				if(hasData && !GameAssets.defaultSkin.matches(_itemData) && GameAssets.defaultPose.matches(_itemData)) {
+				if(hasData && !GameAssets.defaultSkin.matches(_itemData) && !GameAssets.defaultPose.matches(_itemData)) {
 					rioVisual.alpha = 1;
 				}
 			});

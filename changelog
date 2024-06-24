@@ -19,6 +19,7 @@
 - Updated back button arrow and the red x (used for closing item filter banner) to have a larger hit area
 - [Code] Rewrote `RoundedRectangle` to have width/height as normal params
 - [Code] Renamed `TextBase` to `TextTranslated`, and then a new `TextBase` made (which `TextTranslated` inherits from)
+- [Bug] "X" overlay on toolbar preview had a small bug prevent it from showing
 
 
 == V1.29 - 19 June 2024 ==
