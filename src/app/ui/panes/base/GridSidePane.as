@@ -32,8 +32,8 @@ package app.ui.panes.base
 			_scrollbox.add(_grid);
 		}
 
-		public function addToGrid(pItem:DisplayObject) : DisplayObject {
-			_grid.add(pItem);
+		public function addToGrid(pItem:DisplayObject, addToStart:Boolean = false) : DisplayObject {
+			_grid.add(pItem, addToStart);
 			return pItem;
 		}
 

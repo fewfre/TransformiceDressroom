@@ -1,3 +1,7 @@
+== V1.29c - 21 June 2024 ==
+- [Code] Rewrote grid button logic such that only 1 grid is needed for additional buttons in same cell (such as delete button)
+
+
 == V1.29b - 21 June 2024 ==
 - Added an animation control widget that allows for finer control over the animation of the puppet
 - The following poses now have a more helpful frame shown on poses tab pane:

@@ -214,7 +214,7 @@ package app.world
 			
 			var tPane:SidePane = null;
 			// Outfit Pane
-			tPane = _paneManager.addPane(TAB_OUTFITS, new OutfitManagerTabPane(character, _useOutfitShareCode));
+			tPane = _paneManager.addPane(TAB_OUTFITS, new OutfitManagerTabPane(character, _useOutfitShareCode, function(){ return character.getParamsTfmOfficialSyntax() }));
 			tPane.addEventListener(Event.CLOSE, function(pEvent:Event){ _paneManager.openPane(shopTabs.getSelectedTabEventName()); });
 			
 			// "Other" Tab Color Picker Pane
@@ -563,24 +563,17 @@ package app.world
 			for each(var tType:ItemType in ItemType.TYPES_WITH_SHOP_PANES) {
 				tPane = getShopPane(tType);
 				// Based on what the character is wearing at start, toggle on the appropriate buttons.
-				tPane.toggleGridButtonWithData( character.getItemData(tType) );
+				tPane.toggleGridButtonWithData( character.getItemData(tType), true );
 			}
 			getShopPane(ItemType.POSE).flagWaveInput.text = character.flagWavingCode || "";
 		}
 
 		private function _onItemToggled(pEvent:FewfEvent) : void {
 			var tType:ItemType = pEvent.data.type;
-			var tInfoBar:Infobar = getInfobarByType(tType);
 
 			// De-select all buttons that aren't the clicked one.
 			var tPane:ShopCategoryPane = getShopPane(tType);
-			var tButtons:Vector.<PushButton> = tPane.buttons;
-			for(var i:int = 0; i < tButtons.length; i++) {
-				if(tButtons[i].data.itemID != pEvent.data.itemID) {
-					if (tButtons[i].pushed) { tButtons[i].toggleOff(); }
-				}
-			}
-
+			var tInfoBar:Infobar = tPane.infoBar;
 			var tButton:PushButton = tPane.getButtonWithItemData(pEvent.data.itemData);
 			// If clicked button is toggled on, equip it. Otherwise remove it.
 			if(tButton.pushed) {
@@ -659,15 +652,12 @@ package app.world
 			if(pane.infoBar.isRefreshLocked || !pane.buttons.length) { return; }
 			
 			if(!pSetToDefault) {
-				var tLength = pane.buttons.length;
-				var btn:PushButton = pane.buttons[ Math.floor(Math.random() * tLength) ];
-				btn.toggleOn();
-				if(pane.flagOpen) pane.scrollItemIntoView(btn);
+				pane.chooseRandomItem();
 			} else {
 				_removeItem(pType);
 				// Set to default values for required types
 				if(!!pane.defaultItemData) {
-					if(pane.flagOpen) pane.scrollItemIntoView(pane.getButtonWithItemData(pane.defaultItemData));
+					if(pane.flagOpen) pane.scrollItemIntoView(pane.getCellWithItemData(pane.defaultItemData));
 				}
 			}
 		}
@@ -678,8 +668,7 @@ package app.world
 			shopTabs.UnpressAll();
 			shopTabs.toggleTabOn(itemType.toString());
 			var tPane:ShopCategoryPane = getShopPane(itemType);
-			var itemBttn:PushButton = tPane.toggleGridButtonWithData( character.getItemData(itemType) );
-			tPane.scrollItemIntoView(itemBttn);
+			var itemBttn:PushButton = tPane.toggleGridButtonWithData( character.getItemData(itemType), true );
 		}
 		
 		private function _goToItemColorPicker(pItemData:ItemData) : void {

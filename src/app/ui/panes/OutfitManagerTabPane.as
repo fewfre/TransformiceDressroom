@@ -26,27 +26,24 @@ package app.ui.panes
 		// Storage
 		private var _character : Character;
 		
-		private var _deleteBtnGrid     : Grid;
 		private var _onUserLookClicked : Function;
+		private var _getLookCodeForCurrentOutfit : Function;
 		private var _exportButton      : SpriteButton;
 		private var _importButton      : SpriteButton;
 		
-		private var _addOutfitButtonHolder : Sprite;
-		private var _addOutfitDeleteButton : Sprite;
+		private var _newOutfitButtonHolder : Sprite;
 		
 		// Constructor
-		public function OutfitManagerTabPane(pCharacter:Character, pOnUserLookClicked:Function) {
+		public function OutfitManagerTabPane(pCharacter:Character, pOnUserLookClicked:Function, pGetLookCodeForCurrentOutfit:Function) {
 			super(5);
 			_character = pCharacter;
 			_onUserLookClicked = pOnUserLookClicked;
+			_getLookCodeForCurrentOutfit = pGetLookCodeForCurrentOutfit;
 			
 			this.addInfoBar( new Infobar({ showBackButton:true, hideItemPreview:true, gridManagement:{ hideRandomizeLock:true } }) )
 				.on(Infobar.BACK_CLICKED, function(e):void{ dispatchEvent(new Event(Event.CLOSE)); });
 			
-			_deleteBtnGrid = _scrollbox.add(new Grid(385, 5).setXY(15,5)) as Grid;
-			
 			this.grid.reverse(); // Start reversed so that new outfits get added to start of list
-			_deleteBtnGrid.reverse();
 			this.infoBar.on(GridManagementWidget.RANDOMIZE_CLICKED, function(){ selectRandomOutfit(); });
 			
 			// Custom infobar buttons
@@ -69,121 +66,100 @@ package app.ui.panes
 		public override function open() : void {
 			super.open();
 			
+			_initLookCodesVector();
 			_renderOutfits();
 		}
 		
 		public function addNewLook(lookCode:String) : void {
 			trace('addNewLook', lookCode);
-			var looks:Array = getStoredLookCodes();
-			looks.push(lookCode);
-			Fewf.sharedObject.setData(ConstantsApp.SHARED_OBJECT_KEY_OUTFITS, looks);
+			var entry:LookEntry = _addNewLookCodeAsEntryAndSave(lookCode);
 			
 			// Add it to grid - do it manually to avoid re-rendering whole list
-			toggleExportButton(looks.length > 0);
-			_addLookButton(lookCode, looks.length-1);
+			toggleExportButton(_lookCodesEntries.length > 0);
+			_addLookButton(entry);
 			_addNewOutfitButton();
 			refreshScrollbox();
 		}
 		
-		public function deleteLookByIndex(i:int) : void {
-			var looks:Array = getStoredLookCodes();
-			var oldCode:String = looks[i];
-			looks.splice(i, 1);
-			Fewf.sharedObject.setData(ConstantsApp.SHARED_OBJECT_KEY_OUTFITS, looks);
+		public function deleteLookById(entryId:Number) : void {
+			var removedEntry:LookEntry = _deleteLookEntryIdAndSave(entryId);
 			
-			// Remove it from grid - do it manually to avoid re-rendering whole list
-			toggleExportButton(looks.length > 0);
-			// The "add outfit button" can shift over cell index by 1 if grid is not reversed, since it's always added to top left
-			var btnI = grid.reversed ? i : i+1;
-			grid.remove(grid.cells[btnI]);
-			_deleteBtnGrid.remove(_deleteBtnGrid.cells[btnI]);
-			// We have to update the delete index for other delete buttons
-			var delBtn:ScaleButton;
-			for(var di:int = btnI; di < _deleteBtnGrid.cells.length; di++) {
-				// If child doesn't exist (such as "add new look" one which is empty") ignore
-				if((_deleteBtnGrid.cells[di] as Sprite).numChildren > 0) {
-					delBtn = (_deleteBtnGrid.cells[di] as Sprite).getChildAt(0) as ScaleButton; // Delete button holder only ever has 1 child
-					delBtn.data.lookIndex--;
+			toggleExportButton(_lookCodesEntries.length > 0);
+			if(removedEntry) {
+				for(var i:int = 0; i < grid.cells.length; i++) {
+					var btn:PushButton = _findPushButtonInCell(grid.cells[i]);
+					if(btn && btn.data.entryId != null && btn.data.entryId == removedEntry.id) {
+						grid.remove(grid.cells[i]);
+						refreshScrollbox();
+						return;
+					}
 				}
 			}
-			refreshScrollbox();
 		}
 		
 		public function selectRandomOutfit() : void {
-			var btn = buttons[ Math.floor(Math.random() * buttons.length) ];
-			btn.toggleOn();
-			if(this.flagOpen) this.scrollItemIntoView(btn);
+			var looksCount = grid.cells.length-1; // ignore cell for "add new outfit"
+			var i = Math.floor(Math.random() * looksCount);
+			if(!grid.reversed) i++ // offset it so we don't select "add new outfit"
+			_activatePushButtonGridCell(grid.cells[i]);
 		}
 		
 		/****************************
 		* Private
 		*****************************/
-		private function getStoredLookCodes() : Array {
-			return Fewf.sharedObject.getData(ConstantsApp.SHARED_OBJECT_KEY_OUTFITS) || [];
-		}
-		
 		private function _renderOutfits() : void {
-			var looks:Array = getStoredLookCodes();
+			toggleExportButton(_lookCodesEntries.length > 0);
+			resetGrid();
 			
-			toggleExportButton(looks.length > 0);
-			clearButtons();
-			_deleteBtnGrid.reset();
-			
-			for(var i:int = 0; i < looks.length; i++) {
-				var look = looks[i];
-				_addLookButton(look, i);
+			for each(var lookEntry:LookEntry in _lookCodesEntries){
+				_addLookButton(lookEntry);
 			}
 			
 			_addNewOutfitButton();
 			refreshScrollbox();
 		}
 		
-		public function _addLookButton(lookCode:String, i:int) : void {
-			var lookMC = new Character(new <ItemData>[ GameAssets.defaultPose ], lookCode, true);
+		public function _addLookButton(lookEntry:LookEntry) : void {
+			var lookMC = new Character(new <ItemData>[ GameAssets.defaultPose ], lookEntry.lookCode, true);
+			var cell:Sprite = new Sprite();
+			var actionTray:Sprite = new Sprite(); actionTray.alpha = 0;
 			
-			var btn:PushButton = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:lookMC }) as PushButton;
-			btn.addEventListener(PushButton.STATE_CHANGED_AFTER, function(){
-				_onUserLookClicked(lookCode);
-				
-				_untoggleAll(buttons, btn);
+			var btn:PushButton = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:lookMC, data:{ entryId:lookEntry.id } }).appendTo(cell) as PushButton;
+			btn.on(PushButton.STATE_CHANGED_AFTER, function(){
+				_onUserLookClicked(lookEntry.lookCode);
 			});
-			addButton(btn);
+			btn.on(MouseEvent.MOUSE_OVER, function(e){ actionTray.alpha = 1; });
+			btn.on(MouseEvent.MOUSE_OUT, function(e){ actionTray.alpha = 0; });
+			
+			// Add on top of main button
+			cell.addChild(actionTray);
 			
 			// Corresponding Delete Button
-			var deleteBtnHolder = new Sprite(); deleteBtnHolder.alpha = 0;
-			var deleteBtn:ScaleButton = deleteBtnHolder.addChild(new ScaleButton({ x:grid.cellSize-5, y:5, obj:new $Trash(), obj_scale:0.4, data:{ lookIndex:i } })) as ScaleButton;
+			var deleteBtn:ScaleButton = new ScaleButton({ x:grid.cellSize-5, y:5, obj:new $Trash(), obj_scale:0.4 }).appendTo(actionTray) as ScaleButton;
 			// We have to delete by the index (instead of a code) since if someone added the same look twice but in different spots, this could delete the one in the wrong spot
-			deleteBtn.addEventListener(MouseEvent.CLICK, function(e){ deleteLookByIndex(deleteBtn.data.lookIndex); });
-			_deleteBtnGrid.add(deleteBtnHolder);
+			deleteBtn.on(MouseEvent.CLICK, function(e){ deleteLookById(lookEntry.id); });
 			
-			deleteBtn.addEventListener(MouseEvent.MOUSE_OVER, function(e){ deleteBtnHolder.alpha = 1; });
-			deleteBtn.addEventListener(MouseEvent.MOUSE_OUT, function(e){ deleteBtnHolder.alpha = 0; });
+			deleteBtn.on(MouseEvent.MOUSE_OVER, function(e){ actionTray.alpha = 1; });
+			deleteBtn.on(MouseEvent.MOUSE_OUT, function(e){ actionTray.alpha = 0; });
 			
-			btn.addEventListener(MouseEvent.MOUSE_OVER, function(e){ deleteBtnHolder.alpha = 1; });
-			btn.addEventListener(MouseEvent.MOUSE_OUT, function(e){ deleteBtnHolder.alpha = 0; });
+			// Finally add to grid (do it at end so auto event handlers can be hooked up properly)
+			addToGrid(cell);
 		}
 		
 		private function _addNewOutfitButton() : void {
 			var tAddToTopOfList:Boolean = !grid.reversed;
-			if(_addOutfitButtonHolder) _grid.remove(_addOutfitButtonHolder);
-			if(_addOutfitDeleteButton) _deleteBtnGrid.remove(_addOutfitDeleteButton);
-			var holder = new Sprite();
-			new ScaleButton({ x:grid.cellSize*0.5, y:grid.cellSize*0.5, width:grid.cellSize, height:grid.cellSize, obj:new $OutfitAdd() })
-			.appendTo(holder).on(MouseEvent.CLICK, function(e){ addNewLook(_character.getParamsTfmOfficialSyntax()) });
+			if(_newOutfitButtonHolder) _grid.remove(_newOutfitButtonHolder);
+			_newOutfitButtonHolder = new Sprite();
 			
-			_addOutfitButtonHolder = holder;
-			_addOutfitDeleteButton = new Sprite();
-			this.grid.add(_addOutfitButtonHolder, tAddToTopOfList);
-			_deleteBtnGrid.add(_addOutfitDeleteButton, tAddToTopOfList); // empty spot since no delete button for this
-			// this.buttons.push(tNewOutfitBtn);// DO NOT ADD TO BUTTONS! only add to grid; this avoids issue when clicking "random" button
-		}
-
-		private function _untoggleAll(pList:Vector.<PushButton>, pExcepotButton:PushButton=null) : void {
-			for(var i:int = 0; i < pList.length; i++) {
-				if (pList[i].pushed && pList[i] != pExcepotButton) {
-					pList[i].toggleOff();
-				}
-			}
+			// We do this so grid traversal works
+			var fakePushBtn:PushButton = new PushButton({ width:0, height:0, data:{ entryId:null } }).appendTo(_newOutfitButtonHolder) as PushButton;
+			fakePushBtn.visible=false;
+			
+			new ScaleButton({ x:grid.cellSize*0.5, y:grid.cellSize*0.5, width:grid.cellSize, height:grid.cellSize, obj:new $OutfitAdd() })
+			.appendTo(_newOutfitButtonHolder).on(MouseEvent.CLICK, function(e){ addNewLook(_getLookCodeForCurrentOutfit()) });
+			
+			// Finally add to grid (do it at end so auto event handlers can be hooked up properly)
+			addToGrid(_newOutfitButtonHolder, tAddToTopOfList);
 		}
 		
 		private function toggleExportButton(pShow:Boolean) : void {
@@ -195,10 +171,53 @@ package app.ui.panes
 		}
 		
 		/****************************
+		* Private - Look code stuff
+		*****************************/
+		private var _lookCodesEntries : Vector.<LookEntry>;
+		private function _initLookCodesVector() : void {
+			_lookCodesEntries = new Vector.<LookEntry>();
+			var list:Array = Fewf.sharedObject.getData(ConstantsApp.SHARED_OBJECT_KEY_OUTFITS) || [];
+			for each(var look:String in list) {
+				_lookCodesEntries.push(new LookEntry(look, _getNewEntryId()));
+			}
+		}
+		
+		private var __uniqIdIndex:int = 0;
+		private function _getNewEntryId() : int { return __uniqIdIndex++; }
+		
+		private function _addNewLookCodeAsEntryAndSave(look:String) : LookEntry {
+			var entry:LookEntry = new LookEntry(look, _getNewEntryId());
+			_lookCodesEntries.push(entry);
+			_saveCodeEntriesVector();
+			return entry;
+		}
+		
+		private function _deleteLookEntryIdAndSave(id:int) : LookEntry {
+			// We need to delete by id here encase there's multiple of same look code
+			// By finding the index of the id, we can find the real index of the look code instance associated with the index of the button
+			var i:int = FewfUtils.getIndexFromVectorWithKeyVal(_lookCodesEntries, "id", id);
+			if(i > -1) {
+				var oldEntry:LookEntry = _lookCodesEntries[i];
+				_lookCodesEntries.splice(i, 1);
+				_saveCodeEntriesVector();
+				return oldEntry;
+			}
+			return null;
+		}
+		
+		private function _saveCodeEntriesVector() : void {
+			var list:Array = [];
+			for each(var entry:LookEntry in _lookCodesEntries) {
+				list.push(entry.lookCode);
+			}
+			Fewf.sharedObject.setData(ConstantsApp.SHARED_OBJECT_KEY_OUTFITS, list);
+		}
+		
+		/****************************
 		* Events
 		*****************************/
 		private function _onExportClicked(e:MouseEvent) : void {
-			var looks:Array = getStoredLookCodes();
+			var looks:Array = Fewf.sharedObject.getData(ConstantsApp.SHARED_OBJECT_KEY_OUTFITS) || [];
 			var csv:String = looks.join('\n');
 			
 			var bytes:ByteArray = new ByteArray();
@@ -217,7 +236,7 @@ package app.ui.panes
 		private function _onImportSelected(e:Event) : void {
 			try {
 				var importedLooks = e.target.data.toString().split('\n');
-				var oldLooks:Array = getStoredLookCodes();
+				var oldLooks:Array = Fewf.sharedObject.getData(ConstantsApp.SHARED_OBJECT_KEY_OUTFITS) || [];
 				for(var i:int = importedLooks.length-1; i >= 0; i--) {
 					// Don't allow an import file with invalid code
 					if(this._character.parseParams(importedLooks[i]) === false) {
@@ -231,6 +250,7 @@ package app.ui.panes
 				var final = oldLooks.concat(importedLooks);
 				Fewf.sharedObject.setData(ConstantsApp.SHARED_OBJECT_KEY_OUTFITS, final);
 				
+				_initLookCodesVector();
 				_renderOutfits();
 			} catch(e) {
 				trace('Import Error: ', e);
@@ -242,9 +262,20 @@ package app.ui.panes
 		}
 		
 		protected override function _onInfobarReverseGridClicked(e:Event) : void {
-			grid.reverse(); _deleteBtnGrid.reverse();
+			grid.reverse();
 			_addNewOutfitButton();
 			refreshScrollbox();
 		}
+	}
+}
+
+// This stupid thing is needed since the user can potentially have multiple copies of the same look, and deleteing one could delete it in the "wrong spot"
+internal class LookEntry {
+	public var lookCode:String;
+	public var id:int;
+	
+	public function LookEntry(pLookCode:String, pId:int) {
+		lookCode = pLookCode;
+		id = pId;
 	}
 }

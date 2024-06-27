@@ -16,13 +16,12 @@ package app.ui.panes
 	import flash.utils.setTimeout;
 	import app.ui.panes.base.ButtonGridSidePane;
 	import app.ui.panes.infobar.Infobar;
+	import flash.display.DisplayObject;
 
 	public class ShopCategoryPaneForFiltering extends ButtonGridSidePane
 	{
 		private var _type: ItemType;
 		private var _itemDataVector: Vector.<ItemData>;
-		
-		private var _actionsGrid : Grid;
 		
 		public function get type():ItemType { return _type; }
 		
@@ -38,12 +37,9 @@ package app.ui.panes
 			
 			this.addInfoBar( new Infobar({ showEyeDropper:false, hideItemPreview:true, gridManagement:{ hideRandomize:true, hideArrows:true } }) );
 			this.infoBar.showColorWheel(false);
-				
-			_actionsGrid = _scrollbox.add(new Grid(385, grid.columns).setXY(grid.x,grid.y)) as Grid;
 			
 			// We want them to start reversed
 			grid.reverse();
-			_actionsGrid.reverse();
 		}
 		
 		/****************************
@@ -53,27 +49,13 @@ package app.ui.panes
 			_setupGrid(GameAssets.getItemDataListByType(_type));
 		}
 		
-		public function getButtonWithItemData(itemData:ItemData) : PushButton {
-			return FewfUtils.vectorFind(buttons, function(b:PushButton){ return itemData.matches(b.data.itemData) });
-		}
-		
-		public function toggleGridButtonWithData(pData:ItemData) : PushButton {
-			if(pData && getButtonWithItemData(pData)) {
-				var btn:PushButton = getButtonWithItemData(pData);
-				btn.toggleOn();
-				return btn;
-			}
-			return null;
-		}
-		
 		/****************************
 		* Private
 		*****************************/
 		private function _setupGrid(pItemList:Vector.<ItemData>) : void {
 			_itemDataVector = pItemList;
 
-			clearButtons();
-			_actionsGrid.reset();
+			resetGrid();
 
 			for(var i:int = 0; i < pItemList.length; i++) {
 				_addButton(pItemList[i], 1, i);
@@ -81,15 +63,16 @@ package app.ui.panes
 			refreshScrollbox();
 		}
 		
-		private function _addButton(itemData:ItemData, pScale:Number, i:int) {
+		private function _addButton(itemData:ItemData, pScale:Number, i:int) : void {
 			var shopItem : MovieClip = GameAssets.getItemImage(itemData);
 			shopItem.scaleX = shopItem.scaleY = pScale;
+			var cell:Sprite = new Sprite();
 			
-			var customizeButton : Sprite = _addCustomizeButton(itemData);
-			_actionsGrid.add(customizeButton);
+			var customizeButton : DisplayObject = _addCustomizeButton(itemData);
 
-			var shopItemButton : PushButton = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:shopItem, id:i, data:{ type:_type, id:i, itemID:itemData.id, itemData:itemData, customizeButton:customizeButton } });
-			addButton(shopItemButton);
+			var shopItemButton : PushButton = new PushButton({ size:grid.cellSize, obj:shopItem, id:i, data:{ type:_type, id:i, itemID:itemData.id, itemData:itemData, customizeButton:customizeButton } }).appendTo(cell) as PushButton;
+			
+			cell.addChild( customizeButton );
 			
 			shopItemButton.alpha = 0.5;
 			customizeButton.visible = false;
@@ -98,15 +81,13 @@ package app.ui.panes
 				shopItemButton.toggleOn(false);
 				customizeButton.visible = true;
 			}
-			shopItemButton.addEventListener(PushButton.STATE_CHANGED_AFTER, _onItemToggled);
-		}
-		
-		private function _getButtonWithItemId(pId:String) : PushButton {
-			return FewfUtils.vectorFind(buttons, function(b:PushButton){ return b.data.itemID == pId });
+			
+			// Finally add to grid (do it at end so auto event handlers can be hooked up properly)
+			addToGrid(cell);
 		}
 		
 		private function _addCustomizeButton(data:ItemData) : Sprite {
-			if(!data.colors || data.colors.length == 0) { return new MovieClip(); }
+			if(!data.colors || data.colors.length == 0) { return new Sprite(); }
 			
 			var btn : PushButton = new PushButton({ width:20, height:20, obj:new $ColorWheel(), data:{ itemData:data } });
 			btn.alpha = 0.35;
@@ -124,7 +105,7 @@ package app.ui.panes
 		/****************************
 		* Events
 		*****************************/
-		private function _onItemToggled(e:FewfEvent) : void {
+		protected override function _onCellPushButtonToggled(e:FewfEvent) : void {
 			var btn:PushButton = e.target as PushButton;
 			btn.alpha = btn.pushed ? 1 : 0.5;
 			if(btn.pushed) {
@@ -135,11 +116,6 @@ package app.ui.panes
 				btn.data.customizeButton.visible = false;
 			}
 			// dispatchEvent(new FewfEvent(ITEM_TOGGLED, e.data));
-		}
-		
-		protected override function _onInfobarReverseGridClicked(e:Event) : void {
-			this.grid.reverse();
-			this._actionsGrid.reverse();
 		}
 	}
 }

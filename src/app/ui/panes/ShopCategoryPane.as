@@ -19,6 +19,8 @@ package app.ui.panes
 	import flash.text.TextFormat;
 	import app.ui.panes.base.ButtonGridSidePane;
 	import app.ui.panes.infobar.Infobar;
+	import flash.display.Sprite;
+	import flash.display.DisplayObject;
 
 	public class ShopCategoryPane extends ButtonGridSidePane
 	{
@@ -27,7 +29,6 @@ package app.ui.panes
 		private var _defaultItemData: ItemData;
 		public var selectedButtonIndex : int;
 		
-		private var _defaultSkinColorButton: ScaleButton;
 		private var _flagWaveInput: FancyInput;
 		public function get flagWaveInput() : FancyInput { return _flagWaveInput; }
 		
@@ -62,17 +63,31 @@ package app.ui.panes
 			super.open();
 		}
 		
-		public function getButtonWithItemData(itemData:ItemData) : PushButton {
-			return FewfUtils.vectorFind(buttons, function(b:PushButton){ return itemData.matches(b.data.itemData) });
+		public function getCellWithItemData(itemData:ItemData) : DisplayObject {
+			return !itemData ? null : FewfUtils.vectorFind(grid.cells, function(c:DisplayObject){ return itemData.matches(_findPushButtonInCell(c).data.itemData) });
 		}
 		
-		public function toggleGridButtonWithData(pData:ItemData) : PushButton {
-			if(pData && getButtonWithItemData(pData)) {
-				var btn:PushButton = getButtonWithItemData(pData);
+		public function getButtonWithItemData(itemData:ItemData) : PushButton {
+			return _findPushButtonInCell(getCellWithItemData(itemData));
+		}
+		
+		public function toggleGridButtonWithData(pData:ItemData, pScrollIntoView:Boolean=false) : PushButton {
+			var cell:DisplayObject = getCellWithItemData(pData);
+			if(cell) {
+				var btn:PushButton = _findPushButtonInCell(cell);
 				btn.toggleOn();
+				if(pScrollIntoView && _flagOpen) scrollItemIntoView(cell);
 				return btn;
 			}
 			return null;
+		}
+		
+		public function chooseRandomItem() : void {
+			var tLength = grid.cells.length;
+			var cell:DisplayObject = grid.cells[ Math.floor(Math.random() * tLength) ];
+			var btn:PushButton = _findPushButtonInCell(cell);
+			btn.toggleOn();
+			if(_flagOpen) scrollItemIntoView(cell);
 		}
 		
 		public function filterItemIds(pIds:Vector.<String>) : void {
@@ -87,24 +102,30 @@ package app.ui.panes
 		private function _setupGrid(pItemList:Vector.<ItemData>) : void {
 			_itemDataVector = pItemList;
 			_setDefaultItemDataFromList(pItemList);
-			var scale:Number = 1;
 
-			clearButtons();
+			resetGrid();
 
-			var itemData : ItemData, shopItem : MovieClip, shopItemButton : PushButton;
 			for(var i:int = 0; i < pItemList.length; i++) {
-				itemData = pItemList[i];
-				shopItem = GameAssets.getItemImage(itemData);
-				shopItem.scaleX = shopItem.scaleY = scale;
-
-				shopItemButton = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:shopItem, id:i, data:{ type:_type, id:i, itemID:itemData.id, itemData:itemData } });
-				addButton(shopItemButton);
-				shopItemButton.addEventListener(PushButton.STATE_CHANGED_AFTER, _onItemToggled);
+				_addButton(pItemList[i], 1, i);
 			}
 			
-			_addDefaultSkinColorButtonIfSkinPane();
 			refreshScrollbox();
 		}
+		
+		private function _addButton(itemData:ItemData, pScale:Number, i:int) : void {
+			var shopItem : MovieClip = GameAssets.getItemImage(itemData);
+			shopItem.scaleX = shopItem.scaleY = pScale;
+			var cell:Sprite = new Sprite();
+
+			var shopItemButton:PushButton = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:shopItem, id:i, data:{ type:_type, id:i, itemID:itemData.id, itemData:itemData } }).appendTo(cell) as PushButton;
+			
+			_addDefaultSkinColorButtonIfNeeded(itemData, cell, shopItemButton);
+			_addFlagWaveInputIfNeeded(itemData, cell, shopItemButton);
+			
+			// Finally add to grid (do it at end so auto event handlers can be hooked up properly)
+			addToGrid(cell);
+		}
+			
 		private function _setDefaultItemDataFromList(list:Vector.<ItemData>) : void {
 			_defaultItemData = null;
 			if(_type == ItemType.SKIN) {
@@ -118,79 +139,54 @@ package app.ui.panes
 			}
 		}
 		
-		private function _getButtonWithItemId(pId:String) : PushButton {
-			return FewfUtils.vectorFind(buttons, function(b:PushButton){ return b.data.itemID == pId });
-		}
-		
-		private function _addDefaultSkinColorButtonIfSkinPane() : void {
-			if(_defaultSkinColorButton && _defaultSkinColorButton.parent) {
-				_defaultSkinColorButton.parent.removeChild(_defaultSkinColorButton);
-			}
-			_defaultSkinColorButton = null;
-			if(_type == ItemType.SKIN && !!_getButtonWithItemId(GameAssets.defaultSkin.id)) {
-				// Customizeable fur color button
-				// cannot attach to button due to main button eating mouse events
-				_defaultSkinColorButton = grid.addChild(new ScaleButton({ obj:new $ColorWheel(), obj_scale:0.5 })) as ScaleButton;
-				_defaultSkinColorButton.addEventListener(ButtonBase.CLICK, function():void{
-					var btn:PushButton = _getButtonWithItemId(GameAssets.defaultSkin.id);
-					btn.toggleOn();
+		private function _addDefaultSkinColorButtonIfNeeded(itemData:ItemData, cell:Sprite, parentButton:PushButton) : void {
+			if(!GameAssets.defaultSkin.matches(itemData)) { return; }
+			// Customizeable fur color button
+			new ScaleButton({ obj:new $ColorWheel(), obj_scale:0.5 }).setXY(60, 12).appendTo(cell)
+				.on(ButtonBase.CLICK, function():void{
+					parentButton.toggleOn();
 					dispatchEvent(new Event(DEFAULT_SKIN_COLOR_BTN_CLICKED));
 				});
-				_repositionDefaultSkinColorButtonIfExists();
-			}
-			if(_type == ItemType.POSE) {
-				// Flag waving code text field
-				// cannot attach to button due to main button eating mouse events
-				_flagWaveInput = new FancyInput({ width:grid.cellSize-8, height:16, padding:2 });
-				
-				// Placeholder
-				_flagWaveInput.placeholderTextBase.setUntranslatedText('/f __');
-				_flagWaveInput.placeholderTextBase.x += 14;
-				
-				// Center Text
-				var tFormat:TextFormat = new TextFormat();
-				tFormat.align = 'center';
-				_flagWaveInput.field.defaultTextFormat = tFormat;
-				
-				grid.addChild(_flagWaveInput);
-				_flagWaveInput.field.addEventListener(KeyboardEvent.KEY_UP, function(e):void{
-					dispatchEvent(new FewfEvent(FLAG_WAVE_CODE_CHANGED, { code:_flagWaveInput.text }));
-				});
-				// paste support
-				_flagWaveInput.field.addEventListener(TextEvent.TEXT_INPUT, function(e):void{
-					if(e.text.length <= 1) return;
-					dispatchEvent(new FewfEvent(FLAG_WAVE_CODE_CHANGED, { code:e.text }));
-				});
-				// select pose if textbox clicked
-				_flagWaveInput.field.addEventListener(FocusEvent.FOCUS_IN, function():void{
-					buttons[18].toggleOn();
-				});
-				_repositionDefaultSkinColorButtonIfExists();
-			}
 		}
-		private function _repositionDefaultSkinColorButtonIfExists() : void {
-			if(_defaultSkinColorButton) {
-				var tSkinButton = _getButtonWithItemId(GameAssets.defaultSkin.id);
-				_defaultSkinColorButton.x = tSkinButton.x + 60;
-				_defaultSkinColorButton.y = tSkinButton.y + 12;
-			}
-			if(_flagWaveInput) {
-				var tPoseButton = buttons[18];
-				_flagWaveInput.x = tPoseButton.x + grid.cellSize/2 + 0.5;
-				_flagWaveInput.y = tPoseButton.y + 12;
-			}
+		
+		private function _addFlagWaveInputIfNeeded(itemData:ItemData, cell:Sprite, parentButton:PushButton) : void {
+			if(!GameAssets.poses[18].matches(itemData)) { return; }
+			// Flag waving code text field
+			// cannot attach to button due to main button eating mouse events
+			_flagWaveInput = new FancyInput({ width:grid.cellSize-8, height:16, padding:2 });
+			_flagWaveInput.x = grid.cellSize/2 + 0.5;
+			_flagWaveInput.y = 12;
+			cell.addChild(_flagWaveInput);
+			
+			// Placeholder
+			_flagWaveInput.placeholderTextBase.setUntranslatedText('/f __');
+			_flagWaveInput.placeholderTextBase.x += 14;
+			
+			// Center Text
+			var tFormat:TextFormat = new TextFormat();
+			tFormat.align = 'center';
+			_flagWaveInput.field.defaultTextFormat = tFormat;
+			
+			_flagWaveInput.field.addEventListener(KeyboardEvent.KEY_UP, function(e):void{
+				dispatchEvent(new FewfEvent(FLAG_WAVE_CODE_CHANGED, { code:_flagWaveInput.text }));
+			});
+			// paste support
+			_flagWaveInput.field.addEventListener(TextEvent.TEXT_INPUT, function(e):void{
+				if(e.text.length <= 1) return;
+				dispatchEvent(new FewfEvent(FLAG_WAVE_CODE_CHANGED, { code:e.text }));
+			});
+			// select pose if textbox clicked
+			_flagWaveInput.field.addEventListener(FocusEvent.FOCUS_IN, function():void{
+				parentButton.toggleOn();
+			});
 		}
 		
 		/****************************
 		* Events
 		*****************************/
-		private function _onItemToggled(e:FewfEvent) : void {
+		protected override function _onCellPushButtonToggled(e:FewfEvent) : void {
+			super._onCellPushButtonToggled(e);
 			dispatchEvent(new FewfEvent(ITEM_TOGGLED, e.data));
-		}
-		
-		protected override function _onInfobarReverseGridClicked(e:Event) : void {
-			this.grid.reverse();
-			_repositionDefaultSkinColorButtonIfExists();
 		}
 	}
 }

@@ -7,27 +7,36 @@ package app.ui.panes.base
 	import app.ui.ShopInfoBar;
 	import flash.ui.Keyboard;
 	import app.ui.buttons.PushButton;
+	import flash.display.Sprite;
+	import com.fewfre.events.FewfEvent;
 
 	public class ButtonGridSidePane extends GridSidePane
 	{
 		// Storage
 		public var buttons: Vector.<PushButton>;
+		// private var _lastGridIndex : uint;
 		
 		// Constructor
 		public function ButtonGridSidePane(pColumns:Number) {
 			super(pColumns);
 			buttons = new Vector.<PushButton>();
+			// _lastGridIndex = 0;
 		}
 
-		public function addButton(pItem:PushButton) : PushButton {
-			buttons.push(pItem);
-			addToGrid(pItem);
+		public override function addToGrid(pItem:DisplayObject, addToStart:Boolean = false) : DisplayObject {
+			super.addToGrid(pItem, addToStart);
+			// For this to work the button must be added to `pItem` *before* it's passed in
+			var btn:PushButton = _findPushButtonInCell(pItem);
+			if(btn) {
+				btn.on(PushButton.STATE_CHANGED_AFTER, _onCellPushButtonToggled);
+				addToStart ? buttons.unshift(btn) : buttons.push(btn);
+			}
 			return pItem;
 		}
-
-		public function clearButtons() : void {
+		
+		public override function resetGrid():void {
+			super.resetGrid();
 			buttons = new Vector.<PushButton>();
-			resetGrid();
 		}
 		
 		public override function handleKeyboardDirectionalInput(keyCode:uint) : void {
@@ -46,31 +55,29 @@ package app.ui.panes.base
 		}
 		
 		protected function _traversePaneButtonGrid(pRight:Boolean):void {
-			var pane:ButtonGridSidePane = this;
-			if(pane && pane.grid && pane.buttons && pane.buttons.length > 0 && pane.buttons[0] is PushButton) {
-				var activeButtonIndex:int = _findIndexActivePushButton(buttons);
-				if(activeButtonIndex == -1) { activeButtonIndex = pane.grid.reversed ? buttons.length-1 : 0; }
+			if(_grid.cells.length > 0) {
+				var activeButtonIndex:int = _findIndexOfActiveGridCell();
+				// var activeButtonIndex:int = _findIndexActivePushButton(buttons);
+				if(activeButtonIndex == -1) { activeButtonIndex = _grid.reversed ? buttons.length-1 : 0; }
 				
-				var dir:int = (pRight ? 1 : -1) * (pane.grid.reversed ? -1 : 1),
-					length:uint = buttons.length;
+				var dir:int = (pRight ? 1 : -1) * (_grid.reversed ? -1 : 1),
+					length:uint = _grid.cells.length;
 					
 				var newI:int = activeButtonIndex+dir;
 				// mod it so it wraps - `length` added before mod to allow a `-1` dir to properly wrap
 				newI = (length + newI) % length;
 				
-				var btn:PushButton = buttons[newI];
-				btn.toggleOn();
-				_scrollbox.scrollItemIntoView(btn);
+				_activatePushButtonGridCell(_grid.cells[newI]);
 			}
 		}
 		
 		protected function _traversePaneButtonGridVertically(pUp:Boolean):void {
-			var pane:ButtonGridSidePane = this;
-			if(pane && pane.grid && pane.buttons && pane.buttons.length > 0 && pane.buttons[0] is PushButton) {
-				var activeButtonIndex:int = _findIndexActivePushButton(buttons);
-				if(activeButtonIndex == -1) { activeButtonIndex = grid.reversed ? buttons.length-1 : 0; }
-				var dir:int = (pUp ? -1 : 1) * (grid.reversed ? -1 : 1),
-					length:uint = buttons.length;
+			if(_grid.cells.length > 0) {
+				var activeButtonIndex:int = _findIndexOfActiveGridCell();
+				// var activeButtonIndex:int = _findIndexActivePushButton(buttons);
+				if(activeButtonIndex == -1) { activeButtonIndex = grid.reversed ? _grid.cells.length-1 : 0; }
+				var dir:int = (pUp ? -1 : 1) * (_grid.reversed ? -1 : 1),
+					length:uint = _grid.cells.length;
 				
 				var rowI:Number = Math.floor(activeButtonIndex / grid.columns);
 				rowI = (rowI + dir); // increment row in direction
@@ -91,11 +98,36 @@ package app.ui.panes.base
 					newI = rowI*grid.columns + colI;
 				}
 				
-				var btn:PushButton = buttons[newI];
-				btn.toggleOn();
-				_scrollbox.scrollItemIntoView(btn);
+				_activatePushButtonGridCell(_grid.cells[newI]);
 			}
 		}
+		
+		// If component or a child of the component is a `PushButton` then push it
+		protected function _activatePushButtonGridCell(cell:DisplayObject) : void {
+			var btn:PushButton = _findPushButtonInCell(cell);
+			if(btn) {
+				btn.toggleOn();
+				if(_flagOpen) scrollItemIntoView(cell);
+			}
+		}
+		
+		// If component or first child of the component is a `PushButton` then return it
+		protected function _findPushButtonInCell(o:DisplayObject) : PushButton {
+			if(!o) { return null; }
+			if(o is PushButton) {
+				return (o as PushButton);
+			} else if(o is Sprite) {
+				var sprite:Sprite = o as Sprite;
+				if(sprite.numChildren > 0 && sprite.getChildAt(0) is PushButton) {
+					return sprite.getChildAt(0) as PushButton;
+				}
+			}
+			return null;
+		}
+		
+		// protected function _getSelectedCell() : DisplayObject {
+		// 	return _grid.cells[_lastGridIndex];
+		// }
 		
 		// Find the pressed button
 		protected function _findIndexActivePushButton(pButtons:Vector.<PushButton>):int {
@@ -105,6 +137,30 @@ package app.ui.panes.base
 				}
 			}
 			return -1;
+		}
+		
+		protected function _findIndexOfActiveGridCell():int {
+			var btn:PushButton;
+			for(var i:int = 0; i < _grid.cells.length; i++){
+				btn = _findPushButtonInCell(_grid.cells[i]);
+				if(!!btn && btn.pushed){
+					return i;
+				}
+			}
+			return -1;
+		}
+
+		protected function _onCellPushButtonToggled(e:FewfEvent) : void {
+			_untoggleAllCells(e.currentTarget as PushButton);
+		}
+		protected function _untoggleAllCells(pExceptButton:PushButton=null) : void {
+			var btn:PushButton;
+			for(var i:int = 0; i < _grid.cells.length; i++) {
+				btn = _findPushButtonInCell(_grid.cells[i]);
+				if (!!btn && btn.pushed && btn != pExceptButton) {
+					btn.toggleOff();
+				}
+			}
 		}
 	}
 }
