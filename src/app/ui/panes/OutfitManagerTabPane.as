@@ -40,7 +40,7 @@ package app.ui.panes
 			_character = pCharacter;
 			_onUserLookClicked = pOnUserLookClicked;
 			
-			this.addInfoBar( new Infobar({ showBackButton:true, hideItemPreview:true, gridManagement:true }) )
+			this.addInfoBar( new Infobar({ showBackButton:true, hideItemPreview:true, gridManagement:{ hideRandomizeLock:true } }) )
 				.on(Infobar.BACK_CLICKED, function(e):void{ dispatchEvent(new Event(Event.CLOSE)); });
 			
 			_deleteBtnGrid = _scrollbox.add(new Grid(385, 5).setXY(15,5)) as Grid;
