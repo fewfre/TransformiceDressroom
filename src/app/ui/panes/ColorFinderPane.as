@@ -15,16 +15,18 @@ package app.ui.panes
 	import flash.net.FileReference;
 	import flash.net.FileFilter;
 	import flash.net.URLRequest;
-	import app.ui.panes.base.GridSidePane;
+	import app.ui.panes.base.SidePaneWithInfobar;
 	import app.ui.panes.infobar.Infobar;
 	
-	public class ColorFinderPane extends GridSidePane
+	public class ColorFinderPane extends SidePaneWithInfobar
 	{
 		// Constants
 		public static const EVENT_ITEM_ICON_CLICKED : String = "event_item_icon_clicked";
 		
 		// Storage
 		private var _tray : MovieClip;
+		private var _scrollbox : FancyScrollbox;
+		
 		private var _stageBitmap : BitmapData;
 		private var _itemCont : MovieClip;
 		private var _itemDragDrop : MovieClip;
@@ -48,10 +50,14 @@ package app.ui.panes
 		
 		// Constructor
 		public function ColorFinderPane(pData:Object) {
-			super(1);
+			super();
 			this.addInfoBar( new Infobar({ showBackButton:true }) )
 				.on(Infobar.BACK_CLICKED, _onBackClicked)
 				.on(Infobar.ITEM_PREVIEW_CLICKED, function(e){ dispatchEvent(new Event(EVENT_ITEM_ICON_CLICKED)); });
+			
+			// Scrollbox used for lazy cropping of dragged around item
+			_scrollbox = new FancyScrollbox(ConstantsApp.PANE_WIDTH, 390-60).setXY(5, 5+60);
+			addChild(_scrollbox);
 			
 			_tray = addChild(new MovieClip()) as MovieClip;
 			_tray.x = ConstantsApp.PANE_WIDTH * 0.5;

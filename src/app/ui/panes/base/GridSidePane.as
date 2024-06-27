@@ -10,17 +10,15 @@ package app.ui.panes.base
 	import app.ui.panes.infobar.GridManagementWidget;
 	import app.ui.panes.infobar.Infobar;
 
-	public class GridSidePane extends SidePane
+	public class GridSidePane extends SidePaneWithInfobar
 	{
 		// Storage
 		protected var _scrollbox : FancyScrollbox;
 		protected var _grid : Grid;
-		protected var _infoBar : Infobar;
 		
 		// Properties
 		public function get scrollbox() : FancyScrollbox { return _scrollbox; }
 		public function get grid() : Grid { return _grid; }
-		public function get infoBar() : Infobar { return _infoBar; }
 		
 		// Constructor
 		public function GridSidePane(pColumns:Number) {
@@ -45,16 +43,10 @@ package app.ui.panes.base
 			_scrollbox.refresh();
 		}
 
-		public function addInfoBar(pInfobar:Infobar) : Infobar {
-			_infoBar = addChild(pInfobar) as Infobar;
-			_infoBar.x = _infoBar.y = 5;
+		public override function addInfoBar(pInfobar:Infobar) : Infobar {
+			super.addInfoBar(pInfobar);
 			_scrollbox.y += 60;
 			_scrollbox.setSize(ConstantsApp.PANE_WIDTH, 385 - 60);
-			
-			_infoBar
-				.on(GridManagementWidget.REVERSE_CLICKED, _onInfobarReverseGridClicked)
-				.on(GridManagementWidget.LEFT_ARROW_CLICKED, _onInfobarLeftArrowClicked)
-				.on(GridManagementWidget.RIGHT_ARROW_CLICKED, _onInfobarRightArrowClicked);
 			
 			return pInfobar;
 		}
@@ -63,21 +55,11 @@ package app.ui.panes.base
 			_scrollbox.scrollItemIntoView(pItem);
 		}
 		
-		public function handleKeyboardDirectionalInput(keyCode:uint) : void {
-			// override me
-		}
-		
 		///////////////////////
 		// Events
 		///////////////////////
-		protected function _onInfobarReverseGridClicked(e:Event) : void {
+		protected override function _onInfobarReverseGridClicked(e:Event) : void {
 			this.grid.reverse();
-		}
-		protected function _onInfobarLeftArrowClicked(e:Event) : void {
-			handleKeyboardDirectionalInput(Keyboard.LEFT);
-		}
-		protected function _onInfobarRightArrowClicked(e:Event) : void {
-			handleKeyboardDirectionalInput(Keyboard.RIGHT);
 		}
 	}
 }
