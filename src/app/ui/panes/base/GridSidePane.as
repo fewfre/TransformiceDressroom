@@ -19,11 +19,12 @@ package app.ui.panes.base
 		// Properties
 		public function get scrollbox() : FancyScrollbox { return _scrollbox; }
 		public function get grid() : Grid { return _grid; }
+		public function get defaultScrollboxHeight() : Number { return _infoBar ? 385-60 : 385; }
 		
 		// Constructor
 		public function GridSidePane(pColumns:Number) {
 			super();
-			_scrollbox = new FancyScrollbox(ConstantsApp.PANE_WIDTH, 385).setXY(5, 5);
+			_scrollbox = new FancyScrollbox(ConstantsApp.PANE_WIDTH, defaultScrollboxHeight).setXY(5, 5);
 			addChild(_scrollbox);
 			// Grid is purposely less wide than the scrollbox to add padding + prevent horizontal scrollbar
 			_grid = new Grid(385, pColumns).setXY(15, 5);
@@ -46,7 +47,7 @@ package app.ui.panes.base
 		public override function addInfoBar(pInfobar:Infobar) : Infobar {
 			super.addInfoBar(pInfobar);
 			_scrollbox.y += 60;
-			_scrollbox.setSize(ConstantsApp.PANE_WIDTH, 385 - 60);
+			_scrollbox.setSize(ConstantsApp.PANE_WIDTH, defaultScrollboxHeight);
 			
 			return pInfobar;
 		}

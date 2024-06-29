@@ -1,26 +1,29 @@
 package app.ui.panes
-{
-	
-	import app.ui.common.FancyInput;
-	import app.data.ItemType;
+{	
+	import app.data.ConstantsApp;
+	import app.data.FavoriteItemsLocalStorageManager;
 	import app.data.GameAssets;
-	import flash.display.MovieClip;
+	import app.data.ItemType;
 	import app.ui.buttons.PushButton;
-	import com.fewfre.events.FewfEvent;
-	import com.fewfre.display.ButtonBase;
-	import com.fewfre.utils.FewfUtils;
 	import app.ui.buttons.ScaleButton;
-	import flash.events.Event;
-	import app.world.data.ItemData;
-	import com.fewfre.display.Grid;
-	import flash.events.TextEvent;
-	import flash.events.KeyboardEvent;
-	import flash.events.FocusEvent;
-	import flash.text.TextFormat;
+	import app.ui.buttons.SpriteButton;
+	import app.ui.common.FancyInput;
 	import app.ui.panes.base.ButtonGridSidePane;
 	import app.ui.panes.infobar.Infobar;
-	import flash.display.Sprite;
+	import app.world.data.ItemData;
+	import com.fewfre.display.ButtonBase;
+	import com.fewfre.display.Grid;
+	import com.fewfre.events.FewfEvent;
+	import com.fewfre.utils.Fewf;
+	import com.fewfre.utils.FewfUtils;
 	import flash.display.DisplayObject;
+	import flash.display.MovieClip;
+	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.events.FocusEvent;
+	import flash.events.KeyboardEvent;
+	import flash.events.TextEvent;
+	import flash.text.TextFormat;
 
 	public class ShopCategoryPane extends ButtonGridSidePane
 	{
@@ -28,6 +31,7 @@ package app.ui.panes
 		private var _itemDataVector: Vector.<ItemData>;
 		private var _defaultItemData: ItemData;
 		public var selectedButtonIndex : int;
+		public var _favoritesGrid : Grid;
 		
 		private var _flagWaveInput: FancyInput;
 		public function get flagWaveInput() : FancyInput { return _flagWaveInput; }
@@ -52,8 +56,12 @@ package app.ui.panes
 			}
 			
 			selectedButtonIndex = -1;
-			this.addInfoBar( new Infobar({ showEyeDropper:_type!=ItemType.POSE, gridManagement:true }) );
+			this.addInfoBar( new Infobar({ showEyeDropper:_type!=ItemType.POSE, gridManagement:true, showFavorites:true }) );
+			_infoBar.on(Infobar.FAVORITE_CLICKED, _addRemoveFavoriteToggled);
 			_setupGrid(GameAssets.getItemDataListByType(_type));
+			
+			_favoritesGrid = new Grid(ConstantsApp.PANE_WIDTH, 10, 3).setXY(7, 60+5).appendTo(this);
+			_renderFavorites();
 		}
 		
 		/****************************
@@ -179,6 +187,45 @@ package app.ui.panes
 			_flagWaveInput.field.addEventListener(FocusEvent.FOCUS_IN, function():void{
 				parentButton.toggleOn();
 			});
+		}
+		
+		/****************************
+		* Favorites
+		*****************************/
+		private function _renderFavorites() : void {
+			var favIds:Array = FavoriteItemsLocalStorageManager.getFavoritesIdList(_type).concat().reverse(); // Reverse so newest show first
+			
+			_favoritesGrid.reset();
+			_favoritesGrid.columns = Math.min(16, Math.max(10, favIds.length));
+			
+			var tItemData:ItemData;
+			for each(var tId:String in favIds) {
+				tItemData = GameAssets.getItemFromTypeID(_type, tId);
+				if(tItemData) {
+					_favoritesGrid.add(new SpriteButton({ size:_favoritesGrid.cellSize, obj:GameAssets.getItemImage(tItemData), obj_scale:"auto", data:tItemData })
+						.on(ButtonBase.CLICK, _favoriteClicked));
+				}
+			}
+			
+			// Update rest of UI to make room for it
+			_scrollbox.y = 65 + _favoritesGrid.calculatedHeight+5; // shift it down an extra 5 so that main grid list isn't touching it (padding)
+			_grid.y = favIds.length > 0 ? 0 : 3; // If fav grid exists, then shift grid up to avoid an extra gap between fav list and grid
+			_scrollbox.setSize(_scrollbox.scrollPane.width, defaultScrollboxHeight - (_favoritesGrid.calculatedHeight+3))
+		}
+		
+		private function _favoriteClicked(e:FewfEvent) : void {
+			var itemData:ItemData = (e.currentTarget as SpriteButton).data as ItemData;
+			toggleGridButtonWithData(itemData, true);
+		}
+		
+		private function _addRemoveFavoriteToggled(e:FewfEvent) : void {
+			var pushed:Boolean = e.data.pushed, tId:String = _infoBar.itemData.id;
+			if(pushed) {
+				FavoriteItemsLocalStorageManager.addFavoriteId(_type, tId);
+			} else {
+				FavoriteItemsLocalStorageManager.removeFavoriteId(_type, tId);
+			}
+			_renderFavorites();
 		}
 		
 		/****************************

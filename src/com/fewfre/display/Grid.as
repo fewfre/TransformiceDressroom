@@ -11,7 +11,7 @@ package com.fewfre.display
 		private var _columns : uint;
 		private var _margin : Number;
 		private var _cellSize : Number; // The max size an item that's added can be before it won't fit.
-		private var _spacing : Number; // Simply the radius+margin for easily spacing items added to grid.
+		private var _spacing : Number; // Simply the diameter+margin for easily spacing items added to grid.
 
 		private var _list : Vector.<DisplayObject>;
 		private var _reversed : Boolean;
@@ -24,6 +24,7 @@ package com.fewfre.display
 		public function get rows():Number { return Math.ceil(_list.length / _columns); }
 		public function get columns():uint { return _columns; }
 		public function set columns(pColumns:uint):void { _columns = pColumns; _calcCellSizeAndSpacing(); _repositionCells(); }
+		public function get calculatedHeight():Number { return rows * _spacing - _margin; }
 
 		// Constructor
 		public function Grid(pWidth:Number, pColumns:uint, pMargin:Number=5) {
@@ -36,6 +37,7 @@ package com.fewfre.display
 			_reversed = false;
 		}
 		public function setXY(pX:Number, pY:Number) : Grid { x = pX; y = pY; return this; }
+		public function appendTo(target:Sprite): Grid { target.addChild(this); return this; }
 		
 		/****************************
 		* Public

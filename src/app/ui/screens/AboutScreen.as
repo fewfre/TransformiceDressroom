@@ -53,15 +53,9 @@ package app.ui.screens
 				.on(ButtonBase.CLICK, _onSourceClicked);
 				
 			// Discord Button
-			var discordButton:ButtonBase = new SpriteButton({ size:bsize, origin:0.5 }).appendTo(this)
+			new SpriteButton({ size:bsize, origin:0.5, obj:new $DiscordLogo(), origin:0.5 }).appendTo(this)
 				.setXY(-bg.Width*0.5 + bsize/2 + 15, bg.Height*0.5 - bsize/2 - 15)
 				.on(ButtonBase.CLICK, _onDiscordClicked);
-			var bitmap:Bitmap = Fewf.assets.lazyLoadImageUrlAsBitmap('resources/discord-logo.png');
-			bitmap.addEventListener(Event.COMPLETE, function(e):void{
-				bitmap.x = -bitmap.width/2;
-				bitmap.y = -bitmap.height/2;
-			})
-			discordButton.addChild(bitmap);
 		
 			///////////////////////
 			// Close Button

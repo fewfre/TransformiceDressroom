@@ -1,6 +1,7 @@
 == V1.29c - 27 June 2024 ==
 - [Code] Rewrote grid button logic such that only 1 grid is needed for additional buttons in same cell (such as delete button)
 - [Code] Color Finder cropping code made a tiny bit clearer
+- Added ability to favorite items and have them appear above the items grid
 
 
 == V1.29b - 21 June 2024 ==

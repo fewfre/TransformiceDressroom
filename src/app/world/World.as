@@ -133,8 +133,9 @@ package app.world
 				.on(Toolbox.TRASH_CLICKED, _onTrashButtonClicked)
 				.on(Toolbox.FILTER_BANNER_CLOSED, _onExitItemFilteringMode);
 			
-			var tOutfitButton:ScaleButton = addChild(new ScaleButton({ x:_toolbox.x+167, y:_toolbox.y+12.5+21, width:25, height:25, origin:0.5, obj:new $Outfit(), obj_scale:0.4 })) as ScaleButton;
-			tOutfitButton.addEventListener(ButtonBase.CLICK, function(pEvent:Event){ _paneManager.openPane(TAB_OUTFITS); });
+			// Outfit Button
+			new ScaleButton({ origin:0.5, obj:new $Outfit(), obj_scale:0.4 }).appendTo(this).setXY(_toolbox.x+167, _toolbox.y+12.5+21)
+				.on(ButtonBase.CLICK, function(pEvent:Event){ _paneManager.openPane(TAB_OUTFITS); });
 			
 			_animationControls = new AnimationControls().setXY(78, pStage.stageHeight - 35/2 - 5).appendTo(this);
 			_animationControls.addEventListener(Event.CLOSE, function(e):void{ _toolbox.toggleAnimationButtonOffWithEvent(); });

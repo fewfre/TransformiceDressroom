@@ -1,6 +1,7 @@
 package app.ui.panes.infobar
 {
 	import app.data.ConstantsApp;
+	import app.data.FavoriteItemsLocalStorageManager;
 	import app.data.GameAssets;
 	import app.data.ItemType;
 	import app.ui.buttons.ScaleButton;
@@ -10,6 +11,7 @@ package app.ui.panes.infobar
 	import app.world.data.ItemData;
 	import com.fewfre.display.ButtonBase;
 	import com.fewfre.display.TextTranslated;
+	import com.fewfre.events.FewfEvent;
 	import com.fewfre.utils.Fewf;
 	import com.fewfre.utils.FewfDisplayUtils;
 	import flash.display.DisplayObject;
@@ -19,7 +21,6 @@ package app.ui.panes.infobar
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	import com.fewfre.events.FewfEvent;
 
 	public class Infobar extends Sprite
 	{
@@ -28,6 +29,7 @@ package app.ui.panes.infobar
 		public static const ITEM_PREVIEW_CLICKED  : String = "item_preview_clicked";
 		public static const COLOR_WHEEL_CLICKED   : String = "color_wheel_clicked";
 		public static const EYE_DROPPER_CLICKED   : String = "eye_dropper_clicked";
+		public static const FAVORITE_CLICKED      : String = "favorite_clicked"; // FewfEvent<{ pushed:bool }>
 		
 		// Storage
 		public var Width                 : Number;
@@ -43,6 +45,7 @@ package app.ui.panes.infobar
 		private var _leftButtonsTray     : Sprite;
 		private var _idText              : TextTranslated;
 		private var _eyeDropperButton    : SpriteButton;
+		private var _favoriteButton      : SpriteButton;
 		
 		private var _downloadButton      : SpriteButton;
 		
@@ -59,7 +62,7 @@ package app.ui.panes.infobar
 		
 		// Constructor
 		// pData = { ?showBackButton:bool=false, ?hideItemPreview:bool=false, ?showEyeDropper:bool=false,
-		//           ?gridManagement:(bool|{})=false }
+		//           ?showFavorites:bool=false,, ?gridManagement:(bool|{})=false }
 		public function Infobar(pData:Object=null) {
 			super();
 			pData = pData || {};
@@ -112,12 +115,12 @@ package app.ui.panes.infobar
 			if(!pData.showBackButton) {
 				_colorWheel = new ScaleButton({ x:80, y:24, obj:new $ColorWheel() }).appendTo(this) as ScaleButton;
 				_colorWheel.setXY(_imageCont.x + _imageCont.Width + _colorWheel.Image.width*0.5 + 10, 25)
-					.on(ButtonBase.CLICK, function(e):void{ dispatchEvent(new Event(COLOR_WHEEL_CLICKED)); });
+					.on(ButtonBase.CLICK, dispatchEventHandler(COLOR_WHEEL_CLICKED));
 				showColorWheel(false);
 			} else {
 				_backButton = new ScaleButton({ x:80, y:24, obj:new $BackArrow() }).appendTo(this) as ScaleButton;
 				_backButton.setXY(_imageCont.x + _imageCont.Width + _backButton.Image.width*0.5 + 10, 25)
-					.on(MouseEvent.MOUSE_UP, function(e):void{ dispatchEvent(new Event(BACK_CLICKED)); });
+					.on(MouseEvent.MOUSE_UP, dispatchEventHandler(BACK_CLICKED));
 				_rearrangeLeftButtonsTray();
 			}
 			
@@ -133,10 +136,19 @@ package app.ui.panes.infobar
 			* Image Buttons
 			*********************/
 			if(pData.showEyeDropper) {
-				_eyeDropperButton = new SpriteButton({ width:BTN_SIZE, height:BTN_SIZE, obj_scale:0.45, obj:new $EyeDropper() })
+				_eyeDropperButton = new SpriteButton({ size:BTN_SIZE, obj_scale:0.45, obj:new $EyeDropper() })
 					.setXY(0, BTN_Y).appendTo(_leftButtonsTray) as SpriteButton;
-				_eyeDropperButton.on(ButtonBase.CLICK, function(e):void{ dispatchEvent(new Event(EYE_DROPPER_CLICKED)); })
+				_eyeDropperButton.on(ButtonBase.CLICK, dispatchEventHandler(EYE_DROPPER_CLICKED));
 				_eyeDropperButton.disable().alpha = 0;
+			}
+			if(pData.showFavorites) {
+				_favoriteButton = new SpriteButton({ size:BTN_SIZE, obj:new $HeartEmpty(), data:{ pushed:false } });
+				_favoriteButton.setXY(pData.showEyeDropper ? BTN_SIZE+3 : 0, BTN_Y).appendTo(_leftButtonsTray)
+					.on(ButtonBase.CLICK, function(e):void{
+						_updateFavoriteButton(!_favoriteButton.data.pushed);
+						dispatchEvent(new FewfEvent(FAVORITE_CLICKED, { pushed:_favoriteButton.data.pushed }));
+					});
+				_favoriteButton.disable().alpha = 0;
 			}
 			
 			/********************
@@ -233,6 +245,11 @@ package app.ui.panes.infobar
 			_idText.alpha = 1;
 			_downloadButton.enable().alpha = 1;
 			if(_eyeDropperButton) _eyeDropperButton.enable().alpha = 1;
+			if(_favoriteButton) {
+				_favoriteButton.enable().alpha = 1;
+				var on:Boolean = FavoriteItemsLocalStorageManager.hasId(pData.type, pData.id);
+				_updateFavoriteButton(on);
+			}
 		}
 		
 		public function removeInfo() : void {
@@ -243,6 +260,7 @@ package app.ui.panes.infobar
 			showColorWheel(false);
 			_downloadButton.disable().alpha = 0;
 			if(_eyeDropperButton) _eyeDropperButton.disable().alpha = 0;
+			if(_favoriteButton) _favoriteButton.disable().alpha = 0;
 		}
 		
 		public function unlockRandomizeButton() : void {
@@ -252,6 +270,15 @@ package app.ui.panes.infobar
 		private function _setNoItemImage() :void {
 			ChangeImage(new $NoItem());
 			this.Image.scaleX = this.Image.scaleY = 0.75;
+		}
+		
+		private function _updateFavoriteButton(pOn:Boolean) : void {
+			_favoriteButton.data.pushed = pOn;
+			_favoriteButton.ChangeImage(pOn ? new $HeartFull() : new $HeartEmpty());
+		}
+		
+		private function dispatchEventHandler(pEventName:String) : Function {
+			return function(e):void{ dispatchEvent(new Event(pEventName)); };
 		}
 		
 		private function _onDownloadClicked(e:Event) : void {
