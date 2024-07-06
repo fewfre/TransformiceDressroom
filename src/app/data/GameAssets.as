@@ -338,6 +338,19 @@ pOnInitComplete
 					break;
 				case ItemType.POSE:
 					tItem = getDefaultPoseSetup({ pose:pData });
+					// Hacky way to deal with these cases not being handled correctly by centering logic
+					setTimeout(function():void{
+						if(pData.id == "Sleep") {
+							var img:MovieClip = (tItem as Pose).pose;
+							img.x += -15;
+							img.scaleX = img.scaleY = 1.3;
+						}
+						else if(pData.id == "Plumes") {
+							var img:MovieClip = (tItem as Pose).pose;
+							img.x += 13;
+							img.scaleX = img.scaleY = 1.25;
+						}
+					},0);
 					break;
 				/*case ItemType.SHIRT:
 				case ItemType.PANTS:

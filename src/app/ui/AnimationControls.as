@@ -281,7 +281,7 @@ package app.ui
 			_looping = !_looping;
 			_updateUIBasedOnState();
 			_animating = true;
-			_animationTarget.gotoAndPlay(0);
+			_animationTarget.gotoAndPlay(1);
 			_playAnimationTargetChildren();
 		}
 		
