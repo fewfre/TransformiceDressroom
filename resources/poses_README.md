@@ -1,6 +1,7 @@
 Whe updating with a new file:
-- Fix heart (`$Coeur`) to not have empty frames at the end
-- `AnimSit` need to have `PiedD_1` bone exist in the last empty frame - having it at (x:0.9, y:0) seems to be fine for hiding it
+- Fix `$Coeur` (heart) to not have empty frames at the end
+- `AnimSit` needs `PiedD_1` bone added into the last empty frame on it's layer - just mark the bone as invisible & at (x:0.9, y:0)
+- `AnimCadeau` needs `Oeil_1` bone added into the last empty frame on it's layer - just mark the bone as invisible
 - Delete all the timeline script actions
 	- for anything new, keep track of special script actions (on last frame, unless otherwise noted):
 		- `AnimSleep`: `gotoAndPlay(13);`
