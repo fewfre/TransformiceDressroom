@@ -1,3 +1,8 @@
+== V1.29d - 27 June 2024 ==
+- Fixed bug with sit animation foot disappeared (updated poses file)
+- Reordered some poses so that `PreInvoc`/`Invoc` and `StatiqueBalai`/`CourseBalai` are now paired on the same line as it's partner
+
+
 == V1.29c - 27 June 2024 ==
 - [Code] Rewrote grid button logic such that only 1 grid is needed for additional buttons in same cell (such as delete button)
 - [Code] Color Finder cropping code made a tiny bit clearer

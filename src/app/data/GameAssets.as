@@ -101,10 +101,10 @@ function(){
 	var tPoseClasses = [
 		"Statique", "Course", "Duck", "Sleep", "Sit", "Mad", "Laugh", "Kiss", "Facepalm", "Danse", "Cry", "Confetti", "Clap",
 		"Rondoudou", "Selfie", "Zelda", "Plumes", "Langue", "Drapeau",
-		"StatiqueBalai", "CourseBalai", "Peche", "Neige", "Marshmallow", "PreInvoc", "Invoc", "Cadeau", "Attaque",
+		"Neige", "Attaque", "StatiqueBalai", "CourseBalai", "PreInvoc", "Invoc", "Peche", "Marshmallow", "Cadeau",
 		"Hi5_1", "Hi5_2", "Calin_1", "Calin_2", "Bisou_1", "Bisou_2",
 	];
-	// Unused: Calin,
+	// Unused: AnimPFC_1/AnimPFC_2
 	for(var i:int = 0; i < tPoseClasses.length; i++) {
 		poses.push(new ItemData(ItemType.POSE, tPoseClasses[i], { itemClass:Fewf.assets.getLoadedClass( "Anim"+tPoseClasses[i] ) }));
 	}

@@ -1,0 +1,17 @@
+Whe updating with a new file:
+- Fix heart (`$Coeur`) to not have empty frames at the end
+- `AnimSit` need to have `PiedD_1` bone exist in the last empty frame - having it at (x:0.9, y:0) seems to be fine for hiding it
+- Delete all the timeline script actions
+	- for anything new, keep track of special script actions (on last frame, unless otherwise noted):
+		- `AnimSleep`: `gotoAndPlay(13);`
+		- `AnimPlumes`: `gotoAndStop(1);` (twice in a row in same snippet, not sure if it matters)
+		- `AnimPeche`: the stop is on the first frame (not sure why; could be decompile bug)
+		- `AnimNeige`: `if(parent) Object(parent).x_finAnimNeige();`
+		- `AnimMarshmallow`: the stop is on the first frame (not sure why; could be decompile bug)
+		- `AnimMad`: `gotoAndStop(1);`
+		- `AnimLaugh`: `gotoAndStop(1);`
+		- `AnimDrapeau`: `gotoAndStop(1);` (twice in a row in same snippet, not sure if it matters)
+		- `AnimDanse`: `gotoAndStop(1);`
+		- `AnimCry`: `gotoAndStop(1);`
+		- `AnimConfetti`: `if(parent) Object(parent).x_finAnimConfetti();`
+		- `AnimClap`: `gotoAndPlay(4);` (twice in a row in same snippet, not sure if it matters)
