@@ -1,7 +1,7 @@
 Whe updating with a new file:
 - Fix `$Coeur` (heart) to not have empty frames at the end
 - `AnimSit` needs `PiedD_1` bone added into the last empty frame on it's layer - just mark the bone as invisible & at (x:0.9, y:0)
-- `AnimCadeau` needs `Oeil_1` bone added into the last empty frame on it's layer - just mark the bone as invisible
+- `AnimCadeau` & `AnimZelda` needs `Oeil_1` bone added into the eyebrow frame(s) on it's layer - just mark the bone as invisible
 - Delete all the timeline script actions
 	- for anything new, keep track of special script actions (on last frame, unless otherwise noted):
 		- `AnimSleep`: `gotoAndPlay(13);`

@@ -2,6 +2,7 @@
 - Updated poses file
 	- Fixed bug with sit animation foot disappearing
 	- Fixed bug with gift animation eye disappearing
+	- Fixed bug with zelda animation eye disappearing
 - Reordered some poses so that `PreInvoc`/`Invoc` and `StatiqueBalai`/`CourseBalai` are now paired on the same line as it's partner
 - Fixed `Sleep` and `Plumes` pose buttons not having the image properly centered
 
