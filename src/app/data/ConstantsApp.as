@@ -13,7 +13,7 @@ package app.data
 		* General
 		*****************************/
 		public static const VERSION					: String = "1.29d";
-		public static const SOURCE_URL				: String = "https://github.com/fewfre/TransformiceDressroom/blob/master/changelog";
+		public static const SOURCE_URL				: String = "https://github.com/fewfre/TransformiceDressroom/blob/master/CHANGELOG.md";
 		public static const DISCORD_URL				: String = "https://discord.gg/DREPH9GqWw";
 		
 		public static const DEFAULT_SKIN_ID			: int = 0;
