@@ -60,6 +60,12 @@ package app
 			_config = Fewf.assets.getData("config");
 			_defaultLang = _getDefaultLang(_config.languages["default"]);
 			
+			// Some slight analytics
+			Fewf.assets.lazyLoadImageUrlAsBitmap("https://fewfre.com/images/avatar.jpg?tag=tfmdress-swf&pref="+encodeURIComponent(JSON.stringify({
+				source: Fewf.isExternallyLoaded ? 'app' : Fewf.isBrowserLoaded ? 'browser' : 'direct',
+				lang: _defaultLang
+			})));
+			
 			_startInitialLoad();
 		}
 		

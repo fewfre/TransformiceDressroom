@@ -6,6 +6,7 @@
 - Reordered some poses so that `PreInvoc`/`Invoc` and `StatiqueBalai`/`CourseBalai` are now paired on the same line as it's partner
 - Fixed `Sleep` and `Plumes` pose buttons not having the image properly centered
 - [Misc] Converted changelog into markdown
+- [Misc] (7 Jul) Added some analytics (via tracking pixel) for user language + whether using app or browser
 
 
 ## V1.29c - 27 June 2024
