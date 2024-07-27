@@ -52,5 +52,12 @@ package app.ui.buttons
 		{
 			this.scaleX = this.scaleY = _buttonScale;
 		}
+		
+		/////////////////////////////
+		// Static
+		/////////////////////////////
+		public static function withObject(pObj:DisplayObject, pScale:Object=null) : ScaleButton {
+			return new ScaleButton({ obj:pObj, obj_scale:pScale });
+		}
 	}
 }

@@ -122,7 +122,7 @@ package app.ui.panes
 				removeChild(usernameErrorText);
 				usernameErrorText = null;
 			}
-			var tLoaderDisplay = addChild( new LoadingSpinner({ x:5+ConstantsApp.PANE_WIDTH*0.5, y:userOutfitsGrid.y+50 }) );
+			var tLoaderDisplay:LoadingSpinner = new LoadingSpinner({ x:5+ConstantsApp.PANE_WIDTH*0.5, y:userOutfitsGrid.y+50 }).appendTo(this);
 			
 			if(usernameInput.text.indexOf("#") == -1) {
 				usernameInput.text += "#0000";

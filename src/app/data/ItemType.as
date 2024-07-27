@@ -19,6 +19,9 @@ package app.data
 		public static const PAW_BACK			: ItemType = new ItemType("back-paw", 10);
 		public static const BACK				: ItemType = new ItemType("back");
 		
+		public static const ALL : Vector.<ItemType> = new <ItemType>[
+			POSE, SKIN, HEAD, HAIR, EYES, EARS, MOUTH, NECK, TAIL, CONTACTS, HAND, TATTOO, OBJECT, PAW_BACK, BACK ];
+		
 		// Order of item layering when occupying the same spot.
 		public static const LAYERING : Vector.<ItemType> = new <ItemType>[
 			// SKIN, NECK, HAIR, MOUTH, HEAD, EARS, CONTACTS, EYES, TAIL, HAND, OBJECT, BACK, PAW_BACK ];
@@ -41,6 +44,15 @@ package app.data
 		
 		// This is required for proper auto string convertion on `trace`/`Dictionary` and such - enums should always have
 		public function toString() : String { return _value.toString(); }
+		public static function fromString(pValue:String) : ItemType {
+			if(!pValue) return null;
+			for each(var type:ItemType in ALL) {
+				if(type.toString() == pValue) {
+					return type;
+				}
+			}
+			return null;
+		}
 		
 		public function toInt() : int { return _num; }
 	}

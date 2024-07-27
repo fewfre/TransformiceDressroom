@@ -46,7 +46,7 @@ package app.world
 		private var _toolbox           : Toolbox;
 		private var _animationControls : AnimationControls;
 		
-		private var _shareScreen       : LinkTray;
+		private var _shareScreen       : ShareScreen;
 		private var trashConfirmScreen : TrashConfirmScreen;
 		private var _langScreen        : LangScreen;
 		private var _aboutScreen       : AboutScreen;
@@ -81,9 +81,9 @@ package app.world
 		private function _buildWorld(pStage:Stage) {
 			ShareCodeFilteringData.init();
 			
-			/****************************
-			* Create Character
-			*****************************/
+			/////////////////////////////
+			// Create Character
+			/////////////////////////////
 			var parms:String = null;
 			if(!Fewf.isExternallyLoaded) {
 				try {
@@ -95,10 +95,7 @@ package app.world
 				} catch (error:Error) { };
 			}
 			
-			_giantFilterIcon = new $FilterIcon();
-			_giantFilterIcon.scaleX = _giantFilterIcon.scaleY = 4;
-			_giantFilterIcon.x = 180; _giantFilterIcon.y = 180 + 50;
-			addChild(_giantFilterIcon);
+			_giantFilterIcon = DisplayWrapper.wrap(new $FilterIcon(), this).scale(4).move(180, 180 + 50).asSprite;
 			_giantFilterIcon.visible = false;
 			
 			this.character = new Character(new <ItemData>[ GameAssets.defaultSkin, GameAssets.defaultPose ], parms)
@@ -107,9 +104,9 @@ package app.world
 			this.character.addEventListener(MouseEvent.DOUBLE_CLICK, function(e:MouseEvent){ _paneManager.openPane(WORN_ITEMS_PANE_ID); })
 			this.character.addEventListener(Character.POSE_UPDATED, _onCharacterPoseUpdated);
 			
-			/****************************
-			* Setup UI
-			*****************************/
+			/////////////////////////////
+			// Setup UI
+			/////////////////////////////
 			var tShop:RoundedRectangle = new RoundedRectangle(ConstantsApp.SHOP_WIDTH, ConstantsApp.APP_HEIGHT).setXY(450, 10)
 				.appendTo(this).drawAsTray();
 			_paneManager = tShop.addChild(new PaneManager()) as PaneManager;
@@ -143,8 +140,8 @@ package app.world
 			/////////////////////////////
 			// Bottom Left Area
 			/////////////////////////////
-			var tLangButton:LangButton = addChild(new LangButton({ x:22, y:pStage.stageHeight-17, width:30, height:25, origin:0.5 })) as LangButton;
-			tLangButton.addEventListener(ButtonBase.CLICK, _onLangButtonClicked);
+			var tLangButton:LangButton = new LangButton({ x:22, y:pStage.stageHeight-17, width:30, height:25, origin:0.5 }).appendTo(this)
+				.on(ButtonBase.CLICK, _onLangButtonClicked) as LangButton;
 			
 			// About Screen Button
 			var aboutButton:SpriteButton = new SpriteButton({ size:25, origin:0.5 }).appendTo(this)
@@ -154,29 +151,24 @@ package app.world
 			
 			if(!!(ParentApp.reopenSelectionLauncher())) {
 				new ScaleButton({ obj:new $BackArrow(), obj_scale:0.5, origin:0.5 }).appendTo(this)
-				.setXY(22, pStage.stageHeight-17-28)
+					.setXY(22, pStage.stageHeight-17-28)
 					.on(ButtonBase.CLICK, function():void{ ParentApp.reopenSelectionLauncher()(); });
 			}
 			
 			/////////////////////////////
 			// Screens
 			/////////////////////////////
-			_shareScreen = new LinkTray({ x:pStage.stageWidth * 0.5, y:pStage.stageHeight * 0.5 });
-			_shareScreen.addEventListener(Event.CLOSE, _onShareScreenClosed);
+			_shareScreen = new ShareScreen().on(Event.CLOSE, _onShareScreenClosed);
+			_langScreen = new LangScreen().on(Event.CLOSE, _onLangScreenClosed);
+			_aboutScreen = new AboutScreen().on(Event.CLOSE, _onAboutScreenClosed);
 			
-			trashConfirmScreen = new TrashConfirmScreen({ x:337, y:65 });
-			trashConfirmScreen.addEventListener(TrashConfirmScreen.CONFIRM, _onTrashConfirmScreenConfirm);
-			trashConfirmScreen.addEventListener(Event.CLOSE, _onTrashConfirmScreenClosed);
-			
-			_langScreen = new LangScreen({  });
-			_langScreen.addEventListener(Event.CLOSE, _onLangScreenClosed);
-			
-			_aboutScreen = new AboutScreen();
-			_aboutScreen.addEventListener(Event.CLOSE, _onAboutScreenClosed);
+			trashConfirmScreen = new TrashConfirmScreen().setXY(337, 65)
+				.on(TrashConfirmScreen.CONFIRM, _onTrashConfirmScreenConfirm)
+				.on(Event.CLOSE, _onTrashConfirmScreenClosed);
 
-			/****************************
-			* Create item panes
-			*****************************/
+			/////////////////////////////
+			// Create item panes
+			/////////////////////////////
 			for each(var tType:ItemType in ItemType.TYPES_WITH_SHOP_PANES) {
 				_paneManager.addPane(tType.toString(), _setupItemPane(tType));
 				if(tType != ItemType.POSE) {
@@ -188,9 +180,10 @@ package app.world
 			
 			Fewf.dispatcher.addEventListener(ConstantsApp.DOWNLOAD_ITEM_DATA_IMAGE, _onSaveItemDataAsImage);
 			
-			/****************************
-			* Config Pane
-			*****************************/
+			/////////////////////////////
+			// Static Panes
+			/////////////////////////////
+			// Config Pane
 			if(ConstantsApp.CONFIG_TAB_ENABLED) {
 				_paneManager.addPane(TAB_CONFIG, new ConfigTabPane({
 					onShareCodeEntered:_onShareCodeEntered,
@@ -198,9 +191,7 @@ package app.world
 				}));
 			}
 			
-			/****************************
-			* Other Pane
-			*****************************/
+			// Other Pane
 			var tPaneOther:OtherTabPane = _paneManager.addPane(TAB_OTHER, new OtherTabPane(character)) as OtherTabPane;
 			tPaneOther.button_hand.addEventListener(PushButton.STATE_CHANGED_AFTER, this.buttonHandClickAfter);
 			for each(var bttn:Object in tPaneOther.buttons_back) {
@@ -213,48 +204,45 @@ package app.world
 			tPaneOther.itemFilterButton.addEventListener(ButtonBase.CLICK, function(pEvent:Event){ _getAndOpenItemFilteringPane(); });
 			tPaneOther = null;
 			
-			var tPane:SidePane = null;
 			// Outfit Pane
-			tPane = _paneManager.addPane(TAB_OUTFITS, new OutfitManagerTabPane(character, _useOutfitShareCode, function(){ return character.getParamsTfmOfficialSyntax() }));
-			tPane.addEventListener(Event.CLOSE, function(pEvent:Event){ _paneManager.openPane(shopTabs.getSelectedTabEventName()); });
+			_paneManager.addPane(TAB_OUTFITS, new OutfitManagerTabPane(character, _useOutfitShareCode, function(){ return character.getParamsTfmOfficialSyntax() }))
+				.on(Event.CLOSE, function(pEvent:Event){ _paneManager.openPane(shopTabs.getSelectedTabEventName()); });
 			
 			// "Other" Tab Color Picker Pane
-			tPane = _paneManager.addPane(CONFIG_COLOR_PANE_ID, new ColorPickerTabPane({ hide_default:true, hideItemPreview:true }));
-			tPane.addEventListener(ColorPickerTabPane.EVENT_COLOR_PICKED, _onConfigColorPickChanged);
-			tPane.addEventListener(Event.CLOSE, function(pEvent:Event){ _paneManager.openPane(TAB_OTHER); });
+			_paneManager.addPane(CONFIG_COLOR_PANE_ID, new ColorPickerTabPane({ hide_default:true, hideItemPreview:true }))
+				.on(ColorPickerTabPane.EVENT_COLOR_PICKED, _onConfigColorPickChanged)
+				.on(Event.CLOSE, function(pEvent:Event){ _paneManager.openPane(TAB_OTHER); });
 			
 			// Worn Items Pane
-			tPane = _paneManager.addPane(WORN_ITEMS_PANE_ID, new WornItemsPane(character, _goToItemColorPicker));
-			tPane.addEventListener(Event.CLOSE, function(pEvent:Event){ _paneManager.openPane(TAB_OTHER); });
+			_paneManager.addPane(WORN_ITEMS_PANE_ID, new WornItemsPane(character, _goToItemColorPicker))
+				.on(Event.CLOSE, function(pEvent:Event){ _paneManager.openPane(TAB_OTHER); });
 			
 			// Item Filtering Pane
-			tPane = _paneManager.addPane(TAB_ITEM_FILTERING, new ItemFilteringPane());
-			tPane.addEventListener(ItemFilteringPane.EVENT_PREVIEW_ENABLED, function(pEvent:FewfEvent){ _enableFilterMode(); });
-			tPane.addEventListener(ItemFilteringPane.EVENT_STOP_FILTERING, function(pEvent:FewfEvent){ _closeItemFilteringPane(); });
-			tPane.addEventListener(ItemFilteringPane.EVENT_RESET_FILTERING, function(pEvent:FewfEvent){ _resetItemFilteringPane(); });
+			_paneManager.addPane(TAB_ITEM_FILTERING, new ItemFilteringPane())
+				.on(ItemFilteringPane.EVENT_PREVIEW_ENABLED, function(pEvent:FewfEvent){ _enableFilterMode(); })
+				.on(ItemFilteringPane.EVENT_STOP_FILTERING, function(pEvent:FewfEvent){ _closeItemFilteringPane(); })
+				.on(ItemFilteringPane.EVENT_RESET_FILTERING, function(pEvent:FewfEvent){ _resetItemFilteringPane(); });
 			
 			// Color Picker Pane
-			tPane = _paneManager.addPane(COLOR_PANE_ID, new ColorPickerTabPane({}));
-			tPane.addEventListener(ColorPickerTabPane.EVENT_COLOR_PICKED, _onColorPickChanged);
-			tPane.addEventListener(ColorPickerTabPane.EVENT_PREVIEW_COLOR, _onColorPickHoverPreview);
-			tPane.addEventListener(Event.CLOSE, _onColorPickerBackClicked);
-			tPane.addEventListener(ColorPickerTabPane.EVENT_ITEM_ICON_CLICKED, function(e){
-				_onColorPickerBackClicked(e);
-				_removeItem(getColorPickerPane().infoBar.itemData.type);
-			});
+			_paneManager.addPane(COLOR_PANE_ID, new ColorPickerTabPane({}))
+				.on(ColorPickerTabPane.EVENT_COLOR_PICKED, _onColorPickChanged)
+				.on(ColorPickerTabPane.EVENT_PREVIEW_COLOR, _onColorPickHoverPreview)
+				.on(Event.CLOSE, _onColorPickerBackClicked)
+				.on(ColorPickerTabPane.EVENT_ITEM_ICON_CLICKED, function(e){
+					_onColorPickerBackClicked(e);
+					_removeItem(getColorPickerPane().infoBar.itemData.type);
+				});
 			
 			// Color Finder Pane
-			tPane = _paneManager.addPane(COLOR_FINDER_PANE_ID, new ColorFinderPane({}));
-			tPane.addEventListener(Event.CLOSE, _onColorFinderBackClicked);
-			tPane.addEventListener(ColorFinderPane.EVENT_ITEM_ICON_CLICKED, function(e){
-				_onColorFinderBackClicked(e);
-				_removeItem(getColorFinderPane().infoBar.itemData.type);
-			});
+			_paneManager.addPane(COLOR_FINDER_PANE_ID, new ColorFinderPane({}))
+				.on(Event.CLOSE, _onColorFinderBackClicked)
+				.on(ColorFinderPane.EVENT_ITEM_ICON_CLICKED, function(e){
+					_onColorFinderBackClicked(e);
+					_removeItem(getColorFinderPane().infoBar.itemData.type);
+				});
 			
 			// Select First Pane
 			shopTabs.tabs[0].toggleOn();
-			
-			tPane = null;
 		}
 
 		private function _setupItemPane(pType:ItemType) : ShopCategoryPane {
@@ -537,12 +525,12 @@ package app.world
 					FewfDisplayUtils.copyToClipboardAnimatedGif(character.copy().outfit.pose, 1, function(){
 						_toolbox.updateClipboardButton(false, false);
 					})
-				} {
+				} else {
 					FewfDisplayUtils.copyToClipboard(character);
 					_toolbox.updateClipboardButton(false, true);
 				}
 			} catch(e) {
-					_toolbox.updateClipboardButton(false, false);
+				_toolbox.updateClipboardButton(false, false);
 			}
 			setTimeout(function(){ _toolbox.updateClipboardButton(true); }, 750);
 		}
@@ -780,15 +768,9 @@ package app.world
 				getShopPane(pType).selectedButtonIndex = pID;
 			}
 			
-			private function getColorPickerPane() : ColorPickerTabPane {
-				return _paneManager.getPane(COLOR_PANE_ID) as ColorPickerTabPane;
-			}
-			private function getConfigColorPickerPane() : ColorPickerTabPane {
-				return _paneManager.getPane(CONFIG_COLOR_PANE_ID) as ColorPickerTabPane;
-			}
-			private function getColorFinderPane() : ColorFinderPane {
-				return _paneManager.getPane(COLOR_FINDER_PANE_ID) as ColorFinderPane;
-			}
+			private function getColorPickerPane() : ColorPickerTabPane { return _paneManager.getPane(COLOR_PANE_ID) as ColorPickerTabPane; }
+			private function getConfigColorPickerPane() : ColorPickerTabPane { return _paneManager.getPane(CONFIG_COLOR_PANE_ID) as ColorPickerTabPane; }
+			private function getColorFinderPane() : ColorFinderPane { return _paneManager.getPane(COLOR_FINDER_PANE_ID) as ColorFinderPane; }
 		//}END Get TabPane data
 		
 		//{REGION ItemFiltering Tab

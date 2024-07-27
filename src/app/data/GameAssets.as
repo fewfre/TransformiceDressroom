@@ -9,6 +9,7 @@ package app.data
 	import flash.geom.*;
 	import flash.utils.Dictionary;
 	import flash.utils.setTimeout;
+	import com.fewfre.display.DisplayWrapper;
 
 	public class GameAssets
 	{
@@ -210,6 +211,10 @@ pOnInitComplete
 			return FewfUtils.getIndexFromVectorWithKeyVal(getItemDataListByType(pType), "id", pID);
 		}
 
+		public static function doesItemDataMatchDefaultOfTypeIfAny(pItemData:ItemData) : Boolean {
+			return GameAssets.defaultSkin.matches(pItemData) || GameAssets.defaultPose.matches(pItemData);
+		}
+
 		/****************************
 		* Color - GET
 		*****************************/
@@ -396,6 +401,15 @@ pOnInitComplete
 			tLine.graphics.lineTo(pWidth, 1);
 			
 			return tLine;
+		}
+		
+		
+		public static function createScreenBackdrop(pSize:Number=10000) : DisplayWrapper {
+			return new DisplayWrapper(new Sprite()).move(-pSize/2, -pSize/2).draw(function(graphics:Graphics):void{
+				graphics.beginFill(0x000000, 0.2);
+				graphics.drawRect(0, 0, pSize, pSize);
+				graphics.endFill();
+			});
 		}
 	}
 }

@@ -23,6 +23,8 @@ package app.ui.panes.base
 			_flagOpen = false;
 			_flagDirty = true;
 		}
+		public function on(type:String, listener:Function): SidePane { this.addEventListener(type, listener); return this; }
+		public function off(type:String, listener:Function): SidePane { this.removeEventListener(type, listener); return this; }
 		
 		public function open() : void {
 			_flagOpen = true;

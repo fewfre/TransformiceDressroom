@@ -1,22 +1,22 @@
 package app.ui.screens
 {
-	import com.fewfre.display.TextTranslated;
+	import app.ui.buttons.ScaleButton;
+	import app.ui.buttons.SpriteButton;
+	import app.ui.common.RoundedRectangle;
 	import com.fewfre.display.ButtonBase;
-	import com.adobe.images.*;
-	import app.data.*;
-	import app.ui.buttons.*;
-	import app.ui.common.*;
-	import app.world.data.*;
-	import flash.display.*;
-	import flash.events.*;
-	import flash.geom.*;
-	import flash.net.*;
-	import flash.text.*;
-	import flash.system.System;
+	import com.fewfre.display.TextTranslated;
+	import com.fewfre.utils.Fewf;
+	import fl.transitions.easing.Elastic;
 	import fl.transitions.Tween;
-	import fl.transitions.easing.*;
-	
-	public class LinkTray extends MovieClip
+	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.system.System;
+	import flash.text.TextField;
+	import flash.text.TextFieldType;
+	import app.data.GameAssets;
+
+	public class ShareScreen extends Sprite
 	{
 		// Storage
 		private var _bg					: RoundedRectangle;
@@ -30,21 +30,12 @@ package app.ui.screens
 		public var _textCopyTween2		: Tween;
 		
 		// Constructor
-		// pData = { x:Number, y:Number }
-		public function LinkTray(pData:Object) {
-			this.x = pData.x;
-			this.y = pData.y;
+		public function ShareScreen() {
+			// Center Screen
+			this.x = Fewf.stage.stageWidth * 0.5;
+			this.y = Fewf.stage.stageHeight * 0.5;
 			
-			/****************************
-			* Click Tray
-			*****************************/
-			var tClickTray:Sprite = addChild(new Sprite()) as Sprite;
-			tClickTray.x = -5000;
-			tClickTray.y = -5000;
-			tClickTray.graphics.beginFill(0x000000, 0.2);
-			tClickTray.graphics.drawRect(0, 0, -tClickTray.x*2, -tClickTray.y*2);
-			tClickTray.graphics.endFill();
-			tClickTray.addEventListener(MouseEvent.CLICK, _onCloseClicked);
+			GameAssets.createScreenBackdrop().appendTo(this).on(MouseEvent.CLICK, _onCloseClicked);
 			
 			/****************************
 			* Background
@@ -66,8 +57,8 @@ package app.ui.screens
 			
 			_text = _newCopyInput({ x:0, y:tY }, this);
 			
-			var tCopyButton:SpriteButton = addChild(new SpriteButton({ x:tWidth*0.5-(80/2)-20, y:tY+39, text:"share_copy", width:80, height:25, origin:0.5 })) as SpriteButton;
-			tCopyButton.addEventListener(ButtonBase.CLICK, function():void{ _copyToClipboard(); });
+			var tCopyButton:SpriteButton = new SpriteButton({ x:tWidth*0.5-(80/2)-20, y:tY+39, text:"share_copy", width:80, height:25, origin:0.5 }).appendTo(this)
+				.on(ButtonBase.CLICK, function():void{ _copyToClipboard(); }) as SpriteButton;
 			
 			_textCopiedMessage = new TextTranslated("share_link_copied", { size:17, originX:1, x:tCopyButton.x - tCopyButton.Width/2 - 10, y:tCopyButton.y, alpha:0 }).appendToT(this);
 			
@@ -80,17 +71,18 @@ package app.ui.screens
 			
 			_text2 = _newCopyInput({ x:0, y:tY }, this);
 			
-			var tCopyButton2:SpriteButton = addChild(new SpriteButton({ x:tWidth*0.5-(80/2)-20, y:tY+39, text:"share_copy", width:80, height:25, origin:0.5 })) as SpriteButton;
-			tCopyButton2.addEventListener(ButtonBase.CLICK, function():void{ _copyToClipboard2(); });
+			var tCopyButton2:SpriteButton = new SpriteButton({ x:tWidth*0.5-(80/2)-20, y:tY+39, text:"share_copy", width:80, height:25, origin:0.5 }).appendTo(this)
+				.on(ButtonBase.CLICK, function():void{ _copyToClipboard2(); }) as SpriteButton;
 			
 			_textCopiedMessage2 = new TextTranslated("share_link_copied", { size:17, originX:1, x:tCopyButton2.x - tCopyButton2.Width/2 - 10, y:tCopyButton2.y, alpha:0 }).appendToT(this);
 			
 			/****************************
 			* Close Button
 			*****************************/
-			var tCloseButton:ScaleButton = addChild(new ScaleButton({ x:tWidth*0.5 - 5, y:-tHeight*0.5 + 5, obj:new $WhiteX() })) as ScaleButton;
-			tCloseButton.addEventListener(ButtonBase.CLICK, _onCloseClicked);
+			ScaleButton.withObject(new $WhiteX()).setXY(tWidth/2 - 5, -tHeight/2 + 5).appendTo(this).on(ButtonBase.CLICK, _onCloseClicked);
 		}
+		public function on(type:String, listener:Function): ShareScreen { this.addEventListener(type, listener); return this; }
+		public function off(type:String, listener:Function): ShareScreen { this.removeEventListener(type, listener); return this; }
 		
 		public function open(pURL:String, pTfmOfficialDressingCode:String) : void {
 			_text.text = pURL;
@@ -124,7 +116,6 @@ package app.ui.screens
 			_textCopiedMessage2.alpha = 0;
 			if(_textCopyTween2) _textCopyTween2.start(); else _textCopyTween2 = new Tween(_textCopiedMessage2, "alpha", Elastic.easeOut, 0, 1, 1, true);
 		}
-		
 		
 		private function _newCopyInput(pData:Object, pParent:Sprite) : TextField {
 			var tTFWidth:Number = _bg.width-50, tTFHeight:Number = 18, tTFPaddingX:Number = 5, tTFPaddingY:Number = 5;

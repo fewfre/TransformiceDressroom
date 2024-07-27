@@ -39,7 +39,7 @@ package app.world.data
 		}
 		
 		public function matches(compare:ItemData) : Boolean {
-			return type == compare.type && id == compare.id;
+			return !!compare && type == compare.type && id == compare.id;
 		}
 		
 		public function uniqId() : String {

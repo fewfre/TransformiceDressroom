@@ -1,31 +1,27 @@
 package app.ui.screens
 {
-	import com.fewfre.display.*;
-	import com.fewfre.utils.*;
-	import com.fewfre.events.FewfEvent;
-	import app.data.*;
-	import app.ui.*;
-	import flash.display.*;
-	import flash.events.*
-	import flash.text.*;
-	import flash.display.MovieClip;
 	
-	public class LoadingSpinner extends MovieClip
+	import flash.display.Sprite;
+	import flash.events.Event;
+	import com.fewfre.display.DisplayWrapper;
+
+	public class LoadingSpinner extends Sprite
 	{
-		private var _loadingSpinner	: MovieClip;
+		private var _loadingSpinner	: Sprite;
 		
 		// pData = { x, y, scale }
-		public function LoadingSpinner(pData:Object) {
+		public function LoadingSpinner(pData:Object=null) {
+			pData = pData || {};
 			if(pData.x) { this.x = pData.x; }
 			if(pData.y) { this.y = pData.y; }
 			var scale:Number = pData.scale ? pData.scale : 2;
 			
-			_loadingSpinner = addChild( new $Loader() ) as MovieClip;
-			_loadingSpinner.scaleX = scale;
-			_loadingSpinner.scaleY = scale;
+			_loadingSpinner = DisplayWrapper.wrap(new $Loader(), this).scale(scale).asSprite;
 			
 			addEventListener(Event.ENTER_FRAME, update);
 		}
+		public function setXY(pX:Number, pY:Number) : LoadingSpinner { x = pX; y = pY; return this; }
+		public function appendTo(target:Sprite): LoadingSpinner { target.addChild(this); return this; }
 		
 		public function destroy():void {
 			removeEventListener(Event.ENTER_FRAME, update);

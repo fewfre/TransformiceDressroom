@@ -7,6 +7,7 @@
 - Fixed `Sleep` and `Plumes` pose buttons not having the image properly centered
 - [Misc] Converted changelog into markdown
 - [Misc] (7 Jul) Added some analytics (via tracking pixel) for user language + whether using app or browser
+- [Code] (26 Jul) Some code tweaks, including polish for popup screens
 
 
 ## V1.29c - 27 June 2024

@@ -62,7 +62,7 @@ package app.ui.panes.infobar
 		
 		// Constructor
 		// pData = { ?showBackButton:bool=false, ?hideItemPreview:bool=false, ?showEyeDropper:bool=false,
-		//           ?showFavorites:bool=false,, ?gridManagement:(bool|{})=false }
+		//           ?showFavorites:bool=false, ?gridManagement:(bool|{})=false }
 		public function Infobar(pData:Object=null) {
 			super();
 			pData = pData || {};
@@ -97,7 +97,7 @@ package app.ui.panes.infobar
 			rioIcon.scaleX = rioIcon.scaleY = 0.75;
 			
 			_removeItemOverlay.addEventListener(MouseEvent.MOUSE_OVER, function():void{
-				if(hasData && !GameAssets.defaultSkin.matches(_itemData) && !GameAssets.defaultPose.matches(_itemData)) {
+				if(hasData && !GameAssets.doesItemDataMatchDefaultOfTypeIfAny(_itemData)) {
 					rioVisual.alpha = 1;
 				}
 			});
@@ -113,12 +113,12 @@ package app.ui.panes.infobar
 			_leftButtonsTray = addChild(new Sprite()) as Sprite;
 			
 			if(!pData.showBackButton) {
-				_colorWheel = new ScaleButton({ x:80, y:24, obj:new $ColorWheel() }).appendTo(this) as ScaleButton;
+				_colorWheel = ScaleButton.withObject(new $ColorWheel()).appendTo(this) as ScaleButton;
 				_colorWheel.setXY(_imageCont.x + _imageCont.Width + _colorWheel.Image.width*0.5 + 10, 25)
 					.on(ButtonBase.CLICK, dispatchEventHandler(COLOR_WHEEL_CLICKED));
 				showColorWheel(false);
 			} else {
-				_backButton = new ScaleButton({ x:80, y:24, obj:new $BackArrow() }).appendTo(this) as ScaleButton;
+				_backButton = ScaleButton.withObject(new $BackArrow()).appendTo(this) as ScaleButton;
 				_backButton.setXY(_imageCont.x + _imageCont.Width + _backButton.Image.width*0.5 + 10, 25)
 					.on(MouseEvent.MOUSE_UP, dispatchEventHandler(BACK_CLICKED));
 				_rearrangeLeftButtonsTray();
@@ -136,13 +136,13 @@ package app.ui.panes.infobar
 			* Image Buttons
 			*********************/
 			if(pData.showEyeDropper) {
-				_eyeDropperButton = new SpriteButton({ size:BTN_SIZE, obj_scale:0.45, obj:new $EyeDropper() })
+				_eyeDropperButton = SpriteButton.withObject(new $EyeDropper(), 0.45, { size:BTN_SIZE })
 					.setXY(0, BTN_Y).appendTo(_leftButtonsTray) as SpriteButton;
 				_eyeDropperButton.on(ButtonBase.CLICK, dispatchEventHandler(EYE_DROPPER_CLICKED));
 				_eyeDropperButton.disable().alpha = 0;
 			}
 			if(pData.showFavorites) {
-				_favoriteButton = new SpriteButton({ size:BTN_SIZE, obj:new $HeartEmpty(), data:{ pushed:false } });
+				_favoriteButton = SpriteButton.withObject(new $HeartEmpty(), 1, { size:BTN_SIZE, data:{ pushed:false } });
 				_favoriteButton.setXY(pData.showEyeDropper ? BTN_SIZE+3 : 0, BTN_Y).appendTo(_leftButtonsTray)
 					.on(ButtonBase.CLICK, function(e):void{
 						_updateFavoriteButton(!_favoriteButton.data.pushed);
@@ -167,8 +167,8 @@ package app.ui.panes.infobar
 			/********************
 			* Right Side Buttons
 			*********************/
-			_downloadButton = new SpriteButton({ x:this.Width-BTN_SIZE, y:BTN_Y, width:BTN_SIZE, height:BTN_SIZE, obj_scale:0.45, obj:new $SimpleDownload() }).appendTo(this) as SpriteButton;
-			_downloadButton.addEventListener(ButtonBase.CLICK, _onDownloadClicked);
+			_downloadButton = SpriteButton.withObject(new $SimpleDownload(), 0.45, { size:BTN_SIZE }).setXY(this.Width-BTN_SIZE, BTN_Y).appendTo(this) as SpriteButton;
+			_downloadButton.on(ButtonBase.CLICK, _onDownloadClicked);
 			_downloadButton.disable().alpha = 0;
 			
 			// Line seperating infobar and contents below it.

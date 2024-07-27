@@ -1,28 +1,24 @@
 package app.ui.panes
 {
-	import com.fewfre.display.*;
+	import app.data.ConstantsApp;
+	import app.data.ShareCodeFilteringData;
+	import app.ui.buttons.GameButton;
+	import app.ui.buttons.PushButton;
+	import app.ui.buttons.SpriteButton;
+	import app.ui.common.RoundedRectangle;
+	import app.ui.panes.base.SidePane;
+	import com.fewfre.display.ButtonBase;
+	import com.fewfre.display.TextTranslated;
 	import com.fewfre.events.FewfEvent;
-	import com.fewfre.utils.Fewf;
-	import com.fewfre.utils.AssetManager;
-	import app.data.*;
-	import app.ui.*;
-	import app.ui.buttons.*;
-	import app.ui.common.*;
-	import app.ui.screens.LoaderDisplay;
-	import app.ui.screens.LoadingSpinner;
-	import app.world.elements.*;
-	import flash.display.*;
-	import flash.events.*;
+	import fl.transitions.easing.Elastic;
+	import fl.transitions.Tween;
+	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.system.System;
 	import flash.text.TextField;
 	import flash.text.TextFieldType;
-	import flash.text.TextFormatAlign;
-	import flash.display.MovieClip;
-	import app.world.data.ItemData;
-	import fl.transitions.Tween;
-	import fl.transitions.easing.Elastic;
-	import flash.system.System;
-	import app.ui.panes.base.SidePane;
-	
+
 	public class ItemFilteringPane extends SidePane
 	{
 		// Constants

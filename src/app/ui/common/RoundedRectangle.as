@@ -39,35 +39,45 @@ package app.ui.common
 		* Public
 		*****************************/
 		public function draw(pColor:uint, pRadius:Number, pLineColor1:uint, pLineColor2:int=-1, pLineColor3:int=-1) : RoundedRectangle {
-			var tX:Number = 0 - (Width * originX);
-			var tY:Number = 0 - (Height * originY);
+			var xx:Number = 0 - (Width * originX);
+			var yy:Number = 0 - (Height * originY);
 			
 			if(pLineColor2 == -1) pLineColor2 = pLineColor1;
 			if(pLineColor3 == -1) pLineColor3 = pLineColor1;
 			
 			graphics.clear();
-			graphics.moveTo(tX, tY);
+			graphics.moveTo(xx, yy);
 			graphics.lineStyle(1, pLineColor1, 1, true);
-			graphics.drawRoundRect(tX+0, tY+0, this.Width - 3, this.Height - 3, pRadius, pRadius);
+			graphics.drawRoundRect(xx+0, yy+0, this.Width - 3, this.Height - 3, pRadius, pRadius);
 			graphics.lineStyle(1, pLineColor2, 1, true);
-			graphics.drawRoundRect(tX+2, tY+2, this.Width - 3, this.Height - 3, pRadius, pRadius);
+			graphics.drawRoundRect(xx+2, yy+2, this.Width - 3, this.Height - 3, pRadius, pRadius);
 			graphics.lineStyle(1, pLineColor3, 1, true);
 			graphics.beginFill(pColor);
-			graphics.drawRoundRect(tX+1, tY+1, this.Width - 3, this.Height - 3, pRadius, pRadius);
+			graphics.drawRoundRect(xx+1, yy+1, this.Width - 3, this.Height - 3, pRadius, pRadius);
+			graphics.endFill();
+			return this;
+		}
+		public function drawThin(pColor:uint, pRadius:Number, pLineColor:uint) : RoundedRectangle {
+			var xx:Number = -(Width * originX), yy:Number = -(Height * originY);
+			
+			graphics.clear();
+			graphics.lineStyle(1, pLineColor, 1, true);
+			graphics.beginFill(pColor);
+			graphics.drawRoundRect(xx, yy, Width, Height, pRadius, pRadius);
 			graphics.endFill();
 			return this;
 		}
 		
 		public function drawSimpleGradient(pColors:Array, pRadius:Number, pLineColor1:uint, pLineColor2:uint, pLineColor3:uint) : RoundedRectangle {
-			var tX:Number = 0 - (Width * originX);
-			var tY:Number = 0 - (Height * originY);
+			var xx:Number = 0 - (Width * originX);
+			var yy:Number = 0 - (Height * originY);
 			
 			graphics.clear();
-			graphics.moveTo(tX, tY);
+			graphics.moveTo(xx, yy);
 			graphics.lineStyle(1, pLineColor1, 1, true);
-			graphics.drawRoundRect(tX+0, tY+0, this.Width - 3, this.Height - 3, pRadius, pRadius);
+			graphics.drawRoundRect(xx+0, yy+0, this.Width - 3, this.Height - 3, pRadius, pRadius);
 			graphics.lineStyle(1, pLineColor2, 1, true);
-			graphics.drawRoundRect(tX+2, tY+2, this.Width - 3, this.Height - 3, pRadius, pRadius);
+			graphics.drawRoundRect(xx+2, yy+2, this.Width - 3, this.Height - 3, pRadius, pRadius);
 			
 			// Draw gradient
 			var type:String = GradientType.LINEAR;
@@ -82,8 +92,8 @@ package app.ui.common
 			var boxWidth:Number = this.Width;
 			var boxHeight:Number = this.Height;
 			var boxRotation:Number = Math.PI/2; // 90°
-			var tx:Number = tX;
-			var ty:Number = tY-(this.Height)*0.1;
+			var tx:Number = xx;
+			var ty:Number = yy-(this.Height)*0.1;
 			matrix.createGradientBox(boxWidth, boxHeight, boxRotation, tx, ty);
 			 
 			this.graphics.beginGradientFill(
@@ -99,7 +109,7 @@ package app.ui.common
 			//this.graphics.drawRect(0, 0, this.Width, this.Height);
 			
 			// Finish
-			graphics.drawRoundRect(tX+1, tY+1, this.Width - 3, this.Height - 3, pRadius, pRadius);
+			graphics.drawRoundRect(xx+1, yy+1, this.Width - 3, this.Height - 3, pRadius, pRadius);
 			graphics.endFill();
 			return this;
 		}
