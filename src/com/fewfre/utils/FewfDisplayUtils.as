@@ -273,11 +273,11 @@ package com.fewfre.utils
 			
 			var tFrameBitmap:BitmapData, tFrameMatrix:Matrix;
 			mc.gotoAndStop(1);
-			for(var i:int = 0; i < totalFrames; i++) {
+			for(var j:int = 0; j < totalFrames; j++) {
 				// tempRect = mc.getBounds(mc);
-				// // var tMatrix:Matrix = new Matrix(1, 0, 0, 1, i*tWidth + -tempRect.left + (tWidth-tempRect.width)/2, -tempRect.top + (tHeight-tempRect.height)/2);
-				// // var tMatrix:Matrix = new Matrix(1, 0, 0, 1, i*tWidth - rect.x + tempRect.x, -rect.y + tempRect.y);
-				// var tMatrix:Matrix = new Matrix(1, 0, 0, 1, i*tWidth*(1/scale) - rect.x, 0 - rect.y);
+				// // var tMatrix:Matrix = new Matrix(1, 0, 0, 1, j*tWidth + -tempRect.left + (tWidth-tempRect.width)/2, -tempRect.top + (tHeight-tempRect.height)/2);
+				// // var tMatrix:Matrix = new Matrix(1, 0, 0, 1, j*tWidth - rect.x + tempRect.x, -rect.y + tempRect.y);
+				// var tMatrix:Matrix = new Matrix(1, 0, 0, 1, j*tWidth*(1/scale) - rect.x, 0 - rect.y);
 				// tMatrix.scale(scale, scale);
 
 				// tBitmap.draw(mc, tMatrix, null, null, null, true);
@@ -289,7 +289,7 @@ package com.fewfre.utils
 				tFrameMatrix.scale(scale, scale);
 				bitmapDataDrawBestQuality(tFrameBitmap, mc, tFrameMatrix);
 				
-				var tMatrix:Matrix = new Matrix(1, 0, 0, 1, (i%columns)*tWidth, Math.floor(i/columns)*tHeight);
+				var tMatrix:Matrix = new Matrix(1, 0, 0, 1, (j%columns)*tWidth, Math.floor(j/columns)*tHeight);
 				tMatrix.scale(1, 1);
 				bitmapDataDrawBestQuality(tBitmap, tFrameBitmap, tMatrix);
 			

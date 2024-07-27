@@ -1,4 +1,10 @@
-## V1.29d - 27 June 2024
+## V1.29e - 27 July 2024
+- [Bug] A share code with an un-customized item now properly overrides the colors of items that were customized beforehand
+	- This also affects outfit manager, as it uses share code logic behind the scenes
+- [Code] Some code tweaks, including polish for popup screens
+
+
+## V1.29d - 6 July 2024
 - Updated poses file
 	- Fixed bug with sit animation foot disappearing
 	- Fixed bug with gift animation eye disappearing
@@ -7,7 +13,6 @@
 - Fixed `Sleep` and `Plumes` pose buttons not having the image properly centered
 - [Misc] Converted changelog into markdown
 - [Misc] (7 Jul) Added some analytics (via tracking pixel) for user language + whether using app or browser
-- [Code] (26 Jul) Some code tweaks, including polish for popup screens
 
 
 ## V1.29c - 27 June 2024
