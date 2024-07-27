@@ -176,7 +176,7 @@ package app.world.elements
 					tID = tColors.splice(0, 1)[0]; // Remove first item and store it as the ID.
 					tData = GameAssets.getItemFromTypeID(pType, tID); if(isOutfit) tData = tData.copy();
 					if(tColors.length > 0) { tData.colors = _hexArrayToIntList(tColors, tData.defaultColors); }
-					else { tData.setColorsToDefault(); } // else if(tID == 1 || tID == "1")   <-- not sure why I had this check before, but it prevents uncustomized colors from properly overriding colors with share codes!
+					else if(pType != ItemType.SKIN || (tID == 1 || tID == "1")) { tData.setColorsToDefault(); }
 				}
 				_itemDataMap[pType] = pAllowNull ? tData : ( tData == null ? _itemDataMap[pType] : tData );
 			// } catch (error:Error) { };
@@ -215,7 +215,7 @@ package app.world.elements
 					}
 					tData = GameAssets.getItemFromTypeID(pType, tID); if(isOutfit) tData = tData.copy();
 					if(tColors.length > 0) { tData.colors = _hexArrayToIntList(tColors, tData.defaultColors); }
-					else { tData.setColorsToDefault(); } // else if(tID == 1 || tID == "1")   <-- not sure why I had this check before, but it prevents uncustomized colors from properly overriding colors with share codes!
+					else if(pType != ItemType.SKIN || (tID == 1 || tID == "1")) { tData.setColorsToDefault(); }
 				}
 				_itemDataMap[pType] = pAllowNull ? tData : ( tData == null ? _itemDataMap[pType] : tData );
 			} catch (error:Error) { };
