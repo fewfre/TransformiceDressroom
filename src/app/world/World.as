@@ -67,6 +67,7 @@ package app.world
 		public static const CONFIG_COLOR_PANE_ID:String = "configColorPane";
 		public static const COLOR_FINDER_PANE_ID:String = "colorFinderPane";
 		public static const WORN_ITEMS_PANE_ID:String = "WORN_ITEMS_PANE_ID";
+		public static const FAVORITES_PANE_ID:String = "favoritesPane";
 		
 		// Constructor
 		public function World(pStage:Stage) {
@@ -133,6 +134,13 @@ package app.world
 			// Outfit Button
 			new ScaleButton({ origin:0.5, obj:new $Outfit(), obj_scale:0.4 }).appendTo(this).setXY(_toolbox.x+167, _toolbox.y+12.5+21)
 				.on(ButtonBase.CLICK, function(pEvent:Event){ _paneManager.openPane(TAB_OUTFITS); });
+				
+			var favButton:ScaleButton = ScaleButton.withObject(new $HeartFull(), 1).appendTo(this).setXY(_toolbox.x+167 + 1, _toolbox.y+12.5+21 + 23)
+				.on(ButtonBase.CLICK, function(pEvent:Event){ _paneManager.openPane(FAVORITES_PANE_ID); }) as ScaleButton;
+			favButton.visible = FavoriteItemsLocalStorageManager.getAllFavorites().length > 0;
+			Fewf.dispatcher.addEventListener(ConstantsApp.FAVORITE_ADDED_OR_REMOVED, function(e:FewfEvent):void{
+				favButton.visible = FavoriteItemsLocalStorageManager.getAllFavorites().length > 0;
+			});
 			
 			_animationControls = new AnimationControls().setXY(78, pStage.stageHeight - 35/2 - 5).appendTo(this);
 			_animationControls.addEventListener(Event.CLOSE, function(e):void{ _toolbox.toggleAnimationButtonOffWithEvent(); });
@@ -230,7 +238,7 @@ package app.world
 				.on(Event.CLOSE, _onColorPickerBackClicked)
 				.on(ColorPickerTabPane.EVENT_ITEM_ICON_CLICKED, function(e){
 					_onColorPickerBackClicked(e);
-					_removeItem(getColorPickerPane().infoBar.itemData.type);
+					_removeItem(getColorPickerPane().infobar.itemData.type);
 				});
 			
 			// Color Finder Pane
@@ -238,7 +246,18 @@ package app.world
 				.on(Event.CLOSE, _onColorFinderBackClicked)
 				.on(ColorFinderPane.EVENT_ITEM_ICON_CLICKED, function(e){
 					_onColorFinderBackClicked(e);
-					_removeItem(getColorFinderPane().infoBar.itemData.type);
+					_removeItem(getColorFinderPane().infobar.itemData.type);
+				});
+			
+			// Favorites Pane
+			_paneManager.addPane(FAVORITES_PANE_ID, new FavoritesTabPane())
+				.on(Event.CLOSE, function(e){ _paneManager.openPane(shopTabs.getSelectedTabEventName()); })
+				.on(FavoritesTabPane.ITEMDATA_SELECTED, function(e:FewfEvent){
+					var itemData:ItemData = e.data as ItemData;
+					character.setItemData(itemData);
+					_updateUIBasedOnCharacter();
+					
+					getShopPane(itemData.type).toggleGridButtonWithData( itemData, true );
 				});
 			
 			// Select First Pane
@@ -251,10 +270,10 @@ package app.world
 			tPane.addEventListener(ShopCategoryPane.DEFAULT_SKIN_COLOR_BTN_CLICKED, function(){ _colorButtonClicked(pType); });
 			tPane.addEventListener(ShopCategoryPane.FLAG_WAVE_CODE_CHANGED, function(e:FewfEvent){ character.flagWavingCode = e.data.code; });
 			
-			tPane.infoBar.on(Infobar.COLOR_WHEEL_CLICKED, function(){ _colorButtonClicked(pType); });
-			tPane.infoBar.on(Infobar.ITEM_PREVIEW_CLICKED, function(){ _removeItem(pType); });
-			tPane.infoBar.on(Infobar.EYE_DROPPER_CLICKED, function(){ _eyeDropButtonClicked(pType); });
-			tPane.infoBar.on(GridManagementWidget.RANDOMIZE_CLICKED, function(){ _randomItemOfType(pType); });
+			tPane.infobar.on(Infobar.COLOR_WHEEL_CLICKED, function(){ _colorButtonClicked(pType); });
+			tPane.infobar.on(Infobar.ITEM_PREVIEW_CLICKED, function(){ _removeItem(pType); });
+			tPane.infobar.on(Infobar.EYE_DROPPER_CLICKED, function(){ _eyeDropButtonClicked(pType); });
+			tPane.infobar.on(GridManagementWidget.RANDOMIZE_CLICKED, function(){ _randomItemOfType(pType); });
 			return tPane;
 		}
 
@@ -264,7 +283,7 @@ package app.world
 			tPane.addEventListener(ShopCategoryPane.DEFAULT_SKIN_COLOR_BTN_CLICKED, function(){ _colorButtonClicked(pType); });
 			
 			// Grid Management Events
-			tPane.infoBar.on(GridManagementWidget.RANDOMIZE_CLICKED, function(){ _randomItemOfType(pType); });
+			tPane.infobar.on(GridManagementWidget.RANDOMIZE_CLICKED, function(){ _randomItemOfType(pType); });
 			return tPane;
 		}
 		
@@ -562,7 +581,7 @@ package app.world
 
 			// De-select all buttons that aren't the clicked one.
 			var tPane:ShopCategoryPane = getShopPane(tType);
-			var tInfoBar:Infobar = tPane.infoBar;
+			var tInfoBar:Infobar = tPane.infobar;
 			var tButton:PushButton = tPane.getButtonWithItemData(pEvent.data.itemData);
 			// If clicked button is toggled on, equip it. Otherwise remove it.
 			if(tButton.pushed) {
@@ -612,14 +631,14 @@ package app.world
 				this.character.removeItem(pType);
 			}
 			var tTabPane:ShopCategoryPane = getShopPane(pType);
-			if(!tTabPane || tTabPane.infoBar.hasData == false) { return; }
+			if(!tTabPane || tTabPane.infobar.hasData == false) { return; }
 
 			// If item has a default value, toggle it on. otherwise remove item.
 			if(!!tTabPane.defaultItemData) {
 				tTabPane.getButtonWithItemData(tTabPane.defaultItemData).toggleOn();
 			} else {
 				this.character.removeItem(pType);
-				tTabPane.infoBar.removeInfo();
+				tTabPane.infobar.removeInfo();
 				tTabPane.buttons[ tTabPane.selectedButtonIndex ].toggleOff();
 			}
 		}
@@ -638,7 +657,7 @@ package app.world
 
 		private function _randomItemOfType(pType:ItemType, pSetToDefault:Boolean=false) : void {
 			var pane:ShopCategoryPane = getShopPane(pType);
-			if(pane.infoBar.isRefreshLocked || !pane.buttons.length) { return; }
+			if(pane.infobar.isRefreshLocked || !pane.buttons.length) { return; }
 			
 			if(!pSetToDefault) {
 				pane.chooseRandomItem();
@@ -662,7 +681,7 @@ package app.world
 		
 		private function _goToItemColorPicker(pItemData:ItemData) : void {
 			_goToItem(pItemData);
-			if(getShopPane(pItemData.type).infoBar.colorWheelEnabled) _colorButtonClicked(pItemData.type);
+			if(getShopPane(pItemData.type).infobar.colorWheelEnabled) _colorButtonClicked(pItemData.type);
 		}
 		
 		private function _onShareButtonClicked(pEvent:Event) : void {
@@ -706,7 +725,7 @@ package app.world
 			// Refresh panes
 			for each(var tType:ItemType in ItemType.TYPES_WITH_SHOP_PANES) {
 				var pane:ShopCategoryPane = getShopPane(tType);
-				pane.infoBar.unlockRandomizeButton();
+				pane.infobar.unlockRandomizeButton();
 				
 				// Reset customizations
 				if(tType != ItemType.POSE) {
@@ -753,7 +772,7 @@ package app.world
 			}
 
 			private function getInfobarByType(pType:ItemType) : Infobar {
-				return getShopPane(pType).infoBar;
+				return getShopPane(pType).infobar;
 			}
 
 			private function getButtonArrayByType(pType:ItemType) : Vector.<PushButton> {
@@ -821,11 +840,11 @@ package app.world
 					var tItem:MovieClip = GameAssets.getColoredItemImage(tItemData);
 					GameAssets.copyColor(tItem, getButtonArrayByType(pType)[ getCurItemID(pType) ].Image as MovieClip );
 					GameAssets.copyColor(tItem, getInfobarByType( pType ).Image );
-					GameAssets.copyColor(tItem, getColorPickerPane().infoBar.Image);
+					GameAssets.copyColor(tItem, getColorPickerPane().infobar.Image);
 				} else {
 					_replaceImageWithNewImage(getButtonArrayByType(pType)[ getCurItemID(pType) ], GameAssets.getColoredItemImage(tItemData));
 					_replaceImageWithNewImage(getInfobarByType( pType ), GameAssets.getColoredItemImage(tItemData));
-					_replaceImageWithNewImage(getColorPickerPane().infoBar, GameAssets.getColoredItemImage(tItemData));
+					_replaceImageWithNewImage(getColorPickerPane().infobar, GameAssets.getColoredItemImage(tItemData));
 				}
 				/*var tMC:MovieClip = this.character.getItemFromIndex(pType);
 				if (tMC != null)
@@ -833,7 +852,7 @@ package app.world
 					GameAssets.colorDefault(tMC);
 					GameAssets.copyColor( tMC, getButtonArrayByType(pType)[ getCurItemID(pType) ].Image );
 					GameAssets.copyColor(tMC, getInfobarByType(pType).Image);
-					GameAssets.copyColor(tMC, getColorPickerPane().infoBar.Image);
+					GameAssets.copyColor(tMC, getColorPickerPane().infobar.Image);
 					
 				}*/
 			}
@@ -867,7 +886,7 @@ package app.world
 				if(this.character.getItemData(pType) == null) { return; }
 
 				var tData:ItemData = getInfobarByType(pType).itemData;
-				getColorPickerPane().infoBar.addInfo( tData, GameAssets.getItemImage(tData) );
+				getColorPickerPane().infobar.addInfo( tData, GameAssets.getItemImage(tData) );
 				this.currentlyColoringType = pType;
 				getColorPickerPane().init( tData.uniqId(), tData.colors, tData.defaultColors );
 				_paneManager.openPane(COLOR_PANE_ID);
@@ -875,7 +894,7 @@ package app.world
 			}
 
 			private function _onColorPickerBackClicked(pEvent:Event):void {
-				_paneManager.openPane(getColorPickerPane().infoBar.itemData.type.toString());
+				_paneManager.openPane(getColorPickerPane().infobar.itemData.type.toString());
 			}
 
 			private function _eyeDropButtonClicked(pType:ItemType) : void {
@@ -884,14 +903,14 @@ package app.world
 				var tData:ItemData = getInfobarByType(pType).itemData;
 				var tItem:MovieClip = GameAssets.getColoredItemImage(tData);
 				var tItem2:MovieClip = GameAssets.getColoredItemImage(tData);
-				getColorFinderPane().infoBar.addInfo( tData, tItem );
+				getColorFinderPane().infobar.addInfo( tData, tItem );
 				this.currentlyColoringType = pType;
 				getColorFinderPane().setItem(tItem2);
 				_paneManager.openPane(COLOR_FINDER_PANE_ID);
 			}
 
 			private function _onColorFinderBackClicked(pEvent:Event):void {
-				_paneManager.openPane(getColorFinderPane().infoBar.itemData.type.toString());
+				_paneManager.openPane(getColorFinderPane().infobar.itemData.type.toString());
 			}
 
 			private function _onConfigColorPickChanged(pEvent:FewfEvent):void {

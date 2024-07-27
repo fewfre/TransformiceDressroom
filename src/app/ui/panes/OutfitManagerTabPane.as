@@ -44,7 +44,7 @@ package app.ui.panes
 				.on(Infobar.BACK_CLICKED, function(e):void{ dispatchEvent(new Event(Event.CLOSE)); });
 			
 			this.grid.reverse(); // Start reversed so that new outfits get added to start of list
-			this.infoBar.on(GridManagementWidget.RANDOMIZE_CLICKED, function(){ selectRandomOutfit(); });
+			this.infobar.on(GridManagementWidget.RANDOMIZE_CLICKED, function(){ selectRandomOutfit(); });
 			
 			// Custom infobar buttons
 			var size = 40, xx = ConstantsApp.PANE_WIDTH - size, yy = 11;
@@ -121,15 +121,16 @@ package app.ui.panes
 		
 		public function _addLookButton(lookEntry:LookEntry) : void {
 			var lookMC = new Character(new <ItemData>[ GameAssets.defaultPose ], lookEntry.lookCode, true);
+			
 			var cell:Sprite = new Sprite();
 			var actionTray:Sprite = new Sprite(); actionTray.alpha = 0;
+			cell.addEventListener(MouseEvent.MOUSE_OVER, function(e){ actionTray.alpha = 1; });
+			cell.addEventListener(MouseEvent.MOUSE_OUT, function(e){ actionTray.alpha = 0; });
 			
 			var btn:PushButton = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:lookMC, data:{ entryId:lookEntry.id } }).appendTo(cell) as PushButton;
 			btn.on(PushButton.STATE_CHANGED_AFTER, function(){
 				_onUserLookClicked(lookEntry.lookCode);
 			});
-			btn.on(MouseEvent.MOUSE_OVER, function(e){ actionTray.alpha = 1; });
-			btn.on(MouseEvent.MOUSE_OUT, function(e){ actionTray.alpha = 0; });
 			
 			// Add on top of main button
 			cell.addChild(actionTray);
@@ -138,9 +139,6 @@ package app.ui.panes
 			var deleteBtn:ScaleButton = new ScaleButton({ x:grid.cellSize-5, y:5, obj:new $Trash(), obj_scale:0.4 }).appendTo(actionTray) as ScaleButton;
 			// We have to delete by the index (instead of a code) since if someone added the same look twice but in different spots, this could delete the one in the wrong spot
 			deleteBtn.on(MouseEvent.CLICK, function(e){ deleteLookById(lookEntry.id); });
-			
-			deleteBtn.on(MouseEvent.MOUSE_OVER, function(e){ actionTray.alpha = 1; });
-			deleteBtn.on(MouseEvent.MOUSE_OUT, function(e){ actionTray.alpha = 0; });
 			
 			// Finally add to grid (do it at end so auto event handlers can be hooked up properly)
 			addToGrid(cell);

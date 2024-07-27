@@ -1,4 +1,5 @@
 ## V1.29e - 27 July 2024
+- Added a Favorites pane to see / manage all favorites in one place
 - [Bug] A share code with an un-customized item now properly overrides the colors of items that were customized beforehand
 	- This also affects outfit manager, as it uses share code logic behind the scenes
 - [Code] Some code tweaks, including polish for popup screens

@@ -25,11 +25,11 @@ package app.ui.panes.infobar
 	public class Infobar extends Sprite
 	{
 		// Constants
-		public static const BACK_CLICKED          : String = "back_clicked";
-		public static const ITEM_PREVIEW_CLICKED  : String = "item_preview_clicked";
-		public static const COLOR_WHEEL_CLICKED   : String = "color_wheel_clicked";
-		public static const EYE_DROPPER_CLICKED   : String = "eye_dropper_clicked";
-		public static const FAVORITE_CLICKED      : String = "favorite_clicked"; // FewfEvent<{ pushed:bool }>
+		public static const BACK_CLICKED            : String = "back_clicked";
+		public static const ITEM_PREVIEW_CLICKED    : String = "item_preview_clicked";
+		public static const COLOR_WHEEL_CLICKED     : String = "color_wheel_clicked";
+		public static const EYE_DROPPER_CLICKED     : String = "eye_dropper_clicked";
+		public static const FAVORITE_CLICKED        : String = "favorite_clicked"; // FewfEvent<{ pushed:bool }>
 		
 		// Storage
 		public var Width                 : Number;
@@ -149,6 +149,12 @@ package app.ui.panes.infobar
 						dispatchEvent(new FewfEvent(FAVORITE_CLICKED, { pushed:_favoriteButton.data.pushed }));
 					});
 				_favoriteButton.disable().alpha = 0;
+				// This event handler is needed to update the button encase it's unfavorited from FavoritesPane while it's selected
+				Fewf.dispatcher.addEventListener(ConstantsApp.FAVORITE_ADDED_OR_REMOVED, function(e:FewfEvent):void{
+					if(!!_itemData && e.data.itemType == _itemData.type) {
+						_updateFavoriteButton( FavoriteItemsLocalStorageManager.has(_itemData) );
+					}
+				});
 			}
 			
 			/********************
@@ -247,7 +253,7 @@ package app.ui.panes.infobar
 			if(_eyeDropperButton) _eyeDropperButton.enable().alpha = 1;
 			if(_favoriteButton) {
 				_favoriteButton.enable().alpha = 1;
-				var on:Boolean = FavoriteItemsLocalStorageManager.hasId(pData.type, pData.id);
+				var on:Boolean = FavoriteItemsLocalStorageManager.has(pData);
 				_updateFavoriteButton(on);
 			}
 		}

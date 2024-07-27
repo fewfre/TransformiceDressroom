@@ -13,10 +13,10 @@ package app.ui.panes.base
 	public class SidePaneWithInfobar extends SidePane
 	{
 		// Storage
-		protected var _infoBar : Infobar;
+		protected var _infobar : Infobar;
 		
 		// Properties
-		public function get infoBar() : Infobar { return _infoBar; }
+		public function get infobar() : Infobar { return _infobar; }
 		
 		// Constructor
 		public function SidePaneWithInfobar() {
@@ -24,12 +24,12 @@ package app.ui.panes.base
 		}
 
 		public function addInfoBar(pInfobar:Infobar) : Infobar {
-			_infoBar = pInfobar
+			_infobar = pInfobar
 				.on(GridManagementWidget.REVERSE_CLICKED, _onInfobarReverseGridClicked)
 				.on(GridManagementWidget.LEFT_ARROW_CLICKED, _onInfobarLeftArrowClicked)
 				.on(GridManagementWidget.RIGHT_ARROW_CLICKED, _onInfobarRightArrowClicked);
-			_infoBar.x = _infoBar.y = 5;
-			addChild(_infoBar);
+			_infobar.x = _infobar.y = 5;
+			addChild(_infobar);
 			
 			return pInfobar;
 		}

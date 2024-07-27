@@ -127,5 +127,15 @@ package app.ui.buttons
 				super._renderOut();
 			}
 		}
+		
+		/////////////////////////////
+		// Static
+		/////////////////////////////
+		public static function withObject(pObj:DisplayObject, pScale:Object=null, pData:Object=null) : PushButton {
+			pData = pData || {};
+			pData.obj = pObj;
+			pData.obj_scale = pScale;
+			return new PushButton(pData);
+		}
 	}
 }

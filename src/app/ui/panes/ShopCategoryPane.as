@@ -57,11 +57,14 @@ package app.ui.panes
 			
 			selectedButtonIndex = -1;
 			this.addInfoBar( new Infobar({ showEyeDropper:_type!=ItemType.POSE, gridManagement:true, showFavorites:true }) );
-			_infoBar.on(Infobar.FAVORITE_CLICKED, _addRemoveFavoriteToggled);
+			_infobar.on(Infobar.FAVORITE_CLICKED, _addRemoveFavoriteToggled);
 			_setupGrid(GameAssets.getItemDataListByType(_type));
 			
 			_favoritesGrid = new Grid(ConstantsApp.PANE_WIDTH, 10, 3).setXY(7, 60+5).appendTo(this);
 			_renderFavorites();
+			Fewf.dispatcher.addEventListener(ConstantsApp.FAVORITE_ADDED_OR_REMOVED, function(e:FewfEvent):void{
+				if(e.data.itemType == _type) _renderFavorites();
+			});
 		}
 		
 		/****************************
@@ -84,7 +87,9 @@ package app.ui.panes
 			if(cell) {
 				var btn:PushButton = _findPushButtonInCell(cell);
 				btn.toggleOn();
-				if(pScrollIntoView && _flagOpen) scrollItemIntoView(cell);
+				try {
+					if(pScrollIntoView) scrollItemIntoView(cell);
+				} catch(e){}
 				return btn;
 			}
 			return null;
@@ -219,13 +224,12 @@ package app.ui.panes
 		}
 		
 		private function _addRemoveFavoriteToggled(e:FewfEvent) : void {
-			var pushed:Boolean = e.data.pushed, tId:String = _infoBar.itemData.id;
+			var pushed:Boolean = e.data.pushed, tItemData:ItemData = _infobar.itemData;
 			if(pushed) {
-				FavoriteItemsLocalStorageManager.addFavoriteId(_type, tId);
+				FavoriteItemsLocalStorageManager.addFavorite(tItemData);
 			} else {
-				FavoriteItemsLocalStorageManager.removeFavoriteId(_type, tId);
+				FavoriteItemsLocalStorageManager.removeFavorite(tItemData);
 			}
-			_renderFavorites();
 		}
 		
 		/****************************

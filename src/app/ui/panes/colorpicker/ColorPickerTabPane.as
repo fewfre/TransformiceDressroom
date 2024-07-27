@@ -184,16 +184,16 @@ package app.ui.panes.colorpicker
 				_selectSwatch(pNum);
 			});
 			swatch.swatch.addEventListener(MouseEvent.MOUSE_OVER, function(){
-				if(!!infoBar.itemData) {
-					dispatchEvent(new FewfEvent(EVENT_PREVIEW_COLOR, { type:infoBar.itemData.type, id:infoBar.itemData.id, colorI:pNum }));
+				if(!!infobar.itemData) {
+					dispatchEvent(new FewfEvent(EVENT_PREVIEW_COLOR, { type:infobar.itemData.type, id:infobar.itemData.id, colorI:pNum }));
 				}
 			});
 			swatch.swatch.addEventListener(MouseEvent.MOUSE_OUT, function(){
 				dispatchEvent(new FewfEvent(EVENT_PREVIEW_COLOR, null));
 			});
 			swatch.swatch.addEventListener(MouseEvent.MOUSE_DOWN, function(){
-				if(!!infoBar.itemData) {
-					dispatchEvent(new FewfEvent(EVENT_PREVIEW_COLOR, { type:infoBar.itemData.type, id:infoBar.itemData.id, colorI:pNum }));
+				if(!!infobar.itemData) {
+					dispatchEvent(new FewfEvent(EVENT_PREVIEW_COLOR, { type:infobar.itemData.type, id:infobar.itemData.id, colorI:pNum }));
 				}
 			});
 			swatch.swatch.addEventListener(MouseEvent.MOUSE_UP, function(){
@@ -301,7 +301,7 @@ package app.ui.panes.colorpicker
 		*****************************/
 		// Return a key unique to both this item and this swatch
 		private function _getHistoryDictKey(swatchI:int) {
-			return !infoBar.itemData ? ["misc", swatchI].join('_') : [infoBar.itemData.type, infoBar.itemData.id, swatchI].join('_');
+			return !infobar.itemData ? ["misc", swatchI].join('_') : [infobar.itemData.type, infobar.itemData.id, swatchI].join('_');
 		}
 		private function _addHistory(color:int, swatchI:int) {
 			var itemID = _getHistoryDictKey(swatchI);
