@@ -386,7 +386,7 @@ pOnInitComplete
 		* Misc
 		*****************************/
 		public static function createHorizontalRule(pX:Number, pY:Number, pWidth:Number) : DisplayWrapper {
-			return DisplayWrapper(new Sprite()).move(pX, pY).draw(function(graphics:Graphics):void{
+			return new DisplayWrapper(new Sprite()).move(pX, pY).draw(function(graphics:Graphics):void{
 				graphics.lineStyle(1, 0x11181c, 1, true);
 				graphics.moveTo(0, 0);
 				graphics.lineTo(pWidth, 0);
