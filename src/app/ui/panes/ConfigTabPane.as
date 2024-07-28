@@ -22,25 +22,27 @@ package app.ui.panes
 	
 	public class ConfigTabPane extends SidePane
 	{
+		// Constants
+		public static const LOOK_CODE_SELECTED : String = "look_code_selected"; // FewfEvent<String>
+		
 		// Storage
 		public var userOutfitsGrid		: Grid;
 		public var usernameInput		: FancyInput;
 		public var usernameErrorText	: TextBase;
-		public var onUserLookClicked	: Function;
 		public var _loadingUser			: Boolean;
 		
 		// Constructor
 		// pData = { onShareCodeEntered:Function, onUserLookClicked:Function }
-		public function ConfigTabPane(pData:Object) {
+		public function ConfigTabPane(pOnShareCodeEntered:Function) {
 			super();
-			onUserLookClicked = pData.onUserLookClicked;
 			_loadingUser = false;
 			
 			var i:int = 0, xx:Number = 5, yy:Number = 10, tButton:GameButton, sizex:Number, sizey:Number, spacingx:Number;
 			
 			// Paste share code
 			xx = 15; yy += 14; sizex = ConstantsApp.PANE_WIDTH - 20 - 15;
-			addChild(new PasteShareCodeInput({ x:xx + sizex*0.5, y:yy, width:sizex, onChange:pData.onShareCodeEntered }));
+			new PasteShareCodeInput(sizex).appendTo(this).move(xx + sizex*0.5, yy)
+				.on(PasteShareCodeInput.CHANGE, function(e):void{ pOnShareCodeEntered(e.data.code, e.data.update); });
 			yy += 14;
 			
 			if(Fewf.assets.getData("config").username_lookup_url) {
@@ -60,41 +62,24 @@ package app.ui.panes
 				xx = 15; yy += sizey*0.5;
 				
 				var fieldWidth = ConstantsApp.PANE_WIDTH*0.65 - spacingx*3 - sizex;
-				usernameInput = addChild(new FancyInput({ placeholder:"user_lookup_placeholder", x:xx + fieldWidth*0.5, y:yy, width:fieldWidth, height:sizey-10 })) as FancyInput;
+				usernameInput = new FancyInput({ placeholder:"user_lookup_placeholder", x:xx + fieldWidth*0.5, y:yy, width:fieldWidth, height:sizey-10 }).appendTo(this);
 				usernameInput.field.addEventListener(KeyboardEvent.KEY_DOWN, function(pEvent){
 					if(usernameInput.text != "" && pEvent.charCode == 13) {
 						_onFetchUserLooks(null);
 					}
 				});
 				
-				var looksGoBtn = addChild(new SpriteButton({ x:xx+fieldWidth + spacingx + sizex*0.5, y:yy, width:sizex, height:sizey, obj:new $PlayButton(), obj_scale:0.5, origin:0.5 }));
-				looksGoBtn.addEventListener(MouseEvent.CLICK, _onFetchUserLooks);
+				// Fetch looks request submit button
+				SpriteButton.withObject(new $PlayButton(), 0.5, { width:sizex, height:sizey, origin:0.5 }).appendTo(this)
+					.setXY(xx+fieldWidth + spacingx + sizex*0.5, yy).on(MouseEvent.CLICK, _onFetchUserLooks);
 				
 				yy += sizey*0.5 + 10;
-				userOutfitsGrid = addChild( new Grid(ConstantsApp.PANE_WIDTH - spacingx*2 - 5, 6).setXY(xx-2,yy) ) as Grid;
+				userOutfitsGrid = new Grid(ConstantsApp.PANE_WIDTH - spacingx*2 - 5, 6).setXY(xx-2,yy).appendTo(this);
 				
 				// Since we want this to disappear after a search anyways, coop the error text variable
 				yy += 2;
 				usernameErrorText = new TextTranslated("user_lookup_details", { color:0xAAAAAA, x:xx-2, y:yy, originX:0, originY:0, align:TextFormatAlign.LEFT }).appendToT(this);
 			}
-		}
-		
-		// pData = { x:number, y:number, width:number, height:number }
-		private function _addTextField(pData) : TextField {
-			var tTFWidth:Number = pData.width, tTFHeight:Number = pData.height, tTFPaddingX:Number = 5, tTFPaddingY:Number = 5;
-			// So much easier than doing it with those darn native text field options which have no padding.
-			var tTextBackground:RoundedRectangle = new RoundedRectangle(tTFWidth+tTFPaddingX*2, tTFHeight+tTFPaddingY*2, { origin:0.5 }).setXY(pData.x, pData.y).appendTo(this);
-			tTextBackground.draw(0xdcdfea, 7, 0x444444);
-			
-			var tTextField = tTextBackground.addChild(new TextField()) as TextField;
-			tTextField.type = TextFieldType.INPUT;
-			tTextField.multiline = false;
-			tTextField.width = tTFWidth;
-			tTextField.height = tTFHeight;
-			tTextField.x = tTFPaddingX - tTextBackground.Width*0.5;
-			tTextField.y = tTFPaddingY - tTextBackground.Height*0.5;
-			
-			return tTextField;
 		}
 		
 		/****************************
@@ -103,9 +88,9 @@ package app.ui.panes
 		public function addLook(lookCode:String) {
 			var grid:Grid = this.userOutfitsGrid;
 			var character:Character = new Character(new <ItemData>[ GameAssets.defaultPose ], lookCode, true);
-			var btn = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:character });
-			btn.addEventListener(MouseEvent.CLICK, function(){
-				onUserLookClicked(lookCode);
+			var btn:PushButton = new PushButton({ size:grid.cellSize, obj:character });
+			btn.on(MouseEvent.CLICK, function(){
+				dispatchEvent(new FewfEvent(LOOK_CODE_SELECTED, lookCode));
 				// Hacky way to make push button a normal button
 				btn.toggleOff();
 			});

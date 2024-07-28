@@ -43,8 +43,7 @@ package app.ui.panes
 			sizex = 80; sizey = 40; spacingx = sizex + 10; xx = 10 - spacingx;
 			
 			shamanButtons = new Vector.<PushButton>();
-			var icon = addChild(new $ShamFeather()); icon.x = (xx += spacingx) + sizex*0.5; icon.y = yy + sizey*0.5; icon.scaleX = icon.scaleY = 2;
-			icon.addEventListener(MouseEvent.CLICK, _onNoShamanButtonClicked);
+			DisplayWrapper.wrap(new $ShamFeather(), this).move((xx += spacingx) + sizex*0.5, yy + sizey*0.5).scale(2).on(MouseEvent.CLICK, _onNoShamanButtonClicked);
 			xx -= 5;
 			yy -= 10;
 			shamanButtons.push(tButton = addChild(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextTranslated("btn_normal_mode"), id:ShamanMode.NORMAL.toInt() })) as PushButton);
@@ -70,12 +69,7 @@ package app.ui.panes
 			sizex = 26; sizey = 18;
 			
 			addChild( shamanColorBlueButton = new ColorButton({ color:0x95D9D6, x:xx - (sizex*0.5+3), y:yy + sizey*0.5 + 35, width:sizex, height:sizey }) );
-			// addChild( shamanColorBlueButton = new GameButton({ x:xx - (sizex*0.5+3), y:yy + sizey*0.5 + 35, width:sizex, height:sizey, origin:0.5 }) );
-			// shamanColorBlueButton.addChild(_colorSpriteBox({ color:0x95D9D6, size:12, x:-12*0.5, y:-12*0.5 }));
-			
 			addChild( shamanColorPinkButton = new ColorButton({ color:0xFCA6F1, x:xx + (sizex*0.5+3), y:yy + sizey*0.5 + 35, width:sizex, height:sizey }) );
-			// addChild( shamanColorPinkButton = new GameButton({ x:xx + (sizex*0.5+3), y:yy + sizey*0.5 + 35, width:sizex, height:sizey, origin:0.5 }) );
-			// shamanColorPinkButton.addChild(_colorSpriteBox({ color:0xFCA6F1, size:12, x:-12*0.5, y:-12*0.5 }));
 			
 			// Line
 			yy += 50 + 10;
@@ -83,7 +77,7 @@ package app.ui.panes
 			
 			// Grid
 			yy += 15; xx = 20;
-			var grid:Grid = addChild( new Grid(385, GameAssets.extraBack.length).setXY(xx,yy) ) as Grid;
+			var grid:Grid = new Grid(385, GameAssets.extraBack.length).setXY(xx,yy).appendTo(this);
 			
 			this.buttons_back = new Vector.<PushButton>();
 			for each(var itemData:ItemData in GameAssets.extraBack) {
@@ -96,28 +90,28 @@ package app.ui.panes
 			}
 
 			yy = grid.y + grid.cellSize + 5;
-			grid = addChild( new Grid(385, 5).setXY(xx,yy) ) as Grid;
-			this.button_hand = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:new GameAssets.extraObjectWand.itemClass(), obj_scale:1.5, id:i++ });
+			grid = new Grid(385, 5).setXY(xx,yy).appendTo(this);
+			this.button_hand = new PushButton({ size:grid.cellSize, obj:new GameAssets.extraObjectWand.itemClass(), obj_scale:1.5, id:i++ });
 			grid.add(this.button_hand);
 			if(character.getItemData(ItemType.OBJECT)) { this.button_hand.toggleOn(); }
 			
-			this.button_backHand = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:new GameAssets.extraBackHand.itemClass(), obj_scale:1.5, id:i++ });
+			this.button_backHand = new PushButton({ size:grid.cellSize, obj:new GameAssets.extraBackHand.itemClass(), obj_scale:1.5, id:i++ });
 			grid.add(this.button_backHand);
 			if(character.getItemData(ItemType.PAW_BACK)) { this.button_backHand.toggleOn(); }
 			
 			// Bottom buttons
+			var saveHeadButton:GameButton = new GameButton({ x:353, y:315, width:70, height:70 }).appendTo(this) as GameButton;
+			saveHeadButton.on(MouseEvent.CLICK, _onSaveMouseHeadClicked);
 			characterHead = new Character(new <ItemData>[ GameAssets.defaultSkin, GameAssets.defaultPose ]);
-			var saveHeadButton = addChild(new GameButton({ x:353, y:315, width:70, height:70 }));
 			saveHeadButton.addChild(characterHead);
-			saveHeadButton.addEventListener(MouseEvent.CLICK, _onSaveMouseHeadClicked);
 			
 			if(ConstantsApp.ANIMATION_DOWNLOAD_ENABLED) {
-				webpButton = addChild(new GameButton({ x:353-70-5, y:315, width:70, height:70 })) as GameButton;
+				webpButton = new GameButton({ x:353-70-5, y:315, width:70, height:70 }).appendTo(this) as GameButton;
+				webpButton.on(MouseEvent.CLICK, _onSaveAsWebpClicked);
 				new TextBase('.webp', { x:35, y:35, origin:0.5, size:16 }).appendTo(webpButton);
-				webpButton.addEventListener(MouseEvent.CLICK, _onSaveAsWebpClicked);
 			}
 			
-			itemFilterButton = addChild(new SpriteButton({ x:xx, y:315, width:70, height:70, obj:new $FilterIcon(), obj_scale:0.85 })) as SpriteButton;
+			itemFilterButton = SpriteButton.withObject(new $FilterIcon(), 0.85, { x:xx, y:315, width:70, height:70 }).appendTo(this) as SpriteButton;
 		}
 		
 		/****************************
@@ -133,18 +127,6 @@ package app.ui.panes
 		/****************************
 		* Private
 		*****************************/
-		// pData = { color:int, box:Sprite[optional], size:Number=20, x:Number[optional], y:Number[optional] }
-		private function _colorSpriteBox(pData:Object) : Sprite {
-			var tBox:Sprite = pData.box ? pData.box : new Sprite();
-			var tSize:Number = pData.size ? pData.size : 20;
-			tBox.graphics.beginFill(pData.color, 1);
-			tBox.graphics.drawRect(0, 0, tSize, tSize);
-			tBox.graphics.endFill();
-			if(pData.x) tBox.x = pData.x;
-			if(pData.y) tBox.y = pData.y;
-			return tBox;
-		}
-		
 		private function _updateHead() {
 			// copy character data onto our copy
 			for each(var tItemType in ItemType.LAYERING) {

@@ -193,18 +193,16 @@ package app.world
 			/////////////////////////////
 			// Config Pane
 			if(ConstantsApp.CONFIG_TAB_ENABLED) {
-				_paneManager.addPane(TAB_CONFIG, new ConfigTabPane({
-					onShareCodeEntered:_onShareCodeEntered,
-					onUserLookClicked:_useOutfitShareCode
-				}));
+				_paneManager.addPane(TAB_CONFIG, new ConfigTabPane(_onShareCodeEntered))
+					.on(ConfigTabPane.LOOK_CODE_SELECTED, function(e:FewfEvent):void{ _useOutfitShareCode(e.data as String); });
 			}
 			
 			// Other Pane
 			var tPaneOther:OtherTabPane = _paneManager.addPane(TAB_OTHER, new OtherTabPane(character)) as OtherTabPane;
-			tPaneOther.button_hand.addEventListener(PushButton.STATE_CHANGED_AFTER, this.buttonHandClickAfter);
 			for each(var bttn:Object in tPaneOther.buttons_back) {
 				bttn.addEventListener(PushButton.STATE_CHANGED_AFTER, this.buttonBackClickAfter);
 			}
+			tPaneOther.button_hand.addEventListener(PushButton.STATE_CHANGED_AFTER, this.buttonHandClickAfter);
 			tPaneOther.button_backHand.addEventListener(PushButton.STATE_CHANGED_AFTER, this.buttonBackHandClickAfter);
 			tPaneOther.shamanColorPickerButton.addEventListener(ButtonBase.CLICK, function(pEvent:Event){ _shamanColorButtonClicked(); });
 			tPaneOther.shamanColorBlueButton.addEventListener(ButtonBase.CLICK, function(pEvent:Event){ _setConfigShamanColor(0x95D9D6); });

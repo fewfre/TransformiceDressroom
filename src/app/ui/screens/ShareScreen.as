@@ -1,29 +1,22 @@
 package app.ui.screens
 {
-	import app.ui.buttons.ScaleButton;
-	import app.ui.buttons.SpriteButton;
-	import app.ui.common.RoundedRectangle;
-	import com.fewfre.display.ButtonBase;
-	import com.fewfre.display.TextTranslated;
-	import com.fewfre.utils.Fewf;
-	import fl.transitions.easing.Elastic;
-	import fl.transitions.Tween;
 	import flash.display.Sprite;
-	import flash.events.Event;
-	import flash.events.MouseEvent;
-	import flash.system.System;
-	import flash.text.TextField;
-	import flash.text.TextFieldType;
-	import app.data.GameAssets;
+	import app.ui.common.RoundedRectangle;
 	import app.ui.common.FancyCopyField;
+	import com.fewfre.utils.Fewf;
+	import app.data.GameAssets;
+	import flash.events.MouseEvent;
+	import com.fewfre.display.TextTranslated;
+	import app.ui.buttons.ScaleButton;
+	import flash.events.Event;
+	import com.fewfre.display.ButtonBase;
 
 	public class ShareScreen extends Sprite
 	{
 		// Storage
-		private var _bg           : RoundedRectangle;
-		
-		public var _tfmCopyField  : FancyCopyField;
-		public var _fewfCopyField : FancyCopyField;
+		private var _bg            : RoundedRectangle;
+		private var _tfmCopyField  : FancyCopyField;
+		private var _fewfCopyField : FancyCopyField;
 		
 		// Constructor
 		public function ShareScreen() {
@@ -62,7 +55,7 @@ package app.ui.screens
 			_fewfCopyField.text = pURL;
 		}
 		
-		private function _onCloseClicked(pEvent:Event) : void {
+		private function _onCloseClicked(e:Event) : void {
 			dispatchEvent(new Event(Event.CLOSE));
 		}
 	}

@@ -15,7 +15,8 @@ package app.ui.screens
 		
 		// Constructor
 		// pData = { x:Number, y:Number }
-		public function LoaderDisplay(pData:Object) {
+		public function LoaderDisplay(pData:Object=null) {
+			pData = pData || {};
 			pData.origin = 0.5;
 			super(500, 200, pData);
 			this.drawAsTray();

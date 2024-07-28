@@ -14,6 +14,7 @@ package app.ui
 	import app.world.elements.Character;
 	import flash.utils.setTimeout;
 	import flash.events.Event;
+	import com.fewfre.events.FewfEvent;
 	
 	public class Toolbox extends Sprite
 	{
@@ -130,7 +131,8 @@ package app.ui
 			* Under Toolbox
 			*********************/
 			if(!ConstantsApp.CONFIG_TAB_ENABLED) {
-				addChild(new PasteShareCodeInput({ x:18, y:33, onChange:onShareCodeEntered }));
+				new PasteShareCodeInput().appendTo(this).move(18, 33)
+					.on(PasteShareCodeInput.CHANGE, function(e:FewfEvent):void{ onShareCodeEntered(e.data.code, e.data.update); });
 			}
 			
 			// Item Filter Banner

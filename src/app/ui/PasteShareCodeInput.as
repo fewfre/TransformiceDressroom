@@ -11,33 +11,36 @@ package app.ui
 	import flash.utils.setTimeout;
 	import flash.utils.clearTimeout;
 	import app.ui.common.FancyInput;
+	import com.fewfre.events.FewfEvent;
 	
 	public class PasteShareCodeInput extends Sprite
 	{
+		// Constants
+		public static const CHANGE : String = "share_code_paste_change"; // FewfEvent<{ code:String, update:(state:String)=>void }>
+		
 		// Storage
 		private var _input              : FancyInput;
 		private var _placeholderState   : String;
 		private var _placeholderTimeout : Number;
 		
 		// Constructor
-		// pData = { x:Number, y:Number, width?:Number, onChange:(code, (state:String)=>void)=>void }
-		public function PasteShareCodeInput(pData:Object) {
-			this.x = pData.x;
-			this.y = pData.y;
-			var tOnShareCodeEntered = pData.onChange;
-			
-			_input = new FancyInput({ width:pData.width || 250, placeholder:"share_paste" }).appendTo(this);
+		public function PasteShareCodeInput(pWidth:Number=0) {
+			_input = new FancyInput({ width:pWidth || 250, placeholder:"share_paste" }).appendTo(this);
 			
 			// Why TEXT_INPUT - https://stackoverflow.com/a/10049605/1411473
 			_input.field.addEventListener(TextEvent.TEXT_INPUT, function(e){
 				var code = e.text;//_text.text;
-				_input.text = "";
+				_input.text = ""; // Remove it now that we already grabbed it
 				_forceShareFieldUnfocus();
-				tOnShareCodeEntered(code, _setShareCodeProgress);
+				dispatchEvent(new FewfEvent(CHANGE, { code:code, update:_setShareCodeProgress }));
 				e.preventDefault();
 			});
 			_setShareCodeProgress("placeholder");
 		}
+		public function move(pX:Number, pY:Number) : PasteShareCodeInput { this.x = pX; this.y = pY; return this; }
+		public function appendTo(pParent:Sprite): PasteShareCodeInput { pParent.addChild(this); return this; }
+		public function on(type:String, listener:Function): PasteShareCodeInput { this.addEventListener(type, listener); return this; }
+		public function off(type:String, listener:Function): PasteShareCodeInput { this.removeEventListener(type, listener); return this; }
 		
 		private function focusIn(event:Event):void {
 			if(_placeholderState != "focusIn") {

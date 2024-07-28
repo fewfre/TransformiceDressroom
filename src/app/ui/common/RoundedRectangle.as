@@ -57,6 +57,7 @@ package app.ui.common
 			graphics.endFill();
 			return this;
 		}
+		
 		public function drawThin(pRadius:Number, pColor:uint, pLineColor:uint) : RoundedRectangle {
 			var xx:Number = -(Width * originX), yy:Number = -(Height * originY);
 			
