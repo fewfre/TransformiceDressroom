@@ -18,6 +18,7 @@ package app.ui.panes
 	import flash.system.System;
 	import flash.text.TextField;
 	import flash.text.TextFieldType;
+	import app.ui.common.FancyCopyField;
 
 	public class ItemFilteringPane extends SidePane
 	{
@@ -27,9 +28,7 @@ package app.ui.panes
 		public static const EVENT_RESET_FILTERING : String = "event_reset_filtering";
 		
 		// Storage
-		private var _textCopyField		: TextField;
-		private var _textCopiedMessage	: TextTranslated;
-		private var _textCopyTween		: Tween;
+		private var _copyField : FancyCopyField;
 		
 		// Constructor
 		public function ItemFilteringPane() {
@@ -37,18 +36,19 @@ package app.ui.panes
 			var i:int = 0, xx:Number = 0, yy:Number = 5, tButton:GameButton, sizex:Number, sizey:Number, spacingx:Number;
 			
 			// Preview Button
-			xx = ConstantsApp.PANE_WIDTH/2; yy += 50; sizex = ConstantsApp.PANE_WIDTH * 0.9; sizey = 35;
+			xx = 5+ConstantsApp.PANE_WIDTH/2; yy += 50; sizex = ConstantsApp.PANE_WIDTH * 0.9; sizey = 35;
 			new SpriteButton({ width:sizex, height:sizey, origin:0.5, text:"filtermode_preview_btn" })
 				.setXY(xx,yy).appendTo(this).on(ButtonBase.CLICK, _onPreviewButtonClicked);
 			
 			// Description
-			yy = 125; xx = 2 + 5;
+			yy = 125; xx = 5+2 + 5;
 			var desc:TextTranslated = new TextTranslated("filtermode_description", { x:xx, y:yy, origin:0 }).appendToT(this);
 			desc.field.width = ConstantsApp.PANE_WIDTH - 5*2;
 			desc.field.wordWrap = true;
 			
 			// Share code textbox
-			_addNewCopySection(ConstantsApp.APP_HEIGHT - 165);
+			xx = 5+ConstantsApp.PANE_WIDTH/2; yy = ConstantsApp.APP_HEIGHT - 165
+			_copyField = new FancyCopyField(ConstantsApp.PANE_WIDTH-20).appendTo(this).centerOrigin().move(xx, yy);
 			
 			// Stop Filtering Button
 			sizex = ConstantsApp.PANE_WIDTH/2 - 10;
@@ -66,54 +66,8 @@ package app.ui.panes
 		}
 		
 		public override function open() : void {
-			super.open();	
-			_textCopyField.text = ShareCodeFilteringData.generateShareCode();
-		}
-		
-		/****************************
-		* Copy Section
-		*****************************/
-		private function _addNewCopySection(pY:Number) : void {
-			var tWidth:Number = ConstantsApp.PANE_WIDTH-20;
-			_textCopyField = _newCopyInput({ x:ConstantsApp.PANE_WIDTH/2, y:pY, width:tWidth }, this);
-			
-			var tCopyButton:SpriteButton = addChild(new SpriteButton({ x:-_textCopyField.x+tWidth*0.5-(80/2)+13, y:pY+39, text:"share_copy", width:80, height:25, origin:0.5 })) as SpriteButton;
-			tCopyButton.addEventListener(ButtonBase.CLICK, function():void{ _copyToClipboard(); });
-			
-			_textCopiedMessage = new TextTranslated("share_link_copied", { size:15, originX:1, x:tCopyButton.x - tCopyButton.Width/2 - 10, y:tCopyButton.y-2, alpha:0 }).appendToT(this);
-		}
-		
-		private function _clearCopiedMessages() : void {
-			if(_textCopyTween) _textCopyTween.stop();
-			_textCopiedMessage.alpha = 0;
-		}
-		
-		private function _copyToClipboard() : void {
-			_clearCopiedMessages();
-			_textCopyField.setSelection(0, _textCopyField.text.length)
-			System.setClipboard(_textCopyField.text);
-			_textCopiedMessage.alpha = 0;
-			if(_textCopyTween) _textCopyTween.start(); else _textCopyTween = new Tween(_textCopiedMessage, "alpha", Elastic.easeOut, 0, 1, 1, true);
-		}
-		
-		
-		private function _newCopyInput(pData:Object, pParent:Sprite) : TextField {
-			var tTFWidth:Number = pData.width, tTFHeight:Number = 18, tTFPaddingX:Number = 5, tTFPaddingY:Number = 5;
-			var tTextBackground:RoundedRectangle = new RoundedRectangle(tTFWidth+tTFPaddingX*2, tTFHeight+tTFPaddingY*2, { origin:0.5 }).setXY(pData.x, pData.y)
-				.appendTo(pParent).draw(0xFFFFFF, 7, 0x444444);
-			
-			var tTextField:TextField = tTextBackground.addChild(new TextField()) as TextField;
-			tTextField.type = TextFieldType.DYNAMIC;
-			tTextField.multiline = false;
-			tTextField.width = tTFWidth;
-			tTextField.height = tTFHeight;
-			tTextField.x = tTFPaddingX - tTextBackground.Width*0.5;
-			tTextField.y = tTFPaddingY - tTextBackground.Height*0.5;
-			tTextField.addEventListener(MouseEvent.CLICK, function(pEvent:Event):void{
-				_clearCopiedMessages();
-				tTextField.setSelection(0, tTextField.text.length);
-			});
-			return tTextField;
+			super.open();
+			_copyField.text = ShareCodeFilteringData.generateShareCode() || '...';
 		}
 		
 		/****************************
