@@ -37,7 +37,7 @@ package com.fewfre.display
 			_reversed = false;
 		}
 		public function setXY(pX:Number, pY:Number) : Grid { x = pX; y = pY; return this; }
-		public function appendTo(target:Sprite): Grid { target.addChild(this); return this; }
+		public function appendTo(pParent:Sprite): Grid { pParent.addChild(this); return this; }
 		
 		/****************************
 		* Public

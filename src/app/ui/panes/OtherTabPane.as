@@ -75,7 +75,7 @@ package app.ui.panes
 			
 			// Line
 			yy += 50 + 10;
-			addChild( GameAssets.createHorizontalRule(10, yy, ConstantsApp.PANE_WIDTH - 15) );
+			GameAssets.createHorizontalRule(10, yy, ConstantsApp.PANE_WIDTH - 15).appendTo(this);
 			
 			/////////////////////////////
 			// Item Section

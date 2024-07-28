@@ -136,7 +136,7 @@ package app.ui
 			_updateUIBasedOnState();
 		}
 		public function setXY(pX:Number, pY:Number) : AnimationControls { x = pX; y = pY; return this; }
-		public function appendTo(target:Sprite): AnimationControls { target.addChild(this); return this; }
+		public function appendTo(pParent:Sprite): AnimationControls { pParent.addChild(this); return this; }
 
 		/****************************
 		* Public

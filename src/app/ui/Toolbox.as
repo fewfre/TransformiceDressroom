@@ -141,7 +141,7 @@ package app.ui
 			_itemFilterBanner.addEventListener(Event.CLOSE, dispatchEventHandler(FILTER_BANNER_CLOSED));
 		}
 		public function setXY(pX:Number, pY:Number) : Toolbox { x = pX; y = pY; return this; }
-		public function appendTo(target:Sprite): Toolbox { target.addChild(this); return this; }
+		public function appendTo(pParent:Sprite): Toolbox { pParent.addChild(this); return this; }
 		public function on(type:String, listener:Function): Toolbox { this.addEventListener(type, listener); return this; }
 		public function off(type:String, listener:Function): Toolbox { this.removeEventListener(type, listener); return this; }
 		

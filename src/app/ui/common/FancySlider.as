@@ -41,7 +41,7 @@ package app.ui.common
 			this.addEventListener(SliderEvent.THUMB_DRAG, _onChanged);
 		}
 		public function setXY(pX:Number, pY:Number) : FancySlider { x = pX; y = pY; return this; }
-		public function appendTo(target:Sprite): FancySlider { target.addChild(this); return this; }
+		public function appendTo(pParent:Sprite): FancySlider { pParent.addChild(this); return this; }
 		
 		public function updateViaMouseWheelDelta(pDelta) : void {
 			this.value += pDelta * 0.02;

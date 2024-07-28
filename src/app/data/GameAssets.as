@@ -385,18 +385,16 @@ pOnInitComplete
 		/****************************
 		* Misc
 		*****************************/
-		public static function createHorizontalRule(pX:Number, pY:Number, pWidth:Number) : Sprite {
-			var tLine:Sprite = new Sprite(); tLine.x = pX; tLine.y = pY;
-			
-			tLine.graphics.lineStyle(1, 0x11181c, 1, true);
-			tLine.graphics.moveTo(0, 0);
-			tLine.graphics.lineTo(pWidth, 0);
-			
-			tLine.graphics.lineStyle(1, 0x608599, 1, true);
-			tLine.graphics.moveTo(0, 1);
-			tLine.graphics.lineTo(pWidth, 1);
-			
-			return tLine;
+		public static function createHorizontalRule(pX:Number, pY:Number, pWidth:Number) : DisplayWrapper {
+			return DisplayWrapper(new Sprite()).move(pX, pY).draw(function(graphics:Graphics):void{
+				graphics.lineStyle(1, 0x11181c, 1, true);
+				graphics.moveTo(0, 0);
+				graphics.lineTo(pWidth, 0);
+				
+				graphics.lineStyle(1, 0x608599, 1, true);
+				graphics.moveTo(0, 1);
+				graphics.lineTo(pWidth, 1);
+			});
 		}
 		
 		public static function createScreenBackdrop(pSize:Number=10000) : DisplayWrapper {

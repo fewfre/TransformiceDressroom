@@ -53,7 +53,7 @@ package app.ui.common
 			_textField.addEventListener(FocusEvent.MOUSE_FOCUS_CHANGE, _onFocusOut);
 		}
 		public function setXY(pX:Number, pY:Number) : FancyInput { x = pX; y = pY; return this; }
-		public function appendTo(target:Sprite): FancyInput { target.addChild(this); return this; }
+		public function appendTo(pParent:Sprite): FancyInput { pParent.addChild(this); return this; }
 		
 		protected function _onFocusIn(event:Event):void {
 			_placeholderText.alpha = 0;

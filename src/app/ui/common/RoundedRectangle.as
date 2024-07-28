@@ -33,7 +33,7 @@ package app.ui.common
 			if(pData.originY != null) { originY = pData.originY; }
 		}
 		public function setXY(pX:Number, pY:Number) : RoundedRectangle { x = pX; y = pY; return this; }
-		public function appendTo(target:Sprite): RoundedRectangle { target.addChild(this); return this; }
+		public function appendTo(pParent:Sprite): RoundedRectangle { pParent.addChild(this); return this; }
 		
 		/****************************
 		* Public

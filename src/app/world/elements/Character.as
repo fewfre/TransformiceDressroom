@@ -71,7 +71,7 @@ package app.world.elements
 			updatePose();
 		}
 		public function setXY(pX:Number, pY:Number) : Character { x = pX; y = pY; return this; }
-		public function appendTo(target:Sprite): Character { target.addChild(this); return this; }
+		public function appendTo(pParent:Sprite): Character { pParent.addChild(this); return this; }
 		
 		public function get dragBounds() : Rectangle { return _dragBounds; }
 		public function setDragBounds(pX:Number, pY:Number, pWidth:Number, pHeight:Number): Character {

@@ -78,7 +78,7 @@ package com.fewfre.display
 			_render();
 		}
 		public function setXY(pX:Number, pY:Number) : TextBase { x = pX; y = pY; return this; }
-		public function appendTo(target:Sprite): TextBase { target.addChild(this); return this; }
+		public function appendTo(pParent:Sprite): TextBase { pParent.addChild(this); return this; }
 
 		/****************************
 		* Render

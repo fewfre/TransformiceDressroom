@@ -66,7 +66,7 @@ package app.ui.panes.infobar
 			}
 		}
 		public function setXY(pX:Number, pY:Number) : GridManagementWidget { x = pX; y = pY; return this; }
-		public function appendTo(target:Sprite): GridManagementWidget { target.addChild(this); return this; }
+		public function appendTo(pParent:Sprite): GridManagementWidget { pParent.addChild(this); return this; }
 		public function on(type:String, listener:Function): GridManagementWidget { this.addEventListener(type, listener); return this; }
 		public function off(type:String, listener:Function): GridManagementWidget { this.removeEventListener(type, listener); return this; }
 		

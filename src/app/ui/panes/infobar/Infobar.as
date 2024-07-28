@@ -178,14 +178,14 @@ package app.ui.panes.infobar
 			_downloadButton.disable().alpha = 0;
 			
 			// Line seperating infobar and contents below it.
-			addChild( GameAssets.createHorizontalRule(5, 53, this.Width-10) );
+			GameAssets.createHorizontalRule(5, 53, this.Width-10).appendTo(this);
 			
 			if(pData.hideItemPreview) {
 				hideImageCont();
 			}
 		}
 		public function setXY(pX:Number, pY:Number) : Infobar { x = pX; y = pY; return this; }
-		public function appendTo(target:Sprite): Infobar { target.addChild(this); return this; }
+		public function appendTo(pParent:Sprite): Infobar { pParent.addChild(this); return this; }
 		public function on(type:String, listener:Function): Infobar { this.addEventListener(type, listener); return this; }
 		public function off(type:String, listener:Function): Infobar { this.removeEventListener(type, listener); return this; }
 

@@ -48,7 +48,7 @@ package app.ui.panes
 			if(Fewf.assets.getData("config").username_lookup_url) {
 				// Line
 				yy += 16;
-				addChild( GameAssets.createHorizontalRule(10, yy, ConstantsApp.PANE_WIDTH - 15 - 15) );
+				GameAssets.createHorizontalRule(10, yy, ConstantsApp.PANE_WIDTH - 15 - 15).appendTo(this);
 				yy += 16;
 				
 				// User look fetcher - Title
