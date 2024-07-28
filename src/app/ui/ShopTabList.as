@@ -43,8 +43,8 @@ package app.ui
 
 		private function _createTab(pText:String, pX:Number, pY:Number, pWidth:Number, pHeight:Number, pEvent:String) : PushButton {
 			var tBttn:PushButton = new PushButton({ x:pX, y:pY, width:pWidth, height:pHeight, text:pText, allowToggleOff:false, data:{ event:pEvent } });
-			// tBttn.addEventListener(PushButton.STATE_CHANGED_BEFORE, function(tBttn){ return function(){ untoggle(tBttn, pEvent); }; }(tBttn));//, false, 0, true
-			tBttn.addEventListener(PushButton.STATE_CHANGED_BEFORE, function():void{ untoggle(tBttn, pEvent); });
+			// tBttn.addEventListener(PushButton.BEFORE_TOGGLE, function(tBttn){ return function(){ untoggle(tBttn, pEvent); }; }(tBttn));//, false, 0, true
+			tBttn.addEventListener(PushButton.BEFORE_TOGGLE, function():void{ untoggle(tBttn, pEvent); });
 			addChild(tBttn)
 			tabs.push(tBttn);
 			return tBttn;

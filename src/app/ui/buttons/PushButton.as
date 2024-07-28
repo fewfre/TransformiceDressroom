@@ -12,8 +12,8 @@ package app.ui.buttons
 	public class PushButton extends GameButton
 	{
 		// Constants
-		public static const STATE_CHANGED_BEFORE:String="state_changed_before";
-		public static const STATE_CHANGED_AFTER:String="state_changed_after";
+		public static const BEFORE_TOGGLE:String="state_changed_before";
+		public static const TOGGLE:String="state_changed_after";
 		
 		// Storage
 		public var id:int;
@@ -72,7 +72,7 @@ package app.ui.buttons
 
 		public function toggle(pOn:*=null, pFireEvent:Boolean=true) : void
 		{
-			if(pFireEvent) _dispatch(STATE_CHANGED_BEFORE);
+			if(pFireEvent) _dispatch(BEFORE_TOGGLE);
 			
 			this.pushed = pOn != null ? pOn : !this.pushed;
 			if(this.pushed) {
@@ -81,7 +81,7 @@ package app.ui.buttons
 				_renderUnpressed();
 			}
 			
-			if(pFireEvent) _dispatch(STATE_CHANGED_AFTER);
+			if(pFireEvent) _dispatch(TOGGLE);
 		}
 		
 		public function toggleOn(pFireEvent:Boolean=true) : void {

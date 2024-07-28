@@ -107,8 +107,8 @@ package app.ui
 			
 			_animateButton = new PushButton({ size:tButtonSize, obj_scale:0.65, obj:new $PlayButton(), origin:0.5 })
 				.setXY(tX-tButtonXInc*tButtonOnRight, yy)
-				.on(PushButton.STATE_CHANGED_AFTER, dispatchEventHandler(ANIMATION_TOGGLED))
-				.on(PushButton.STATE_CHANGED_AFTER, function(e):void{
+				.on(PushButton.TOGGLE, dispatchEventHandler(ANIMATION_TOGGLED))
+				.on(PushButton.TOGGLE, function(e):void{
 					var icon:Sprite = !_animateButton.pushed ? new $PlayButton() : newStopIcon();
 					_animateButton.ChangeImage(icon, 0.65);
 				})

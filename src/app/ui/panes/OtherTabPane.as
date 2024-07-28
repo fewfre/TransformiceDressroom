@@ -61,7 +61,7 @@ package app.ui.panes
 			if(_character.disableSkillsMode) {
 				_disableSkillsModeButton.toggleOn();
 			}
-			_disableSkillsModeButton.addEventListener(PushButton.STATE_CHANGED_AFTER, _onShamanDisableSkillsModeButtonClicked);
+			_disableSkillsModeButton.addEventListener(PushButton.TOGGLE, _onShamanDisableSkillsModeButtonClicked);
 			
 			// Color buttons
 			yy += 10;
@@ -87,13 +87,13 @@ package app.ui.panes
 			_backItemButtons = new Vector.<PushButton>();
 			for each(var itemData:ItemData in GameAssets.extraBack) {
 				var bttn:PushButton = new PushButton({ size:grid.cellSize, obj:new itemData.itemClass(), obj_scale:1.5, id:i++, data:{ id:itemData.id, itemData:itemData } });
-				bttn.on(PushButton.STATE_CHANGED_AFTER, function(e:FewfEvent):void{
+				bttn.on(PushButton.TOGGLE, function(e:FewfEvent):void{
 					// Deselect other toggled back items
 					for each(var bttn:PushButton in _backItemButtons) {
 						if(bttn.data.id != e.data.id) bttn.toggleOff(false);
 					}
 				});
-				bttn.on(PushButton.STATE_CHANGED_AFTER, _onItemToggled);
+				bttn.on(PushButton.TOGGLE, _onItemToggled);
 				grid.add(bttn);
 				_backItemButtons.push(bttn);
 				if(_character.getItemData(ItemType.BACK) && _character.getItemData(ItemType.BACK).id == itemData.id) {
@@ -105,12 +105,12 @@ package app.ui.panes
 			grid = new Grid(385, 5).setXY(xx,yy).appendTo(this);
 			
 			_frontHandButton = new PushButton({ size:grid.cellSize, obj:new GameAssets.extraObjectWand.itemClass(), obj_scale:1.5, id:i++, data:{ itemData:GameAssets.extraObjectWand } });
-			_frontHandButton.on(PushButton.STATE_CHANGED_AFTER, _onItemToggled);
+			_frontHandButton.on(PushButton.TOGGLE, _onItemToggled);
 			grid.add(_frontHandButton);
 			if(_character.getItemData(ItemType.OBJECT)) { _frontHandButton.toggleOn(); }
 			
 			_backHandButton = new PushButton({ size:grid.cellSize, obj:new GameAssets.extraBackHand.itemClass(), obj_scale:1.5, id:i++, data:{ itemData:GameAssets.extraBackHand } });
-			_backHandButton.on(PushButton.STATE_CHANGED_AFTER, _onItemToggled);
+			_backHandButton.on(PushButton.TOGGLE, _onItemToggled);
 			grid.add(_backHandButton);
 			if(_character.getItemData(ItemType.PAW_BACK)) { _backHandButton.toggleOn(); }
 			
@@ -195,7 +195,7 @@ package app.ui.panes
 		*****************************/
 		private function _registerClickHandler(pList:Vector.<PushButton>, pCallback:Function) : void {
 			for(var i:int = 0; i < pList.length; i++) {
-				pList[i].addEventListener(PushButton.STATE_CHANGED_BEFORE, pCallback);
+				pList[i].addEventListener(PushButton.BEFORE_TOGGLE, pCallback);
 			}
 		}
 		

@@ -64,7 +64,7 @@ package app.ui.panes
 			shopItem.scaleX = shopItem.scaleY = 2;
 
 			var shopItemButton : PushButton = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:shopItem, data:itemData });
-			shopItemButton.on(PushButton.STATE_CHANGED_AFTER, function(e:FewfEvent){ _onItemClicked(e.data); });
+			shopItemButton.on(PushButton.TOGGLE, function(e:FewfEvent){ _onItemClicked(e.data); });
 			
 			// Finally add to grid (do it at end so auto event handlers can be hooked up properly)
 			addToGrid(shopItemButton);

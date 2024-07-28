@@ -128,7 +128,7 @@ package app.ui.panes
 			cell.addEventListener(MouseEvent.MOUSE_OUT, function(e){ actionTray.alpha = 0; });
 			
 			var btn:PushButton = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:lookMC, data:{ entryId:lookEntry.id } }).appendTo(cell) as PushButton;
-			btn.on(PushButton.STATE_CHANGED_AFTER, function(){
+			btn.on(PushButton.TOGGLE, function(){
 				_onUserLookClicked(lookEntry.lookCode);
 			});
 			

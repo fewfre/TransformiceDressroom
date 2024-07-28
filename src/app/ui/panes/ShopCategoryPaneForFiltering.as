@@ -95,7 +95,7 @@ package app.ui.panes
 				btn.alpha = 1;
 				btn.toggleOn(false);
 			}
-			btn.addEventListener(PushButton.STATE_CHANGED_AFTER, function(e:FewfEvent){
+			btn.addEventListener(PushButton.TOGGLE, function(e:FewfEvent){
 				ShareCodeFilteringData.setCustomizable(data.type, data.id, (e.target as PushButton).pushed);
 				btn.alpha = ShareCodeFilteringData.isCustomizable(data.type, data.id) ? 1 : 0.35;
 			});

@@ -28,7 +28,7 @@ package app.ui.panes.base
 			// For this to work the button must be added to `pItem` *before* it's passed in
 			var btn:PushButton = _findPushButtonInCell(pItem);
 			if(btn) {
-				btn.on(PushButton.STATE_CHANGED_AFTER, _onCellPushButtonToggled);
+				btn.on(PushButton.TOGGLE, _onCellPushButtonToggled);
 				addToStart ? buttons.unshift(btn) : buttons.push(btn);
 			}
 			return pItem;

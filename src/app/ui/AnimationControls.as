@@ -88,10 +88,10 @@ package app.ui
 			xx += tButtonXInc;
 			var msize = bsize/2-1;
 			_speedButtons = new <PushButton>[
-				new PushButton({ text:'loading_progress', width:msize, height:msize, origin:0.5, data:{ speed:0.25 }, allowToggleOff:false }).setXY(xx - msize/2-1, yy - msize/2-1).on(PushButton.STATE_CHANGED_AFTER, _onSpeedButtonClicked).appendTo(this) as PushButton,
-				new PushButton({ text:'loading_progress', width:msize, height:msize, origin:0.5, data:{ speed:0.50 }, allowToggleOff:false }).setXY(xx + msize/2+1, yy - msize/2-1).on(PushButton.STATE_CHANGED_AFTER, _onSpeedButtonClicked).appendTo(this) as PushButton,
-				new PushButton({ text:'loading_progress', width:msize, height:msize, origin:0.5, data:{ speed:1.00 }, allowToggleOff:false }).setXY(xx - msize/2-1, yy + msize/2+1).on(PushButton.STATE_CHANGED_AFTER, _onSpeedButtonClicked).appendTo(this) as PushButton,
-				new PushButton({ text:'loading_progress', width:msize, height:msize, origin:0.5, data:{ speed:2.00 }, allowToggleOff:false }).setXY(xx + msize/2+1, yy + msize/2+1).on(PushButton.STATE_CHANGED_AFTER, _onSpeedButtonClicked).appendTo(this) as PushButton,
+				new PushButton({ text:'loading_progress', width:msize, height:msize, origin:0.5, data:{ speed:0.25 }, allowToggleOff:false }).setXY(xx - msize/2-1, yy - msize/2-1).on(PushButton.TOGGLE, _onSpeedButtonClicked).appendTo(this) as PushButton,
+				new PushButton({ text:'loading_progress', width:msize, height:msize, origin:0.5, data:{ speed:0.50 }, allowToggleOff:false }).setXY(xx + msize/2+1, yy - msize/2-1).on(PushButton.TOGGLE, _onSpeedButtonClicked).appendTo(this) as PushButton,
+				new PushButton({ text:'loading_progress', width:msize, height:msize, origin:0.5, data:{ speed:1.00 }, allowToggleOff:false }).setXY(xx - msize/2-1, yy + msize/2+1).on(PushButton.TOGGLE, _onSpeedButtonClicked).appendTo(this) as PushButton,
+				new PushButton({ text:'loading_progress', width:msize, height:msize, origin:0.5, data:{ speed:2.00 }, allowToggleOff:false }).setXY(xx + msize/2+1, yy + msize/2+1).on(PushButton.TOGGLE, _onSpeedButtonClicked).appendTo(this) as PushButton,
 			];
 			_speedButtons[0].Text.setUntranslatedText('¼');
 			_speedButtons[1].Text.setUntranslatedText('½');

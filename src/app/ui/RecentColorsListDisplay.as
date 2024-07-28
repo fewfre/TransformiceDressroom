@@ -45,7 +45,7 @@ package app.ui
 			
 			_deleteToggleButton = new DeleteButton({ x:bgWidth*0.5-25-2, width:deleteWidth, height:bgHeight, obj:new $Trash(), obj_scale:0.85 });;
 			_deleteToggleButton.y += -_deleteToggleButton.Height * 0.5;
-			_deleteToggleButton.addEventListener(PushButton.STATE_CHANGED_AFTER, function():void{ render(); });
+			_deleteToggleButton.addEventListener(PushButton.TOGGLE, function():void{ render(); });
 			addChild(_deleteToggleButton);
 			
 			// Add BG
