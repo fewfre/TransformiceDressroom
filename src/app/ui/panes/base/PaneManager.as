@@ -13,6 +13,7 @@ package app.ui.panes.base
 			super();
 			_panes = {};
 		}
+		public function appendTo(pParent:Sprite): PaneManager { pParent.addChild(this); return this; }
 		
 		public function addPane(pID:String, pPane:SidePane) : SidePane {
 			_panes[pID] = pPane;

@@ -24,7 +24,7 @@ package app.ui.screens
 			Fewf.assets.addEventListener(ProgressEvent.PROGRESS, _onLoadProgress);
 			Fewf.assets.addEventListener(AssetManager.PACK_LOADED, _onPackLoaded);
 			
-			_loadingSpinner = addChild(new LoadingSpinner({ y:-45, scale:2 })) as LoadingSpinner;
+			_loadingSpinner = new LoadingSpinner({ y:-45, scale:2 }).appendTo(this);
 			
 			_leftToLoadText = new TextTranslated("loading", { values:"", size:18, x:0, y:10 }).appendToT(this);
 			_loadProgressText = new TextTranslated("loading_progress", { values:"", size:18, x:0, y:35 }).appendToT(this);

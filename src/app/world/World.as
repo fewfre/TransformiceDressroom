@@ -110,7 +110,7 @@ package app.world
 			/////////////////////////////
 			var tShop:RoundedRectangle = new RoundedRectangle(ConstantsApp.SHOP_WIDTH, ConstantsApp.APP_HEIGHT).setXY(450, 10)
 				.appendTo(this).drawAsTray();
-			_paneManager = tShop.addChild(new PaneManager()) as PaneManager;
+			_paneManager = new PaneManager().appendTo(tShop);
 			
 			this.shopTabs = new ShopTabList(70, ConstantsApp.APP_HEIGHT).setXY(375, 10).appendTo(this);
 			this.shopTabs.addEventListener(ShopTabList.TAB_CLICKED, _onTabClicked);
@@ -197,37 +197,31 @@ package app.world
 					.on(ConfigTabPane.LOOK_CODE_SELECTED, function(e:FewfEvent):void{ _useOutfitShareCode(e.data as String); });
 			}
 			
-			// Other Pane
-			var tPaneOther:OtherTabPane = _paneManager.addPane(TAB_OTHER, new OtherTabPane(character)) as OtherTabPane;
-			for each(var bttn:Object in tPaneOther.buttons_back) {
-				bttn.addEventListener(PushButton.STATE_CHANGED_AFTER, this.buttonBackClickAfter);
-			}
-			tPaneOther.button_hand.addEventListener(PushButton.STATE_CHANGED_AFTER, this.buttonHandClickAfter);
-			tPaneOther.button_backHand.addEventListener(PushButton.STATE_CHANGED_AFTER, this.buttonBackHandClickAfter);
-			tPaneOther.shamanColorPickerButton.addEventListener(ButtonBase.CLICK, function(pEvent:Event){ _shamanColorButtonClicked(); });
-			tPaneOther.shamanColorBlueButton.addEventListener(ButtonBase.CLICK, function(pEvent:Event){ _setConfigShamanColor(0x95D9D6); });
-			tPaneOther.shamanColorPinkButton.addEventListener(ButtonBase.CLICK, function(pEvent:Event){ _setConfigShamanColor(0xFCA6F1); });
-			tPaneOther.itemFilterButton.addEventListener(ButtonBase.CLICK, function(pEvent:Event){ _getAndOpenItemFilteringPane(); });
-			tPaneOther = null;
+			// "Other" Pane
+			_paneManager.addPane(TAB_OTHER, new OtherTabPane(character))
+				.on(OtherTabPane.CUSTOM_SHAMAN_COLOR_CLICKED, function(e:Event):void{ _shamanColorButtonClicked(); })
+				.on(OtherTabPane.SHAMAN_COLOR_PICKED, function(e:FewfEvent):void{ _setConfigShamanColor(e.data as int); })
+				.on(OtherTabPane.ITEM_TOGGLED, _otherTabItemToggled)
+				.on(OtherTabPane.FILTER_MODE_CLICKED, function(e:Event){ _getAndOpenItemFilteringPane(); });
 			
 			// Outfit Pane
 			_paneManager.addPane(TAB_OUTFITS, new OutfitManagerTabPane(character, _useOutfitShareCode, function(){ return character.getParamsTfmOfficialSyntax() }))
-				.on(Event.CLOSE, function(pEvent:Event){ _paneManager.openPane(shopTabs.getSelectedTabEventName()); });
+				.on(Event.CLOSE, function(e:Event){ _paneManager.openPane(shopTabs.getSelectedTabEventName()); });
 			
 			// "Other" Tab Color Picker Pane
 			_paneManager.addPane(CONFIG_COLOR_PANE_ID, new ColorPickerTabPane({ hide_default:true, hideItemPreview:true }))
 				.on(ColorPickerTabPane.EVENT_COLOR_PICKED, _onConfigColorPickChanged)
-				.on(Event.CLOSE, function(pEvent:Event){ _paneManager.openPane(TAB_OTHER); });
+				.on(Event.CLOSE, function(e:Event){ _paneManager.openPane(TAB_OTHER); });
 			
 			// Worn Items Pane
 			_paneManager.addPane(WORN_ITEMS_PANE_ID, new WornItemsPane(character, _goToItemColorPicker))
-				.on(Event.CLOSE, function(pEvent:Event){ _paneManager.openPane(TAB_OTHER); });
+				.on(Event.CLOSE, function(e:Event){ _paneManager.openPane(TAB_OTHER); });
 			
 			// Item Filtering Pane
 			_paneManager.addPane(TAB_ITEM_FILTERING, new ItemFilteringPane())
-				.on(ItemFilteringPane.EVENT_PREVIEW_ENABLED, function(pEvent:FewfEvent){ _enableFilterMode(); })
-				.on(ItemFilteringPane.EVENT_STOP_FILTERING, function(pEvent:FewfEvent){ _closeItemFilteringPane(); })
-				.on(ItemFilteringPane.EVENT_RESET_FILTERING, function(pEvent:FewfEvent){ _resetItemFilteringPane(); });
+				.on(ItemFilteringPane.EVENT_PREVIEW_ENABLED, function(e:FewfEvent){ _enableFilterMode(); })
+				.on(ItemFilteringPane.EVENT_STOP_FILTERING, function(e:FewfEvent){ _closeItemFilteringPane(); })
+				.on(ItemFilteringPane.EVENT_RESET_FILTERING, function(e:FewfEvent){ _resetItemFilteringPane(); });
 			
 			// Color Picker Pane
 			_paneManager.addPane(COLOR_PANE_ID, new ColorPickerTabPane({}))
@@ -601,23 +595,9 @@ package app.world
 			}
 		}
 
-		public function buttonHandClickAfter(pEvent:Event):void {
-			toggleItemSelectionOneOff(ItemType.OBJECT, pEvent.target as PushButton, GameAssets.extraObjectWand);
-		}
-
-		public function buttonBackClickAfter(pEvent:FewfEvent):void {
-			for each(var bttn:PushButton in (_paneManager.getPane(TAB_OTHER) as OtherTabPane).buttons_back) {
-				if(bttn.data.id != pEvent.data.id) bttn.toggleOff(false);
-			}
-			toggleItemSelectionOneOff(ItemType.BACK, pEvent.target as PushButton, GameAssets.getItemFromTypeID(ItemType.BACK, pEvent.data.id));
-		}
-
-		public function buttonBackHandClickAfter(pEvent:Event):void {
-			toggleItemSelectionOneOff(ItemType.PAW_BACK, pEvent.target as PushButton, GameAssets.extraBackHand);
-		}
-
-		private function toggleItemSelectionOneOff(pType:ItemType, pButton:PushButton, pItemData:ItemData) : void {
-			if (pButton.pushed) {
+		private function _otherTabItemToggled(e:FewfEvent) : void { _toggleItemSelectionOneOff(e.data.type, e.data.itemData); }
+		private function _toggleItemSelectionOneOff(pType:ItemType, pItemData:ItemData) : void {
+			if (pItemData) {
 				this.character.setItemData( pItemData );
 			} else {
 				this.character.removeItem(pType);

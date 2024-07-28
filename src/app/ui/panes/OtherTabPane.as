@@ -1,126 +1,159 @@
 package app.ui.panes
 {
-	import com.fewfre.display.*;
-	import com.fewfre.utils.FewfDisplayUtils;
-	import com.fewfre.events.FewfEvent;
 	import app.data.*;
-	import app.ui.*;
 	import app.ui.buttons.*;
-	import app.world.elements.*;
-	import flash.display.*;
-	import flash.events.*;
-	import flash.display.MovieClip;
-	import app.world.data.ItemData;
 	import app.ui.panes.base.SidePane;
-	
+	import app.world.data.ItemData;
+	import app.world.elements.Character;
+	import com.fewfre.display.*;
+	import com.fewfre.events.FewfEvent;
+	import com.fewfre.utils.FewfDisplayUtils;
+	import flash.display.DisplayObject;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+
 	public class OtherTabPane extends SidePane
 	{
+		// Constants
+		public static const CUSTOM_SHAMAN_COLOR_CLICKED:String = "custom_shaman_color_clicked";
+		public static const SHAMAN_COLOR_PICKED:String = "shaman_color_picked"; // FewfEvent<int>
+		public static const ITEM_TOGGLED:String = "item_toggled"; // FewfEvent<{ type:ItemType, itemData:ItemData|null }>
+		public static const FILTER_MODE_CLICKED:String = "filter_mode_clicked";
+		
 		// Storage
-		public var character:Character;
+		private var _character       : Character;
 		
-		public var button_hand		: PushButton;
-		public var button_backHand	: PushButton;
-		public var buttons_back		: Vector.<PushButton>;
+		private var _frontHandButton : PushButton;
+		private var _backHandButton  : PushButton;
+		private var _backItemButtons : Vector.<PushButton>;
 		
-		public var shamanButtons	: Vector.<PushButton>;
-		public var disableSkillsModeButton	: PushButton;
-		public var shamanColorPickerButton	: ScaleButton;
-		public var shamanColorBlueButton	: ColorButton;
-		public var shamanColorPinkButton	: ColorButton;
+		private var _shamanButtons   : Vector.<PushButton>;
+		private var _disableSkillsModeButton : PushButton;
 		
-		public var characterHead	: Character;
-		public var webpButton		: GameButton;
-		public var itemFilterButton	: SpriteButton;
+		private var _characterHead   : Character;
+		private var _webpButton      : GameButton;
 		
 		// Constructor
 		public function OtherTabPane(pCharacter:Character) {
 			super();
-			character = pCharacter;
+			_character = pCharacter;
 			
-			var i:int = 0, xx:Number = 20, yy:Number = 20, tButton:GameButton, sizex:Number, sizey:Number, spacingx:Number;
+			var i:int = 0, xx:Number = 20, yy:Number = 20, sizex:Number, sizey:Number, spacingx:Number;
 			
+			/////////////////////////////
+			// Shaman Section
+			/////////////////////////////
 			// Shaman options
 			sizex = 80; sizey = 40; spacingx = sizex + 10; xx = 10 - spacingx;
 			
-			shamanButtons = new Vector.<PushButton>();
-			DisplayWrapper.wrap(new $ShamFeather(), this).move((xx += spacingx) + sizex*0.5, yy + sizey*0.5).scale(2).on(MouseEvent.CLICK, _onNoShamanButtonClicked);
-			xx -= 5;
-			yy -= 10;
-			shamanButtons.push(tButton = addChild(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextTranslated("btn_normal_mode"), id:ShamanMode.NORMAL.toInt() })) as PushButton);
-			shamanButtons.push(tButton = addChild(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextTranslated("btn_hard_mode"), id:ShamanMode.HARD.toInt() })) as PushButton);
-			shamanButtons.push(tButton = addChild(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextTranslated("btn_divine_mode"), id:ShamanMode.DIVINE.toInt() })) as PushButton);
-			if(character.shamanMode != ShamanMode.OFF) {
-				shamanButtons[character.shamanMode.toInt()-2].toggleOn();
+			_shamanButtons = new Vector.<PushButton>();
+			DisplayWrapper.wrap(new $ShamFeather(), this).move((xx += spacingx) + sizex*0.5, yy + sizey*0.5).scale(2).on(MouseEvent.CLICK, _onNoShamanButtonClicked).asSprite.buttonMode = true;
+			xx -= 5; yy -= 10;
+			_shamanButtons.push(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextTranslated("btn_normal_mode"), id:ShamanMode.NORMAL.toInt() }).appendTo(this) as PushButton);
+			_shamanButtons.push(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextTranslated("btn_hard_mode"), id:ShamanMode.HARD.toInt() }).appendTo(this) as PushButton);
+			_shamanButtons.push(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextTranslated("btn_divine_mode"), id:ShamanMode.DIVINE.toInt() }).appendTo(this) as PushButton);
+			if(_character.shamanMode != ShamanMode.OFF) {
+				_shamanButtons[_character.shamanMode.toInt()-2].toggleOn();
 			}
-			_registerClickHandler(shamanButtons, _onShamanButtonClicked);
+			_registerClickHandler(_shamanButtons, _onShamanButtonClicked);
 			
-			disableSkillsModeButton = addChild(new PushButton({ x:10 + sizex*1.5 + spacingx - 180/2, y:yy + sizey + 5, width:180, height:20, obj:new TextTranslated("btn_no_skills_mode") })) as PushButton;
-			if(character.disableSkillsMode) {
-				disableSkillsModeButton.toggleOn();
+			_disableSkillsModeButton = new PushButton({ x:10 + sizex*1.5 + spacingx - 180/2, y:yy + sizey + 5, width:180, height:20, obj:new TextTranslated("btn_no_skills_mode") }).appendTo(this) as PushButton;
+			if(_character.disableSkillsMode) {
+				_disableSkillsModeButton.toggleOn();
 			}
-			disableSkillsModeButton.addEventListener(PushButton.STATE_CHANGED_AFTER, _onShamandisableSkillsModeButtonClicked);
+			_disableSkillsModeButton.addEventListener(PushButton.STATE_CHANGED_AFTER, _onShamanDisableSkillsModeButtonClicked);
 			
 			// Color buttons
 			yy += 10;
 			sizex = 80; sizey = 50;
-			
-			addChild( shamanColorPickerButton = new ScaleButton({ x:xx += spacingx + 30, y:yy + sizey*0.5 - 10, obj:new $ColorWheel() }) );
+			ScaleButton.withObject(new $ColorWheel()).setXY(xx += spacingx + 30, yy + sizey*0.5 - 10).appendTo(this).on(ButtonBase.CLICK, function(e):void{ dispatchEvent(new Event(CUSTOM_SHAMAN_COLOR_CLICKED)); });
 			
 			sizex = 26; sizey = 18;
-			
-			addChild( shamanColorBlueButton = new ColorButton({ color:0x95D9D6, x:xx - (sizex*0.5+3), y:yy + sizey*0.5 + 35, width:sizex, height:sizey }) );
-			addChild( shamanColorPinkButton = new ColorButton({ color:0xFCA6F1, x:xx + (sizex*0.5+3), y:yy + sizey*0.5 + 35, width:sizex, height:sizey }) );
+			// Default Blue/Pink Shaman color buttons
+			new ColorButton({ color:0x95D9D6, x:xx - (sizex*0.5+3), y:yy + sizey*0.5 + 35, width:sizex, height:sizey }).appendTo(this).on(ButtonBase.CLICK, function(e:FewfEvent){ dispatchEvent(new FewfEvent(SHAMAN_COLOR_PICKED, e.data)); });
+			new ColorButton({ color:0xFCA6F1, x:xx + (sizex*0.5+3), y:yy + sizey*0.5 + 35, width:sizex, height:sizey }).appendTo(this).on(ButtonBase.CLICK, function(e:FewfEvent){ dispatchEvent(new FewfEvent(SHAMAN_COLOR_PICKED, e.data)); });
 			
 			// Line
 			yy += 50 + 10;
 			addChild( GameAssets.createHorizontalRule(10, yy, ConstantsApp.PANE_WIDTH - 15) );
 			
+			/////////////////////////////
+			// Item Section
+			/////////////////////////////
 			// Grid
 			yy += 15; xx = 20;
 			var grid:Grid = new Grid(385, GameAssets.extraBack.length).setXY(xx,yy).appendTo(this);
 			
-			this.buttons_back = new Vector.<PushButton>();
+			_backItemButtons = new Vector.<PushButton>();
 			for each(var itemData:ItemData in GameAssets.extraBack) {
-				var bttn:PushButton = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:new itemData.itemClass(), obj_scale:1.5, id:i++, data:{ id:itemData.id } });
+				var bttn:PushButton = new PushButton({ size:grid.cellSize, obj:new itemData.itemClass(), obj_scale:1.5, id:i++, data:{ id:itemData.id, itemData:itemData } });
+				bttn.on(PushButton.STATE_CHANGED_AFTER, function(e:FewfEvent):void{
+					// Deselect other toggled back items
+					for each(var bttn:PushButton in _backItemButtons) {
+						if(bttn.data.id != e.data.id) bttn.toggleOff(false);
+					}
+				});
+				bttn.on(PushButton.STATE_CHANGED_AFTER, _onItemToggled);
 				grid.add(bttn);
-				this.buttons_back.push(bttn);
-				if(character.getItemData(ItemType.BACK) && character.getItemData(ItemType.BACK).id == itemData.id) {
+				_backItemButtons.push(bttn);
+				if(_character.getItemData(ItemType.BACK) && _character.getItemData(ItemType.BACK).id == itemData.id) {
 					bttn.toggleOn();
 				}
 			}
 
 			yy = grid.y + grid.cellSize + 5;
 			grid = new Grid(385, 5).setXY(xx,yy).appendTo(this);
-			this.button_hand = new PushButton({ size:grid.cellSize, obj:new GameAssets.extraObjectWand.itemClass(), obj_scale:1.5, id:i++ });
-			grid.add(this.button_hand);
-			if(character.getItemData(ItemType.OBJECT)) { this.button_hand.toggleOn(); }
 			
-			this.button_backHand = new PushButton({ size:grid.cellSize, obj:new GameAssets.extraBackHand.itemClass(), obj_scale:1.5, id:i++ });
-			grid.add(this.button_backHand);
-			if(character.getItemData(ItemType.PAW_BACK)) { this.button_backHand.toggleOn(); }
+			_frontHandButton = new PushButton({ size:grid.cellSize, obj:new GameAssets.extraObjectWand.itemClass(), obj_scale:1.5, id:i++, data:{ itemData:GameAssets.extraObjectWand } });
+			_frontHandButton.on(PushButton.STATE_CHANGED_AFTER, _onItemToggled);
+			grid.add(_frontHandButton);
+			if(_character.getItemData(ItemType.OBJECT)) { _frontHandButton.toggleOn(); }
 			
-			// Bottom buttons
+			_backHandButton = new PushButton({ size:grid.cellSize, obj:new GameAssets.extraBackHand.itemClass(), obj_scale:1.5, id:i++, data:{ itemData:GameAssets.extraBackHand } });
+			_backHandButton.on(PushButton.STATE_CHANGED_AFTER, _onItemToggled);
+			grid.add(_backHandButton);
+			if(_character.getItemData(ItemType.PAW_BACK)) { _backHandButton.toggleOn(); }
+			
+			/////////////////////////////
+			// Bottom Buttons
+			/////////////////////////////
 			var saveHeadButton:GameButton = new GameButton({ x:353, y:315, width:70, height:70 }).appendTo(this) as GameButton;
 			saveHeadButton.on(MouseEvent.CLICK, _onSaveMouseHeadClicked);
-			characterHead = new Character(new <ItemData>[ GameAssets.defaultSkin, GameAssets.defaultPose ]);
-			saveHeadButton.addChild(characterHead);
+			_characterHead = new Character(new <ItemData>[ GameAssets.defaultSkin, GameAssets.defaultPose ]).appendTo(saveHeadButton);
 			
 			if(ConstantsApp.ANIMATION_DOWNLOAD_ENABLED) {
-				webpButton = new GameButton({ x:353-70-5, y:315, width:70, height:70 }).appendTo(this) as GameButton;
-				webpButton.on(MouseEvent.CLICK, _onSaveAsWebpClicked);
-				new TextBase('.webp', { x:35, y:35, origin:0.5, size:16 }).appendTo(webpButton);
+				_webpButton = new GameButton({ x:353-70-5, y:315, width:70, height:70 }).appendTo(this) as GameButton;
+				_webpButton.on(MouseEvent.CLICK, _onSaveAsWebpClicked);
+				new TextBase('.webp', { x:35, y:35, origin:0.5, size:16 }).appendTo(_webpButton);
 			}
 			
-			itemFilterButton = SpriteButton.withObject(new $FilterIcon(), 0.85, { x:xx, y:315, width:70, height:70 }).appendTo(this) as SpriteButton;
+			SpriteButton.withObject(new $FilterIcon(), 0.85, { x:xx, y:315, width:70, height:70 }).appendTo(this)
+				.on(ButtonBase.CLICK, function(e:Event):void{ dispatchEvent(new Event(FILTER_MODE_CLICKED)); });
 		}
 		
 		/****************************
 		* Public
 		*****************************/
-		
 		public override function open() : void {
 			super.open();
 			
+			_updateHead();
+		}
+		
+		public function updateButtonsBasedOnCurrentData() : void {
+			for(var i:int = 0; i < _shamanButtons.length; i++) {
+				_shamanButtons[i].toggleOff();
+			}
+			if(_character.shamanMode != ShamanMode.OFF) {
+				_shamanButtons[_character.shamanMode.toInt()-2].toggleOn(false);
+			}
+			_disableSkillsModeButton.toggle(_character.disableSkillsMode, false);
+			
+			_frontHandButton.toggle(!!_character.getItemData(ItemType.OBJECT), false);
+			for each(var bttn:PushButton in _backItemButtons) {
+				bttn.toggle(!!_character.getItemData(ItemType.BACK) && _character.getItemData(ItemType.BACK).id == bttn.data.id, false);
+			}
+			_backHandButton.toggle(!!_character.getItemData(ItemType.PAW_BACK), false);
 			_updateHead();
 		}
 		
@@ -130,14 +163,14 @@ package app.ui.panes
 		private function _updateHead() {
 			// copy character data onto our copy
 			for each(var tItemType in ItemType.LAYERING) {
-				var data = character.getItemData(tItemType);
-				if(data) characterHead.setItemData( data ); else characterHead.removeItem( tItemType );
+				var data:ItemData = _character.getItemData(tItemType);
+				if(data) _characterHead.setItemData( data ); else _characterHead.removeItem( tItemType );
 			}
-			characterHead.setItemData( character.getItemData(ItemType.POSE) );
-			characterHead.scale = 1;
+			_characterHead.setItemData( _character.getItemData(ItemType.POSE) );
+			_characterHead.scale = 1;
 			
 			// Cut the head off the poor mouse ;_;
-			var pose = characterHead.outfit.pose;
+			var pose = _characterHead.outfit.pose;
 			var partsToKeep:Array = ["Tete_", "Oeil_", "OeilVide_", "Oeil2_", "Oeil3_", "Oeil4_", "OreilleD_", "OreilleG_"];
 			var tChild:DisplayObject = null;
 			for(var i:int = pose.numChildren-1; i >= 0; i--) {
@@ -149,11 +182,11 @@ package app.ui.panes
 			}
 			
 			var btnSize = 70, size = 60;
-			var tBounds = characterHead.getBounds(characterHead);
+			var tBounds = _characterHead.getBounds(_characterHead);
 			var tOffset = tBounds.topLeft;
-			FewfDisplayUtils.fitWithinBounds(characterHead, size, size, size, size);
-			characterHead.x = btnSize / 2 - (tBounds.width / 2 + tOffset.x) * characterHead.scaleX;
-			characterHead.y = btnSize / 2 - (tBounds.height / 2 + tOffset.y) * characterHead.scaleY;
+			FewfDisplayUtils.fitWithinBounds(_characterHead, size, size, size, size);
+			_characterHead.x = btnSize / 2 - (tBounds.width / 2 + tOffset.x) * _characterHead.scaleX;
+			_characterHead.y = btnSize / 2 - (tBounds.height / 2 + tOffset.y) * _characterHead.scaleY;
 		
 		}
 		
@@ -167,31 +200,36 @@ package app.ui.panes
 		}
 		
 		private function _onShamanButtonClicked(pEvent:Event) {
-			_untoggle(shamanButtons, pEvent.target as PushButton);
-			character.shamanMode = ShamanMode.fromInt(pEvent.target.id);
+			_untoggle(_shamanButtons, pEvent.target as PushButton);
+			_character.shamanMode = ShamanMode.fromInt(pEvent.target.id);
 			if(pEvent.target.pushed) {
-				character.shamanMode = ShamanMode.OFF;
+				_character.shamanMode = ShamanMode.OFF;
 			}
-			character.updatePose();
+			_character.updatePose();
 			_updateHead();
 		}
 		
 		private function _onNoShamanButtonClicked(pEvent:Event) {
-			_untoggle(shamanButtons);
-			character.shamanMode = ShamanMode.OFF;
-			character.updatePose();
+			_untoggle(_shamanButtons);
+			_character.shamanMode = ShamanMode.OFF;
+			_character.updatePose();
 			_updateHead();
 		}
 		
-		private function _onShamandisableSkillsModeButtonClicked(pEvent:Event) {
-			character.disableSkillsMode = (pEvent.target as PushButton).pushed;
-			if(character.disableSkillsMode && character.shamanMode == ShamanMode.OFF) {
-				character.shamanMode = ShamanMode.fromInt(shamanButtons[0].id);
-				shamanButtons[0].toggleOn(false);
+		private function _onShamanDisableSkillsModeButtonClicked(pEvent:Event) {
+			_character.disableSkillsMode = (pEvent.target as PushButton).pushed;
+			if(_character.disableSkillsMode && _character.shamanMode == ShamanMode.OFF) {
+				_character.shamanMode = ShamanMode.fromInt(_shamanButtons[0].id);
+				_shamanButtons[0].toggleOn(false);
 			}
-			character.updatePose();
+			_character.updatePose();
 			_updateHead();
 			
+		}
+		
+		private function _onItemToggled(e:FewfEvent) : void {
+			var bttn:PushButton = e.target as PushButton, itemData:ItemData = e.data.itemData;
+			dispatchEvent(new FewfEvent(ITEM_TOGGLED, { type:itemData.type, itemData:bttn.pushed ? itemData : null }));
 		}
 
 		private function _untoggle(pList:Vector.<PushButton>, pButton:PushButton=null) : void {
@@ -205,31 +243,14 @@ package app.ui.panes
 			_updateHead();
 		}
 		
-		public function updateButtonsBasedOnCurrentData() : void {
-			for(var i:int = 0; i < shamanButtons.length; i++) {
-				shamanButtons[i].toggleOff();
-			}
-			if(character.shamanMode != ShamanMode.OFF) {
-				shamanButtons[character.shamanMode.toInt()-2].toggleOn(false);
-			}
-			disableSkillsModeButton.toggle(character.disableSkillsMode, false);
-			
-			button_hand.toggle(!!character.getItemData(ItemType.OBJECT), false);
-			for each(var bttn:PushButton in buttons_back) {
-				bttn.toggle(!!character.getItemData(ItemType.BACK) && character.getItemData(ItemType.BACK).id == bttn.data.id, false);
-			}
-			button_backHand.toggle(!!character.getItemData(ItemType.PAW_BACK), false);
-			_updateHead();
-		}
-		
 		private function _onSaveMouseHeadClicked(pEvent:Event) {
-			FewfDisplayUtils.saveAsPNG(characterHead, 'mouse_head', character.outfit.scaleX);
+			FewfDisplayUtils.saveAsPNG(_characterHead, 'mouse_head', _character.outfit.scaleX);
 		}
 		
 		private function _onSaveAsWebpClicked(e:Event) {
-			webpButton.disable();
-			FewfDisplayUtils.saveAsAnimatedGif(character.copy().outfit.pose, "character", this.character.outfit.scaleX, "webp", function(){
-				webpButton.enable();
+			_webpButton.disable();
+			FewfDisplayUtils.saveAsAnimatedGif(_character.copy().outfit.pose, "character", _character.outfit.scaleX, "webp", function(){
+				_webpButton.enable();
 			});
 		}
 	}
