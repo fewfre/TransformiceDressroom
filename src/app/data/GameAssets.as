@@ -398,7 +398,7 @@ pOnInitComplete
 		}
 		
 		public static function createScreenBackdrop(pSize:Number=10000) : DisplayWrapper {
-			return new DisplayWrapper(new Shape()).move(-pSize/2, -pSize/2).draw(function(graphics:Graphics):void{
+			return new DisplayWrapper(new Sprite()).move(-pSize/2, -pSize/2).draw(function(graphics:Graphics):void{
 				graphics.beginFill(0x000000, 0.2);
 				graphics.drawRect(0, 0, pSize, pSize);
 				graphics.endFill();
