@@ -1,18 +1,18 @@
 package app.ui.panes.colorpicker
 {
-	import com.piterwilson.utils.*;
-	import com.fewfre.display.*;
-	import com.fewfre.events.FewfEvent;
-	import app.data.*;
-	import app.ui.*;
-	import app.ui.buttons.*;
-	import flash.display.*;
-	import flash.events.*;
-	import flash.utils.Dictionary;
-	import ext.ParentApp;
+	import app.data.ConstantsApp;
+	import app.ui.buttons.SpriteButton;
 	import app.ui.panes.base.GridSidePane;
 	import app.ui.panes.infobar.Infobar;
-	
+	import com.fewfre.display.ButtonBase;
+	import com.fewfre.events.FewfEvent;
+	import com.piterwilson.utils.ColorPicker;
+	import flash.display.DisplayObject;
+	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.events.DataEvent;
+
 	public class ColorPickerTabPane extends GridSidePane
 	{
 		// Constants
@@ -44,48 +44,35 @@ package app.ui.panes.colorpicker
 		// pData = { hide_default:bool, hideItemPreview:bool }
 		public function ColorPickerTabPane(pData:Object) {
 			super(1);
+			_colorSwatches = new Vector.<ColorSwatch>();
 			
 			this.addInfoBar( new Infobar({ showBackButton:true, hideItemPreview:pData.hideItemPreview }) )
 				.on(Infobar.BACK_CLICKED, _onColorPickerBackClicked)
 				.on(Infobar.ITEM_PREVIEW_CLICKED, function(e){ dispatchEvent(new Event(EVENT_ITEM_ICON_CLICKED)); });
 			
-			var tClickOffDetector = addChildAt(new Sprite(), 0) as Sprite;
-			tClickOffDetector.graphics.beginFill( 0xFFFFFF );
-			tClickOffDetector.graphics.drawRect( 0, 0, 115, 325 );
-			tClickOffDetector.alpha = 0;
-			tClickOffDetector.x = 0;
-			tClickOffDetector.y = 60;
-			tClickOffDetector.addEventListener(MouseEvent.CLICK, function(e:Event){
-				_addRecentColor();
-			});
+			var tClickOffDetector:Sprite = addItem(new Sprite()) as Sprite;
+			tClickOffDetector.graphics.beginFill( 0xFFFFFF, 0 );
+			tClickOffDetector.graphics.drawRect( 0, 0, 114, 325 );
+			tClickOffDetector.addEventListener(MouseEvent.CLICK, function(e:Event){ _addRecentColor(); });
 			
-			_psColorPick = this.addItem(new ColorPicker()) as ColorPicker;
-			_psColorPick.x = 105;
-			_psColorPick.y = 5;
-			_psColorPick.addEventListener(ColorPicker.COLOR_PICKED, _onColorPickChanged);
-			
-			_colorSwatches = new Vector.<ColorSwatch>();
+			_psColorPick = this.addItem(new ColorPicker().setXY(105, 5).on(ColorPicker.COLOR_PICKED, _onColorPickChanged)) as ColorPicker;
 			
 			if(!pData.hide_default) {
-				var defaults_btn:SpriteButton;
-				defaults_btn = this.addItem( new SpriteButton({ text:"btn_color_defaults", x:6, y:15, width:100, height:22, obj:new MovieClip() }) ) as SpriteButton;
-				defaults_btn.addEventListener(ButtonBase.CLICK, function(){ _defaultAllColors(); });
+				this.addItem( new SpriteButton({ text:"btn_color_defaults", x:6, y:15, width:100, height:22 })
+					.on(ButtonBase.CLICK, function(){ _defaultAllColors(); }) );
 			}
 			
-			_randomizeButton = this.addItem(new SpriteButton({ x:ConstantsApp.PANE_WIDTH - 24 - 11, y:14, width:24, height:24, obj_scale:0.8, obj:new $Dice() })) as SpriteButton;
-			_randomizeButton.addEventListener(ButtonBase.CLICK, function(){ _randomizeAllColors(); });
+			_randomizeButton = SpriteButton.withObject(new $Dice(), 0.8, { size:24 }).setXY(ConstantsApp.PANE_WIDTH - 24 - 11, 14)
+				.on(ButtonBase.CLICK, function(){ _randomizeAllColors(); }) as SpriteButton;
+				this.addItem(_randomizeButton);
 			
-			_recentColorsDisplay = new RecentColorsListDisplay({ x:ConstantsApp.PANE_WIDTH/2, y:316+60+17 });
-			_recentColorsDisplay.addEventListener(RecentColorsListDisplay.EVENT_COLOR_PICKED, _onRecentColorBtnClicked);
-			addChild(_recentColorsDisplay);
+			_recentColorsDisplay = new RecentColorsListDisplay().setXY(ConstantsApp.PANE_WIDTH/2, 316+60+17).appendTo(this)
+				.on(RecentColorsListDisplay.EVENT_COLOR_PICKED, _onRecentColorBtnClicked);
 			
 			var historySize = 270;
-			_colorHistory = new ColorHistoryOverlay(historySize);
-			_colorHistory.x = _psColorPick.x + 10 + historySize*0.5;
-			_colorHistory.y = _psColorPick.y + 40 + historySize*0.5;
-			_colorHistory.addEventListener(ColorHistoryOverlay.EVENT_COLOR_PICKED, _onHistoryColorClicked);
-			
-			// this.UpdatePane(false);
+			_colorHistory = new ColorHistoryOverlay(historySize)
+				.setXY(_psColorPick.x + 10 + historySize*0.5, _psColorPick.y + 40 + historySize*0.5)
+				.on(ColorHistoryOverlay.EVENT_COLOR_PICKED, _onHistoryColorClicked);
 		}
 		
 		public override function open() : void {
@@ -168,49 +155,24 @@ package app.ui.panes.colorpicker
 		}
 		
 		private function _createColorSwatch(pNum:int, pX:int, pY:int, pLocked:Boolean=false) : ColorSwatch {
-			var swatch:ColorSwatch = new ColorSwatch();
-			swatch.addEventListener(ColorSwatch.USER_MODIFIED_TEXT, function(){
-				_selectSwatch(pNum);
-				changeColor(swatch.color, true);
-			});
-			swatch.addEventListener(ColorSwatch.ENTER_PRESSED, function(){
-				_selectSwatch(pNum);
-				_addRecentColor();
-			});
-			swatch.addEventListener(ColorSwatch.BUTTON_CLICK, function(){
-				// Add here since we just changed what swatch we're on and current one is thus "finalized"
-				_addRecentColor();
-				// don't track a change just from clicking a swatch, but do still set cursor/add a recent if needed
-				_selectSwatch(pNum);
-			});
-			swatch.swatch.addEventListener(MouseEvent.MOUSE_OVER, function(){
-				if(!!infobar.itemData) {
-					dispatchEvent(new FewfEvent(EVENT_PREVIEW_COLOR, { type:infobar.itemData.type, id:infobar.itemData.id, colorI:pNum }));
-				}
-			});
-			swatch.swatch.addEventListener(MouseEvent.MOUSE_OUT, function(){
-				dispatchEvent(new FewfEvent(EVENT_PREVIEW_COLOR, null));
-			});
-			swatch.swatch.addEventListener(MouseEvent.MOUSE_DOWN, function(){
-				if(!!infobar.itemData) {
-					dispatchEvent(new FewfEvent(EVENT_PREVIEW_COLOR, { type:infobar.itemData.type, id:infobar.itemData.id, colorI:pNum }));
-				}
-			});
-			swatch.swatch.addEventListener(MouseEvent.MOUSE_UP, function(){
-				dispatchEvent(new FewfEvent(EVENT_PREVIEW_COLOR, null));
-			});
-			swatch.x = pX;
-			swatch.y = pY;
-			
-			swatch.historyButton.addEventListener(MouseEvent.CLICK, function(){ _showHistory(pNum); });
-			swatch.lockIcon.addEventListener(MouseEvent.CLICK, function(){
-				swatch.locked ? swatch.unlock() : swatch.lock();
-				_updateLockHistoryFromCurrentState();
-			});
-			if(pLocked) {
-				swatch.lock();
-			}
-			
+			var swatch:ColorSwatch = new ColorSwatch().setXY(pX, pY)
+				.on(ColorSwatch.USER_MODIFIED_TEXT, function(){ _selectSwatch(pNum); changeColor(swatch.color, true); })
+				.on(ColorSwatch.ENTER_PRESSED, function(){ _selectSwatch(pNum); _addRecentColor(); })
+				.on(ColorSwatch.BUTTON_CLICK, function(){
+					// Add here since we just changed what swatch we're on and current one is thus "finalized"
+					_addRecentColor();
+					// don't track a change just from clicking a swatch, but do still set cursor/add a recent if needed
+					_selectSwatch(pNum);
+				})
+				.on(ColorSwatch.SHOW_PREVIEW, function(){
+					if(!!infobar.itemData) {
+						dispatchEvent(new FewfEvent(EVENT_PREVIEW_COLOR, { type:infobar.itemData.type, id:infobar.itemData.id, colorI:pNum }));
+					}
+				})
+				.on(ColorSwatch.HIDE_PREVIEW, function(){ dispatchEvent(new FewfEvent(EVENT_PREVIEW_COLOR, null)); })
+				.on(ColorSwatch.HISTORY_CLICKED, function(e){ _showHistory(pNum); })
+				.on(ColorSwatch.LOCK_TOGGLED, function(e:FewfEvent){ _updateLockHistoryFromCurrentState(); });
+			if(pLocked) { swatch.lock(); }
 			return swatch;
 		}
 		

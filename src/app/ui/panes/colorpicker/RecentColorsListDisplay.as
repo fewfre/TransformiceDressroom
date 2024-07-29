@@ -1,4 +1,4 @@
-package app.ui
+package app.ui.panes.colorpicker
 {
 	import com.piterwilson.utils.*;
 	import com.fewfre.display.*;
@@ -26,7 +26,7 @@ package app.ui
 		public function get isDeleteModeOn():Boolean { return _deleteToggleButton.pushed; }
 		
 		// Constructor
-		public function RecentColorsListDisplay(pData:Object)
+		public function RecentColorsListDisplay()
 		{
 			super();
 			this.visible = false; // turned on in render()
@@ -35,28 +35,24 @@ package app.ui
 				RECENTS = ParentApp.sharedData.recentColors || [];
 				ParentApp.sharedData.recentColors = RECENTS;
 			}
-			this.x = pData.x;
-			this.y = pData.y;
 			
 			_recentColorButtons = new Vector.<ColorButton>();
 			
 			var deleteWidth:Number = 50;
 			var bgWidth:Number = ConstantsApp.PANE_WIDTH - 20 - deleteWidth, bgHeight = 24;
 			
-			_deleteToggleButton = new DeleteButton({ x:bgWidth*0.5-25-2, width:deleteWidth, height:bgHeight, obj:new $Trash(), obj_scale:0.85 });;
+			_deleteToggleButton = new DeleteButton({ x:bgWidth*0.5-25-2, width:deleteWidth, height:bgHeight, obj:new $Trash(), obj_scale:0.85 }).appendTo(this) as DeleteButton;
 			_deleteToggleButton.y += -_deleteToggleButton.Height * 0.5;
-			_deleteToggleButton.addEventListener(PushButton.TOGGLE, function():void{ render(); });
-			addChild(_deleteToggleButton);
+			_deleteToggleButton.on(PushButton.TOGGLE, function():void{ render(); });
 			
 			// Add BG
-			_bg = new RoundedRectangle(bgWidth, bgHeight, { x:-deleteWidth*0.5+2, origin:0.5 });
-			addChild(_bg);
-			
-			_verticalRule = new Shape();
-			_verticalRule.x = _bg.Width*0.5 - 2.5;
-			_verticalRule.y = -_bg.Height*0.5 + 2.5;
-			_bg.addChild(_verticalRule);
+			_bg = new RoundedRectangle(bgWidth, bgHeight, { x:-deleteWidth*0.5+2, origin:0.5 }).appendTo(this);
+			_verticalRule = DisplayWrapper.wrap(new Shape(), _bg).move(_bg.Width*0.5 - 2.5, -_bg.Height*0.5 + 2.5).asShape;
 		}
+		public function setXY(pX:Number, pY:Number) : RecentColorsListDisplay { x = pX; y = pY; return this; }
+		public function appendTo(pParent:Sprite): RecentColorsListDisplay { pParent.addChild(this); return this; }
+		public function on(type:String, listener:Function): RecentColorsListDisplay { this.addEventListener(type, listener); return this; }
+		public function off(type:String, listener:Function): RecentColorsListDisplay { this.removeEventListener(type, listener); return this; }
 		
 		/****************************
 		* Public
@@ -86,28 +82,24 @@ package app.ui
 			_verticalRule.graphics.lineTo(0, _bg.Height-5);
 			
 			// Render new buttons
-			var maxColors = 12;
-			var len = Math.min(RECENTS.length, maxColors);
+			var maxColors:int = 12, len = Math.min(RECENTS.length, maxColors);
 			var tTrayWidth = _bg.Width - 5, tSpacingX = 2.5, tBtnWidth = (tTrayWidth-(tSpacingX*maxColors)-tSpacingX*2)/maxColors,
-			tX = _bg.x-_bg.Width/2 + tBtnWidth*0.5 + tSpacingX*2;
+			xx = _bg.x-_bg.Width/2 + tBtnWidth*0.5 + tSpacingX*2;
 			for(var i:int = 0; i < len; i++) {
-				var color:int = RECENTS[i];
-				
-				var btn = new ColorButton({ x:tX + (i*(tBtnWidth+tSpacingX)), width:tBtnWidth, height:17, color:color });
-				if(isDeleteModeOn) {
-					(function(btn){
-						var nou:MovieClip = new $No();
-						nou.scaleX = nou.scaleY = 0.2;
-						nou.alpha = 0;
-						btn.addChild(nou);
-						btn.addEventListener(ButtonBase.OVER, function(){ nou.alpha = 0.5 });
-						btn.addEventListener(ButtonBase.OUT, function(){ nou.alpha = 0 });
-					})(btn);
-				}
-				btn.addEventListener(ButtonBase.CLICK, _onRecentColorBtnClicked);
-				addChild(btn);
+				var btn:ColorButton = _createColorButton(RECENTS[i], tBtnWidth).setXY(xx + (i*(tBtnWidth+tSpacingX)), 0).appendTo(this)
+					.on(ButtonBase.CLICK, _onRecentColorBtnClicked) as ColorButton;
 				_recentColorButtons.push(btn);
 			}
+		}
+		
+		private function _createColorButton(pColor:int, pWidth:Number) : ColorButton {
+			var btn:ColorButton = new ColorButton({ width:pWidth, height:17, color:pColor });
+			if(isDeleteModeOn) {
+				var nou:Sprite = DisplayWrapper.wrap(new $No(), btn).scale(0.2).alpha(0).asSprite;
+				btn.addEventListener(ButtonBase.OVER, function(){ nou.alpha = 0.5 });
+				btn.addEventListener(ButtonBase.OUT, function(){ nou.alpha = 0 });
+			}
+			return btn;
 		}
 		
 		public function toggleOffDeleteMode() : void {

@@ -96,6 +96,10 @@ package com.piterwilson.utils
 			bwGraphics.drawRect(0, 0, this._width, this._height);
 			this.redrawBigGradient();
 		}
+		public function setXY(pX:Number, pY:Number) : ColorPicker { x = pX; y = pY; return this; }
+		public function appendTo(pParent:Sprite): ColorPicker { pParent.addChild(this); return this; }
+		public function on(type:String, listener:Function): ColorPicker { this.addEventListener(type, listener); return this; }
+		public function off(type:String, listener:Function): ColorPicker { this.removeEventListener(type, listener); return this; }
 
 		internal function colorGradSpriteMouseDown(arg1:MouseEvent):void {
 			this.mouseDownInsideColorGrad = true;

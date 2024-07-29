@@ -386,7 +386,7 @@ pOnInitComplete
 		* Misc
 		*****************************/
 		public static function createHorizontalRule(pX:Number, pY:Number, pWidth:Number) : DisplayWrapper {
-			return new DisplayWrapper(new Sprite()).move(pX, pY).draw(function(graphics:Graphics):void{
+			return new DisplayWrapper(new Shape()).move(pX, pY).draw(function(graphics:Graphics):void{
 				graphics.lineStyle(1, 0x11181c, 1, true);
 				graphics.moveTo(0, 0);
 				graphics.lineTo(pWidth, 0);
@@ -398,7 +398,7 @@ pOnInitComplete
 		}
 		
 		public static function createScreenBackdrop(pSize:Number=10000) : DisplayWrapper {
-			return new DisplayWrapper(new Sprite()).move(-pSize/2, -pSize/2).draw(function(graphics:Graphics):void{
+			return new DisplayWrapper(new Shape()).move(-pSize/2, -pSize/2).draw(function(graphics:Graphics):void{
 				graphics.beginFill(0x000000, 0.2);
 				graphics.drawRect(0, 0, pSize, pSize);
 				graphics.endFill();

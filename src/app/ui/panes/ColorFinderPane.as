@@ -17,6 +17,7 @@ package app.ui.panes
 	import flash.net.URLRequest;
 	import app.ui.panes.base.SidePaneWithInfobar;
 	import app.ui.panes.infobar.Infobar;
+	import app.ui.panes.colorpicker.RecentColorsListDisplay;
 	
 	public class ColorFinderPane extends SidePaneWithInfobar
 	{
@@ -123,8 +124,7 @@ package app.ui.panes
 			/********************
 			* Recent colors display
 			*********************/
-			_recentColorsDisplay = new RecentColorsListDisplay({ x:ConstantsApp.PANE_WIDTH/2, y:316+60+17 });
-			addChild(_recentColorsDisplay);
+			_recentColorsDisplay = new RecentColorsListDisplay().setXY(ConstantsApp.PANE_WIDTH/2, 316+60+17).appendTo(this);
 			
 			/****************************
 			* Selectable text field

@@ -11,10 +11,11 @@ package app.ui.panes.colorpicker
 		// Constants
 		public static const EVENT_COLOR_PICKED		: String = "event_color_picked";
 		
+		// Static
 		private static var HISTORY : Dictionary = new Dictionary();
 		
 		// Storage
-		private var size : Number;
+		private var size : uint;
 		
 		// Constructor
 		public function ColorHistoryOverlay(pSize:uint) {
@@ -24,44 +25,45 @@ package app.ui.panes.colorpicker
 			graphics.beginFill( 0x000000, 0.5 );
 			graphics.drawRect( -size*0.5, -size*0.5, size, size );
 		}
+		public function setXY(pX:Number, pY:Number) : ColorHistoryOverlay { x = pX; y = pY; return this; }
+		public function appendTo(pParent:Sprite): ColorHistoryOverlay { pParent.addChild(this); return this; }
+		public function on(type:String, listener:Function): ColorHistoryOverlay { this.addEventListener(type, listener); return this; }
+		public function off(type:String, listener:Function): ColorHistoryOverlay { this.removeEventListener(type, listener); return this; }
 		
 		/****************************
 		* Public
 		*****************************/
 		// Clear old history tray data
 		public function clearTray() : void {
-			while(this.numChildren){
-				this.removeChildAt(0);
-			}
+			this.removeChildren();
 		}
 		
 		public function addHistory(itemID:String, color:int) {
 			if(!HISTORY[itemID]) HISTORY[itemID] = [];
-			var itemHistory = HISTORY[itemID];
+			var itemHistory:Array = HISTORY[itemID];
 			// Remove old value if there is one, and move it to front of the list
 			if(itemHistory.indexOf(color) != -1) {
 				itemHistory.splice(itemHistory.indexOf(color), 1);
 			}
 			itemHistory.unshift(color);
 		}
-		public function getHistoryColors(itemID:String) {
+		public function getHistoryColors(itemID:String) : Array {
 			if(!HISTORY[itemID]) HISTORY[itemID] = [];
 			return HISTORY[itemID];
 		}
 		
 		public function renderHistory(itemID:String) {
-			var colors = getHistoryColors(itemID);
+			var colors:Array = getHistoryColors(itemID);
 			if(colors.length > 0) {
 				clearTray();
 				
 				var length = Math.min(colors.length, 9);
 				var btnSize = 70, spacing = 10, columns = 3,
-				tX = -(btnSize+spacing) * (columns-1)/2, tY = -(btnSize+spacing) * (columns-1)/2;
+				xx = -(btnSize+spacing) * (columns-1)/2, yy = -(btnSize+spacing) * (columns-1)/2;
 				for(var i = 0; i < length; i++) {
-					var color = colors[i];
-					var btn = new ColorButton({ color:color, x:tX+((i%columns) * (btnSize+spacing)), y:tY+(Math.floor(i/columns)*(btnSize+spacing)), size:btnSize });
-					btn.addEventListener(ButtonBase.CLICK, _onHistoryColorClicked);
-					this.addChild(btn);
+					new ColorButton({ color:colors[i], size:btnSize }).appendTo(this)
+						.setXY(xx+((i%columns) * (btnSize+spacing)), yy+(Math.floor(i/columns)*(btnSize+spacing)))
+						.on(ButtonBase.CLICK, _onHistoryColorClicked);
 				}
 			}
 		}
