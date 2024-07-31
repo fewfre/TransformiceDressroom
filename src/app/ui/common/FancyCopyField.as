@@ -10,13 +10,15 @@ package app.ui.common
 	import flash.text.TextFieldType;
 	import flash.text.TextFormat;
 	import flash.utils.setTimeout;
+	import app.data.ConstantsApp;
+	import com.fewfre.display.TextBase;
 
 	public class FancyCopyField
 	{
 		// Constants
-		private static const BG_COLOR : uint = 0x374151;//0xFFFFFF;
+		private static const BG_COLOR : uint = ConstantsApp.COLOR_BUTTON_BLUE;//0x374151;//0xFFFFFF;
 		private static const BORDER_COLOR : uint = 0x4b5563;//0x444444;
-		private static const TEXT_COLOR : uint = 0x9ca3af;//0x000000;
+		private static const TEXT_COLOR : uint = TextBase.DEFAULT_COLOR;//0x9ca3af;//0x000000;
 		
 		// Storage
 		private var _root			: Sprite;
@@ -89,6 +91,7 @@ import flash.display.Sprite;
 class CopyButton extends GameButton
 {
 	private var _icon:Sprite;
+	private var _iconDefaultAlpha:Number = 1;
 	
 	public function CopyButton(pData) {
 		super(pData);
@@ -102,11 +105,13 @@ class CopyButton extends GameButton
 	override protected function _renderOut() : void { _renderUp(); }
 	override protected function _renderUp() : void {
 		_bg.alpha = 0;
+		if(_icon) _icon.alpha = _iconDefaultAlpha;
 	}
 	
 	override protected function _renderDown() : void { _renderOver(); }
 	override protected function _renderOver() : void {
 		_bg.alpha = 1;
+		if(_icon) _icon.alpha = 1;
 	}
 	
 	override protected function _renderDisabled() : void {} // Don't have any visual change
@@ -117,14 +122,14 @@ class CopyButton extends GameButton
 	private function _newCopyIcon() : Sprite {
 		var tIcon:Sprite = new $CopyIcon();
 		tIcon.scaleX = tIcon.scaleY = 0.35;
-		tIcon.alpha = 0.5;
+		_iconDefaultAlpha = tIcon.alpha = 0.5;
 		return tIcon;
 	}
 	
 	private function _newCheckmarkIcon() : Sprite {
 		var tIcon:Sprite = new $Yes();
 		tIcon.scaleX = tIcon.scaleY = 0.5;
-		tIcon.alpha = 0.8;
+		_iconDefaultAlpha = tIcon.alpha = 0.8;
 		return tIcon;
 	}
 	
