@@ -72,10 +72,10 @@ package app.ui.panes
 				
 				// Fetch looks request submit button
 				SpriteButton.withObject(new $PlayButton(), 0.5, { width:sizex, height:sizey, origin:0.5 }).appendTo(this)
-					.setXY(xx+fieldWidth + spacingx + sizex*0.5, yy).on(MouseEvent.CLICK, _onFetchUserLooks);
+					.move(xx+fieldWidth + spacingx + sizex*0.5, yy).on(MouseEvent.CLICK, _onFetchUserLooks);
 				
 				yy += sizey*0.5 + 10;
-				userOutfitsGrid = new Grid(ConstantsApp.PANE_WIDTH - spacingx*2 - 5, 6).setXY(xx-2,yy).appendTo(this);
+				userOutfitsGrid = new Grid(ConstantsApp.PANE_WIDTH - spacingx*2 - 5, 6).move(xx-2,yy).appendTo(this);
 				
 				// Since we want this to disappear after a search anyways, coop the error text variable
 				yy += 2;

@@ -35,7 +35,7 @@ package com.fewfre.display
 			_render();
 			_addEventListeners();
 		}
-		public function setXYT(pX:Number, pY:Number) : TextTranslated { x = pX; y = pY; return this; }
+		public function moveT(pX:Number, pY:Number) : TextTranslated { x = pX; y = pY; return this; }
 		public function appendToT(target:Sprite): TextTranslated { target.addChild(this); return this; }
 
 		/****************************

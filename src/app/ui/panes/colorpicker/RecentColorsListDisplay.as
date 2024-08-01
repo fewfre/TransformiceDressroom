@@ -51,7 +51,7 @@ package app.ui.panes.colorpicker
 			_bg = new RoundRectangle(bgWidth, bgHeight).move(-deleteWidth*0.5+2, 0).toOrigin(0.5).toRadius(5).appendTo(this);
 			_verticalRule = DisplayWrapper.wrap(new Shape(), _bg.root).move(_bg.width*0.5 - 2.5, -_bg.height*0.5 + 2.5).asShape;
 		}
-		public function setXY(pX:Number, pY:Number) : RecentColorsListDisplay { x = pX; y = pY; return this; }
+		public function move(pX:Number, pY:Number) : RecentColorsListDisplay { x = pX; y = pY; return this; }
 		public function appendTo(pParent:Sprite): RecentColorsListDisplay { pParent.addChild(this); return this; }
 		public function on(type:String, listener:Function): RecentColorsListDisplay { this.addEventListener(type, listener); return this; }
 		public function off(type:String, listener:Function): RecentColorsListDisplay { this.removeEventListener(type, listener); return this; }
@@ -88,7 +88,7 @@ package app.ui.panes.colorpicker
 			var tTrayWidth = _bg.width - 5, tSpacingX = 2.5, tBtnWidth = (tTrayWidth-(tSpacingX*maxColors)-tSpacingX*2)/maxColors,
 			xx = _bg.x-_bg.width/2 + tBtnWidth*0.5 + tSpacingX*2;
 			for(var i:int = 0; i < len; i++) {
-				var btn:ColorButton = _createColorButton(RECENTS[i], tBtnWidth).setXY(xx + (i*(tBtnWidth+tSpacingX)), 0).appendTo(this)
+				var btn:ColorButton = _createColorButton(RECENTS[i], tBtnWidth).move(xx + (i*(tBtnWidth+tSpacingX)), 0).appendTo(this)
 					.onButtonClick(_onRecentColorBtnClicked) as ColorButton;
 				_recentColorButtons.push(btn);
 			}

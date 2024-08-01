@@ -100,7 +100,7 @@ package app.world
 			_giantFilterIcon.visible = false;
 			
 			this.character = new Character(new <ItemData>[ GameAssets.defaultSkin, GameAssets.defaultPose ], parms)
-				.setXY(180, 275).setDragBounds(0+4, 73+4, 375-8, Fewf.stage.stageHeight-73-8).appendTo(this);
+				.move(180, 275).setDragBounds(0+4, 73+4, 375-8, Fewf.stage.stageHeight-73-8).appendTo(this);
 			this.character.doubleClickEnabled = true;
 			this.character.addEventListener(MouseEvent.DOUBLE_CLICK, function(e:MouseEvent){ _paneManager.openPane(WORN_ITEMS_PANE_ID); })
 			this.character.addEventListener(Character.POSE_UPDATED, _onCharacterPoseUpdated);
@@ -112,14 +112,14 @@ package app.world
 				.appendTo(this).drawAsTray();
 			_paneManager = new PaneManager().appendTo(tShop.root);
 			
-			this.shopTabs = new ShopTabList(70, ConstantsApp.APP_HEIGHT).setXY(375, 10).appendTo(this);
+			this.shopTabs = new ShopTabList(70, ConstantsApp.APP_HEIGHT).move(375, 10).appendTo(this);
 			this.shopTabs.addEventListener(ShopTabList.TAB_CLICKED, _onTabClicked);
 			_populateShopTabs();
 
 			/////////////////////////////
 			// Top Area
 			/////////////////////////////
-			_toolbox = new Toolbox(character, _onShareCodeEntered).setXY(188, 28).appendTo(this)
+			_toolbox = new Toolbox(character, _onShareCodeEntered).move(188, 28).appendTo(this)
 				.on(Toolbox.SAVE_CLICKED, _onSaveClicked)
 				.on(Toolbox.SHARE_CLICKED, _onShareButtonClicked)
 				.on(Toolbox.CLIPBOARD_CLICKED, _onClipboardButtonClicked).on(Toolbox.IMGUR_CLICKED, _onImgurButtonClicked)
@@ -132,17 +132,17 @@ package app.world
 				.on(Toolbox.FILTER_BANNER_CLOSED, _onExitItemFilteringMode);
 			
 			// Outfit Button
-			new ScaleButton({ origin:0.5, obj:new $Outfit(), obj_scale:0.4 }).appendTo(this).setXY(_toolbox.x+167, _toolbox.y+12.5+21)
+			new ScaleButton({ origin:0.5, obj:new $Outfit(), obj_scale:0.4 }).appendTo(this).move(_toolbox.x+167, _toolbox.y+12.5+21)
 				.on(ButtonBase.CLICK, function(pEvent:Event){ _paneManager.openPane(TAB_OUTFITS); });
 				
-			var favButton:ScaleButton = ScaleButton.withObject(new $HeartFull(), 1).appendTo(this).setXY(_toolbox.x+167 + 1, _toolbox.y+12.5+21 + 23)
+			var favButton:ScaleButton = ScaleButton.withObject(new $HeartFull(), 1).appendTo(this).move(_toolbox.x+167 + 1, _toolbox.y+12.5+21 + 23)
 				.on(ButtonBase.CLICK, function(pEvent:Event){ _paneManager.openPane(FAVORITES_PANE_ID); }) as ScaleButton;
 			favButton.visible = FavoriteItemsLocalStorageManager.getAllFavorites().length > 0;
 			Fewf.dispatcher.addEventListener(ConstantsApp.FAVORITE_ADDED_OR_REMOVED, function(e:FewfEvent):void{
 				favButton.visible = FavoriteItemsLocalStorageManager.getAllFavorites().length > 0;
 			});
 			
-			_animationControls = new AnimationControls().setXY(78, pStage.stageHeight - 35/2 - 5).appendTo(this);
+			_animationControls = new AnimationControls().move(78, pStage.stageHeight - 35/2 - 5).appendTo(this);
 			_animationControls.addEventListener(Event.CLOSE, function(e):void{ _toolbox.toggleAnimationButtonOffWithEvent(); });
 			
 			/////////////////////////////
@@ -153,13 +153,13 @@ package app.world
 			
 			// About Screen Button
 			var aboutButton:SpriteButton = new SpriteButton({ size:25, origin:0.5 }).appendTo(this)
-				.setXY(tLangButton.x+(tLangButton.Width/2)+2+(25/2), pStage.stageHeight - 17)
+				.move(tLangButton.x+(tLangButton.Width/2)+2+(25/2), pStage.stageHeight - 17)
 				.on(ButtonBase.CLICK, _onAboutButtonClicked) as SpriteButton;
-			new TextBase("?", { size:22, color:0xFFFFFF, bold:true, origin:0.5 }).setXY(0, -1).appendTo(aboutButton)
+			new TextBase("?", { size:22, color:0xFFFFFF, bold:true, origin:0.5 }).move(0, -1).appendTo(aboutButton)
 			
 			if(!!(ParentApp.reopenSelectionLauncher())) {
 				new ScaleButton({ obj:new $BackArrow(), obj_scale:0.5, origin:0.5 }).appendTo(this)
-					.setXY(22, pStage.stageHeight-17-28)
+					.move(22, pStage.stageHeight-17-28)
 					.on(ButtonBase.CLICK, function():void{ ParentApp.reopenSelectionLauncher()(); });
 			}
 			
@@ -170,7 +170,7 @@ package app.world
 			_langScreen = new LangScreen().on(Event.CLOSE, _onLangScreenClosed);
 			_aboutScreen = new AboutScreen().on(Event.CLOSE, _onAboutScreenClosed);
 			
-			trashConfirmScreen = new TrashConfirmScreen().setXY(337, 65)
+			trashConfirmScreen = new TrashConfirmScreen().move(337, 65)
 				.on(TrashConfirmScreen.CONFIRM, _onTrashConfirmScreenConfirm)
 				.on(Event.CLOSE, _onTrashConfirmScreenClosed);
 

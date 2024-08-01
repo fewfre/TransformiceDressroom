@@ -37,7 +37,7 @@ package app.ui.panes
 			// Preview Button
 			xx = 5+ConstantsApp.PANE_WIDTH/2; yy += 50; sizex = ConstantsApp.PANE_WIDTH * 0.9; sizey = 35;
 			new SpriteButton({ width:sizex, height:sizey, origin:0.5, text:"filtermode_preview_btn" })
-				.setXY(xx,yy).appendTo(this).on(ButtonBase.CLICK, _onPreviewButtonClicked);
+				.move(xx,yy).appendTo(this).on(ButtonBase.CLICK, _onPreviewButtonClicked);
 			
 			// Description
 			yy = 125; xx = 5+2 + 5;

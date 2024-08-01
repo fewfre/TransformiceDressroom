@@ -55,23 +55,23 @@ package app.ui.panes.colorpicker
 			tClickOffDetector.graphics.drawRect( 0, 0, 114, 325 );
 			tClickOffDetector.addEventListener(MouseEvent.CLICK, function(e:Event){ _addRecentColor(); });
 			
-			_psColorPick = this.addItem(new ColorPicker().setXY(105, 5).on(ColorPicker.COLOR_PICKED, _onColorPickChanged)) as ColorPicker;
+			_psColorPick = this.addItem(new ColorPicker().move(105, 5).on(ColorPicker.COLOR_PICKED, _onColorPickChanged)) as ColorPicker;
 			
 			if(!pData.hide_default) {
 				this.addItem( new SpriteButton({ text:"btn_color_defaults", x:6, y:15, width:100, height:22 })
 					.on(ButtonBase.CLICK, function(){ _defaultAllColors(); }) );
 			}
 			
-			_randomizeButton = SpriteButton.withObject(new $Dice(), 0.8, { size:24 }).setXY(ConstantsApp.PANE_WIDTH - 24 - 11, 14)
+			_randomizeButton = SpriteButton.withObject(new $Dice(), 0.8, { size:24 }).move(ConstantsApp.PANE_WIDTH - 24 - 11, 14)
 				.on(ButtonBase.CLICK, function(){ _randomizeAllColors(); }) as SpriteButton;
 				this.addItem(_randomizeButton);
 			
-			_recentColorsDisplay = new RecentColorsListDisplay().setXY(ConstantsApp.PANE_WIDTH/2, 316+60+17).appendTo(this)
+			_recentColorsDisplay = new RecentColorsListDisplay().move(ConstantsApp.PANE_WIDTH/2, 316+60+17).appendTo(this)
 				.on(RecentColorsListDisplay.EVENT_COLOR_PICKED, _onRecentColorBtnClicked);
 			
 			var historySize = 270;
 			_colorHistory = new ColorHistoryOverlay(historySize)
-				.setXY(_psColorPick.x + 10 + historySize*0.5, _psColorPick.y + 40 + historySize*0.5)
+				.move(_psColorPick.x + 10 + historySize*0.5, _psColorPick.y + 40 + historySize*0.5)
 				.on(ColorHistoryOverlay.EVENT_COLOR_PICKED, _onHistoryColorClicked);
 		}
 		
@@ -155,7 +155,7 @@ package app.ui.panes.colorpicker
 		}
 		
 		private function _createColorSwatch(pNum:int, pX:int, pY:int, pLocked:Boolean=false) : ColorSwatch {
-			var swatch:ColorSwatch = new ColorSwatch().setXY(pX, pY)
+			var swatch:ColorSwatch = new ColorSwatch().move(pX, pY)
 				.on(ColorSwatch.USER_MODIFIED_TEXT, function(){ _selectSwatch(pNum); changeColor(swatch.color, true); })
 				.on(ColorSwatch.ENTER_PRESSED, function(){ _selectSwatch(pNum); _addRecentColor(); })
 				.on(ColorSwatch.BUTTON_CLICK, function(){

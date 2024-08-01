@@ -107,12 +107,12 @@ package app.ui.panes.infobar
 			
 			if(!pData.showBackButton) {
 				_colorWheel = ScaleButton.withObject(new $ColorWheel()).appendTo(this) as ScaleButton;
-				_colorWheel.setXY(_imageCont.x + _imageCont.width + _colorWheel.Image.width*0.5 + 10, 25)
+				_colorWheel.move(_imageCont.x + _imageCont.width + _colorWheel.Image.width*0.5 + 10, 25)
 					.on(ButtonBase.CLICK, dispatchEventHandler(COLOR_WHEEL_CLICKED));
 				showColorWheel(false);
 			} else {
 				_backButton = ScaleButton.withObject(new $BackArrow()).appendTo(this) as ScaleButton;
-				_backButton.setXY(_imageCont.x + _imageCont.width + _backButton.Image.width*0.5 + 10, 25)
+				_backButton.move(_imageCont.x + _imageCont.width + _backButton.Image.width*0.5 + 10, 25)
 					.on(MouseEvent.MOUSE_UP, dispatchEventHandler(BACK_CLICKED));
 				_rearrangeLeftButtonsTray();
 			}
@@ -130,13 +130,13 @@ package app.ui.panes.infobar
 			*********************/
 			if(pData.showEyeDropper) {
 				_eyeDropperButton = SpriteButton.withObject(new $EyeDropper(), 0.45, { size:BTN_SIZE })
-					.setXY(0, BTN_Y).appendTo(_leftButtonsTray) as SpriteButton;
+					.move(0, BTN_Y).appendTo(_leftButtonsTray) as SpriteButton;
 				_eyeDropperButton.on(ButtonBase.CLICK, dispatchEventHandler(EYE_DROPPER_CLICKED));
 				_eyeDropperButton.disable().alpha = 0;
 			}
 			if(pData.showFavorites) {
 				_favoriteButton = SpriteButton.withObject(new $HeartEmpty(), 1, { size:BTN_SIZE, data:{ pushed:false } });
-				_favoriteButton.setXY(pData.showEyeDropper ? BTN_SIZE+3 : 0, BTN_Y).appendTo(_leftButtonsTray)
+				_favoriteButton.move(pData.showEyeDropper ? BTN_SIZE+3 : 0, BTN_Y).appendTo(_leftButtonsTray)
 					.on(ButtonBase.CLICK, function(e):void{
 						_updateFavoriteButton(!_favoriteButton.data.pushed);
 						dispatchEvent(new FewfEvent(FAVORITE_CLICKED, { pushed:_favoriteButton.data.pushed }));
@@ -155,7 +155,7 @@ package app.ui.panes.infobar
 			*********************/
 			if(pData.gridManagement) {
 				var widgetProps:Object = pData.gridManagement is Boolean ? {} : pData.gridManagement; // If a boolean ("true") use defaults
-				_gridManagementWidget = new GridManagementWidget(widgetProps).setXY(this.Width*0.5-20+(144/2), BTN_Y).appendTo(this);
+				_gridManagementWidget = new GridManagementWidget(widgetProps).move(this.Width*0.5-20+(144/2), BTN_Y).appendTo(this);
 				_gridManagementWidget.on(GridManagementWidget.RANDOMIZE_CLICKED, function(e):void{ dispatchEvent(e); })
 				_gridManagementWidget.on(GridManagementWidget.REVERSE_CLICKED, function(e):void{ dispatchEvent(e); })
 				_gridManagementWidget.on(GridManagementWidget.LEFT_ARROW_CLICKED, function(e):void{ dispatchEvent(e); })
@@ -166,7 +166,7 @@ package app.ui.panes.infobar
 			/********************
 			* Right Side Buttons
 			*********************/
-			_downloadButton = SpriteButton.withObject(new $SimpleDownload(), 0.45, { size:BTN_SIZE }).setXY(this.Width-BTN_SIZE, BTN_Y).appendTo(this) as SpriteButton;
+			_downloadButton = SpriteButton.withObject(new $SimpleDownload(), 0.45, { size:BTN_SIZE }).move(this.Width-BTN_SIZE, BTN_Y).appendTo(this) as SpriteButton;
 			_downloadButton.on(ButtonBase.CLICK, _onDownloadClicked);
 			_downloadButton.disable().alpha = 0;
 			
@@ -177,7 +177,7 @@ package app.ui.panes.infobar
 				hideImageCont();
 			}
 		}
-		public function setXY(pX:Number, pY:Number) : Infobar { x = pX; y = pY; return this; }
+		public function move(pX:Number, pY:Number) : Infobar { x = pX; y = pY; return this; }
 		public function appendTo(pParent:Sprite): Infobar { pParent.addChild(this); return this; }
 		public function on(type:String, listener:Function): Infobar { this.addEventListener(type, listener); return this; }
 		public function off(type:String, listener:Function): Infobar { this.removeEventListener(type, listener); return this; }

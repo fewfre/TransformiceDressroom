@@ -30,20 +30,20 @@ package app.ui.screens
 			
 			// Header
 			yy = -95;
-			new TextTranslated("share_header", { size:25 }).setXY(0, yy).appendTo(this);
+			new TextTranslated("share_header", { size:25 }).move(0, yy).appendTo(this);
 
 			// TFM Syntax - Selectable text field + Copy Button and message
 			yy = -50;
-			new TextTranslated("share_tfm_syntax", { size:15 }).setXY(0, yy).appendTo(this);
+			new TextTranslated("share_tfm_syntax", { size:15 }).move(0, yy).appendTo(this);
 			_tfmCopyField = new FancyCopyField(tWidth-50).appendTo(this).centerOrigin().move(0, yy+40);
 			
 			// Fewf Syntax
 			yy = 55;
-			new TextTranslated("share_fewfre_syntax", { size:15 }).setXY(0, yy).appendTo(this);
+			new TextTranslated("share_fewfre_syntax", { size:15 }).move(0, yy).appendTo(this);
 			_fewfCopyField = new FancyCopyField(tWidth-50).appendTo(this).centerOrigin().move(0, yy+40);
 			
 			// Close Button
-			ScaleButton.withObject(new $WhiteX()).setXY(tWidth/2 - 5, -tHeight/2 + 5).appendTo(this).onButtonClick(_onCloseClicked);
+			ScaleButton.withObject(new $WhiteX()).move(tWidth/2 - 5, -tHeight/2 + 5).appendTo(this).onButtonClick(_onCloseClicked);
 		}
 		public function on(type:String, listener:Function): ShareScreen { this.addEventListener(type, listener); return this; }
 		public function off(type:String, listener:Function): ShareScreen { this.removeEventListener(type, listener); return this; }

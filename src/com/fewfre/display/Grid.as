@@ -36,7 +36,7 @@ package com.fewfre.display
 			_list = new Vector.<DisplayObject>();
 			_reversed = false;
 		}
-		public function setXY(pX:Number, pY:Number) : Grid { x = pX; y = pY; return this; }
+		public function move(pX:Number, pY:Number) : Grid { x = pX; y = pY; return this; }
 		public function appendTo(pParent:Sprite): Grid { pParent.addChild(this); return this; }
 		
 		/****************************

@@ -25,7 +25,7 @@ package app.ui.panes.colorpicker
 			graphics.beginFill( 0x000000, 0.5 );
 			graphics.drawRect( -size*0.5, -size*0.5, size, size );
 		}
-		public function setXY(pX:Number, pY:Number) : ColorHistoryOverlay { x = pX; y = pY; return this; }
+		public function move(pX:Number, pY:Number) : ColorHistoryOverlay { x = pX; y = pY; return this; }
 		public function appendTo(pParent:Sprite): ColorHistoryOverlay { pParent.addChild(this); return this; }
 		public function on(type:String, listener:Function): ColorHistoryOverlay { this.addEventListener(type, listener); return this; }
 		public function off(type:String, listener:Function): ColorHistoryOverlay { this.removeEventListener(type, listener); return this; }
@@ -62,7 +62,7 @@ package app.ui.panes.colorpicker
 				xx = -(btnSize+spacing) * (columns-1)/2, yy = -(btnSize+spacing) * (columns-1)/2;
 				for(var i = 0; i < length; i++) {
 					new ColorButton({ color:colors[i], size:btnSize }).appendTo(this)
-						.setXY(xx+((i%columns) * (btnSize+spacing)), yy+(Math.floor(i/columns)*(btnSize+spacing)))
+						.move(xx+((i%columns) * (btnSize+spacing)), yy+(Math.floor(i/columns)*(btnSize+spacing)))
 						.on(ButtonBase.CLICK, _onHistoryColorClicked);
 				}
 			}

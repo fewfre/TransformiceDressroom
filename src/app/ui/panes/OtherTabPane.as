@@ -66,7 +66,7 @@ package app.ui.panes
 			// Color buttons
 			yy += 10;
 			sizex = 80; sizey = 50;
-			ScaleButton.withObject(new $ColorWheel()).setXY(xx += spacingx + 30, yy + sizey*0.5 - 10).appendTo(this).on(ButtonBase.CLICK, function(e):void{ dispatchEvent(new Event(CUSTOM_SHAMAN_COLOR_CLICKED)); });
+			ScaleButton.withObject(new $ColorWheel()).move(xx += spacingx + 30, yy + sizey*0.5 - 10).appendTo(this).on(ButtonBase.CLICK, function(e):void{ dispatchEvent(new Event(CUSTOM_SHAMAN_COLOR_CLICKED)); });
 			
 			sizex = 26; sizey = 18;
 			// Default Blue/Pink Shaman color buttons
@@ -82,7 +82,7 @@ package app.ui.panes
 			/////////////////////////////
 			// Grid
 			yy += 15; xx = 20;
-			var grid:Grid = new Grid(385, GameAssets.extraBack.length).setXY(xx,yy).appendTo(this);
+			var grid:Grid = new Grid(385, GameAssets.extraBack.length).move(xx,yy).appendTo(this);
 			
 			_backItemButtons = new Vector.<PushButton>();
 			for each(var itemData:ItemData in GameAssets.extraBack) {
@@ -102,7 +102,7 @@ package app.ui.panes
 			}
 
 			yy = grid.y + grid.cellSize + 5;
-			grid = new Grid(385, 5).setXY(xx,yy).appendTo(this);
+			grid = new Grid(385, 5).move(xx,yy).appendTo(this);
 			
 			_frontHandButton = new PushButton({ size:grid.cellSize, obj:new GameAssets.extraObjectWand.itemClass(), obj_scale:1.5, id:i++, data:{ itemData:GameAssets.extraObjectWand } });
 			_frontHandButton.on(PushButton.TOGGLE, _onItemToggled);

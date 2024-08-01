@@ -39,11 +39,11 @@ package app.ui.panes
 			infobar.on(GridManagementWidget.RANDOMIZE_CLICKED, _onRandomizeClicked);
 			
 			// Delete all favorites logic
-			_deleteAllConfirmScreen = new TrashConfirmScreen().setXY(ConstantsApp.PANE_WIDTH - 36, 31)
+			_deleteAllConfirmScreen = new TrashConfirmScreen().move(ConstantsApp.PANE_WIDTH - 36, 31)
 				.on(Event.CLOSE, function(e):void{ removeChild(_deleteAllConfirmScreen); })
 				.on(TrashConfirmScreen.CONFIRM, _onDeleteAll);
 			// Delete button (opens confirm screen)
-			SpriteButton.withObject(new $Trash(), 'auto', { size:40 }).setXY(ConstantsApp.PANE_WIDTH - 40, 11).appendTo(this)
+			SpriteButton.withObject(new $Trash(), 'auto', { size:40 }).move(ConstantsApp.PANE_WIDTH - 40, 11).appendTo(this)
 				.on(MouseEvent.CLICK, function(e):void{ addChild(_deleteAllConfirmScreen); });
 		}
 		
@@ -86,7 +86,7 @@ package app.ui.panes
 			cell.addChild(actionTray);
 			
 			// Corresponding Delete Button
-			ScaleButton.withObject(new $Trash(), 0.4).setXY(grid.cellSize-5, 5).appendTo(actionTray)
+			ScaleButton.withObject(new $Trash(), 0.4).move(grid.cellSize-5, 5).appendTo(actionTray)
 				.on(MouseEvent.CLICK, function(e){ _deleteFavorite(itemData); });
 			
 			// Finally add to grid (do it at end so auto event handlers can be hooked up properly)

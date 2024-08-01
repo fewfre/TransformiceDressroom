@@ -81,7 +81,7 @@ package app.ui.panes.colorpicker
 			_textBorder = addChild(new Sprite()) as Sprite; _textBorder.x = _swatchBorder.x + SWATCH_SIZE+2 + 6;
 			
 			var bttnIcon:Sprite = _createInvisibleHitboxWithIcon(SWATCH_SIZE*1.65, new $UndoArrow());
-			_historyBtn = ScaleButton.withObject(bttnIcon, 0.5).setXY(100, SWATCH_SIZE*0.5+1.5).appendTo(this)
+			_historyBtn = ScaleButton.withObject(bttnIcon, 0.5).move(100, SWATCH_SIZE*0.5+1.5).appendTo(this)
 				.on(MouseEvent.CLICK, _onHistoryClicked) as ScaleButton
 			_historyBtn.visible = false;
 			
@@ -91,7 +91,7 @@ package app.ui.panes.colorpicker
 			
 			_updateBorders();
 		}
-		public function setXY(pX:Number, pY:Number) : ColorSwatch { x = pX; y = pY; return this; }
+		public function move(pX:Number, pY:Number) : ColorSwatch { x = pX; y = pY; return this; }
 		public function appendTo(pParent:Sprite): ColorSwatch { pParent.addChild(this); return this; }
 		public function on(type:String, listener:Function): ColorSwatch { this.addEventListener(type, listener); return this; }
 		public function off(type:String, listener:Function): ColorSwatch { this.removeEventListener(type, listener); return this; }

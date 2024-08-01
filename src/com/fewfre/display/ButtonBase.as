@@ -49,7 +49,7 @@ package com.fewfre.display
 			
 			_addEventListeners();
 		}
-		public function setXY(pX:Number, pY:Number) : ButtonBase { x = pX; y = pY; return this; }
+		public function move(pX:Number, pY:Number) : ButtonBase { x = pX; y = pY; return this; }
 		public function appendTo(pParent:Sprite): ButtonBase { pParent.addChild(this); return this; }
 		public function on(type:String, listener:Function, useCapture:Boolean = false): ButtonBase { this.addEventListener(type, listener, useCapture); return this; }
 		public function onButtonClick(listener:Function, useCapture:Boolean = false): ButtonBase { this.addEventListener(ButtonBase.CLICK, listener, useCapture); return this; }

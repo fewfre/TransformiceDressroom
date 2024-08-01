@@ -57,7 +57,7 @@ package app.ui.panes
 				.on(Infobar.ITEM_PREVIEW_CLICKED, function(e){ dispatchEvent(new Event(EVENT_ITEM_ICON_CLICKED)); });
 			
 			// Scrollbox used for lazy cropping of dragged around item
-			_scrollbox = new FancyScrollbox(ConstantsApp.PANE_WIDTH, 390-60).setXY(5, 5+60);
+			_scrollbox = new FancyScrollbox(ConstantsApp.PANE_WIDTH, 390-60).move(5, 5+60);
 			addChild(_scrollbox);
 			
 			_tray = addChild(new MovieClip()) as MovieClip;
@@ -111,7 +111,7 @@ package app.ui.panes
 			*********************/
 			var tSliderWidth = ConstantsApp.PANE_WIDTH * 0.4;
 			_scaleSlider = new FancySlider(tSliderWidth)
-				.setXY(-tSliderWidth*0.5, -110)
+				.moveSelf(-tSliderWidth*0.5, -110)
 				.setSliderParams(1, 5, 1)
 				.appendTo(_tray);
 			_scaleSlider.addEventListener(FancySlider.CHANGE, _onSliderChange);
@@ -124,7 +124,7 @@ package app.ui.panes
 			/********************
 			* Recent colors display
 			*********************/
-			_recentColorsDisplay = new RecentColorsListDisplay().setXY(ConstantsApp.PANE_WIDTH/2, 316+60+17).appendTo(this);
+			_recentColorsDisplay = new RecentColorsListDisplay().move(ConstantsApp.PANE_WIDTH/2, 316+60+17).appendTo(this);
 			
 			/****************************
 			* Selectable text field

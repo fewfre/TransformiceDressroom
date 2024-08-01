@@ -32,7 +32,7 @@ package app.ui.screens
 			SpriteButton.withObject(new $No(), 0.6, { x:tButtonSpacing, size:bsize, origin:0.5 }).appendTo(this)
 				.onButtonClick(_onCloseClicked);
 		}
-		public function setXY(pX:Number, pY:Number) : TrashConfirmScreen { x = pX; y = pY; return this; }
+		public function move(pX:Number, pY:Number) : TrashConfirmScreen { x = pX; y = pY; return this; }
 		public function on(type:String, listener:Function): TrashConfirmScreen { this.addEventListener(type, listener); return this; }
 		public function off(type:String, listener:Function): TrashConfirmScreen { this.removeEventListener(type, listener); return this; }
 		

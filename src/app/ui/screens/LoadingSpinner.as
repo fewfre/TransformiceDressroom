@@ -18,7 +18,7 @@ package app.ui.screens
 			
 			addEventListener(Event.ENTER_FRAME, update);
 		}
-		public function setXY(pX:Number, pY:Number) : LoadingSpinner { x = pX; y = pY; return this; }
+		public function move(pX:Number, pY:Number) : LoadingSpinner { x = pX; y = pY; return this; }
 		public function appendTo(pParent:Sprite): LoadingSpinner { pParent.addChild(this); return this; }
 		
 		public function destroy():void {

@@ -80,22 +80,22 @@ package app.ui
 			var bsize = 28, bspace=5, tButtonXInc=bsize+bspace;
 			var xx = _dragHandle.width + bsize/2 + 3, yy = 0.5, tButtonsOnLeft = 0, tButtonOnRight = 0;
 			
-			_animateButton = new SpriteButton({ size:bsize, obj_scale:0.5, obj:new Sprite(), origin:0.5 }).setXY(xx,yy).appendTo(this) as SpriteButton;
+			_animateButton = new SpriteButton({ size:bsize, obj_scale:0.5, obj:new Sprite(), origin:0.5 }).move(xx,yy).appendTo(this) as SpriteButton;
 			_animateButton.onButtonClick(_onAnimationButtonToggled);
 			tButtonsOnLeft++;
 			
 			xx += tButtonXInc;
-			_loopButton = new SpriteButton({ size:bsize, obj_scale:0.5, obj:new Sprite(), origin:0.5 }).setXY(xx,yy).appendTo(this) as SpriteButton;
+			_loopButton = new SpriteButton({ size:bsize, obj_scale:0.5, obj:new Sprite(), origin:0.5 }).move(xx,yy).appendTo(this) as SpriteButton;
 			_loopButton.onButtonClick(_onLoopButtonToggled);
 			tButtonsOnLeft++;
 			
 			xx += tButtonXInc;
 			var msize = bsize/2-1;
 			_speedButtons = new <PushButton>[
-				new PushButton({ text:'loading_progress', width:msize, height:msize, origin:0.5, data:{ speed:0.25 }, allowToggleOff:false }).setXY(xx - msize/2-1, yy - msize/2-1).on(PushButton.TOGGLE, _onSpeedButtonClicked).appendTo(this) as PushButton,
-				new PushButton({ text:'loading_progress', width:msize, height:msize, origin:0.5, data:{ speed:0.50 }, allowToggleOff:false }).setXY(xx + msize/2+1, yy - msize/2-1).on(PushButton.TOGGLE, _onSpeedButtonClicked).appendTo(this) as PushButton,
-				new PushButton({ text:'loading_progress', width:msize, height:msize, origin:0.5, data:{ speed:1.00 }, allowToggleOff:false }).setXY(xx - msize/2-1, yy + msize/2+1).on(PushButton.TOGGLE, _onSpeedButtonClicked).appendTo(this) as PushButton,
-				new PushButton({ text:'loading_progress', width:msize, height:msize, origin:0.5, data:{ speed:2.00 }, allowToggleOff:false }).setXY(xx + msize/2+1, yy + msize/2+1).on(PushButton.TOGGLE, _onSpeedButtonClicked).appendTo(this) as PushButton,
+				new PushButton({ text:'loading_progress', width:msize, height:msize, origin:0.5, data:{ speed:0.25 }, allowToggleOff:false }).move(xx - msize/2-1, yy - msize/2-1).on(PushButton.TOGGLE, _onSpeedButtonClicked).appendTo(this) as PushButton,
+				new PushButton({ text:'loading_progress', width:msize, height:msize, origin:0.5, data:{ speed:0.50 }, allowToggleOff:false }).move(xx + msize/2+1, yy - msize/2-1).on(PushButton.TOGGLE, _onSpeedButtonClicked).appendTo(this) as PushButton,
+				new PushButton({ text:'loading_progress', width:msize, height:msize, origin:0.5, data:{ speed:1.00 }, allowToggleOff:false }).move(xx - msize/2-1, yy + msize/2+1).on(PushButton.TOGGLE, _onSpeedButtonClicked).appendTo(this) as PushButton,
+				new PushButton({ text:'loading_progress', width:msize, height:msize, origin:0.5, data:{ speed:2.00 }, allowToggleOff:false }).move(xx + msize/2+1, yy + msize/2+1).on(PushButton.TOGGLE, _onSpeedButtonClicked).appendTo(this) as PushButton,
 			];
 			_speedButtons[0].Text.setUntranslatedText('¼');
 			_speedButtons[1].Text.setUntranslatedText('½');
@@ -115,7 +115,7 @@ package app.ui
 			_nextFrameButton = new SpriteButton({ x:xx-tButtonXInc*tButtonsOnLeft, y:yy, width:bsize, height:bsize, obj_scale:0.5, obj:new Sprite(), origin:0.5 }).appendTo(this) as SpriteButton;
 			_nextFrameButton.onButtonClick(_onNextFrameClicked);
 			tButtonOnRight++;
-			_framesText = new TextBase('', { size:8 }).setXY(_nextFrameButton.x, _nextFrameButton.y).appendTo(this);
+			_framesText = new TextBase('', { size:8 }).move(_nextFrameButton.x, _nextFrameButton.y).appendTo(this);
 			_framesText.mouseEnabled = false;
 			_framesText.mouseChildren = false;
 			
@@ -126,7 +126,7 @@ package app.ui
 			/////////////////////
 			var tTotalButtons:Number = tButtonsOnLeft+tButtonOnRight;
 			var tSliderWidth:Number = sliderRight - sliderLeft;
-			_timelineSlider = new FancySlider(tSliderWidth).setXY(sliderLeft, 0)
+			_timelineSlider = new FancySlider(tSliderWidth).moveSelf(sliderLeft, 0)
 				.setSliderParams(1, 1, 1)
 				.appendTo(this);
 			_timelineSlider.addEventListener(FancySlider.CHANGE, _onTimelineSliderChanged);
@@ -134,12 +134,12 @@ package app.ui
 			/////////////////////
 			// Misc
 			/////////////////////
-			ScaleButton.withObject(new $WhiteX(), 0.25).setXY(_bg.width, -_bg.height/2).appendTo(this)
+			ScaleButton.withObject(new $WhiteX(), 0.25).move(_bg.width, -_bg.height/2).appendTo(this)
 				.onButtonClick(function(e){ dispatchEvent(new Event(Event.CLOSE)); });
 			
 			_updateUIBasedOnState();
 		}
-		public function setXY(pX:Number, pY:Number) : AnimationControls { x = pX; y = pY; return this; }
+		public function move(pX:Number, pY:Number) : AnimationControls { x = pX; y = pY; return this; }
 		public function appendTo(pParent:Sprite): AnimationControls { pParent.addChild(this); return this; }
 
 		/****************************

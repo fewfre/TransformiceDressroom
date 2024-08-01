@@ -40,7 +40,7 @@ package app.ui.common
 			this.addEventListener(SliderEvent.CHANGE, _onChanged);
 			this.addEventListener(SliderEvent.THUMB_DRAG, _onChanged);
 		}
-		public function setXY(pX:Number, pY:Number) : FancySlider { x = pX; y = pY; return this; }
+		public function moveSelf(pX:Number, pY:Number) : FancySlider { x = pX; y = pY; return this; }
 		public function appendTo(pParent:Sprite): FancySlider { pParent.addChild(this); return this; }
 		
 		public function updateViaMouseWheelDelta(pDelta) : void {

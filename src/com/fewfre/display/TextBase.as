@@ -77,7 +77,7 @@ package com.fewfre.display
 			_field = addChild(new TextField()) as TextField;
 			_render();
 		}
-		public function setXY(pX:Number, pY:Number) : TextBase { x = pX; y = pY; return this; }
+		public function move(pX:Number, pY:Number) : TextBase { x = pX; y = pY; return this; }
 		public function appendTo(pParent:Sprite): TextBase { pParent.addChild(this); return this; }
 
 		/****************************

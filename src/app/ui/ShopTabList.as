@@ -21,7 +21,7 @@ package app.ui
 			
 			tabs = new Vector.<PushButton>();
 		}
-		public function setXY(pX:Number, pY:Number) : ShopTabList { x = pX; y = pY; return this; }
+		public function move(pX:Number, pY:Number) : ShopTabList { x = pX; y = pY; return this; }
 		public function appendTo(pParent:Sprite): ShopTabList { pParent.addChild(this); return this; }
 		
 		// Array<{ text:String, event:String }

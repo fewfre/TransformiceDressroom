@@ -60,7 +60,7 @@ package app.ui.panes
 			_infobar.on(Infobar.FAVORITE_CLICKED, _addRemoveFavoriteToggled);
 			_setupGrid(GameAssets.getItemDataListByType(_type));
 			
-			_favoritesGrid = new Grid(ConstantsApp.PANE_WIDTH, 10, 3).setXY(7, 60+5).appendTo(this);
+			_favoritesGrid = new Grid(ConstantsApp.PANE_WIDTH, 10, 3).move(7, 60+5).appendTo(this);
 			_renderFavorites();
 			Fewf.dispatcher.addEventListener(ConstantsApp.FAVORITE_ADDED_OR_REMOVED, function(e:FewfEvent):void{
 				if(e.data.itemType == _type) _renderFavorites();
@@ -155,7 +155,7 @@ package app.ui.panes
 		private function _addDefaultSkinColorButtonIfNeeded(itemData:ItemData, cell:Sprite, parentButton:PushButton) : void {
 			if(!GameAssets.defaultSkin.matches(itemData)) { return; }
 			// Customizeable fur color button
-			new ScaleButton({ obj:new $ColorWheel(), obj_scale:0.5 }).setXY(60, 12).appendTo(cell)
+			new ScaleButton({ obj:new $ColorWheel(), obj_scale:0.5 }).move(60, 12).appendTo(cell)
 				.on(ButtonBase.CLICK, function():void{
 					parentButton.toggleOn();
 					dispatchEvent(new Event(DEFAULT_SKIN_COLOR_BTN_CLICKED));
@@ -215,7 +215,7 @@ package app.ui.panes
 			// Update rest of UI to make room for it
 			_scrollbox.y = 65 + _favoritesGrid.calculatedHeight+5; // shift it down an extra 5 so that main grid list isn't touching it (padding)
 			_grid.y = favIds.length > 0 ? 0 : 3; // If fav grid exists, then shift grid up to avoid an extra gap between fav list and grid
-			_scrollbox.setSize(_scrollbox.scrollPane.width, defaultScrollboxHeight - (_favoritesGrid.calculatedHeight+3))
+			_scrollbox.resize(_scrollbox.scrollPane.width, defaultScrollboxHeight - (_favoritesGrid.calculatedHeight+3))
 		}
 		
 		private function _favoriteClicked(e:FewfEvent) : void {

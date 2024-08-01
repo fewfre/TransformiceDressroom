@@ -38,7 +38,7 @@ package app.world.elements
 			_pose = addChild( new pPoseData.itemClass() ) as MovieClip;
 			stop();
 		}
-		public function setXY(pX:Number, pY:Number) : Pose { x = pX; y = pY; return this; }
+		public function move(pX:Number, pY:Number) : Pose { x = pX; y = pY; return this; }
 		public function appendTo(pParent:Sprite): Pose { pParent.addChild(this); return this; }
 		
 		override public function play() : void {

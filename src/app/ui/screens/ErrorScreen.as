@@ -42,7 +42,7 @@ package app.ui.screens
 			/****************************
 			* Close Button
 			*****************************/
-			ScaleButton.withObject(new $WhiteX()).setXY(tWidth/2 - 5, -tHeight/2 + 5).appendTo(this).onButtonClick(_onCloseClicked);
+			ScaleButton.withObject(new $WhiteX()).move(tWidth/2 - 5, -tHeight/2 + 5).appendTo(this).onButtonClick(_onCloseClicked);
 		}
 		
 		public function open(errorText:String) : void {

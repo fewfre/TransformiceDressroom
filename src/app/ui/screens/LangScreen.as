@@ -46,7 +46,7 @@ package app.ui.screens
 			tFlagTray.y -= 55*(tRows-1)*0.5;
 			
 			// Close Button
-			ScaleButton.withObject(new $WhiteX()).setXY(tWidth/2 - 5, -tHeight/2 + 5).appendTo(this).onButtonClick(_onCloseClicked);
+			ScaleButton.withObject(new $WhiteX()).move(tWidth/2 - 5, -tHeight/2 + 5).appendTo(this).onButtonClick(_onCloseClicked);
 		}
 		public function on(type:String, listener:Function): LangScreen { this.addEventListener(type, listener); return this; }
 		public function off(type:String, listener:Function): LangScreen { this.removeEventListener(type, listener); return this; }

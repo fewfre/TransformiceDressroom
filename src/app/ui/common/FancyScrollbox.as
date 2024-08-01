@@ -29,8 +29,8 @@ package app.ui.common
 			_scrollPane.source = _content;
 			super.addChild(_scrollPane);
 		}
-		public function setXY(pX:Number, pY:Number) : FancyScrollbox { x = pX; y = pY; return this; }
-		public function setSize(pWidth:Number, pHeight:Number) : FancyScrollbox { _scrollPane.setSize(pWidth, pHeight); return this; }
+		public function move(pX:Number, pY:Number) : FancyScrollbox { x = pX; y = pY; return this; }
+		public function resize(pWidth:Number, pHeight:Number) : FancyScrollbox { _scrollPane.setSize(pWidth, pHeight); return this; }
 		
 		private function _newScrollPane(pWidth:Number, pHeight:Number) : ScrollPane {
 			var pane:ScrollPaneWithDragFix = new ScrollPaneWithDragFix();

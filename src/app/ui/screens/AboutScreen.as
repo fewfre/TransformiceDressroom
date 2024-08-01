@@ -41,9 +41,9 @@ package app.ui.screens
 			// Version Info / Acknowledgements
 			///////////////////////
 			xx = -tWidth*0.5 + 15; yy = -tHeight*0.5 + 20;
-			new TextTranslated("version", { originX:0, values:ConstantsApp.VERSION }).setXY(xx, yy).appendTo(this);
+			new TextTranslated("version", { originX:0, values:ConstantsApp.VERSION }).move(xx, yy).appendTo(this);
 			yy += 20;
-			_translatedByText = new TextTranslated("translated_by", { size:10, originX:0 }).setXYT(xx, yy).appendToT(this)
+			_translatedByText = new TextTranslated("translated_by", { size:10, originX:0 }).moveT(xx, yy).appendToT(this)
 			_updateTranslatedByText();
 			Fewf.dispatcher.addEventListener(I18n.FILE_UPDATED, _onFileUpdated);
 
@@ -54,18 +54,18 @@ package app.ui.screens
 			
 			// Github / Changelog Button
 			SpriteButton.withObject(new $GitHubIcon(), 1, { size:bsize, origin:0.5 }).appendTo(this)
-				.setXY(tWidth*0.5 - bsize/2 - 15, tHeight*0.5 - bsize/2 - 15)
+				.move(tWidth*0.5 - bsize/2 - 15, tHeight*0.5 - bsize/2 - 15)
 				.onButtonClick(_onSourceClicked);
 				
 			// Discord Button
 			SpriteButton.withObject(new $DiscordLogo(), 1, { size:bsize, origin:0.5 }).appendTo(this)
-				.setXY(-tWidth*0.5 + bsize/2 + 15, tHeight*0.5 - bsize/2 - 15)
+				.move(-tWidth*0.5 + bsize/2 + 15, tHeight*0.5 - bsize/2 - 15)
 				.onButtonClick(_onDiscordClicked);
 		
 			///////////////////////
 			// Close Button
 			///////////////////////
-			ScaleButton.withObject(new $WhiteX()).setXY(tWidth/2 - 5, -tHeight/2 + 5).appendTo(this).onButtonClick(_onCloseClicked);
+			ScaleButton.withObject(new $WhiteX()).move(tWidth/2 - 5, -tHeight/2 + 5).appendTo(this).onButtonClick(_onCloseClicked);
 		}
 		public function on(type:String, listener:Function): AboutScreen { this.addEventListener(type, listener); return this; }
 		public function off(type:String, listener:Function): AboutScreen { this.removeEventListener(type, listener); return this; }

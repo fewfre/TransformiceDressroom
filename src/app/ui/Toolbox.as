@@ -72,19 +72,19 @@ package app.ui
 			tX = -tTrayWidth*0.5 + tButtonSize*0.5 + tButtonSizeSpace;
 			
 			new SpriteButton({ size:tButtonSize, obj_scale:0.45, obj:new $Link(), origin:0.5 }).appendTo(tTray)
-				.setXY(tX+tButtonXInc*tButtonsOnLeft, yy)
+				.move(tX+tButtonXInc*tButtonsOnLeft, yy)
 				.on(ButtonBase.CLICK, dispatchEventHandler(SHARE_CLICKED));
 			tButtonsOnLeft++;
 			
 			if(!Fewf.isExternallyLoaded) {
 				_imgurButton = new SpriteButton({ size:tButtonSize, obj_scale:0.45, obj:new $ImgurIcon(), origin:0.5 })
-					.setXY(tX+tButtonXInc*tButtonsOnLeft, yy)
+					.move(tX+tButtonXInc*tButtonsOnLeft, yy)
 					.on(ButtonBase.CLICK, dispatchEventHandler(IMGUR_CLICKED))
 					.appendTo(tTray) as SpriteButton;
 				tButtonsOnLeft++;
 			} else {
 				_clipboardButton = new SpriteButton({ size:tButtonSize, obj_scale:0.415, obj:new $CopyIcon(), origin:0.5 })
-					.setXY(tX+tButtonXInc*tButtonsOnLeft, yy)
+					.move(tX+tButtonXInc*tButtonsOnLeft, yy)
 					.on(ButtonBase.CLICK, dispatchEventHandler(CLIPBOARD_CLICKED))
 					.appendTo(tTray) as SpriteButton;
 				tButtonsOnLeft++;
@@ -94,18 +94,18 @@ package app.ui
 			tX = tTrayWidth*0.5-(tButtonSize*0.5 + tButtonSizeSpace);
 
 			new SpriteButton({ size:tButtonSize, obj_scale:0.42, obj:new $Trash(), origin:0.5 }).appendTo(tTray)
-				.setXY(tX-tButtonXInc*tButtonOnRight, yy)
+				.move(tX-tButtonXInc*tButtonOnRight, yy)
 				.on(ButtonBase.CLICK, dispatchEventHandler(TRASH_CLICKED));
 			tButtonOnRight++;
 
 			// Dice icon based on https://www.iconexperience.com/i_collection/icons/?icon=dice
 			new SpriteButton({ size:tButtonSize, obj_scale:1, obj:new $Dice(), origin:0.5 }).appendTo(tTray)
-				.setXY(tX-tButtonXInc*tButtonOnRight, yy)
+				.move(tX-tButtonXInc*tButtonOnRight, yy)
 				.on(ButtonBase.CLICK, dispatchEventHandler(RANDOM_CLICKED));
 			tButtonOnRight++;
 			
 			_animateButton = new PushButton({ size:tButtonSize, obj_scale:0.65, obj:new $PlayButton(), origin:0.5 })
-				.setXY(tX-tButtonXInc*tButtonOnRight, yy)
+				.move(tX-tButtonXInc*tButtonOnRight, yy)
 				.on(PushButton.TOGGLE, dispatchEventHandler(ANIMATION_TOGGLED))
 				.on(PushButton.TOGGLE, function(e):void{
 					var icon:Sprite = !_animateButton.pushed ? new $PlayButton() : newStopIcon();
@@ -120,7 +120,7 @@ package app.ui
 			var tTotalButtons:Number = tButtonsOnLeft+tButtonOnRight;
 			var tSliderWidth:Number = tTrayWidth - tButtonXInc*(tTotalButtons) - 20;
 			tX = -tSliderWidth*0.5+(tButtonXInc*((tButtonsOnLeft-tButtonOnRight)*0.5))-1;
-			scaleSlider = new FancySlider(tSliderWidth).setXY(tX, yy)
+			scaleSlider = new FancySlider(tSliderWidth).moveSelf(tX, yy)
 				.setSliderParams(1, 8, pCharacter.outfit.scaleX)
 				.appendTo(tTray);
 			scaleSlider.addEventListener(FancySlider.CHANGE, dispatchEventHandler(SCALE_SLIDER_CHANGE));
@@ -139,7 +139,7 @@ package app.ui
 			_itemFilterBanner = _newItemFilterBanner(-112, 33);
 			_itemFilterBanner.addEventListener(Event.CLOSE, dispatchEventHandler(FILTER_BANNER_CLOSED));
 		}
-		public function setXY(pX:Number, pY:Number) : Toolbox { x = pX; y = pY; return this; }
+		public function move(pX:Number, pY:Number) : Toolbox { x = pX; y = pY; return this; }
 		public function appendTo(pParent:Sprite): Toolbox { pParent.addChild(this); return this; }
 		public function on(type:String, listener:Function): Toolbox { this.addEventListener(type, listener); return this; }
 		public function off(type:String, listener:Function): Toolbox { this.removeEventListener(type, listener); return this; }
@@ -150,7 +150,7 @@ package app.ui
 			var hh:Number = 28-2/*minus 2 because of extra border*/;
 			new RoundRectangle(260, hh).toOrigin(0, 0.5).toRadius(4).drawSolid(0xDDDDFF, 0x0000FF, 2).appendTo(tray);
 			new TextTranslated("share_filter_banner", { x:10, originX:0, originY:0.5, color:0x111111 }).appendToT(tray);
-			ScaleButton.withObject(new $No(), 0.5).setXY(245, 0).appendTo(tray)
+			ScaleButton.withObject(new $No(), 0.5).move(245, 0).appendTo(tray)
 				.on(ButtonBase.CLICK, function(e):void{ tray.dispatchEvent(new Event(Event.CLOSE)); });
 				
 			return tray;
