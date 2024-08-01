@@ -1,24 +1,28 @@
 package app.ui
 {
-	import com.fewfre.display.*;
-	import com.fewfre.events.*;
-	import com.fewfre.utils.*;
-	import app.ui.*;
-	import app.ui.buttons.*;
-	import flash.display.*;
-	import flash.text.TextTranslated;
-	import flash.events.MouseEvent;
-	import app.ui.common.RoundedRectangle;
-	import flash.events.Event;
+	import app.ui.buttons.PushButton;
+	import app.ui.buttons.ScaleButton;
+	import app.ui.buttons.SpriteButton;
 	import app.ui.common.FancySlider;
+	import com.fewfre.display.RoundRectangle;
+	import com.fewfre.display.TextBase;
+	import com.fewfre.events.FewfEvent;
+	import com.fewfre.utils.Fewf;
+	import fl.controls.Button;
+	import flash.display.MovieClip;
+	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.text.TextTranslated;
 	import flash.ui.Mouse;
 	import flash.ui.MouseCursor;
-	import fl.controls.Button;
+	import com.fewfre.display.DisplayWrapper;
+	import flash.display.Graphics;
 	
 	public class AnimationControls extends Sprite
 	{
 		// Storage
-		private var _bg : RoundedRectangle;
+		private var _bg : RoundRectangle;
 		private var _dragHandle : Sprite;
 		
 		public var _animateButton : SpriteButton;
@@ -41,7 +45,7 @@ package app.ui
 		public function AnimationControls() {
 			super();
 			if(ORIGINAL_FRAMERATE == -1) ORIGINAL_FRAMERATE = Fewf.stage.frameRate;
-			_bg = new RoundedRectangle(220, 35, { originY:0.5 }).draw(0x444444, 3, 0x222222).appendTo(this);
+			_bg = new RoundRectangle(220, 35, { originY:0.5 }).toRadius(5).drawSolid(0x444444, 0x222222, 2).appendTo(this);
 			
 			_animating = false;
 			_looping = true;
@@ -52,37 +56,37 @@ package app.ui
 			/////////////////////
 			// Drag Handle
 			/////////////////////
-			_dragHandle = new Sprite();
-			_dragHandle.graphics.beginFill(0, 0.35);
-			_dragHandle.graphics.drawRect(-7, -_bg.Height/2, 14, _bg.Height-2);
-			_dragHandle.graphics.endFill();
-			_dragHandle.graphics.beginFill(0xFFFFFF);
-			_dragHandle.graphics.drawCircle(0, 0, 2);
-			_dragHandle.graphics.drawCircle(0, -10, 2);
-			_dragHandle.graphics.drawCircle(0, 10, 2);
-			_dragHandle.graphics.endFill();
-			addChild(_dragHandle);
-			_dragHandle.x = 7 + 1.5;
-			_dragHandle.y = -0.5;
+			var tHandleHeight:Number = _bg.height-2, tHandleWidth:Number=14;
+			_dragHandle = DisplayWrapper.wrap(new Sprite(), this).draw(function(graphics:Graphics):void{
+				graphics.beginFill(0x000000, 0.35);
+				graphics.drawRect(0, -tHandleHeight/2, tHandleWidth, tHandleHeight);
+				graphics.endFill();
+				graphics.beginFill(0xFFFFFF);
+				graphics.drawCircle(tHandleWidth/2, -10, 2); // Top circle
+				graphics.drawCircle(tHandleWidth/2, 0, 2); // Middle circle
+				graphics.drawCircle(tHandleWidth/2, 10, 2); // Bottom circle
+				graphics.endFill();
+			}).move(1, 0)
+			.on(MouseEvent.MOUSE_DOWN, _onDragStart)
+			.on(MouseEvent.MOUSE_OVER, function(e):void{ Mouse.cursor = MouseCursor.HAND; })
+			.on(MouseEvent.MOUSE_OUT, function(e):void{ Mouse.cursor = MouseCursor.AUTO; })
+			.asSprite;
 			_dragHandle.buttonMode = true;
 			_dragHandle.useHandCursor = true;
-			_dragHandle.addEventListener(MouseEvent.MOUSE_DOWN, _onDragStart);
-			_dragHandle.addEventListener(MouseEvent.MOUSE_OVER, function(e):void{ Mouse.cursor = MouseCursor.HAND; });
-			_dragHandle.addEventListener(MouseEvent.MOUSE_OUT, function(e):void{ Mouse.cursor = MouseCursor.AUTO; });
 			
 			/////////////////////
 			// Buttons - Left
 			/////////////////////
 			var bsize = 28, bspace=5, tButtonXInc=bsize+bspace;
-			var xx = _dragHandle.width + bsize/2 + 3, yy = 0, tButtonsOnLeft = 0, tButtonOnRight = 0;
+			var xx = _dragHandle.width + bsize/2 + 3, yy = 0.5, tButtonsOnLeft = 0, tButtonOnRight = 0;
 			
-			_animateButton = new SpriteButton({ x:xx, y:yy, width:bsize, height:bsize, obj_scale:0.5, obj:new Sprite(), origin:0.5 }).appendTo(this) as SpriteButton;
-			_animateButton.addEventListener(ButtonBase.CLICK, _onAnimationButtonToggled);
+			_animateButton = new SpriteButton({ size:bsize, obj_scale:0.5, obj:new Sprite(), origin:0.5 }).setXY(xx,yy).appendTo(this) as SpriteButton;
+			_animateButton.onButtonClick(_onAnimationButtonToggled);
 			tButtonsOnLeft++;
 			
 			xx += tButtonXInc;
-			_loopButton = new SpriteButton({ x:xx, y:yy, width:bsize, height:bsize, obj_scale:0.5, obj:new Sprite(), origin:0.5 }).appendTo(this) as SpriteButton;
-			_loopButton.addEventListener(ButtonBase.CLICK, _onLoopButtonToggled);
+			_loopButton = new SpriteButton({ size:bsize, obj_scale:0.5, obj:new Sprite(), origin:0.5 }).setXY(xx,yy).appendTo(this) as SpriteButton;
+			_loopButton.onButtonClick(_onLoopButtonToggled);
 			tButtonsOnLeft++;
 			
 			xx += tButtonXInc;
@@ -106,10 +110,10 @@ package app.ui
 			/////////////////////
 			// Buttons - Right
 			/////////////////////
-			xx = _bg.Width - bsize/2 - 4, yy = 0, tButtonsOnLeft = 0, tButtonOnRight = 0;
+			xx = _bg.width - bsize/2 - 4, yy = 0, tButtonsOnLeft = 0, tButtonOnRight = 0;
 			
 			_nextFrameButton = new SpriteButton({ x:xx-tButtonXInc*tButtonsOnLeft, y:yy, width:bsize, height:bsize, obj_scale:0.5, obj:new Sprite(), origin:0.5 }).appendTo(this) as SpriteButton;
-			_nextFrameButton.addEventListener(ButtonBase.CLICK, _onNextFrameClicked);
+			_nextFrameButton.onButtonClick(_onNextFrameClicked);
 			tButtonOnRight++;
 			_framesText = new TextBase('', { size:8 }).setXY(_nextFrameButton.x, _nextFrameButton.y).appendTo(this);
 			_framesText.mouseEnabled = false;
@@ -130,8 +134,8 @@ package app.ui
 			/////////////////////
 			// Misc
 			/////////////////////
-			new ScaleButton({ obj:new $WhiteX(), obj_scale:0.25 }).setXY(_bg.Width, -_bg.Height/2).appendTo(this)
-				.on(MouseEvent.CLICK, function(e){ dispatchEvent(new Event(Event.CLOSE)); });
+			ScaleButton.withObject(new $WhiteX(), 0.25).setXY(_bg.width, -_bg.height/2).appendTo(this)
+				.onButtonClick(function(e){ dispatchEvent(new Event(Event.CLOSE)); });
 			
 			_updateUIBasedOnState();
 		}

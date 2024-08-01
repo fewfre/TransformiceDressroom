@@ -96,7 +96,7 @@ package app.world
 				} catch (error:Error) { };
 			}
 			
-			_giantFilterIcon = DisplayWrapper.wrap(new $FilterIcon(), this).scale(4).move(180, 180 + 50).asSprite;
+			_giantFilterIcon = DisplayWrapper.wrap(new $FilterIcon(), this).toScale(4).move(180, 180 + 50).asSprite;
 			_giantFilterIcon.visible = false;
 			
 			this.character = new Character(new <ItemData>[ GameAssets.defaultSkin, GameAssets.defaultPose ], parms)
@@ -108,9 +108,9 @@ package app.world
 			/////////////////////////////
 			// Setup UI
 			/////////////////////////////
-			var tShop:RoundedRectangle = new RoundedRectangle(ConstantsApp.SHOP_WIDTH, ConstantsApp.APP_HEIGHT).setXY(450, 10)
+			var tShop:RoundRectangle = new RoundRectangle(ConstantsApp.SHOP_WIDTH, ConstantsApp.APP_HEIGHT).move(450, 10)
 				.appendTo(this).drawAsTray();
-			_paneManager = new PaneManager().appendTo(tShop);
+			_paneManager = new PaneManager().appendTo(tShop.root);
 			
 			this.shopTabs = new ShopTabList(70, ConstantsApp.APP_HEIGHT).setXY(375, 10).appendTo(this);
 			this.shopTabs.addEventListener(ShopTabList.TAB_CLICKED, _onTabClicked);

@@ -1,24 +1,25 @@
 package app.ui.panes
 {
+	import app.data.*;
+	import app.ui.buttons.PushButton;
+	import app.ui.buttons.SpriteButton;
+	import app.ui.common.FancyInput;
+	import app.ui.panes.base.SidePane;
+	import app.ui.PasteShareCodeInput;
+	import app.ui.screens.LoadingSpinner;
+	import app.world.data.ItemData;
+	import app.world.elements.Character;
 	import com.fewfre.display.*;
 	import com.fewfre.events.FewfEvent;
-	import com.fewfre.utils.Fewf;
 	import com.fewfre.utils.AssetManager;
-	import app.data.*;
-	import app.ui.*;
-	import app.ui.buttons.*;
-	import app.ui.common.*;
-	import app.ui.screens.LoaderDisplay;
-	import app.ui.screens.LoadingSpinner;
-	import app.world.elements.*;
-	import flash.display.*;
-	import flash.events.*;
+	import com.fewfre.utils.Fewf;
+	import flash.display.MovieClip;
+	import flash.events.Event;
+	import flash.events.KeyboardEvent;
+	import flash.events.MouseEvent;
 	import flash.text.TextField;
 	import flash.text.TextFieldType;
 	import flash.text.TextFormatAlign;
-	import flash.display.MovieClip;
-	import app.world.data.ItemData;
-	import app.ui.panes.base.SidePane;
 	
 	public class ConfigTabPane extends SidePane
 	{
@@ -37,7 +38,7 @@ package app.ui.panes
 			super();
 			_loadingUser = false;
 			
-			var i:int = 0, xx:Number = 5, yy:Number = 10, tButton:GameButton, sizex:Number, sizey:Number, spacingx:Number;
+			var i:int = 0, xx:Number = 5, yy:Number = 10, sizex:Number, sizey:Number, spacingx:Number;
 			
 			// Paste share code
 			xx = 15; yy += 14; sizex = ConstantsApp.PANE_WIDTH - 20 - 15;

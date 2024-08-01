@@ -1,13 +1,15 @@
 package app.ui.panes.colorpicker
 {
-	import com.piterwilson.utils.*;
-	import com.fewfre.display.*;
-	import com.fewfre.events.FewfEvent;
 	import app.data.ConstantsApp;
-	import app.ui.buttons.*;
-	import app.ui.common.*;
-	import flash.display.*;
+	import app.ui.buttons.ColorButton;
+	import app.ui.buttons.PushButton;
+	import com.fewfre.display.ButtonBase;
+	import com.fewfre.display.DisplayWrapper;
+	import com.fewfre.display.RoundRectangle;
+	import com.fewfre.events.FewfEvent;
 	import ext.ParentApp;
+	import flash.display.Shape;
+	import flash.display.Sprite;
 	
 	public class RecentColorsListDisplay extends Sprite
 	{
@@ -20,7 +22,7 @@ package app.ui.panes.colorpicker
 		// Storage
 		private var _recentColorButtons	: Vector.<ColorButton>;
 		private var _deleteToggleButton	: DeleteButton;
-		private var _bg : RoundedRectangle;
+		private var _bg : RoundRectangle;
 		private var _verticalRule : Shape;
 		
 		public function get isDeleteModeOn():Boolean { return _deleteToggleButton.pushed; }
@@ -46,8 +48,8 @@ package app.ui.panes.colorpicker
 			_deleteToggleButton.on(PushButton.TOGGLE, function():void{ render(); });
 			
 			// Add BG
-			_bg = new RoundedRectangle(bgWidth, bgHeight, { x:-deleteWidth*0.5+2, origin:0.5 }).appendTo(this);
-			_verticalRule = DisplayWrapper.wrap(new Shape(), _bg).move(_bg.Width*0.5 - 2.5, -_bg.Height*0.5 + 2.5).asShape;
+			_bg = new RoundRectangle(bgWidth, bgHeight).move(-deleteWidth*0.5+2, 0).toOrigin(0.5).toRadius(5).appendTo(this);
+			_verticalRule = DisplayWrapper.wrap(new Shape(), _bg.root).move(_bg.width*0.5 - 2.5, -_bg.height*0.5 + 2.5).asShape;
 		}
 		public function setXY(pX:Number, pY:Number) : RecentColorsListDisplay { x = pX; y = pY; return this; }
 		public function appendTo(pParent:Sprite): RecentColorsListDisplay { pParent.addChild(this); return this; }
@@ -74,20 +76,20 @@ package app.ui.panes.colorpicker
 			
 			this.visible = RECENTS.length > 0;
 			var bgBorderColor = isDeleteModeOn ? 0x780f11 : 0;//0x0f474f;
-			_bg.draw(0x6f6b64, 5, bgBorderColor);
+			_bg.draw3d(0x6f6b64, bgBorderColor);
 			
 			_verticalRule.graphics.clear();
 			_verticalRule.graphics.lineStyle(5, bgBorderColor, 1, false, "normal", "square");
 			_verticalRule.graphics.moveTo(0, 0);
-			_verticalRule.graphics.lineTo(0, _bg.Height-5);
+			_verticalRule.graphics.lineTo(0, _bg.height-5);
 			
 			// Render new buttons
 			var maxColors:int = 12, len = Math.min(RECENTS.length, maxColors);
-			var tTrayWidth = _bg.Width - 5, tSpacingX = 2.5, tBtnWidth = (tTrayWidth-(tSpacingX*maxColors)-tSpacingX*2)/maxColors,
-			xx = _bg.x-_bg.Width/2 + tBtnWidth*0.5 + tSpacingX*2;
+			var tTrayWidth = _bg.width - 5, tSpacingX = 2.5, tBtnWidth = (tTrayWidth-(tSpacingX*maxColors)-tSpacingX*2)/maxColors,
+			xx = _bg.x-_bg.width/2 + tBtnWidth*0.5 + tSpacingX*2;
 			for(var i:int = 0; i < len; i++) {
 				var btn:ColorButton = _createColorButton(RECENTS[i], tBtnWidth).setXY(xx + (i*(tBtnWidth+tSpacingX)), 0).appendTo(this)
-					.on(ButtonBase.CLICK, _onRecentColorBtnClicked) as ColorButton;
+					.onButtonClick(_onRecentColorBtnClicked) as ColorButton;
 				_recentColorButtons.push(btn);
 			}
 		}
@@ -95,7 +97,7 @@ package app.ui.panes.colorpicker
 		private function _createColorButton(pColor:int, pWidth:Number) : ColorButton {
 			var btn:ColorButton = new ColorButton({ width:pWidth, height:17, color:pColor });
 			if(isDeleteModeOn) {
-				var nou:Sprite = DisplayWrapper.wrap(new $No(), btn).scale(0.2).alpha(0).asSprite;
+				var nou:Sprite = DisplayWrapper.wrap(new $No(), btn).toScale(0.2).toAlpha(0).asSprite;
 				btn.addEventListener(ButtonBase.OVER, function(){ nou.alpha = 0.5 });
 				btn.addEventListener(ButtonBase.OUT, function(){ nou.alpha = 0 });
 			}
@@ -147,15 +149,16 @@ class DeleteButton extends PushButton
 {
 		public function DeleteButton(pData) {
 			super(pData);
+			_bg.radius = 5;
 		}
 		/****************************
 		* Render
 		*****************************/
 		override protected function _renderUp() : void {
 			if (this.pushed == false) {
-				_bg.draw(0xeb9d9e, 5, 0xFF0000);
+				_bg.draw3d(0xeb9d9e, 0xFF0000);
 			} else {
-				_bg.draw(0xFF0000, 5, 0x780f11);
+				_bg.draw3d(0xFF0000, 0x780f11);
 			}
 		}
 		
@@ -165,9 +168,9 @@ class DeleteButton extends PushButton
 		
 		override protected function _renderOver() : void {
 			if (this.pushed == false) {
-				_bg.draw(0xf57375, 5, 0xFF0000);
+				_bg.draw3d(0xf57375, 0xFF0000);
 			} else {
-				_bg.draw(0xDD0000, 5, 0x780f11);
+				_bg.draw3d(0xDD0000, 0x780f11);
 			}
 		}
 		
@@ -180,6 +183,6 @@ class DeleteButton extends PushButton
 		}
 
 		override protected function _renderPressed() : void {
-			_bg.draw(0xFF0000, 5, 0x780f11);
+			_bg.draw3d(0xFF0000, 0x780f11);
 		}
 }

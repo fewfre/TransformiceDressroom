@@ -1,7 +1,6 @@
 package app.ui
 {
 	import com.fewfre.display.TextTranslated;
-	import app.ui.common.RoundedRectangle;
 	import flash.display.Sprite;
 	import flash.text.TextField;
 	import flash.text.TextFieldType;

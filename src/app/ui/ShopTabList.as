@@ -1,7 +1,7 @@
 package app.ui
 {
 	import app.ui.buttons.PushButton;
-	import app.ui.common.RoundedRectangle;
+	import com.fewfre.display.RoundRectangle;
 	import com.fewfre.events.FewfEvent;
 	import flash.display.Sprite;
 
@@ -11,13 +11,13 @@ package app.ui
 		public static const TAB_CLICKED			: String = "shop_tab_clicked";
 
 		// Storage
-		private var _bg: RoundedRectangle;
+		private var _bg: RoundRectangle;
 		public var tabs: Vector.<PushButton> = new Vector.<PushButton>();
 
 		// Constructor
 		// pTabDataList = Vector.<{ text:String, event:String }> }
 		public function ShopTabList(pWidth:Number, pHeight:Number) {
-			_bg = new RoundedRectangle(pWidth, pHeight).appendTo(this).drawAsTray();
+			_bg = new RoundRectangle(pWidth, pHeight).appendTo(this).drawAsTray();
 			
 			tabs = new Vector.<PushButton>();
 		}
@@ -28,8 +28,8 @@ package app.ui
 		public function populate(pTabs:Vector.<Object>) : ShopTabList {
 			var tXMargin:Number = 5;
 			var tYMargin:Number = 5;
-			var tHeight:Number = Math.min(65, (_bg.Height - tYMargin) / pTabs.length - tYMargin);
-			var tWidth:Number = _bg.Width - (tXMargin * 2);
+			var tHeight:Number = Math.min(65, (_bg.height - tYMargin) / pTabs.length - tYMargin);
+			var tWidth:Number = _bg.width - (tXMargin * 2);
 			var tYSpacing:Number = tHeight + tYMargin;
 			var tX:Number = tXMargin;
 			var tY:Number = tYMargin - tYSpacing; // Go back one space for when for loop adds one space.

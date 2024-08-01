@@ -1,20 +1,17 @@
 package app.ui.screens
 {
-	import app.data.*;
-	import app.ui.buttons.*;
-	import app.ui.common.*;
-	import app.world.data.*;
-	import com.adobe.images.*;
-	import com.fewfre.display.*;
-	import com.fewfre.events.*;
-	import com.fewfre.utils.*;
-	import flash.display.*;
-	import flash.events.*;
-	
-	public class ErrorScreen extends MovieClip
+	import app.data.GameAssets;
+	import app.ui.buttons.ScaleButton;
+	import com.fewfre.display.RoundRectangle;
+	import com.fewfre.display.TextBase;
+	import com.fewfre.utils.Fewf;
+	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+
+	public class ErrorScreen extends Sprite
 	{
 		// Storage
-		private var _tray			: RoundedRectangle;
 		private var _text			: TextBase;
 		private var _string			: String;
 		
@@ -32,20 +29,20 @@ package app.ui.screens
 			* Background
 			*****************************/
 			var tWidth:Number = 500, tHeight:Number = 200;
-			_tray = new RoundedRectangle(tWidth, tHeight, { origin:0.5 }).appendTo(this).draw(0xFFDDDD, 25, 0xFF0000);
+			new RoundRectangle(tWidth, tHeight).toOrigin(0.5).toRadius(25).draw3d(0xFFDDDD, 0xFF0000).appendTo(this);
 
 			/****************************
 			* Message
 			*****************************/
 			// We manually x center the text since we're using wordWrap which uses width instead of textWidth
-			_text = new TextBase("", { color:0x330000, originX:0, originY:0.5, x:-(_tray.Width - 20) / 2 }).appendTo(this);
-			_text.field.width = _tray.Width - 20;
+			_text = new TextBase("", { color:0x330000, originX:0, originY:0.5, x:-(tWidth - 20) / 2 }).appendTo(this);
+			_text.field.width = tWidth - 20;
 			_text.field.wordWrap = true;
 			
 			/****************************
 			* Close Button
 			*****************************/
-			ScaleButton.withObject(new $WhiteX()).setXY(tWidth/2 - 5, -tHeight/2 + 5).appendTo(this).on(ButtonBase.CLICK, _onCloseClicked);
+			ScaleButton.withObject(new $WhiteX()).setXY(tWidth/2 - 5, -tHeight/2 + 5).appendTo(this).onButtonClick(_onCloseClicked);
 		}
 		
 		public function open(errorText:String) : void {

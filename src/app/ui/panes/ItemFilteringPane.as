@@ -5,7 +5,6 @@ package app.ui.panes
 	import app.ui.buttons.GameButton;
 	import app.ui.buttons.PushButton;
 	import app.ui.buttons.SpriteButton;
-	import app.ui.common.RoundedRectangle;
 	import app.ui.panes.base.SidePane;
 	import com.fewfre.display.ButtonBase;
 	import com.fewfre.display.TextTranslated;
@@ -94,12 +93,13 @@ class DeleteButton extends SpriteButton
 {
 		public function DeleteButton(pData) {
 			super(pData);
+			_bg.radius = 5;
 		}
 		/****************************
 		* Render
 		*****************************/
 		override protected function _renderUp() : void {
-			_bg.draw(0xDD0000, 5, 0x780f11);
+			_bg.draw3d(0xDD0000, 0x780f11);
 		}
 		
 		override protected function _renderDown() : void {
@@ -107,7 +107,7 @@ class DeleteButton extends SpriteButton
 		}
 		
 		override protected function _renderOver() : void {
-			_bg.draw(0xFF0000, 5, 0x780f11);
+			_bg.draw3d(0xFF0000, 0x780f11);
 		}
 		
 		override protected function _renderOut() : void {

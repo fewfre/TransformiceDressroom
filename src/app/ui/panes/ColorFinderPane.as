@@ -33,9 +33,9 @@ package app.ui.panes
 		private var _itemDragDrop : MovieClip;
 		private var _item : MovieClip;
 		private var _text : TextField;
-		private var _textColorBox : RoundedRectangle;
+		private var _textColorBox : RoundRectangle;
 		private var _hoverText : TextField;
-		private var _hoverColorBox : RoundedRectangle;
+		private var _hoverColorBox : RoundRectangle;
 		private var _recentColorsDisplay : RecentColorsListDisplay;
 		private var _scaleSlider : FancySlider;
 		
@@ -131,37 +131,37 @@ package app.ui.panes
 			*****************************/
 			var tTFWidth:Number = 65, tTFHeight:Number = 18, tTFPaddingX:Number = 5, tTFPaddingY:Number = 5;
 			// So much easier than doing it with those darn native text field options which have no padding.
-			var tTextBackground:RoundedRectangle = new RoundedRectangle(tTFWidth+tTFPaddingX*2, tTFHeight+tTFPaddingY*2, { origin:0.5 })
-				.setXY(15, 170).appendTo(_tray).draw(0xFFFFFF, 7, 0x444444);
+			var tTextBackground:RoundRectangle = new RoundRectangle(tTFWidth+tTFPaddingX*2, tTFHeight+tTFPaddingY*2).toOrigin(0.5)
+				.move(15, 170).appendTo(_tray).toRadius(7).draw3d(0xFFFFFF, 0x444444);
 			
 			_text = tTextBackground.addChild(new TextField()) as TextField;
 			_text.type = TextFieldType.DYNAMIC;
 			_text.multiline = false;
 			_text.width = tTFWidth;
 			_text.height = tTFHeight;
-			_text.x = tTFPaddingX - tTextBackground.Width*0.5;
-			_text.y = tTFPaddingY - tTextBackground.Height*0.5;
+			_text.x = tTFPaddingX - tTextBackground.width*0.5;
+			_text.y = tTFPaddingY - tTextBackground.height*0.5;
 			_text.addEventListener(MouseEvent.CLICK, function(pEvent:Event){ _text.setSelection(0, _text.text.length); });
 			
-			var tSize = tTextBackground.Height;
-			_textColorBox = new RoundedRectangle(tSize, tSize, { origin:0.5 }).appendTo(_tray)
-				.setXY(tTextBackground.x - (tTextBackground.Width*0.5) - (tSize*0.5) - 5, tTextBackground.y);
+			var tSize = tTextBackground.height;
+			_textColorBox = new RoundRectangle(tSize, tSize).toOrigin(0.5).toRadius(7).appendTo(_tray)
+				.move(tTextBackground.x - (tTextBackground.width*0.5) - (tSize*0.5) - 5, tTextBackground.y);
 			
-			_hoverColorBox = new RoundedRectangle(35, 35, { originX:0, originY:1 }).appendTo(_tray);//.setXY(ConstantsApp.PANE_WIDTH*0.5-5, -122);
+			_hoverColorBox = new RoundRectangle(35, 35).toOrigin(0, 1).toRadius(7).appendTo(_tray);//.move(ConstantsApp.PANE_WIDTH*0.5-5, -122);
 			_hoverColorBox.visible = false;
-			/*var tHoverTextBackground:RoundedRectangle = new RoundedRectangle(_hoverColorBox.Width+8, 20, { originX:0.5, originY:1 }).setXY(-_hoverColorBox.Width*0.5, _hoverColorBox.Height+20).appendTo(_hoverColorBox);
-			tHoverTextBackground.draw(0xFFFFFF, 5, 0xDDDDDD, 0xDDDDDD, 0xDDDDDD);
-			tHoverTextBackground.alpha = 0.75;
-			_hoverText = _hoverColorBox.addChild(new TextField());
-			_hoverText.type = TextFieldType.DYNAMIC;
-			_hoverText.defaultTextFormat.size = 10;
-			_hoverText.defaultTextFormat.align = "center";
-			_hoverText.selectable = false;
-			_hoverText.multiline = false;
-			_hoverText.width = tHoverTextBackground.Width;
-			_hoverText.height = tHoverTextBackground.Height;
-			_hoverText.x = tTFPaddingX - tHoverTextBackground.Width + 2;
-			_hoverText.y = tTFPaddingY + tHoverTextBackground.Height + 25;*/
+			// var tHoverTextBackground:RoundRectangle = new RoundRectangle(_hoverColorBox.width+8, 20, { originX:0.5, originY:1 }).move(-_hoverColorBox.width*0.5, _hoverColorBox.height+20).appendTo(_hoverColorBox.root);
+			// tHoverTextBackground.toRadius(5).draw3d(0xFFFFFF, 0xDDDDDD, 0xDDDDDD, 0xDDDDDD);
+			// tHoverTextBackground.alpha = 0.75;
+			// _hoverText = _hoverColorBox.addChild(new TextField());
+			// _hoverText.type = TextFieldType.DYNAMIC;
+			// _hoverText.defaultTextFormat.size = 10;
+			// _hoverText.defaultTextFormat.align = "center";
+			// _hoverText.selectable = false;
+			// _hoverText.multiline = false;
+			// _hoverText.width = tHoverTextBackground.width;
+			// _hoverText.height = tHoverTextBackground.height;
+			// _hoverText.x = tTFPaddingX - tHoverTextBackground.width + 2;
+			// _hoverText.y = tTFPaddingY + tHoverTextBackground.height + 25;
 			
 			_setColorText(-1);
 			_setHoverColor(-1);
@@ -242,21 +242,21 @@ package app.ui.panes
 		private function _setColorText(pColor:int) : void {
 			if(pColor != -1) {
 				_text.text = FewfUtils.lpad(pColor.toString(16).toUpperCase(), 6, "0");
-				_textColorBox.draw(pColor, 7, 0x444444);
+				_textColorBox.draw3d(pColor, 0x444444);
 				_recentColorsDisplay.addColor(pColor);
 			} else {
 				_text.text = "000000";
-				_textColorBox.draw(0x000000, 7, 0x444444);
+				_textColorBox.draw3d(0x000000, 0x444444);
 			}
 		}
 		
 		private function _setHoverColor(pColor:int) : void {
 			if(pColor != -1) {
 				/*_hoverText.text = FewfUtils.lpad(pColor.toString(16).toUpperCase(), 6, "0");*/
-				_hoverColorBox.draw(pColor, 7, 0x444444);
+				_hoverColorBox.draw3d(pColor, 0x444444);
 			} else {
 				/*_hoverText.text = "000000";*/
-				_hoverColorBox.draw(0x000000, 7, 0x444444);
+				_hoverColorBox.draw3d(0x000000, 0x444444);
 			}
 		}
 		

@@ -47,7 +47,7 @@ package app.ui.panes
 			sizex = 80; sizey = 40; spacingx = sizex + 10; xx = 10 - spacingx;
 			
 			_shamanButtons = new Vector.<PushButton>();
-			DisplayWrapper.wrap(new $ShamFeather(), this).move((xx += spacingx) + sizex*0.5, yy + sizey*0.5).scale(2).on(MouseEvent.CLICK, _onNoShamanButtonClicked).asSprite.buttonMode = true;
+			DisplayWrapper.wrap(new $ShamFeather(), this).move((xx += spacingx) + sizex*0.5, yy + sizey*0.5).toScale(2).on(MouseEvent.CLICK, _onNoShamanButtonClicked).asSprite.buttonMode = true;
 			xx -= 5; yy -= 10;
 			_shamanButtons.push(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextTranslated("btn_normal_mode"), id:ShamanMode.NORMAL.toInt() }).appendTo(this) as PushButton);
 			_shamanButtons.push(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextTranslated("btn_hard_mode"), id:ShamanMode.HARD.toInt() }).appendTo(this) as PushButton);

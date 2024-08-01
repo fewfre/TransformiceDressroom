@@ -1,11 +1,12 @@
 package app.ui.common
 {
+	import com.fewfre.display.RoundRectangle;
 	import com.fewfre.display.TextTranslated;
 	import flash.display.Sprite;
-	import flash.text.TextField;
-	import flash.text.TextFieldType;
 	import flash.events.Event;
 	import flash.events.FocusEvent;
+	import flash.text.TextField;
+	import flash.text.TextFieldType;
 	
 	public class FancyInput extends Sprite
 	{
@@ -29,18 +30,18 @@ package app.ui.common
 			var tTFWidth:Number = pData.width ? pData.width : 250;
 			var tTFHeight:Number = pData.height ? pData.height : 18;
 			// So much easier than doing it with those darn native text field options which have no padding.
-			var tTextBackground:RoundedRectangle = new RoundedRectangle(tTFWidth+padding*2, tTFHeight+padding*2, { origin:0.5 })
-				.appendTo(this).draw(0xdcdfea, 7, 0x444444);
+			var tTextBackground:RoundRectangle = new RoundRectangle(tTFWidth+padding*2, tTFHeight+padding*2).toOrigin(0.5)
+				.appendTo(this).toRadius(7).draw3d(0xdcdfea, 0x444444);
 			
-			_textField = tTextBackground.addChild(new TextField()) as TextField;
+			_textField = addChild(new TextField()) as TextField;
 			_textField.type = TextFieldType.INPUT;
 			_textField.multiline = false;
 			_textField.width = tTFWidth;
 			_textField.height = tTFHeight;
-			_textField.x = padding - tTextBackground.Width*0.5;
-			_textField.y = padding - tTextBackground.Height*0.5;
+			_textField.x = padding - tTextBackground.width*0.5;
+			_textField.y = padding - tTextBackground.height*0.5;
 			
-			_placeholderText = new TextTranslated(pData.placeholder, { originX:0, x:_textField.x+4, color:0x666666 }).appendToT(tTextBackground);
+			_placeholderText = new TextTranslated(pData.placeholder, { originX:0, x:_textField.x+4, color:0x666666 }).appendToT(this);
 			_placeholderText.mouseChildren = false;
 			_placeholderText.mouseEnabled = false;
 			

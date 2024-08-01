@@ -1,9 +1,8 @@
 package app.ui.screens
 {
-	
+	import com.fewfre.display.DisplayWrapper;
 	import flash.display.Sprite;
 	import flash.events.Event;
-	import com.fewfre.display.DisplayWrapper;
 
 	public class LoadingSpinner extends Sprite
 	{
@@ -14,9 +13,8 @@ package app.ui.screens
 			pData = pData || {};
 			if(pData.x) { this.x = pData.x; }
 			if(pData.y) { this.y = pData.y; }
-			var scale:Number = pData.scale ? pData.scale : 2;
 			
-			_loadingSpinner = DisplayWrapper.wrap(new $Loader(), this).scale(scale).asSprite;
+			_loadingSpinner = DisplayWrapper.wrap(new $Loader(), this).toScale(pData.scale || 2).asSprite;
 			
 			addEventListener(Event.ENTER_FRAME, update);
 		}

@@ -12,6 +12,7 @@ package app.ui.common
 	import flash.utils.setTimeout;
 	import app.data.ConstantsApp;
 	import com.fewfre.display.TextBase;
+	import com.fewfre.display.RoundRectangle;
 
 	public class FancyCopyField
 	{
@@ -22,7 +23,7 @@ package app.ui.common
 		
 		// Storage
 		private var _root			: Sprite;
-		private var _tray			: RoundedRectangle;
+		private var _tray			: RoundRectangle;
 		private var _field			: TextField;
 		private var _button			: CopyButton;
 		
@@ -37,7 +38,7 @@ package app.ui.common
 			var padX:int = 10, padY:int = 8;
 			var width:Number = pWidth, wInner:Number = width-padX*2;
 			var height:Number = 38, hInner:Number = height-padY*2;
-			_tray = new RoundedRectangle(width, height).drawThin(8, BG_COLOR, BORDER_COLOR).appendTo(_root);
+			_tray = new RoundRectangle(width, height).toRadius(8).drawSolid(BG_COLOR, BORDER_COLOR).appendTo(_root);
 			var bsize:Number = 30, btnFieldGap:Number = 10;
 			
 			// Text field
@@ -59,7 +60,7 @@ package app.ui.common
 			// });
 			
 			// Copy button
-			_button = new CopyButton({ size:bsize, origin:0.5 }).appendTo(_tray)
+			_button = new CopyButton({ size:bsize, origin:0.5 }).appendTo(_tray.root)
 				.setXY(width - padX - bsize/2 + 2, height/2)
 				.on(ButtonBase.CLICK, _onCopyButtonClicked) as CopyButton;
 			_button.changeIcon(true);
@@ -95,7 +96,7 @@ class CopyButton extends GameButton
 	
 	public function CopyButton(pData) {
 		super(pData);
-		_bg.drawThin(8, 0x1f2937, 0x1f2937);
+		_bg.toRadius(8).drawSolid(0x1f2937, 0x1f2937);
 		addChild(_icon = new Sprite());
 	}
 	

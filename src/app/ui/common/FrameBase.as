@@ -38,6 +38,8 @@ package app.ui.common
 			
 			_render();
 		}
+		public function move(pX:Number, pY:Number) : FrameBase { this.x = pX; this.y = pY; return this; }
+		public function appendTo(pParent:Sprite): FrameBase { pParent.addChild(this); return this; }
 		
 		private function _render() : void {
 			_image.x = 0 - (Width * originX);

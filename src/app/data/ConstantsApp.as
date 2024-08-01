@@ -50,6 +50,18 @@ package app.data
 		public static const COLOR_BUTTON_OUTSET_TOP			: int = 0x5D7D90;
 		
 		public static const COLOR_TRAY_GRADIENT				: Array = [ 0x112528, 0x1E3D42 ];
+// 		public static const COLOR_TRAY_GRADIENT				: Array = [
+// 0x112427,
+// 0x12272a,
+// 0x142a2d,
+// 0x152c30,
+// 0x172f33,
+// 0x183236,
+// 0x1a3539,
+// 0x1b383d,
+// 0x1d3b40,
+// 0x1e3e43,
+// 		];
 		public static const COLOR_TRAY_B_1					: int = 0x6A8fA2;
 		public static const COLOR_TRAY_B_2					: int = 0x11171C;
 		public static const COLOR_TRAY_B_3					: int = 0x324650;

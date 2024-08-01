@@ -4,6 +4,7 @@
 - [Bug] A share code with an un-customized item now properly overrides the colors of items that were customized beforehand
 	- This also affects outfit manager, as it uses share code logic behind the scenes
 - [Code] Some code tweaks, including polish for popup screens and color picker
+- [Code] `RoundedRectangle` rewritten + renamed to `RoundRectangle` and moved to `com.fewfre.display`
 
 
 ## V1.29d - 6 July 2024

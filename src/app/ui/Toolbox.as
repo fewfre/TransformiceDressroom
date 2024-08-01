@@ -6,7 +6,6 @@ package app.ui
 	import com.fewfre.utils.ImgurApi;
 	import app.data.ConstantsApp;
 	import app.ui.buttons.*;
-	import app.ui.common.*;
 	import flash.display.Sprite;
 	import flash.net.*;
 	import ext.ParentApp;
@@ -15,6 +14,9 @@ package app.ui
 	import flash.utils.setTimeout;
 	import flash.events.Event;
 	import com.fewfre.events.FewfEvent;
+	import com.fewfre.display.RoundRectangle;
+	import app.ui.common.FrameBase;
+	import app.ui.common.FancySlider;
 	
 	public class Toolbox extends Sprite
 	{
@@ -34,37 +36,34 @@ package app.ui
 		public static const FILTER_BANNER_CLOSED = "filter_banner_closed";
 		
 		// Storage
-		private var _downloadTray    : FrameBase;
-		private var _bg              : RoundedRectangle;
-		
 		public var scaleSlider       : FancySlider;
 		private var _downloadButton  : ButtonBase;
 		private var _animateButton   : PushButton;
 		private var _imgurButton     : SpriteButton;
 		private var _clipboardButton : SpriteButton;
 		
-		private var _itemFilterBanner: RoundedRectangle;
+		private var _itemFilterBanner: Sprite;
 		
 		// Constructor
 		// onShareCodeEntered: (code, (state:String)=>void)=>void
 		public function Toolbox(pCharacter:Character, onShareCodeEntered:Function) {
-			_bg = new RoundedRectangle(365, 35, { origin:0.5 }).drawAsTray().appendTo(this);
+			var bg:RoundRectangle = new RoundRectangle(365, 35).toOrigin(0.5).drawAsTray().appendTo(this);
 			
 			/********************
 			* Download Button
 			*********************/
-			_downloadTray = addChild(new FrameBase({ x:-_bg.Width*0.5 + 33, y:9, width:66, height:66, origin:0.5 })) as FrameBase;
+			var tDownloadTray:FrameBase = new FrameBase({ x:-bg.width*0.5 + 33, y:9, width:66, height:66, origin:0.5 }).appendTo(this);
 			
 			_downloadButton = new SpriteButton({ size:46, obj:new $LargeDownload(), origin:0.5 })
 				.on(ButtonBase.CLICK, dispatchEventHandler(SAVE_CLICKED))
-				.appendTo(_downloadTray);
+				.appendTo(tDownloadTray);
 			
 			/********************
 			* Toolbar Buttons
 			*********************/
-			var tTray:Sprite = _bg.addChild(new Sprite()) as Sprite;
-			var tTrayWidth = _bg.Width - _downloadTray.Width;
-			tTray.x = -(_bg.Width*0.5) + (tTrayWidth*0.5) + (_bg.Width - tTrayWidth);
+			var tTray:Sprite = bg.addChild(new Sprite()) as Sprite;
+			var tTrayWidth = bg.width - tDownloadTray.Width;
+			tTray.x = -(bg.width*0.5) + (tTrayWidth*0.5) + (bg.width - tTrayWidth);
 			
 			var tButtonSize = 28, tButtonSizeSpace=5, tButtonXInc=tButtonSize+tButtonSizeSpace;
 			var tX = 0, yy = 0, tButtonsOnLeft = 0, tButtonOnRight = 0;
@@ -136,8 +135,8 @@ package app.ui
 			}
 			
 			// Item Filter Banner
-			// Don't append to anything until it should show up
-			_itemFilterBanner = _newItemFilterBanner().setXY(-112, 18)
+			// Don't addChild to anything until it should show up
+			_itemFilterBanner = _newItemFilterBanner(-112, 33);
 			_itemFilterBanner.addEventListener(Event.CLOSE, dispatchEventHandler(FILTER_BANNER_CLOSED));
 		}
 		public function setXY(pX:Number, pY:Number) : Toolbox { x = pX; y = pY; return this; }
@@ -145,12 +144,13 @@ package app.ui
 		public function on(type:String, listener:Function): Toolbox { this.addEventListener(type, listener); return this; }
 		public function off(type:String, listener:Function): Toolbox { this.removeEventListener(type, listener); return this; }
 		
-		private function _newItemFilterBanner() : RoundedRectangle {
-			var hh:Number = 30, yy:Number = hh/2;
-			// Don't append to anything until it should show up
-			var tray : RoundedRectangle = new RoundedRectangle(260, 30).draw(0xDDDDFF, 4, 0x0000FF);
-			new TextTranslated("share_filter_banner", { x:10, y:yy, originX:0, color:0x111111 }).appendToT(tray);
-			new ScaleButton({ obj:new $No(), obj_scale:0.5 }).setXY(245, yy).appendTo(tray)
+		private function _newItemFilterBanner(pX:Number, pY:Number) : Sprite {
+			var tray:Sprite = new Sprite(); tray.x = pX; tray.y = pY;
+			
+			var hh:Number = 28-2/*minus 2 because of extra border*/;
+			new RoundRectangle(260, hh).toOrigin(0, 0.5).toRadius(4).drawSolid(0xDDDDFF, 0x0000FF, 2).appendTo(tray);
+			new TextTranslated("share_filter_banner", { x:10, originX:0, originY:0.5, color:0x111111 }).appendToT(tray);
+			ScaleButton.withObject(new $No(), 0.5).setXY(245, 0).appendTo(tray)
 				.on(ButtonBase.CLICK, function(e):void{ tray.dispatchEvent(new Event(Event.CLOSE)); });
 				
 			return tray;
@@ -160,7 +160,7 @@ package app.ui
 		// Public
 		///////////////////////
 		public function showItemFilterBanner() : void {
-			_itemFilterBanner.appendTo(this);
+			addChild(_itemFilterBanner);
 		}
 		
 		public function hideItemFilterBanner() : void {

@@ -1,14 +1,13 @@
 package app.ui.buttons
-{
-	import com.fewfre.display.*;
-	import com.fewfre.utils.*;
-	import app.data.*;
-	import app.ui.*;
-	import flash.display.*;
+{	
+	import app.data.ConstantsApp;
+	import com.fewfre.display.TextTranslated;
+	import com.fewfre.utils.FewfDisplayUtils;
+	import flash.display.DisplayObject;
 	import flash.events.MouseEvent;
-	import flash.text.*;
-	import flash.geom.*;
-	
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
+
 	public class PushButton extends GameButton
 	{
 		// Constants
@@ -24,8 +23,7 @@ package app.ui.buttons
 		
 		// Constructor
 		// pArgs = { x:Number, y:Number, (width:Number, height:Number OR size:Number), ?obj:DisplayObject, ?obj_scale:Number, ?text:String, ?id:int, ?allowToggleOff:Boolean=true }
-		public function PushButton(pArgs:Object)
-		{
+		public function PushButton(pArgs:Object) {
 			super(pArgs);
 			if(pArgs.id) { id = pArgs.id; }
 			
@@ -66,7 +64,7 @@ package app.ui.buttons
 
 		protected function _renderPressed() : void
 		{
-			_bg.draw(ConstantsApp.COLOR_BUTTON_MOUSE_DOWN, 7, 0x5D7A91, 0x5D7A91, 0x6C8DA8);
+			_bg.draw3d(ConstantsApp.COLOR_BUTTON_MOUSE_DOWN, 0x5D7A91, 0x5D7A91, 0x6C8DA8);
 			if(this.Text) { this.Text.color = 0xFFD800; }
 		}
 

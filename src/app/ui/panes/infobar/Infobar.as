@@ -6,7 +6,6 @@ package app.ui.panes.infobar
 	import app.data.ItemType;
 	import app.ui.buttons.ScaleButton;
 	import app.ui.buttons.SpriteButton;
-	import app.ui.common.RoundedRectangle;
 	import app.ui.panes.infobar.GridManagementWidget;
 	import app.world.data.ItemData;
 	import com.fewfre.display.ButtonBase;
@@ -21,6 +20,8 @@ package app.ui.panes.infobar
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import com.fewfre.display.RoundRectangle;
+	import com.fewfre.display.DisplayWrapper;
 
 	public class Infobar extends Sprite
 	{
@@ -37,7 +38,7 @@ package app.ui.panes.infobar
 		
 		
 		public var Image                 : MovieClip;
-		private var _imageCont           : RoundedRectangle;
+		private var _imageCont           : RoundRectangle;
 		private var _removeItemOverlay   : Sprite;
 		
 		private var _backButton          : ScaleButton;
@@ -71,30 +72,22 @@ package app.ui.panes.infobar
 			/********************
 			* Active Item
 			*********************/
-			_imageCont = new RoundedRectangle(50, 50).appendTo(this)
-				.draw(ConstantsApp.APP_BG_COLOR, 15, 0x5d7d90, 0x11171c, 0x3c5064);
+			// 0x5d7d90, 0x11171c, 0x3c5064
+			_imageCont = RoundRectangle.square(50).toRadius(15).drawSolid(ConstantsApp.APP_BG_COLOR, 0x3c5064, 1.25).appendTo(this);
 			
 			_setNoItemImage();
 			
-			// Overlay that shows up when hovering over image
+			// Hitbox that detects mouse events over image - not visible
 			_removeItemOverlay = addChild(new Sprite()) as Sprite;
-			_removeItemOverlay.graphics.beginFill(0, 0);
-			_removeItemOverlay.graphics.drawRoundRect(0, 0, _imageCont.Width, _imageCont.Height, 15, 15);
-			_removeItemOverlay.graphics.endFill();
+			RoundRectangle.square(50).toAlpha(0).toRadius(15).drawSolid(0, 0).appendTo(_removeItemOverlay); // Only needed for a hitbox - has to be a child since alpha:0 messes up hover events unless it's a child element
 			_removeItemOverlay.buttonMode = true;
 			_removeItemOverlay.useHandCursor = true;
 			
-			var rioVisual:Sprite = _removeItemOverlay.addChild(new Sprite()) as Sprite;
-			rioVisual.x = rioVisual.y = _imageCont.Width*0.5;
-			rioVisual.alpha = 0;
-			
-			var rioBackdrop:RoundedRectangle = new RoundedRectangle(50, 50, { origin:0.5 }).appendTo(rioVisual);
-			rioBackdrop.draw(0x000000, 15, 0x000000);
-			rioBackdrop.alpha = 0.1;
-			
-			var rioIcon:DisplayObject = rioVisual.addChild(new $No());
-			rioIcon.alpha = 0.5;
-			rioIcon.scaleX = rioIcon.scaleY = 0.75;
+			// Contains what's actually shown on hover for _removeItemOverlay
+			var rioVisual:Sprite = DisplayWrapper.wrap(new Sprite(), _removeItemOverlay)
+				.toAlpha(0).move(_imageCont.width*0.5, _imageCont.height*0.5).asSprite;
+			RoundRectangle.square(50).toOrigin(0.5).toAlpha(0.1).toRadius(15).drawSolid(0x000000, 0x000000, 1.25).appendTo(rioVisual);
+			DisplayWrapper.wrap(new $No(), rioVisual).toAlpha(0.5).toScale(0.75);
 			
 			_removeItemOverlay.addEventListener(MouseEvent.MOUSE_OVER, function():void{
 				if(hasData && !GameAssets.doesItemDataMatchDefaultOfTypeIfAny(_itemData)) {
@@ -114,12 +107,12 @@ package app.ui.panes.infobar
 			
 			if(!pData.showBackButton) {
 				_colorWheel = ScaleButton.withObject(new $ColorWheel()).appendTo(this) as ScaleButton;
-				_colorWheel.setXY(_imageCont.x + _imageCont.Width + _colorWheel.Image.width*0.5 + 10, 25)
+				_colorWheel.setXY(_imageCont.x + _imageCont.width + _colorWheel.Image.width*0.5 + 10, 25)
 					.on(ButtonBase.CLICK, dispatchEventHandler(COLOR_WHEEL_CLICKED));
 				showColorWheel(false);
 			} else {
 				_backButton = ScaleButton.withObject(new $BackArrow()).appendTo(this) as ScaleButton;
-				_backButton.setXY(_imageCont.x + _imageCont.Width + _backButton.Image.width*0.5 + 10, 25)
+				_backButton.setXY(_imageCont.x + _imageCont.width + _backButton.Image.width*0.5 + 10, 25)
 					.on(MouseEvent.MOUSE_UP, dispatchEventHandler(BACK_CLICKED));
 				_rearrangeLeftButtonsTray();
 			}
@@ -198,12 +191,12 @@ package app.ui.panes.infobar
 			// Make sure it's always big enough before being fit to have to be scaled down (to avoid extra whitespace)
 			pMC.scaleX *= 2; pMC.scaleY *= 2;
 			this.Image = pMC;
-			FewfDisplayUtils.fitWithinBounds(this.Image, _imageCont.Width, _imageCont.Height, _imageCont.Width * 0.5, _imageCont.Height * 0.5);
+			FewfDisplayUtils.fitWithinBounds(this.Image, _imageCont.width, _imageCont.height, _imageCont.width * 0.5, _imageCont.height * 0.5);
 			this.Image.mouseEnabled = false;
 			this.Image.scaleX *= 0.8;
 			this.Image.scaleY *= 0.8;
-			this.Image.x = _imageCont.Width / 2 - (tBounds.width / 2 + tOffset.x) * this.Image.scaleX;
-			this.Image.y = _imageCont.Height / 2 - (tBounds.height / 2 + tOffset.y) * this.Image.scaleY;
+			this.Image.x = _imageCont.width / 2 - (tBounds.width / 2 + tOffset.x) * this.Image.scaleX;
+			this.Image.y = _imageCont.height / 2 - (tBounds.height / 2 + tOffset.y) * this.Image.scaleY;
 			_imageCont.addChild(this.Image);
 		}
 		
@@ -218,7 +211,7 @@ package app.ui.panes.infobar
 			if(btn.visible && btn.alpha > 0) {
 				_leftButtonsTray.x = btn.x + btn.Image.width*0.5 + 12;
 			} else {
-				_leftButtonsTray.x = _imageCont.x + _imageCont.Width + 10;
+				_leftButtonsTray.x = _imageCont.x + _imageCont.width + 10;
 			}
 		}
 		

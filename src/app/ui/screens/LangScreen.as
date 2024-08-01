@@ -1,24 +1,19 @@
 package app.ui.screens
-{
-	
-	import flash.display.Sprite;
-	import app.ui.common.RoundedRectangle;
-	import com.fewfre.utils.Fewf;
-	import app.data.GameAssets;
-	import flash.events.MouseEvent;
-	import app.ui.buttons.SpriteButton;
-	import com.fewfre.display.ButtonBase;
-	import app.ui.buttons.ScaleButton;
-	import flash.events.Event;
-	import com.fewfre.events.FewfEvent;
+{	
 	import app.data.ConstantsApp;
+	import app.data.GameAssets;
+	import app.ui.buttons.ScaleButton;
+	import app.ui.buttons.SpriteButton;
+	import com.fewfre.display.RoundRectangle;
+	import com.fewfre.events.FewfEvent;
 	import com.fewfre.utils.AssetManager;
+	import com.fewfre.utils.Fewf;
+	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
 
 	public class LangScreen extends Sprite
 	{
-		// Storage
-		private var _tray : RoundedRectangle;
-		
 		// Constructor
 		public function LangScreen() {
 			this.x = Fewf.stage.stageWidth * 0.5;
@@ -28,14 +23,14 @@ package app.ui.screens
 			
 			var tWidth:Number = 500, tHeight:Number = 200;
 			// Background
-			_tray = new RoundedRectangle(tWidth, tHeight, { origin:0.5 }).appendTo(this).drawAsTray();
+			new RoundRectangle(tWidth, tHeight).toOrigin(0.5).drawAsTray().appendTo(this);
 
 			/****************************
 			* Languages
 			*****************************/
 			var tLanguages:Array = Fewf.assets.getData("config").languages.list;
 			
-			var tFlagTray:Sprite = _tray.addChild(new Sprite()) as Sprite, tFlagRowTray:Sprite, xx:Number;
+			var tFlagTray:Sprite = addChild(new Sprite()) as Sprite, tFlagRowTray:Sprite, xx:Number;
 			var tBtn:SpriteButton, tLangData:Object, tColumns:int = 8, tRows:Number = 1+Math.floor((tLanguages.length-1) / tColumns), tColumnsInRow:int = tColumns;
 			for(var i:int = 0; i < tLanguages.length; i++) { tLangData = tLanguages[i];
 				if(i%tColumns == 0) {
@@ -46,12 +41,12 @@ package app.ui.screens
 					xx = -55;
 				}
 				new SpriteButton({ x:xx+=55, width:50, height:50, obj_scale:0.3, obj:_getFlagImage(tLangData), data:tLangData, origin:0.5 })
-				.appendTo(tFlagRowTray).on(ButtonBase.CLICK, _onLanguageClicked);
+				.appendTo(tFlagRowTray).onButtonClick(_onLanguageClicked);
 			}
 			tFlagTray.y -= 55*(tRows-1)*0.5;
 			
 			// Close Button
-			ScaleButton.withObject(new $WhiteX()).setXY(tWidth/2 - 5, -tHeight/2 + 5).appendTo(this).on(ButtonBase.CLICK, _onCloseClicked);
+			ScaleButton.withObject(new $WhiteX()).setXY(tWidth/2 - 5, -tHeight/2 + 5).appendTo(this).onButtonClick(_onCloseClicked);
 		}
 		public function on(type:String, listener:Function): LangScreen { this.addEventListener(type, listener); return this; }
 		public function off(type:String, listener:Function): LangScreen { this.removeEventListener(type, listener); return this; }

@@ -41,7 +41,7 @@ package app
 
 			BrowserMouseWheelPrevention.init(stage);
 
-			_loaderDisplay = addChild( new LoaderDisplay({ x:stage.stageWidth * 0.5, y:stage.stageHeight * 0.5 }) ) as LoaderDisplay;
+			_loaderDisplay = addChild( new LoaderDisplay(stage.stageWidth/2, stage.stageHeight/2) ) as LoaderDisplay;
 			
 			_errorScreen = new ErrorScreen();
 			_errorScreen.addEventListener(Event.CLOSE, function(e){ removeChild(_errorScreen); });
