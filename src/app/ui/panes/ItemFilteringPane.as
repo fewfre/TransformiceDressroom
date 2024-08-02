@@ -2,22 +2,13 @@ package app.ui.panes
 {
 	import app.data.ConstantsApp;
 	import app.data.ShareCodeFilteringData;
-	import app.ui.buttons.GameButton;
-	import app.ui.buttons.PushButton;
 	import app.ui.buttons.SpriteButton;
+	import app.ui.common.FancyCopyField;
 	import app.ui.panes.base.SidePane;
-	import com.fewfre.display.ButtonBase;
 	import com.fewfre.display.TextTranslated;
 	import com.fewfre.events.FewfEvent;
-	import fl.transitions.easing.Elastic;
-	import fl.transitions.Tween;
-	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import flash.system.System;
-	import flash.text.TextField;
-	import flash.text.TextFieldType;
-	import app.ui.common.FancyCopyField;
 
 	public class ItemFilteringPane extends SidePane
 	{
@@ -32,12 +23,12 @@ package app.ui.panes
 		// Constructor
 		public function ItemFilteringPane() {
 			super();
-			var i:int = 0, xx:Number = 0, yy:Number = 5, tButton:GameButton, sizex:Number, sizey:Number, spacingx:Number;
+			var i:int = 0, xx:Number = 0, yy:Number = 5, sizex:Number, sizey:Number, spacingx:Number;
 			
 			// Preview Button
 			xx = 5+ConstantsApp.PANE_WIDTH/2; yy += 50; sizex = ConstantsApp.PANE_WIDTH * 0.9; sizey = 35;
 			new SpriteButton({ width:sizex, height:sizey, origin:0.5, text:"filtermode_preview_btn" })
-				.move(xx,yy).appendTo(this).on(ButtonBase.CLICK, _onPreviewButtonClicked);
+				.move(xx,yy).appendTo(this).onButtonClick(_onPreviewButtonClicked);
 			
 			// Description
 			yy = 125; xx = 5+2 + 5;
@@ -74,16 +65,6 @@ package app.ui.panes
 		*****************************/
 		private function _onPreviewButtonClicked(e:Event) : void {
 			dispatchEvent(new FewfEvent(EVENT_PREVIEW_ENABLED));
-		}
-
-		private function _untoggle(pList:Vector.<PushButton>, pButton:PushButton=null) : void {
-			// if (pButton != null && pButton.pushed) { return; }
-
-			for(var i:int = 0; i < pList.length; i++) {
-				if (pList[i].pushed && pList[i] != pButton) {
-					pList[i].toggleOff();
-				}
-			}
 		}
 	}
 }

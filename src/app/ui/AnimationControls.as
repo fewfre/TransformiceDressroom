@@ -126,10 +126,10 @@ package app.ui
 			/////////////////////
 			var tTotalButtons:Number = tButtonsOnLeft+tButtonOnRight;
 			var tSliderWidth:Number = sliderRight - sliderLeft;
-			_timelineSlider = new FancySlider(tSliderWidth).moveSelf(sliderLeft, 0)
+			_timelineSlider = new FancySlider(tSliderWidth).move(sliderLeft, 0)
 				.setSliderParams(1, 1, 1)
-				.appendTo(this);
-			_timelineSlider.addEventListener(FancySlider.CHANGE, _onTimelineSliderChanged);
+				.appendTo(this)
+				.on(FancySlider.CHANGE, _onTimelineSliderChanged);
 			
 			/////////////////////
 			// Misc

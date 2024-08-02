@@ -5,6 +5,7 @@
 	- This also affects outfit manager, as it uses share code logic behind the scenes
 - [Code] Some code tweaks, including polish for popup screens and color picker
 - [Code] `RoundedRectangle` rewritten + renamed to `RoundRectangle` and moved to `com.fewfre.display`
+- [Code] Some small `I18n` and `fewfre` lib tweaks
 
 
 ## V1.29d - 6 July 2024

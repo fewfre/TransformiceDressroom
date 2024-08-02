@@ -66,12 +66,12 @@ package app.ui.panes
 			// Color buttons
 			yy += 10;
 			sizex = 80; sizey = 50;
-			ScaleButton.withObject(new $ColorWheel()).move(xx += spacingx + 30, yy + sizey*0.5 - 10).appendTo(this).on(ButtonBase.CLICK, function(e):void{ dispatchEvent(new Event(CUSTOM_SHAMAN_COLOR_CLICKED)); });
+			ScaleButton.withObject(new $ColorWheel()).move(xx += spacingx + 30, yy + sizey*0.5 - 10).appendTo(this).onButtonClick(function(e):void{ dispatchEvent(new Event(CUSTOM_SHAMAN_COLOR_CLICKED)); });
 			
 			sizex = 26; sizey = 18;
 			// Default Blue/Pink Shaman color buttons
-			new ColorButton({ color:0x95D9D6, x:xx - (sizex*0.5+3), y:yy + sizey*0.5 + 35, width:sizex, height:sizey }).appendTo(this).on(ButtonBase.CLICK, function(e:FewfEvent){ dispatchEvent(new FewfEvent(SHAMAN_COLOR_PICKED, e.data)); });
-			new ColorButton({ color:0xFCA6F1, x:xx + (sizex*0.5+3), y:yy + sizey*0.5 + 35, width:sizex, height:sizey }).appendTo(this).on(ButtonBase.CLICK, function(e:FewfEvent){ dispatchEvent(new FewfEvent(SHAMAN_COLOR_PICKED, e.data)); });
+			new ColorButton({ color:0x95D9D6, x:xx - (sizex*0.5+3), y:yy + sizey*0.5 + 35, width:sizex, height:sizey }).appendTo(this).onButtonClick(function(e:FewfEvent){ dispatchEvent(new FewfEvent(SHAMAN_COLOR_PICKED, e.data)); });
+			new ColorButton({ color:0xFCA6F1, x:xx + (sizex*0.5+3), y:yy + sizey*0.5 + 35, width:sizex, height:sizey }).appendTo(this).onButtonClick(function(e:FewfEvent){ dispatchEvent(new FewfEvent(SHAMAN_COLOR_PICKED, e.data)); });
 			
 			// Line
 			yy += 50 + 10;
@@ -128,7 +128,7 @@ package app.ui.panes
 			}
 			
 			SpriteButton.withObject(new $FilterIcon(), 0.85, { x:xx, y:315, width:70, height:70 }).appendTo(this)
-				.on(ButtonBase.CLICK, function(e:Event):void{ dispatchEvent(new Event(FILTER_MODE_CLICKED)); });
+				.onButtonClick(function(e:Event):void{ dispatchEvent(new Event(FILTER_MODE_CLICKED)); });
 		}
 		
 		/****************************

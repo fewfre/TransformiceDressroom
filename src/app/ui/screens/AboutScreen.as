@@ -4,12 +4,12 @@ package app.ui.screens
 	import app.data.GameAssets;
 	import app.ui.buttons.ScaleButton;
 	import app.ui.buttons.SpriteButton;
+	import com.fewfre.data.I18n;
 	import com.fewfre.display.DisplayWrapper;
 	import com.fewfre.display.RoundRectangle;
 	import com.fewfre.display.TextTranslated;
 	import com.fewfre.events.FewfEvent;
 	import com.fewfre.utils.Fewf;
-	import com.fewfre.utils.I18n;
 	import flash.display.Bitmap;
 	import flash.display.Graphics;
 	import flash.display.Sprite;

@@ -338,7 +338,7 @@ package com.fewfre.utils
 			
 			var requestVars:URLVariables = new URLVariables();
 			// requestVars.sheet = tPNG;
-			requestVars.sheet_base64 = ImgurApi.encodeByteArray(tPNG);
+			requestVars.sheet_base64 = encodeByteArrayAsString(tPNG);
 			requestVars.width = sheetData.frameWidth;
 			requestVars.height = sheetData.frameHeight;
 			requestVars.framescount = sheetData.framesCount;
@@ -371,6 +371,31 @@ package com.fewfre.utils
 			try {
 				urlLoader.load(request);
 			} catch (e:Error) { pCallback(null, e); }
+		}
+		
+		// https://stackoverflow.com/a/24896808/1411473
+		private static const ENCODE_CHARS : String = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+		public static function encodeByteArrayAsString(bytes:ByteArray):String{
+			var encodeChars:Array = ENCODE_CHARS.split("");
+			var out:Array = [];
+			var i:int = 0;
+			var j:int = 0;
+			var r:int = bytes.length % 3;
+			var len:int = bytes.length - r;
+			var c:int;
+			while (i < len) {
+				c = bytes[i++] << 16 | bytes[i++] << 8 | bytes[i++];
+				out[j++] = encodeChars[c >> 18] + encodeChars[c >> 12 & 0x3f] + encodeChars[c >> 6 & 0x3f] + encodeChars[c & 0x3f];
+			}
+			if (r == 1) {
+				c = bytes[i++];
+				out[j++] = encodeChars[c >> 2] + encodeChars[(c & 0x03) << 4] + "==";
+			}
+			else if (r == 2) {
+				c = bytes[i++] << 8 | bytes[i++];
+				out[j++] = encodeChars[c >> 10] + encodeChars[c >> 4 & 0x3f] + encodeChars[(c & 0x0f) << 2] + "=";
+			}
+			return out.join('');
 		}
 	}
 }

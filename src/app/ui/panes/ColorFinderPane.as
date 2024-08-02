@@ -1,23 +1,22 @@
 package app.ui.panes
 {
-	import app.data.*;
-	import app.ui.*;
+	import app.data.ConstantsApp;
 	import app.ui.buttons.*;
 	import app.ui.common.*;
-	import com.fewfre.display.*;
+	import app.ui.panes.base.SidePaneWithInfobar;
+	import app.ui.panes.colorpicker.RecentColorsListDisplay;
+	import app.ui.panes.infobar.Infobar;
+	import com.fewfre.display.RoundRectangle;
 	import com.fewfre.utils.*;
+	import ext.ParentApp;
 	import flash.display.*;
 	import flash.events.*;
-	import flash.text.*;
 	import flash.geom.*;
-	import ext.ParentApp;
-	
-	import flash.net.FileReference;
 	import flash.net.FileFilter;
+	import flash.net.FileReference;
 	import flash.net.URLRequest;
-	import app.ui.panes.base.SidePaneWithInfobar;
-	import app.ui.panes.infobar.Infobar;
-	import app.ui.panes.colorpicker.RecentColorsListDisplay;
+	import flash.text.TextField;
+	import flash.text.TextFieldType;
 	
 	public class ColorFinderPane extends SidePaneWithInfobar
 	{
@@ -111,10 +110,10 @@ package app.ui.panes
 			*********************/
 			var tSliderWidth = ConstantsApp.PANE_WIDTH * 0.4;
 			_scaleSlider = new FancySlider(tSliderWidth)
-				.moveSelf(-tSliderWidth*0.5, -110)
+				.move(-tSliderWidth*0.5, -110)
 				.setSliderParams(1, 5, 1)
-				.appendTo(_tray);
-			_scaleSlider.addEventListener(FancySlider.CHANGE, _onSliderChange);
+				.appendTo(_tray)
+				.on(FancySlider.CHANGE, _onSliderChange);
 			
 			// Attach scroll event to back to detect scroll anywhere on pane
 			// and also attach to item since it ignores the other scroll event if mouse over it
@@ -173,11 +172,8 @@ package app.ui.panes
 			fileRef.addEventListener(Event.SELECT, function(){ fileRef.load(); });
 			fileRef.addEventListener(Event.COMPLETE, _onFileSelect);
 			
-			var selectImageBtn = new ScaleButton({ x:ConstantsApp.PANE_WIDTH*0.5 - 25, y: -_tray.y + 60 + 25, obj:new $Folder(), obj_scale:1 });
-			selectImageBtn.addEventListener(ButtonBase.CLICK, function(){
-				fileRef.browse([new FileFilter("Images", "*.jpg;*.jpeg;*.gif;*.png")]);
-			});
-			_tray.addChild(selectImageBtn);
+			ScaleButton.withObject(new $Folder()).move(ConstantsApp.PANE_WIDTH/2-25, -_tray.y + 60 + 25).appendTo(_tray)
+				.onButtonClick(function(e){ fileRef.browse([new FileFilter("Images", "*.jpg;*.jpeg;*.gif;*.png")]); });
 		}
 		
 		public override function open() : void {

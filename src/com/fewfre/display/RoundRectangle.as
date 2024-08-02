@@ -98,6 +98,8 @@ package com.fewfre.display
 			return this;
 		}
 		public function toAlpha(pVal:Number) : RoundRectangle { this.alpha = pVal; return this; }
+		public function toVisible(pVal:Boolean) : RoundRectangle { this.visible = pVal; return this; }
+		public function toScale(pVal:Number) : RoundRectangle { this.scale = pVal; return this; }
 		
 		// render values
 		public function toRadius(pRadius:Number) : RoundRectangle { this.radius = pRadius; return this; }

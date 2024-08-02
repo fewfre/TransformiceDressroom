@@ -1,4 +1,4 @@
-package com.fewfre.utils
+package com.fewfre.data
 {
 	import flash.net.SharedObject;
 

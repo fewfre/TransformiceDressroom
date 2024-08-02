@@ -44,6 +44,8 @@ package app.ui.screens
 			*****************************/
 			ScaleButton.withObject(new $WhiteX()).move(tWidth/2 - 5, -tHeight/2 + 5).appendTo(this).onButtonClick(_onCloseClicked);
 		}
+		public function on(type:String, listener:Function): ErrorScreen { this.addEventListener(type, listener); return this; }
+		public function off(type:String, listener:Function): ErrorScreen { this.removeEventListener(type, listener); return this; }
 		
 		public function open(errorText:String) : void {
 			// If screen already open just append to existing message

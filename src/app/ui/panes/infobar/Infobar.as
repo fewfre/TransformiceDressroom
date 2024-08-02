@@ -8,7 +8,6 @@ package app.ui.panes.infobar
 	import app.ui.buttons.SpriteButton;
 	import app.ui.panes.infobar.GridManagementWidget;
 	import app.world.data.ItemData;
-	import com.fewfre.display.ButtonBase;
 	import com.fewfre.display.TextTranslated;
 	import com.fewfre.events.FewfEvent;
 	import com.fewfre.utils.Fewf;
@@ -108,7 +107,7 @@ package app.ui.panes.infobar
 			if(!pData.showBackButton) {
 				_colorWheel = ScaleButton.withObject(new $ColorWheel()).appendTo(this) as ScaleButton;
 				_colorWheel.move(_imageCont.x + _imageCont.width + _colorWheel.Image.width*0.5 + 10, 25)
-					.on(ButtonBase.CLICK, dispatchEventHandler(COLOR_WHEEL_CLICKED));
+					.onButtonClick(dispatchEventHandler(COLOR_WHEEL_CLICKED));
 				showColorWheel(false);
 			} else {
 				_backButton = ScaleButton.withObject(new $BackArrow()).appendTo(this) as ScaleButton;
@@ -131,13 +130,13 @@ package app.ui.panes.infobar
 			if(pData.showEyeDropper) {
 				_eyeDropperButton = SpriteButton.withObject(new $EyeDropper(), 0.45, { size:BTN_SIZE })
 					.move(0, BTN_Y).appendTo(_leftButtonsTray) as SpriteButton;
-				_eyeDropperButton.on(ButtonBase.CLICK, dispatchEventHandler(EYE_DROPPER_CLICKED));
+				_eyeDropperButton.onButtonClick(dispatchEventHandler(EYE_DROPPER_CLICKED));
 				_eyeDropperButton.disable().alpha = 0;
 			}
 			if(pData.showFavorites) {
 				_favoriteButton = SpriteButton.withObject(new $HeartEmpty(), 1, { size:BTN_SIZE, data:{ pushed:false } });
 				_favoriteButton.move(pData.showEyeDropper ? BTN_SIZE+3 : 0, BTN_Y).appendTo(_leftButtonsTray)
-					.on(ButtonBase.CLICK, function(e):void{
+					.onButtonClick(function(e):void{
 						_updateFavoriteButton(!_favoriteButton.data.pushed);
 						dispatchEvent(new FewfEvent(FAVORITE_CLICKED, { pushed:_favoriteButton.data.pushed }));
 					});
@@ -167,7 +166,7 @@ package app.ui.panes.infobar
 			* Right Side Buttons
 			*********************/
 			_downloadButton = SpriteButton.withObject(new $SimpleDownload(), 0.45, { size:BTN_SIZE }).move(this.Width-BTN_SIZE, BTN_Y).appendTo(this) as SpriteButton;
-			_downloadButton.on(ButtonBase.CLICK, _onDownloadClicked);
+			_downloadButton.onButtonClick(_onDownloadClicked);
 			_downloadButton.disable().alpha = 0;
 			
 			// Line seperating infobar and contents below it.

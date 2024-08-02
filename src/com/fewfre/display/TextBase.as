@@ -1,9 +1,6 @@
 package com.fewfre.display
 {
-	import com.fewfre.events.FewfEvent;
 	import com.fewfre.utils.Fewf;
-	import com.fewfre.utils.FewfUtils;
-	import com.fewfre.utils.I18n;
 	import flash.display.Sprite;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;

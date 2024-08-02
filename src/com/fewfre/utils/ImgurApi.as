@@ -4,8 +4,8 @@ package com.fewfre.utils
 	import com.fewfre.utils.Fewf;
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
+	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
-	import flash.utils.ByteArray;
 	
 	import flash.events.Event;
 	import flash.net.URLRequest;
@@ -55,11 +55,10 @@ package com.fewfre.utils
 		private static function _convertDisplayObjectToURI(pObj:DisplayObject) : String {
 			var tRect:Rectangle = pObj.getBounds(pObj);
 			var bmd:BitmapData = new BitmapData(tRect.width, tRect.height, true, 0xFFFFFF);
-			var tMatrix:flash.geom.Matrix = new flash.geom.Matrix(1, 0, 0, 1, -tRect.left, -tRect.top);
+			var tMatrix:Matrix = new Matrix(1, 0, 0, 1, -tRect.left, -tRect.top);
 			bmd.draw(pObj, tMatrix);
 			// Encode and then convert byte array to string.
-			var ba:ByteArray = PNGEncoder.encode(bmd);
-			var uri:String = encodeByteArray(ba);
+			var uri:String = FewfDisplayUtils.encodeByteArrayAsString( PNGEncoder.encode(bmd) );
 			return uri;
 		}
 		
@@ -207,36 +206,5 @@ package com.fewfre.utils
 			foo.field.wordWrap = true;
 			foo.field.width = 400;
 		}*/
-		
-		/*********************
-		* Helper Methods
-		**********************/
-		// https://stackoverflow.com/a/24896808/1411473
-		private static const ENCODE_CHARS : String = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
-		public static function encodeByteArray(bytes:ByteArray):String{
-			var encodeChars:Array = ENCODE_CHARS.split("");
-		/*public static function encodeByteArray(data:BitmapData):String{*/
-			/*if(data == null)throw new Error("data parameter can not be empty!");*/
-			/*var bytes:ByteArray = data.encode(data.rect, new JPEGEncoderOptions(100));  //100 is the JPG quality*/
-			var out:Array = [];
-			var i:int = 0;
-			var j:int = 0;
-			var r:int = bytes.length % 3;
-			var len:int = bytes.length - r;
-			var c:int;
-			while (i < len) {
-				c = bytes[i++] << 16 | bytes[i++] << 8 | bytes[i++];
-				out[j++] = encodeChars[c >> 18] + encodeChars[c >> 12 & 0x3f] + encodeChars[c >> 6 & 0x3f] + encodeChars[c & 0x3f];
-			}
-			if (r == 1) {
-				c = bytes[i++];
-				out[j++] = encodeChars[c >> 2] + encodeChars[(c & 0x03) << 4] + "==";
-			}
-			else if (r == 2) {
-				c = bytes[i++] << 8 | bytes[i++];
-				out[j++] = encodeChars[c >> 10] + encodeChars[c >> 4 & 0x3f] + encodeChars[(c & 0x0f) << 2] + "=";
-			}
-			return out.join('');
-		}
 	}
 }

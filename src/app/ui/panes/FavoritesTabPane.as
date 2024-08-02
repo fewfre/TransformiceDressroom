@@ -1,26 +1,20 @@
 package app.ui.panes
 {
-	import app.data.*;
-	import app.ui.*;
-	import app.ui.buttons.*;
+	import app.data.ConstantsApp;
+	import app.data.FavoriteItemsLocalStorageManager;
+	import app.data.GameAssets;
+	import app.ui.buttons.ScaleButton;
+	import app.ui.buttons.SpriteButton;
 	import app.ui.panes.base.ButtonGridSidePane;
 	import app.ui.panes.infobar.GridManagementWidget;
 	import app.ui.panes.infobar.Infobar;
-	import app.world.data.ItemData;
-	import app.world.elements.*;
-	import com.fewfre.display.*;
-	import com.fewfre.events.FewfEvent;
-	import com.fewfre.utils.Fewf;
-	import com.fewfre.utils.FewfDisplayUtils;
-	import com.fewfre.utils.FewfUtils;
-	import flash.display.*;
-	import flash.display.MovieClip;
-	import flash.events.*;
-	import flash.net.FileFilter;
-	import flash.net.FileReference;
-	import flash.utils.ByteArray;
-	import flash.utils.setTimeout;
 	import app.ui.screens.TrashConfirmScreen;
+	import app.world.data.ItemData;
+	import com.fewfre.events.FewfEvent;
+	import flash.display.MovieClip;
+	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
 	
 	public class FavoritesTabPane extends ButtonGridSidePane
 	{
@@ -80,7 +74,7 @@ package app.ui.panes
 			
 			// main button
 			SpriteButton.withObject(itemImage, "auto", { size:grid.cellSize, data:{ itemData:itemData } }).appendTo(cell)
-				.on(ButtonBase.CLICK, function(){ _dispatchItemData(itemData); });
+				.onButtonClick(function(){ _dispatchItemData(itemData); });
 			
 			// Add on top of main button
 			cell.addChild(actionTray);

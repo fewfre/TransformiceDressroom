@@ -1,11 +1,8 @@
 package app.world
 {
-
-
 	import app.data.*;
 	import app.ui.*;
 	import app.ui.buttons.*;
-	import app.ui.common.*;
 	import app.ui.panes.*;
 	import app.ui.panes.base.ButtonGridSidePane;
 	import app.ui.panes.base.PaneManager;
@@ -18,25 +15,18 @@ package app.world
 	import app.world.data.*;
 	import app.world.elements.*;
 	
-	import com.adobe.images.*;
 	import com.fewfre.display.*;
-	import com.fewfre.events.*;
+	import com.fewfre.events.FewfEvent;
 	import com.fewfre.utils.*;
-	import com.fewfre.utils.AssetManager;
-	import com.piterwilson.utils.*;
 	import ext.ParentApp;
 	
 	import flash.display.*;
-	import flash.display.MovieClip;
-	import flash.events.*
-	import flash.external.*;
-	import flash.geom.*;
-	import flash.net.*;
-	import flash.text.*;
+	import flash.events.*;
+	import flash.external.ExternalInterface;
 	import flash.ui.Keyboard;
-	import flash.utils.*;
+	import flash.utils.setTimeout;
 	
-	public class World extends MovieClip
+	public class World extends Sprite
 	{
 		// Storage
 		private var character    : Character;
@@ -133,10 +123,10 @@ package app.world
 			
 			// Outfit Button
 			new ScaleButton({ origin:0.5, obj:new $Outfit(), obj_scale:0.4 }).appendTo(this).move(_toolbox.x+167, _toolbox.y+12.5+21)
-				.on(ButtonBase.CLICK, function(pEvent:Event){ _paneManager.openPane(TAB_OUTFITS); });
+				.onButtonClick(function(e:Event){ _paneManager.openPane(TAB_OUTFITS); });
 				
 			var favButton:ScaleButton = ScaleButton.withObject(new $HeartFull(), 1).appendTo(this).move(_toolbox.x+167 + 1, _toolbox.y+12.5+21 + 23)
-				.on(ButtonBase.CLICK, function(pEvent:Event){ _paneManager.openPane(FAVORITES_PANE_ID); }) as ScaleButton;
+				.onButtonClick(function(e:Event){ _paneManager.openPane(FAVORITES_PANE_ID); }) as ScaleButton;
 			favButton.visible = FavoriteItemsLocalStorageManager.getAllFavorites().length > 0;
 			Fewf.dispatcher.addEventListener(ConstantsApp.FAVORITE_ADDED_OR_REMOVED, function(e:FewfEvent):void{
 				favButton.visible = FavoriteItemsLocalStorageManager.getAllFavorites().length > 0;
@@ -148,19 +138,20 @@ package app.world
 			/////////////////////////////
 			// Bottom Left Area
 			/////////////////////////////
-			var tLangButton:LangButton = new LangButton({ x:22, y:pStage.stageHeight-17, width:30, height:25, origin:0.5 }).appendTo(this)
-				.on(ButtonBase.CLICK, _onLangButtonClicked) as LangButton;
+			var tLangButton:SpriteButton = LangScreen.createLangButton({ width:30, height:25, origin:0.5 })
+				.move(22, pStage.stageHeight-17).appendTo(this)
+				.onButtonClick(_onLangButtonClicked) as SpriteButton;
 			
 			// About Screen Button
 			var aboutButton:SpriteButton = new SpriteButton({ size:25, origin:0.5 }).appendTo(this)
 				.move(tLangButton.x+(tLangButton.Width/2)+2+(25/2), pStage.stageHeight - 17)
-				.on(ButtonBase.CLICK, _onAboutButtonClicked) as SpriteButton;
+				.onButtonClick(_onAboutButtonClicked) as SpriteButton;
 			new TextBase("?", { size:22, color:0xFFFFFF, bold:true, origin:0.5 }).move(0, -1).appendTo(aboutButton)
 			
 			if(!!(ParentApp.reopenSelectionLauncher())) {
 				new ScaleButton({ obj:new $BackArrow(), obj_scale:0.5, origin:0.5 }).appendTo(this)
 					.move(22, pStage.stageHeight-17-28)
-					.on(ButtonBase.CLICK, function():void{ ParentApp.reopenSelectionLauncher()(); });
+					.onButtonClick(function():void{ ParentApp.reopenSelectionLauncher()(); });
 			}
 			
 			/////////////////////////////
@@ -392,7 +383,7 @@ package app.world
 			
 			// now update the infobars
 			_updateUIBasedOnCharacter();
-			(_paneManager.getPane(TAB_OTHER) as OtherTabPane).updateButtonsBasedOnCurrentData();
+			getOtherPane().updateButtonsBasedOnCurrentData();
 			
 			return parseSuccess;
 		}
@@ -432,7 +423,7 @@ package app.world
 				
 				// now update the infobars
 				_updateUIBasedOnCharacter();
-				(_paneManager.getPane(TAB_OTHER) as OtherTabPane).updateButtonsBasedOnCurrentData();
+				getOtherPane().updateButtonsBasedOnCurrentData();
 			}
 			
 			callback(parseSuccess);
@@ -630,7 +621,7 @@ package app.world
 				var odds:Number = tType == ItemType.POSE ? 0.5 : 0.65;
 				_randomItemOfType(tType, Math.random() <= odds);
 			}
-			(_paneManager.getPane(TAB_OTHER) as OtherTabPane).updateButtonsBasedOnCurrentData();
+			getOtherPane().updateButtonsBasedOnCurrentData();
 		}
 
 		private function _randomItemOfType(pType:ItemType, pSetToDefault:Boolean=false) : void {
@@ -718,7 +709,7 @@ package app.world
 				}
 				
 			}
-			(_paneManager.getPane(TAB_OTHER) as OtherTabPane).updateButtonsBasedOnCurrentData();
+			getOtherPane().updateButtonsBasedOnCurrentData();
 			LockHistoryMap.deleteAllLockHistory();
 		}
 
@@ -768,6 +759,7 @@ package app.world
 			private function getColorPickerPane() : ColorPickerTabPane { return _paneManager.getPane(COLOR_PANE_ID) as ColorPickerTabPane; }
 			private function getConfigColorPickerPane() : ColorPickerTabPane { return _paneManager.getPane(CONFIG_COLOR_PANE_ID) as ColorPickerTabPane; }
 			private function getColorFinderPane() : ColorFinderPane { return _paneManager.getPane(COLOR_FINDER_PANE_ID) as ColorFinderPane; }
+			private function getOtherPane() : OtherTabPane { return _paneManager.getPane(TAB_OTHER) as OtherTabPane; }
 		//}END Get TabPane data
 		
 		//{REGION ItemFiltering Tab

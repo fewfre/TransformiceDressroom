@@ -4,7 +4,6 @@ package app.ui.panes.colorpicker
 	import app.ui.buttons.SpriteButton;
 	import app.ui.panes.base.GridSidePane;
 	import app.ui.panes.infobar.Infobar;
-	import com.fewfre.display.ButtonBase;
 	import com.fewfre.events.FewfEvent;
 	import com.piterwilson.utils.ColorPicker;
 	import flash.display.DisplayObject;
@@ -59,11 +58,11 @@ package app.ui.panes.colorpicker
 			
 			if(!pData.hide_default) {
 				this.addItem( new SpriteButton({ text:"btn_color_defaults", x:6, y:15, width:100, height:22 })
-					.on(ButtonBase.CLICK, function(){ _defaultAllColors(); }) );
+					.onButtonClick(function(){ _defaultAllColors(); }) );
 			}
 			
 			_randomizeButton = SpriteButton.withObject(new $Dice(), 0.8, { size:24 }).move(ConstantsApp.PANE_WIDTH - 24 - 11, 14)
-				.on(ButtonBase.CLICK, function(){ _randomizeAllColors(); }) as SpriteButton;
+				.onButtonClick(function(){ _randomizeAllColors(); }) as SpriteButton;
 				this.addItem(_randomizeButton);
 			
 			_recentColorsDisplay = new RecentColorsListDisplay().move(ConstantsApp.PANE_WIDTH/2, 316+60+17).appendTo(this)

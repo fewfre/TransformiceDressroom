@@ -3,7 +3,6 @@ package app.ui.panes.infobar
 	import flash.display.Sprite;
 	import app.ui.buttons.SpriteButton;
 	import app.ui.buttons.PushButton;
-	import com.fewfre.display.ButtonBase;
 	import flash.events.Event;
 	import flash.geom.Rectangle;
 
@@ -33,7 +32,7 @@ package app.ui.panes.infobar
 			if(!pData.hideRandomize) {
 				// Randomization buttons
 				_randomizeButton = new SpriteButton({ x:xx, y:yy, size:bsize, obj_scale:0.8, obj:new $Dice() }).appendTo(this) as SpriteButton;
-				_randomizeButton.on(ButtonBase.CLICK, dispatchEventHandler(RANDOMIZE_CLICKED));
+				_randomizeButton.onButtonClick(dispatchEventHandler(RANDOMIZE_CLICKED));
 				xx += bsize + spacing;
 				
 				if(!pData.hideRandomizeLock) {
@@ -48,7 +47,7 @@ package app.ui.panes.infobar
 				
 				// List reversal button
 				_reverseButton = new SpriteButton({ x:xx, y:yy, size:bsize, obj_scale:0.7, obj:new $FlipIcon() }).appendTo(this) as SpriteButton;
-				_reverseButton.on(ButtonBase.CLICK, dispatchEventHandler(REVERSE_CLICKED));
+				_reverseButton.onButtonClick(dispatchEventHandler(REVERSE_CLICKED));
 				xx += bsize + spacing;
 			}
 			
@@ -57,10 +56,10 @@ package app.ui.panes.infobar
 				
 				// Arrow buttons
 				_leftItemButton = new SpriteButton({ x:xx, y:yy, size:bsize, obj_scale:0.45, obj:new $BackArrow() }).appendTo(this) as SpriteButton;
-				_leftItemButton.on(ButtonBase.CLICK, dispatchEventHandler(LEFT_ARROW_CLICKED));
+				_leftItemButton.onButtonClick(dispatchEventHandler(LEFT_ARROW_CLICKED));
 				xx += bsize + spacing;
 				_rightItemButton = new SpriteButton({ x:xx, y:yy, size:bsize, obj_scale:0.45, obj:new $BackArrow() }).appendTo(this) as SpriteButton;
-				_rightItemButton.on(ButtonBase.CLICK, dispatchEventHandler(RIGHT_ARROW_CLICKED));
+				_rightItemButton.onButtonClick(dispatchEventHandler(RIGHT_ARROW_CLICKED));
 				_rightItemButton.Image.rotation = 180;
 				xx += bsize + spacing;
 			}

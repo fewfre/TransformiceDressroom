@@ -1,6 +1,5 @@
 package app.ui.common
 {
-	import com.fewfre.display.ButtonBase;
 	import com.fewfre.utils.FewfDisplayUtils;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -62,7 +61,7 @@ package app.ui.common
 			// Copy button
 			_button = new CopyButton({ size:bsize, origin:0.5 }).appendTo(_tray.root)
 				.move(width - padX - bsize/2 + 2, height/2)
-				.on(ButtonBase.CLICK, _onCopyButtonClicked) as CopyButton;
+				.onButtonClick(_onCopyButtonClicked) as CopyButton;
 			_button.changeIcon(true);
 		}
 		public function move(pX:Number, pY:Number) : FancyCopyField { _root.x = pX; _root.y = pY; return this; }

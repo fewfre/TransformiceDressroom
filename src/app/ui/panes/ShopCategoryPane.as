@@ -11,7 +11,6 @@ package app.ui.panes
 	import app.ui.panes.base.ButtonGridSidePane;
 	import app.ui.panes.infobar.Infobar;
 	import app.world.data.ItemData;
-	import com.fewfre.display.ButtonBase;
 	import com.fewfre.display.Grid;
 	import com.fewfre.events.FewfEvent;
 	import com.fewfre.utils.Fewf;
@@ -156,7 +155,7 @@ package app.ui.panes
 			if(!GameAssets.defaultSkin.matches(itemData)) { return; }
 			// Customizeable fur color button
 			new ScaleButton({ obj:new $ColorWheel(), obj_scale:0.5 }).move(60, 12).appendTo(cell)
-				.on(ButtonBase.CLICK, function():void{
+				.onButtonClick(function():void{
 					parentButton.toggleOn();
 					dispatchEvent(new Event(DEFAULT_SKIN_COLOR_BTN_CLICKED));
 				});
@@ -207,8 +206,8 @@ package app.ui.panes
 			for each(var tId:String in favIds) {
 				tItemData = GameAssets.getItemFromTypeID(_type, tId);
 				if(tItemData) {
-					_favoritesGrid.add(new SpriteButton({ size:_favoritesGrid.cellSize, obj:GameAssets.getItemImage(tItemData), obj_scale:"auto", data:tItemData })
-						.on(ButtonBase.CLICK, _favoriteClicked));
+					_favoritesGrid.add(SpriteButton.withObject(GameAssets.getItemImage(tItemData), "auto", { size:_favoritesGrid.cellSize, data:tItemData })
+						.onButtonClick(_favoriteClicked));
 				}
 			}
 			
