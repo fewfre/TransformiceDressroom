@@ -1,4 +1,5 @@
 ## V1.29f - 3 August 2024
+- Emojis can now be selected (button on "Other" pane)
 - Imgur feature overhaul
 	- Now works in air app (only worked on browser before)
 	- Moved button from being on main toolbar to being on the share screen

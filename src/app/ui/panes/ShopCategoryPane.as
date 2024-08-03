@@ -49,13 +49,13 @@ package app.ui.panes
 			if(_type == ItemType.SKIN || _type == ItemType.POSE) { buttonPerRow = 5; }
 			super(buttonPerRow);
 			
-			if(_type !== ItemType.POSE) {
+			if(_type !== ItemType.POSE && _type !== ItemType.EMOJI) {
 				// Start these ones reversed by default
 				grid.reverse();
 			}
 			
 			selectedButtonIndex = -1;
-			this.addInfoBar( new Infobar({ showEyeDropper:_type!=ItemType.POSE, gridManagement:true, showFavorites:true }) );
+			this.addInfoBar( new Infobar({ showEyeDropper:_type!=ItemType.POSE, gridManagement:{ hideRandomizeLock:_type==ItemType.EMOJI }, showFavorites:true }) );
 			_infobar.on(Infobar.FAVORITE_CLICKED, _addRemoveFavoriteToggled);
 			_setupGrid(GameAssets.getItemDataListByType(_type));
 			

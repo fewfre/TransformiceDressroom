@@ -2,25 +2,26 @@ package app.data
 {
 	public final class ItemType
 	{
-		public static const POSE				: ItemType = new ItemType("pose");
-		public static const SKIN				: ItemType = new ItemType("fur", 22); // colors are 21
-		public static const HEAD				: ItemType = new ItemType("head", 0);
-		public static const HAIR				: ItemType = new ItemType("hair", 5);
-		public static const EYES				: ItemType = new ItemType("eyes", 1);
-		public static const EARS				: ItemType = new ItemType("ears", 2);
-		public static const MOUTH				: ItemType = new ItemType("mouth", 3);
-		public static const NECK				: ItemType = new ItemType("neck", 4);
-		public static const TAIL				: ItemType = new ItemType("tail", 6);
-		public static const CONTACTS			: ItemType = new ItemType("contacts", 7);
-		public static const HAND				: ItemType = new ItemType("hands", 8);
-		public static const TATTOO				: ItemType = new ItemType("tattoo", 11);
+		public static const POSE      : ItemType = new ItemType("pose");
+		public static const SKIN      : ItemType = new ItemType("fur", 22); // colors are 21
+		public static const HEAD      : ItemType = new ItemType("head", 0);
+		public static const HAIR      : ItemType = new ItemType("hair", 5);
+		public static const EYES      : ItemType = new ItemType("eyes", 1);
+		public static const EARS      : ItemType = new ItemType("ears", 2);
+		public static const MOUTH     : ItemType = new ItemType("mouth", 3);
+		public static const NECK      : ItemType = new ItemType("neck", 4);
+		public static const TAIL      : ItemType = new ItemType("tail", 6);
+		public static const CONTACTS  : ItemType = new ItemType("contacts", 7);
+		public static const HAND      : ItemType = new ItemType("hands", 8);
+		public static const TATTOO    : ItemType = new ItemType("tattoo", 11);
+		public static const EMOJI     : ItemType = new ItemType("emoji");
 		// Specials
-		public static const OBJECT				: ItemType = new ItemType("object", 9);
-		public static const PAW_BACK			: ItemType = new ItemType("back-paw", 10);
-		public static const BACK				: ItemType = new ItemType("back");
+		public static const OBJECT    : ItemType = new ItemType("object", 9);
+		public static const PAW_BACK  : ItemType = new ItemType("back-paw", 10);
+		public static const BACK      : ItemType = new ItemType("back");
 		
 		public static const ALL : Vector.<ItemType> = new <ItemType>[
-			POSE, SKIN, HEAD, HAIR, EYES, EARS, MOUTH, NECK, TAIL, CONTACTS, HAND, TATTOO, OBJECT, PAW_BACK, BACK ];
+			POSE, SKIN, HEAD, HAIR, EYES, EARS, MOUTH, NECK, TAIL, CONTACTS, HAND, TATTOO, EMOJI, OBJECT, PAW_BACK, BACK ];
 		
 		// Order of item layering when occupying the same spot.
 		public static const LAYERING : Vector.<ItemType> = new <ItemType>[
@@ -29,7 +30,7 @@ package app.data
 		
 		// Which ones have panes, and the order the tabs appear in
 		public static const TYPES_WITH_SHOP_PANES : Vector.<ItemType> = new <ItemType>[
-			SKIN, HEAD, EARS, EYES, MOUTH, NECK, TAIL, HAIR, CONTACTS, TATTOO, HAND, POSE ];
+			SKIN, HEAD, EARS, EYES, MOUTH, NECK, TAIL, HAIR, CONTACTS, TATTOO, HAND, EMOJI, POSE ];
 		
 		public static const TYPES_WITH_SHARE_FILTER_PANES : Vector.<ItemType> = new <ItemType>[
 			HEAD, HAIR, EARS, EYES, MOUTH, NECK, TAIL, CONTACTS, HAND, TATTOO, SKIN ];

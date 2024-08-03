@@ -27,6 +27,7 @@ package app.data
 		public static var contacts: Vector.<ItemData>;
 		public static var hands: Vector.<ItemData>;
 		public static var tattoo: Vector.<ItemData>;
+		public static var emoji: Vector.<ItemData>;
 
 		public static var skins: Vector.<ItemData>;
 		public static var poses: Vector.<ItemData>;
@@ -110,6 +111,20 @@ function(){
 		poses.push(new ItemData(ItemType.POSE, tPoseClasses[i], { itemClass:Fewf.assets.getLoadedClass( "Anim"+tPoseClasses[i] ) }));
 	}
 	_defaultPoseIndex = 0;//FewfUtils.getIndexFromVectorWithKeyVal(poses, "id", ConstantsApp.DEFAULT_POSE_ID);
+},
+function(){
+	emoji = new Vector.<ItemData>();
+	// if(Fewf.assets.getData("config").badges) {
+	if(true) {
+		var url:String, urlSmall:String;
+		for each(var badgeFile:String in Fewf.assets.getData("config").emojis) {
+			emoji.push(new BitmapItemData(ItemType.EMOJI, badgeFile));
+		}
+		// We want to start the lazy load now, and we want to load them in reverse order since they show up in that order by default on badges tab
+		for(var i:int = emoji.length-1; i >= 0; i--) {
+			(emoji[i] as BitmapItemData).getBitmap();
+		}
+	}
 },
 pOnInitComplete
 			]);
@@ -195,6 +210,7 @@ pOnInitComplete
 				case ItemType.CONTACTS:	return contacts;
 				case ItemType.HAND:		return hands;
 				case ItemType.TATTOO:	return tattoo;
+				case ItemType.EMOJI:	return emoji;
 				case ItemType.SKIN:		return skins;
 				case ItemType.POSE:		return poses;
 				case ItemType.BACK:		return extraBack;
@@ -357,6 +373,15 @@ pOnInitComplete
 							img.scaleX = img.scaleY = 1.25;
 						}
 					},0);
+					break;
+				case ItemType.EMOJI:
+					tItem = new MovieClip();
+					// All emojis are 35x35 - this draws an invisible box so that encase it's not loaded yet the size is correct
+					// A hacky solution, but better than rewriting a bunch of stuff for now
+					tItem.graphics.beginFill(0, 0);
+					tItem.graphics.drawRect(0, 0, 35, 35);
+					tItem.graphics.endFill();
+					tItem.addChild((pData as BitmapItemData).getBitmap());
 					break;
 				default:
 					tItem = new pData.itemClass();

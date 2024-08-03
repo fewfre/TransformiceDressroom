@@ -25,8 +25,9 @@ package com.fewfre.loaders
 		private const _DICT_getLoadedBitmapFromUrl:Dictionary = new Dictionary();
 		private const _DICT_bitmapsNeedingToBeDrawnAfterImageLoaded:Dictionary = new Dictionary();
 		
+		// if http passed in loaded directly, else treats it as local path inside resources folder
 		public function lazyLoad(pFilePath:String) : Bitmap {
-			var url:String = pFilePath.indexOf("http") == 0 ? pFilePath : Fewf.swfUrlBase+pFilePath;
+			var url:String = pFilePath.indexOf("http") == 0 ? pFilePath : Fewf.swfUrlBase+"resources/"+pFilePath;
 			var key:String = url; // NOTE: future me, remember that key=url only works if not using cache breaker
 			var tBitmap:Bitmap = new Bitmap();
 			if(_DICT_getLoadedBitmapFromUrl[key]) {

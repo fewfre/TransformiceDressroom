@@ -29,15 +29,51 @@ for ($i = 218; $i <= 500; $i++) {
 	
 	$filename = "f{$i}.swf";
 	$url = "http://www.transformice.com/images/x_bibliotheques/fourrures/$filename";
+	$filenameLocal = "furs/$filename";
 	if(checkExternalFileExists($url)) {
-		file_put_contents("../$filename", fopen($url, 'r'));
-		$resources[] = $filename;
+		file_put_contents("../$filenameLocal", fopen($url, 'r'));
+		$resources[] = $filenameLocal;
 		$external[] = $url;
 		$breakCount = 0;
 	} else {
 		$breakCount++;
 		if($breakCount > 5) {
 			break;
+		}
+	}
+}
+
+//
+// Emoji Loading
+//
+$emojis = array();
+// [prefix, pad]
+$emojiPrefixes = array(
+	["", 0],
+	["1", 2], ["2", 2], ["3", 2], ["4", 2],
+	["1", 4], ["2", 4], ["3", 4]
+);
+foreach ($emojiPrefixes as $prefixData) {
+	list($prefix, $pad) = $prefixData;
+	$start = 0;
+	$max = $start + pow(10, $pad ?: 2); // ?: 2 is for the default "0" case
+	$breakCount = 0; // quit early if enough 404s in a row
+	
+	for ($i = $start; $i <= $max; $i++) {
+		$id = $prefix.str_pad($i, $pad, "0", STR_PAD_LEFT);
+		setProgress('updating', [ 'message'=>"Emoji ($prefix:$pad): $id", 'value'=>$i-$start+1, 'max'=>$max-$start ]);
+		$filename = "$id.png";
+		$url = "https://www.transformice.com/images/x_transformice/x_smiley/$filename";
+		$filenameLocal = "emojis/$filename";
+		if(checkExternalFileExists($url)) {
+			file_put_contents("../$filenameLocal", fopen($url, 'r'));
+			$emojis[] = $filenameLocal;
+			$breakCount = 0;
+		} else {
+			$breakCount++;
+			if($breakCount > 3) {
+				break;
+			}
 		}
 	}
 }
@@ -51,6 +87,7 @@ $json_path = "../config.json";
 $json = json_decode(file_get_contents($json_path), true);
 $json["packs"]["items"] = $resources;
 $json["packs_external"] = $external;
+$json["emojis"] = $emojis;
 $json["cachebreaker"] = time();//md5(time(), true);
 file_put_contents($json_path, json_encode($json));//, JSON_PRETTY_PRINT
 

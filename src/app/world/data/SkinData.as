@@ -51,13 +51,12 @@ package app.world.data
 			// classMap.CuisseG_1		= Fewf.assets.getLoadedClass( "_CuisseG_1_"+_assetID+"_1" );
 			// classMap.CuisseD_1		= Fewf.assets.getLoadedClass( "_CuisseD_1_"+_assetID+"_1" );
 		}
+		public override function copy() : ItemData {
+			return new SkinData({ assetID:_assetID, id:id, type:type, isSkinColor:isSkinColor, color:defaultColors ? defaultColors[0] : null, itemClass:itemClass, classMap:classMap });
+		}
 
 		protected override function _initDefaultColors() : void {
 
-		}
-		
-		public override function copy() : ItemData {
-			return new SkinData({ assetID:_assetID, id:id, type:type, isSkinColor:isSkinColor, color:defaultColors ? defaultColors[0] : null, itemClass:itemClass, classMap:classMap });
 		}
 		
 		// pOptions = { shamanMode:ShamanMode }

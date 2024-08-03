@@ -113,6 +113,13 @@ package app.world.elements
 			outfit.stopAtLastFrame();
 			outfit.goToPreviousFrameIfPoseHasntChanged(tOldPose);
 			dispatchEvent(new Event(POSE_UPDATED));
+			
+			var emojiData:ItemData = getItemData(ItemType.EMOJI);
+			if(emojiData) {
+				var emoji = outfit.addChild((emojiData as BitmapItemData).getBitmap());
+				emoji.x = -35/2;
+				emoji.y = -45 - 35/2;
+			}
 		}
 
 		public function parseParams(pCode:String) : Boolean {
@@ -144,6 +151,7 @@ package app.world.elements
 				_setParamToType(pParams, ItemType.CONTACTS, "c");
 				_setParamToType(pParams, ItemType.HAND, "hd");
 				_setParamToType(pParams, ItemType.TATTOO, "tt");
+				_setParamToType(pParams, ItemType.EMOJI, "em");
 				_setParamToType(pParams, ItemType.POSE, "p", false);
 				
 				if(pParams.paw == "y") { _itemDataMap[ItemType.OBJECT] = GameAssets.extraObjectWand; }
@@ -249,6 +257,7 @@ package app.world.elements
 			_addParamToVariables(tParms, "c", ItemType.CONTACTS);
 			_addParamToVariables(tParms, "hd", ItemType.HAND);
 			_addParamToVariables(tParms, "tt", ItemType.TATTOO);
+			_addParamToVariables(tParms, "em", ItemType.EMOJI);
 			_addParamToVariables(tParms, "p", ItemType.POSE);
 			
 			if(getItemData(ItemType.OBJECT)) { tParms.paw = "y"; }

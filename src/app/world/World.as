@@ -170,7 +170,7 @@ package app.world
 			/////////////////////////////
 			for each(var tType:ItemType in ItemType.TYPES_WITH_SHOP_PANES) {
 				_paneManager.addPane(tType.toString(), _setupItemPane(tType));
-				if(tType != ItemType.POSE) {
+				if(tType != ItemType.POSE && tType != ItemType.EMOJI) {
 					_paneManager.addPane("filter_"+tType.toString(), _setupItemPaneForFiltering(tType));
 				}
 				// Based on what the character is wearing at start, toggle on the appropriate buttons.
@@ -193,7 +193,8 @@ package app.world
 				.on(OtherTabPane.CUSTOM_SHAMAN_COLOR_CLICKED, function(e:Event):void{ _shamanColorButtonClicked(); })
 				.on(OtherTabPane.SHAMAN_COLOR_PICKED, function(e:FewfEvent):void{ _setConfigShamanColor(e.data as int); })
 				.on(OtherTabPane.ITEM_TOGGLED, _otherTabItemToggled)
-				.on(OtherTabPane.FILTER_MODE_CLICKED, function(e:Event){ _getAndOpenItemFilteringPane(); });
+				.on(OtherTabPane.FILTER_MODE_CLICKED, function(e:Event){ _getAndOpenItemFilteringPane(); })
+				.on(OtherTabPane.EMOJI_CLICKED, function(e:Event){ _paneManager.openPane(ItemType.EMOJI.toString()); });
 			
 			// Outfit Pane
 			_paneManager.addPane(TAB_OUTFITS, new OutfitManagerTabPane(character, _useOutfitShareCode, function(){ return character.getParamsTfmOfficialSyntax() }))
@@ -298,7 +299,7 @@ package app.world
 				if(ConstantsApp.CONFIG_TAB_ENABLED && !_itemFiltering_filterEnabled) tabs.push({ text:"tab_config", event:TAB_CONFIG });
 				
 				for each(var type:ItemType in ItemType.TYPES_WITH_SHOP_PANES) {
-					if(!_shouldShowShopTab(type)) continue;
+					if(!_shouldShowShopTab(type) || type == ItemType.EMOJI) continue;
 					// Some i18n ids don't match the type string, so manually handling it here
 					var i18nStr : String = type == ItemType.SKIN ? 'furs' : type == ItemType.HAND ? 'hand' : type == ItemType.POSE ? 'poses' : type.toString();
 					tabs.push({ text:"tab_"+i18nStr, event:type.toString() });
@@ -372,8 +373,7 @@ package app.world
 		
 			// First remove old stuff to prevent conflicts
 			character.shamanMode = ShamanMode.OFF;
-			for each(var tLayerType:ItemType in ItemType.LAYERING) { _removeItem(tLayerType); }
-			_removeItem(ItemType.POSE);
+			for each(var tLayerType:ItemType in ItemType.ALL) { _removeItem(tLayerType); }
 			
 			var parseSuccess:Boolean = character.parseParams(code);
 			
@@ -405,8 +405,7 @@ package app.world
 		
 			// First remove old stuff to prevent conflicts
 			character.shamanMode = ShamanMode.OFF;
-			for each(var tLayerType:ItemType in ItemType.LAYERING) { _removeItem(tLayerType); }
-			_removeItem(ItemType.POSE);
+			for each(var tLayerType:ItemType in ItemType.ALL) { _removeItem(tLayerType); }
 			
 			// If selection mode is active, end it
 			_itemFiltering_selectionModeOn = false;
@@ -608,6 +607,7 @@ package app.world
 
 		private function _onRandomizeDesignClicked(pEvent:Event) : void {
 			for each(var tType:ItemType in ItemType.TYPES_WITH_SHOP_PANES) {
+				if(tType == ItemType.EMOJI) { _removeItem(ItemType.EMOJI); continue; }
 				var odds:Number = tType == ItemType.POSE ? 0.5 : 0.65;
 				_randomItemOfType(tType, Math.random() <= odds);
 			}
@@ -678,8 +678,7 @@ package app.world
 			removeChild(trashConfirmScreen);
 			character.shamanMode = ShamanMode.OFF;
 			// Remove items
-			for each(var tLayerType:ItemType in ItemType.LAYERING) { _removeItem(tLayerType); }
-			_removeItem(ItemType.POSE);
+			for each(var tLayerType:ItemType in ItemType.ALL) { _removeItem(tLayerType); }
 			
 			// Refresh panes
 			for each(var tType:ItemType in ItemType.TYPES_WITH_SHOP_PANES) {

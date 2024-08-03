@@ -40,7 +40,7 @@
 			"x_fourrures3.swf",
 			"x_fourrures4.swf",
 			"x_fourrures5.swf",
-			"f260.swf"
+			"fourrures/f260.swf"
 		],
 		"parts": [
 			"poses.swf"
@@ -56,5 +56,10 @@
 		"https://www.transformice.com/images/x_bibliotheques/x_fourrures5.swf",
 		
 		"https://projects.fewfre.com/a801/transformice/dressroom/resources/poses.swf"
+	],
+	
+	"emojis": [
+		"emojis/9.png",
+		"emojis/20006.png"
 	]
 }

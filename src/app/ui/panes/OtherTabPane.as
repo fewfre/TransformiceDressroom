@@ -19,6 +19,7 @@ package app.ui.panes
 		public static const SHAMAN_COLOR_PICKED:String = "shaman_color_picked"; // FewfEvent<int>
 		public static const ITEM_TOGGLED:String = "item_toggled"; // FewfEvent<{ type:ItemType, itemData:ItemData|null }>
 		public static const FILTER_MODE_CLICKED:String = "filter_mode_clicked";
+		public static const EMOJI_CLICKED:String = "emoji_clicked";
 		
 		// Storage
 		private var _character       : Character;
@@ -129,6 +130,10 @@ package app.ui.panes
 			
 			SpriteButton.withObject(new $FilterIcon(), 0.85, { x:xx, y:315, width:70, height:70 }).appendTo(this)
 				.onButtonClick(function(e:Event):void{ dispatchEvent(new Event(FILTER_MODE_CLICKED)); });
+			
+			xx += 70 + 5;
+			SpriteButton.withObject(GameAssets.getItemImage(GameAssets.emoji[0]), "auto", { x:xx, y:315, width:70, height:70 }).appendTo(this)
+				.onButtonClick(function(e:Event):void{ dispatchEvent(new Event(EMOJI_CLICKED)); });
 		}
 		
 		/****************************
