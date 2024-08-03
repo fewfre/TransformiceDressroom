@@ -28,6 +28,7 @@ package app.ui.common
 		
 		// Properties
 		public function get root() : Sprite { return _root; }
+		public function get text() : String { return _field.text; }
 		public function set text(str:String) : void { _field.text = str; }
 		
 		// Constructor

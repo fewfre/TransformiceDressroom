@@ -28,6 +28,7 @@
 	"username_lookup_url_DISABLED": "https://projects.fewfre.com/a801/transformice/dressroom/resources/scripts/fetchlook/fetchlooknickname.php?nickname=$1",
 	"spritesheet2gif_url": "https://projects.fewfre.com/a801/transformice/dressroom/resources/scripts/spritesheet2gif/spritesheet2gif.php",
 	"fetchpastebin_url": "https://projects.fewfre.com/a801/transformice/dressroom/resources/scripts/pastebin/fetchpastebin.php",
+	"createpastebin_url": "https://projects.fewfre.com/a801/transformice/dressroom/resources/scripts/pastebin/createpastebin.php",
 	"upload2imgur_url": "https://projects.fewfre.com/a801/transformice/dressroom/resources/scripts/imgur/upload2imgur.php",
 	
 	"packs": {

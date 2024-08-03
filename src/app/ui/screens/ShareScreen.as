@@ -53,6 +53,16 @@ package app.ui.screens
 			new TextTranslated("share_fewfre_syntax", { size:15 }).move(0, yy).appendTo(this);
 			_fewfCopyField = new FancyCopyField(tWidth-50).appendTo(this).centerOrigin().move(0, yy+40);
 			
+			// if(!!_getCreatePastebinUrl()) {
+			// 	new SpriteButton({ text:"🌐", size:24, origin:0.5 }).move(tWidth/2 + 20, yy+40).appendTo(this)
+			// 	.onButtonClick(function(e){
+			// 		_createPastebin(_fewfCopyField.text, function(pResp, err:String=null):void{
+			// 			trace('aa', pResp);
+			// 			_fewfCopyField.text = pResp || err;
+			// 		});
+			// 	});
+			// }
+			
 			// Imgur
 			if(!!_getImgurUploadUrl()) {
 				_imgurButton = SpriteButton.withObject(new $ImgurIcon(), 0.45, { size:28, origin:0.5 })
@@ -97,7 +107,7 @@ package app.ui.screens
 			_imgurTray.visible = true;
 			_imgurButton.disable();
 			_imgurCopyField.text = "⏳ ...";
-			_uploadToImgur(_imgurSpriteToUpload, function(pResp, err:String=null){
+			_uploadToImgur(_imgurSpriteToUpload, function(pResp, err:String=null):void{
 				_imgurButton.enable();
 				if(pResp) {
 					try {
@@ -109,16 +119,25 @@ package app.ui.screens
 				}
 			});
 		}
+		
 		private function _uploadToImgur(img:Sprite, pCallback:Function) : void {
-			var url = _getImgurUploadUrl();
-			if(!url) { pCallback(null, "Imgur api not found."); return; }
-			
 			var tPNG:ByteArray = PNGEncoder.encode(FewfDisplayUtils.displayObjectToBitmapData(img));
-			new SimpleUrlLoader(url).setToPost().addFormDataHeader()
+			new SimpleUrlLoader(_getImgurUploadUrl()).setToPost().addFormDataHeader()
 				.addData("base64", FewfDisplayUtils.encodeByteArrayAsString(tPNG))
-				.onComplete(function(resp){
-					pCallback(resp);
-				})
+				.onComplete(function(resp){ pCallback(resp); })
+				.onError(function(err:Error){ pCallback(null, "["+err.name+":"+err.errorID+"] "+err.message); })
+				.load();
+		}
+		
+		///////////////////////
+		// Pastebin
+		///////////////////////
+		private function _getCreatePastebinUrl() : String { return Fewf.assets.getData("config").createpastebin_url; }
+		
+		private function _createPastebin(pPaste:String, pCallback:Function) : void {
+			new SimpleUrlLoader(_getCreatePastebinUrl()).setToPost().addFormDataHeader()
+				.addData("paste", pPaste)
+				.onComplete(function(resp){ pCallback(resp); })
 				.onError(function(err:Error){ pCallback(null, "["+err.name+":"+err.errorID+"] "+err.message); })
 				.load();
 		}

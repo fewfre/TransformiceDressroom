@@ -1,6 +1,5 @@
 <?php
-// Client ID of Imgur App 
-$IMGUR_CLIENT_ID = "c62a11c2af9173b"; 
+require_once '../config.php'; // contains $IMGUR_CLIENT_ID
  
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
