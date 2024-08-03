@@ -227,18 +227,20 @@ package com.fewfre.utils
 			
 		// }
 		
+		public static function displayObjectToBitmapData(pObj:DisplayObject, pScale:Number=1) : BitmapData {
+			var rect:Rectangle = pObj.getBounds(pObj);
+			var tBitmap:BitmapData = new BitmapData(rect.width*pScale, rect.height*pScale, true, 0xFFFFFF);
+
+			var tMatrix:Matrix = new Matrix(1, 0, 0, 1, -rect.left, -rect.top);
+			tMatrix.scale(pScale, pScale);
+
+			return bitmapDataDrawBestQuality(tBitmap, pObj, tMatrix);
+		}
+		
 		// Converts the image to a PNG bitmap and prompts the user to save.
 		public static function saveAsPNG(pObj:DisplayObject, pName:String, pScale:Number=1) : void {
 			if(!pObj){ return; }
-
-			var tRect:Rectangle = pObj.getBounds(pObj);
-			var tBitmap:BitmapData = new BitmapData(tRect.width*pScale, tRect.height*pScale, true, 0xFFFFFF);
-
-			var tMatrix:Matrix = new Matrix(1, 0, 0, 1, -tRect.left, -tRect.top);
-			tMatrix.scale(pScale, pScale);
-
-			bitmapDataDrawBestQuality(tBitmap, pObj, tMatrix);
-			
+			var tBitmap:BitmapData = displayObjectToBitmapData(pObj, pScale);
 			saveImageDataToDevice(tBitmap, pName, 'png');
 		}
 		

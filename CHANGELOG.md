@@ -1,3 +1,11 @@
+## V1.29f - 3 August 2024
+- Imgur feature overhaul
+	- Now works in air app (only worked on browser before)
+	- Moved button from being on main toolbar to being on the share screen
+	- Instead of forcing the user to open the link for the uploaded file, the imgur link now appears in a "copy" input
+- [Code] Some small `I18n` and `fewfre` lib tweaks
+
+
 ## V1.29e - 27 July 2024
 - Added a Favorites pane to see / manage all favorites in one place
 - Redesign for "copy share code" text fields / copy button to make it feel more polished
@@ -5,7 +13,6 @@
 	- This also affects outfit manager, as it uses share code logic behind the scenes
 - [Code] Some code tweaks, including polish for popup screens and color picker
 - [Code] `RoundedRectangle` rewritten + renamed to `RoundRectangle` and moved to `com.fewfre.display`
-- [Code] Some small `I18n` and `fewfre` lib tweaks
 
 
 ## V1.29d - 6 July 2024

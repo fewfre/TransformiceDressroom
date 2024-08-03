@@ -2,7 +2,6 @@ package app.ui
 {
 	import com.fewfre.display.TextTranslated;
 	import com.fewfre.utils.Fewf;
-	import com.fewfre.utils.ImgurApi;
 	import app.data.ConstantsApp;
 	import app.ui.buttons.*;
 	import flash.display.Sprite;
@@ -24,7 +23,6 @@ package app.ui
 		
 		public static const SHARE_CLICKED        = "share_clicked";
 		public static const CLIPBOARD_CLICKED    = "clipboard_clicked";
-		public static const IMGUR_CLICKED        = "imgur_clicked";
 		
 		public static const SCALE_SLIDER_CHANGE  = "scale_slider_change";
 		
@@ -38,7 +36,6 @@ package app.ui
 		public var scaleSlider       : FancySlider;
 		private var _downloadButton  : SpriteButton;
 		private var _animateButton   : PushButton;
-		private var _imgurButton     : SpriteButton;
 		private var _clipboardButton : SpriteButton;
 		
 		private var _itemFilterBanner: Sprite;
@@ -75,13 +72,7 @@ package app.ui
 				.onButtonClick(dispatchEventHandler(SHARE_CLICKED));
 			tButtonsOnLeft++;
 			
-			if(!Fewf.isExternallyLoaded) {
-				_imgurButton = new SpriteButton({ size:tButtonSize, obj_scale:0.45, obj:new $ImgurIcon(), origin:0.5 })
-					.move(xx+tButtonXInc*tButtonsOnLeft, yy)
-					.onButtonClick(dispatchEventHandler(IMGUR_CLICKED))
-					.appendTo(tTray) as SpriteButton;
-				tButtonsOnLeft++;
-			} else {
+			if(Fewf.isExternallyLoaded) {
 				_clipboardButton = new SpriteButton({ size:tButtonSize, obj_scale:0.415, obj:new $CopyIcon(), origin:0.5 })
 					.move(xx+tButtonXInc*tButtonsOnLeft, yy)
 					.onButtonClick(dispatchEventHandler(CLIPBOARD_CLICKED))
@@ -167,10 +158,6 @@ package app.ui
 		
 		public function downloadButtonEnable(pOn:Boolean) : void {
 			if(pOn) _downloadButton.enable(); else _downloadButton.disable();
-		}
-		
-		public function imgurButtonEnable(pOn:Boolean) : void {
-			if(pOn) _imgurButton.enable(); else _imgurButton.disable();
 		}
 		
 		public function toggleAnimationButtonOffWithEvent() : void {

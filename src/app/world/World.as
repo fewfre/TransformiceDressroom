@@ -112,7 +112,7 @@ package app.world
 			_toolbox = new Toolbox(character, _onShareCodeEntered).move(188, 28).appendTo(this)
 				.on(Toolbox.SAVE_CLICKED, _onSaveClicked)
 				.on(Toolbox.SHARE_CLICKED, _onShareButtonClicked)
-				.on(Toolbox.CLIPBOARD_CLICKED, _onClipboardButtonClicked).on(Toolbox.IMGUR_CLICKED, _onImgurButtonClicked)
+				.on(Toolbox.CLIPBOARD_CLICKED, _onClipboardButtonClicked)
 				
 				.on(Toolbox.SCALE_SLIDER_CHANGE, _onScaleSliderChange)
 				
@@ -537,16 +537,6 @@ package app.world
 			setTimeout(function(){ _toolbox.updateClipboardButton(true); }, 750);
 		}
 
-		private function _onImgurButtonClicked(e:Event) : void {
-			Fewf.dispatcher.addEventListener(ImgurApi.EVENT_DONE, _onImgurDone);
-			ImgurApi.uploadImage(character);
-			_toolbox.imgurButtonEnable(false);
-		}
-		private function _onImgurDone(e:*) : void {
-			Fewf.dispatcher.removeEventListener(ImgurApi.EVENT_DONE, _onImgurDone);
-			_toolbox.imgurButtonEnable(true);
-		}
-
 		// Note: does not automatically de-select previous buttons / infobars; do that before calling this
 		// This function is required when setting data via parseParams
 		private function _updateUIBasedOnCharacter() : void {
@@ -672,7 +662,7 @@ package app.world
 				tOfficialCode = "<error creating link>";
 			};
 
-			_shareScreen.open(tURL, tOfficialCode);
+			_shareScreen.open(tURL, tOfficialCode, character);
 			addChild(_shareScreen);
 		}
 
