@@ -25,6 +25,7 @@ package app.world
 	import flash.external.ExternalInterface;
 	import flash.ui.Keyboard;
 	import flash.utils.setTimeout;
+	import app.world.events.ItemDataEvent;
 	
 	public class World extends Sprite
 	{
@@ -299,7 +300,7 @@ package app.world
 				if(ConstantsApp.CONFIG_TAB_ENABLED && !_itemFiltering_filterEnabled) tabs.push({ text:"tab_config", event:TAB_CONFIG });
 				
 				for each(var type:ItemType in ItemType.TYPES_WITH_SHOP_PANES) {
-					if(!_shouldShowShopTab(type) || type == ItemType.EMOJI) continue;
+					if(type == ItemType.EMOJI || !_shouldShowShopTab(type)) continue;
 					// Some i18n ids don't match the type string, so manually handling it here
 					var i18nStr : String = type == ItemType.SKIN ? 'furs' : type == ItemType.HAND ? 'hand' : type == ItemType.POSE ? 'poses' : type.toString();
 					tabs.push({ text:"tab_"+i18nStr, event:type.toString() });
@@ -403,29 +404,35 @@ package app.world
 				return;
 			}
 		
-			// First remove old stuff to prevent conflicts
-			character.shamanMode = ShamanMode.OFF;
-			for each(var tLayerType:ItemType in ItemType.ALL) { _removeItem(tLayerType); }
+			try {
+				// First remove old stuff to prevent conflicts
+				character.shamanMode = ShamanMode.OFF;
+				for each(var tLayerType:ItemType in ItemType.ALL) { _removeItem(tLayerType); }
+				
+				// If selection mode is active, end it
+				_itemFiltering_selectionModeOn = false;
+				_showOrHideGiantFilterIcon();
+				
+				// Parse actual code
+				var parseSuccess:Boolean = ShareCodeFilteringData.parseShareCode(code);
+				if(parseSuccess) {
+					_enableFilterMode();
+					
+					character.updatePose();
+					
+					for each(var tType:ItemType in ItemType.TYPES_WITH_SHOP_PANES) { _refreshButtonCustomizationForItemData(character.getItemData(tType)); }
+					
+					// now update the infobars
+					_updateUIBasedOnCharacter();
+					getOtherPane().updateButtonsBasedOnCurrentData();
+				}
 			
-			// If selection mode is active, end it
-			_itemFiltering_selectionModeOn = false;
-			_showOrHideGiantFilterIcon();
-			
-			// Parse actual code
-			var parseSuccess:Boolean = ShareCodeFilteringData.parseShareCode(code);
-			if(parseSuccess) {
-				_enableFilterMode();
-				
-				character.updatePose();
-				
-				for each(var tType:ItemType in ItemType.TYPES_WITH_SHOP_PANES) { _refreshButtonCustomizationForItemData(character.getItemData(tType)); }
-				
-				// now update the infobars
-				_updateUIBasedOnCharacter();
-				getOtherPane().updateButtonsBasedOnCurrentData();
+				callback(parseSuccess);
 			}
-			
-			callback(parseSuccess);
+			catch (err:Error) {
+				_exitFilterMode();
+				callback(false);
+			};
 		}
 		
 		// Enables it using data already in ShareCodeFilteringData
@@ -548,30 +555,32 @@ package app.world
 			getShopPane(ItemType.POSE).flagWaveInput.text = character.flagWavingCode || "";
 		}
 
-		private function _onItemToggled(pEvent:FewfEvent) : void {
-			var tType:ItemType = pEvent.data.type;
+		private function _onItemToggled(e:ItemDataEvent) : void {
+			var tItemData:ItemData = e.itemData;
 
 			// De-select all buttons that aren't the clicked one.
-			var tPane:ShopCategoryPane = getShopPane(tType);
-			var tInfoBar:Infobar = tPane.infobar;
-			var tButton:PushButton = tPane.getButtonWithItemData(pEvent.data.itemData);
+			var tPane:ShopCategoryPane = getShopPane(tItemData.type), tInfoBar:Infobar = tPane.infobar;
+			var tButton:PushButton = tPane.getButtonWithItemData(tItemData);
 			// If clicked button is toggled on, equip it. Otherwise remove it.
 			if(tButton.pushed) {
-				var tData:ItemData = GameAssets.getItemFromTypeID(tType, pEvent.data.itemID);
-				setCurItemID(tType, tButton.id);
-				this.character.setItemData(tData);
+				tPane.selectedButtonIndex = tButton.id;
 
-				tInfoBar.addInfo( tData, GameAssets.getColoredItemImage(tData) );
 				var showColorWheel : Boolean = false;
 				if(GameAssets.getNumOfCustomColors(tButton.Image as MovieClip) > 0) {
 					showColorWheel = true;
 					if(_itemFiltering_filterEnabled) {
-						showColorWheel = ShareCodeFilteringData.isCustomizable(tType, tData.id);
+						showColorWheel = ShareCodeFilteringData.isCustomizable(tItemData);
+						// If the item can normally be customized but they're turned off by filtering, force reset the color to default
+						if(!showColorWheel) {
+							tItemData.setColorsToDefault();
+						}
 					}
 				}
+				this.character.setItemData(tItemData);
+				tInfoBar.addInfo( tItemData, GameAssets.getColoredItemImage(tItemData) );
 				tInfoBar.showColorWheel(showColorWheel);
 			} else {
-				_removeItem(tType);
+				_removeItem(tItemData.type);
 			}
 		}
 
@@ -724,32 +733,13 @@ package app.world
 			removeChild(_aboutScreen);
 		}
 
-		//{REGION Get TabPane data
-			private function getShopPane(pType:ItemType) : ShopCategoryPane {
-				return _paneManager.getPane(pType.toString()) as ShopCategoryPane;
-			}
-
-			private function getInfobarByType(pType:ItemType) : Infobar {
-				return getShopPane(pType).infobar;
-			}
-
-			private function getButtonArrayByType(pType:ItemType) : Vector.<PushButton> {
-				return getShopPane(pType).buttons;
-			}
-
-			private function getCurItemID(pType:ItemType) : int {
-				return getShopPane(pType).selectedButtonIndex;
-			}
-
-			private function setCurItemID(pType:ItemType, pID:int) : void {
-				getShopPane(pType).selectedButtonIndex = pID;
-			}
-			
+		//{REGION PaneManager helpers
+			private function getShopPane(pType:ItemType) : ShopCategoryPane { return _paneManager.getPane(pType.toString()) as ShopCategoryPane; }
 			private function getColorPickerPane() : ColorPickerTabPane { return _paneManager.getPane(COLOR_PANE_ID) as ColorPickerTabPane; }
 			private function getConfigColorPickerPane() : ColorPickerTabPane { return _paneManager.getPane(CONFIG_COLOR_PANE_ID) as ColorPickerTabPane; }
 			private function getColorFinderPane() : ColorFinderPane { return _paneManager.getPane(COLOR_FINDER_PANE_ID) as ColorFinderPane; }
 			private function getOtherPane() : OtherTabPane { return _paneManager.getPane(TAB_OTHER) as OtherTabPane; }
-		//}END Get TabPane data
+		//}END PaneManager helpers
 		
 		//{REGION ItemFiltering Tab
 			private function _getAndOpenItemFilteringPane() : void {
@@ -794,26 +784,18 @@ package app.world
 			private function _refreshSelectedItemColor(pType:ItemType) : void {
 				character.updatePose();
 				
-				var tItemData = this.character.getItemData(pType);
+				var tPane:ShopCategoryPane = getShopPane(pType);
+				var tItemData:ItemData = this.character.getItemData(pType);
 				if(pType != ItemType.SKIN) {
 					var tItem:MovieClip = GameAssets.getColoredItemImage(tItemData);
-					GameAssets.copyColor(tItem, getButtonArrayByType(pType)[ getCurItemID(pType) ].Image as MovieClip );
-					GameAssets.copyColor(tItem, getInfobarByType( pType ).Image );
+					GameAssets.copyColor(tItem, tPane.buttons[ tPane.selectedButtonIndex ].Image as MovieClip );
+					GameAssets.copyColor(tItem, tPane.infobar.Image );
 					GameAssets.copyColor(tItem, getColorPickerPane().infobar.Image);
 				} else {
-					_replaceImageWithNewImage(getButtonArrayByType(pType)[ getCurItemID(pType) ], GameAssets.getColoredItemImage(tItemData));
-					_replaceImageWithNewImage(getInfobarByType( pType ), GameAssets.getColoredItemImage(tItemData));
+					_replaceImageWithNewImage(tPane.buttons[ tPane.selectedButtonIndex ], GameAssets.getColoredItemImage(tItemData));
+					_replaceImageWithNewImage(tPane.infobar, GameAssets.getColoredItemImage(tItemData));
 					_replaceImageWithNewImage(getColorPickerPane().infobar, GameAssets.getColoredItemImage(tItemData));
 				}
-				/*var tMC:MovieClip = this.character.getItemFromIndex(pType);
-				if (tMC != null)
-				{
-					GameAssets.colorDefault(tMC);
-					GameAssets.copyColor( tMC, getButtonArrayByType(pType)[ getCurItemID(pType) ].Image );
-					GameAssets.copyColor(tMC, getInfobarByType(pType).Image);
-					GameAssets.copyColor(tMC, getColorPickerPane().infobar.Image);
-					
-				}*/
 			}
 			private function _replaceImageWithNewImage(pOldSource:Object, pNew:MovieClip) : void {
 				pNew.x = pOldSource.Image.x;
@@ -827,7 +809,7 @@ package app.world
 			}
 			
 			private function _refreshButtonCustomizationForItemData(data:ItemData) : void {
-				if(!data || data.type == ItemType.POSE) { return; }
+				if(!data || data.type == ItemType.POSE || data.type == ItemType.EMOJI) { return; }
 				
 				var pane:ShopCategoryPane = getShopPane(data.type);
 				var btn:PushButton = pane.getButtonWithItemData(data);
@@ -844,7 +826,7 @@ package app.world
 			private function _colorButtonClicked(pType:ItemType) : void {
 				if(this.character.getItemData(pType) == null) { return; }
 
-				var tData:ItemData = getInfobarByType(pType).itemData;
+				var tData:ItemData = getShopPane(pType).infobar.itemData;
 				getColorPickerPane().infobar.addInfo( tData, GameAssets.getItemImage(tData) );
 				this.currentlyColoringType = pType;
 				getColorPickerPane().init( tData.uniqId(), tData.colors, tData.defaultColors );
@@ -859,7 +841,7 @@ package app.world
 			private function _eyeDropButtonClicked(pType:ItemType) : void {
 				if(this.character.getItemData(pType) == null) { return; }
 
-				var tData:ItemData = getInfobarByType(pType).itemData;
+				var tData:ItemData = getShopPane(pType).infobar.itemData;
 				var tItem:MovieClip = GameAssets.getColoredItemImage(tData);
 				var tItem2:MovieClip = GameAssets.getColoredItemImage(tData);
 				getColorFinderPane().infobar.addInfo( tData, tItem );

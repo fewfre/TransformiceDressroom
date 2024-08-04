@@ -91,13 +91,13 @@ package app.ui.panes
 			
 			var btn : PushButton = new PushButton({ width:20, height:20, obj:new $ColorWheel(), data:{ itemData:data } });
 			btn.alpha = 0.35;
-			if(ShareCodeFilteringData.isCustomizable(data.type, data.id)) {
+			if(ShareCodeFilteringData.isCustomizable(data)) {
 				btn.alpha = 1;
 				btn.toggleOn(false);
 			}
 			btn.addEventListener(PushButton.TOGGLE, function(e:FewfEvent){
-				ShareCodeFilteringData.setCustomizable(data.type, data.id, (e.target as PushButton).pushed);
-				btn.alpha = ShareCodeFilteringData.isCustomizable(data.type, data.id) ? 1 : 0.35;
+				ShareCodeFilteringData.setCustomizable(data, (e.target as PushButton).pushed);
+				btn.alpha = ShareCodeFilteringData.isCustomizable(data) ? 1 : 0.35;
 			});
 			return btn;
 		}

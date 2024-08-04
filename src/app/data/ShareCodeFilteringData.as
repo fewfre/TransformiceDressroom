@@ -2,6 +2,7 @@ package app.data
 {
 	import flash.utils.Dictionary;
 	import flash.net.URLVariables;
+	import app.world.data.ItemData;
 
 	public final class ShareCodeFilteringData
 	{
@@ -63,11 +64,13 @@ package app.data
 			return _itemCustomizableMap[itemType];
 		}
 		
-		public static function isCustomizable(itemType:ItemType, id:String) : Boolean {
+		public static function isCustomizable(itemData:ItemData) : Boolean { return isCustomizableId(itemData.type, itemData.id); }
+		public static function isCustomizableId(itemType:ItemType, id:String) : Boolean {
 			return !!_itemCustomizableMap[itemType][id];
 		}
 		
-		public static function setCustomizable(itemType:ItemType, id:String, flag:Boolean) : void {
+		public static function setCustomizable(itemData:ItemData, flag:Boolean) : void { setCustomizableById(itemData.type, itemData.id, flag); }
+		public static function setCustomizableById(itemType:ItemType, id:String, flag:Boolean) : void {
 			_itemCustomizableMap[itemType][id] = flag;
 		}
 		
@@ -96,7 +99,7 @@ package app.data
 								customizable = true;
 							}
 							addId(type, id);
-							setCustomizable(type, id, customizable);
+							setCustomizableById(type, id, customizable);
 						}
 					}
 				}
@@ -127,7 +130,7 @@ package app.data
 			for each(var tType:ItemType in ItemType.TYPES_WITH_SHARE_FILTER_PANES) {
 				var ids : Vector.<String> = getSelectedIds(tType).sort(_sortIds);
 				if(!!ids && ids.length > 0) {
-					pParams.push(tType.toString()+"="+ids.map(function(id){ return id+(isCustomizable(tType, id) ? CUSTOMIZE_SYMBOL : '') }).join(','));
+					pParams.push(tType.toString()+"="+ids.map(function(id){ return id+(isCustomizableId(tType, id) ? CUSTOMIZE_SYMBOL : '') }).join(','));
 				}
 			}
 			return pParams.length > 0 ? PREFIX + pParams.join('&') : '';
