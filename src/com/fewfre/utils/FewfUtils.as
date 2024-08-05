@@ -85,5 +85,15 @@ package com.fewfre.utils
 		public static function trim(str:String) : String {
 			return !str ? str : str.replace(/^\s+|\s+$/g, ''); // trim whitespace
 		}
+		
+		////////////////////////////////
+		// Color Helpers
+		////////////////////////////////
+		public static function colorIntToHexString(pVal:uint) : String {
+			return pVal.toString(16).toUpperCase();
+		}
+		public static function colorHexStringToInt(pVal:String) : uint {
+			return parseInt(pVal.replace("#", ""), 16);
+		}
 	}
 }

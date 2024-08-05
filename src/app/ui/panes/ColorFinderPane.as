@@ -49,7 +49,7 @@ package app.ui.panes
 		private const _clipRect:Rectangle = new Rectangle(0, 0, 1, 1);
 		
 		// Constructor
-		public function ColorFinderPane(pData:Object) {
+		public function ColorFinderPane() {
 			super();
 			this.addInfoBar( new Infobar({ showBackButton:true }) )
 				.on(Infobar.BACK_CLICKED, _onBackClicked)

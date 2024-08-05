@@ -41,7 +41,8 @@ package app.ui.panes.colorpicker
 		
 		// Constructor
 		// pData = { hide_default:bool, hideItemPreview:bool }
-		public function ColorPickerTabPane(pData:Object) {
+		public function ColorPickerTabPane(pData:Object=null) {
+			pData = pData || {};
 			super(1);
 			_colorSwatches = new Vector.<ColorSwatch>();
 			

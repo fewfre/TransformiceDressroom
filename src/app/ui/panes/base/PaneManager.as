@@ -20,7 +20,7 @@ package app.ui.panes.base
 			return pPane;
 		}
 		
-		public function openPane(pID:String) : void {
+		public function openPane(pID:String) : SidePane {
 			closeAllPanes();
 			var pane:SidePane = _panes[pID];
 			addChild(pane);
@@ -29,6 +29,7 @@ package app.ui.panes.base
 			// (which removed it from display), and then trying to use a keyboard event (since the
 			// element we have focused was removed)
 			Fewf.stage.focus = Fewf.stage;
+			return pane;
 		}
 		
 		public function closePane(pID:String) : void {

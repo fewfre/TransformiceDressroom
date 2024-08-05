@@ -38,6 +38,7 @@ package app.ui.screens
 		
 		private function _onConfirmClicked(pEvent:Event) : void {
 			dispatchEvent(new Event(CONFIRM));
+			dispatchEvent(new Event(Event.CLOSE));
 		}
 		
 		private function _onCloseClicked(pEvent:Event) : void {

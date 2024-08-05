@@ -9,6 +9,7 @@ package app.world.elements
 	import flash.net.*;
 	import flash.utils.Dictionary;
 	import com.fewfre.utils.Fewf;
+	import com.fewfre.utils.FewfUtils;
 
 	public class Character extends Sprite
 	{
@@ -58,9 +59,7 @@ package app.world.elements
 			});
 			Fewf.stage.addEventListener(MouseEvent.MOUSE_UP, function () { if(_dragging) { _dragging = false; stopDrag(); } });
 
-			/****************************
-			* Store Data
-			*****************************/
+			// Store Data
 			_itemDataMap = new Dictionary();
 			for each(var item:ItemData in pWornItems) {
 				_itemDataMap[item.type] = item;
@@ -73,10 +72,7 @@ package app.world.elements
 		public function move(pX:Number, pY:Number) : Character { x = pX; y = pY; return this; }
 		public function appendTo(pParent:Sprite): Character { pParent.addChild(this); return this; }
 		
-		public function get dragBounds() : Rectangle { return _dragBounds; }
-		public function setDragBounds(pX:Number, pY:Number, pWidth:Number, pHeight:Number): Character {
-			_dragBounds =  new Rectangle(pX, pY, pWidth, pHeight); return this;
-		}
+		public function copy() : Character { return new Character(null, getParams(), true); }
 
 		public function updatePose() {
 			var tScale = 3, tOldPose:Pose = outfit;
@@ -121,7 +117,35 @@ package app.world.elements
 				emoji.y = -45 - 35/2;
 			}
 		}
+		
+		public function setDragBounds(pX:Number, pY:Number, pWidth:Number, pHeight:Number): Character {
+			_dragBounds = new Rectangle(pX, pY, pWidth, pHeight); return this;
+		}
+		public function clampCoordsToDragBounds() : void {
+			this.x = Math.max(_dragBounds.x, Math.min(_dragBounds.right, this.x));
+			this.y = Math.max(_dragBounds.y, Math.min(_dragBounds.bottom, this.y));
+		}
 
+		/////////////////////////////
+		// Item Data
+		/////////////////////////////
+		public function getItemData(pType:ItemType) : ItemData {
+			return _itemDataMap[pType];
+		}
+
+		public function setItemData(pItem:ItemData) : void {
+			_itemDataMap[pItem.type] = pItem;
+			updatePose();
+		}
+
+		public function removeItem(pType:ItemType) : void {
+			_itemDataMap[pType] = null;
+			updatePose();
+		}
+
+		/////////////////////////////
+		// Share Code
+		/////////////////////////////
 		public function parseParams(pCode:String) : Boolean {
 			if(!isOutfit) trace("(parseParams) ", pCode);
 			
@@ -167,7 +191,7 @@ package app.world.elements
 					var tColor = _splitOnUrlColorSeperator(pParams["sh"]);
 					_shamanMode = ShamanMode.fromInt( parseInt(tColor.splice(0, 1)[0]) );
 					if(tColor.length > 0) {
-						_shamanColor = _hexToInt(tColor[0]);
+						_shamanColor = FewfUtils.colorHexStringToInt(tColor[0]);
 					}
 				}
 				_disableSkillsMode = pParams.ds == 'y';
@@ -217,8 +241,8 @@ package app.world.elements
 					tColors = tID.split(/\_|\+/); // Get a list of all the colors (ID is first); ex: 5_ffffff+abcdef+169742
 					tID = tColors.splice(0, 1)[0]; // Remove first item and store it as the ID.
 					// Color skins in game syntax are stored differently than dressroom
-					if(pType == ItemType.SKIN && tID == "1" && tColors[0] && GameAssets.FUR_COLORS.indexOf(_hexToInt(tColors[0])) >= 0) {
-						tID = "color"+GameAssets.FUR_COLORS.indexOf(_hexToInt(tColors[0]));
+					if(pType == ItemType.SKIN && tID == "1" && tColors[0] && GameAssets.FUR_COLORS.indexOf(FewfUtils.colorHexStringToInt(tColors[0])) >= 0) {
+						tID = "color"+GameAssets.FUR_COLORS.indexOf(FewfUtils.colorHexStringToInt(tColors[0]));
 						tColors = [];
 					}
 					tData = GameAssets.getItemFromTypeID(pType, tID); if(isOutfit) tData = tData.copy();
@@ -231,12 +255,9 @@ package app.world.elements
 		private function _hexArrayToIntList(pColors:Array, pDefaults:Vector.<uint>) : Vector.<uint> {
 			var ints = new Vector.<uint>();
 			for(var i = 0; i < pDefaults.length; i++) {
-				ints.push( pColors[i] ? _hexToInt(pColors[i]) : pDefaults[i] );
+				ints.push( pColors[i] ? FewfUtils.colorHexStringToInt(pColors[i]) : pDefaults[i] );
 			}
 			return ints;
-		}
-		private function _hexToInt(pVal:String) : int {
-			return parseInt(pVal, 16);
 		}
 		private function _splitOnUrlColorSeperator(pVal:String) : Array {
 			// Used to be , but changed to ; (for atelier801 forum support)
@@ -267,7 +288,7 @@ package app.world.elements
 			if(getItemData(ItemType.PAW_BACK)) { tParms.pawb = "y"; }
 			
 			if(_shamanMode != ShamanMode.OFF) {
-				tParms["sh"] = _shamanMode.toInt()+";"+_intToHex(_shamanColor);
+				tParms["sh"] = _shamanMode.toInt()+";"+FewfUtils.colorIntToHexString(_shamanColor);
 			}
 			if(_disableSkillsMode) {
 				tParms.ds = 'y';
@@ -291,7 +312,7 @@ package app.world.elements
 				
 				var tData:ItemData = getItemData(tTypes[i]);
 				if(tData) {
-					var tColors:Vector.<uint> = getColors(tTypes[i]);
+					var tColors:Vector.<uint> = tData.colors;
 					if(String(tColors) != String(tData.defaultColors)) { // Quick way to compare two arrays with primitive types
 						tIds.push(tData.id+"_"+_intListToHexList(tColors).join("+") );
 					} else {
@@ -313,7 +334,7 @@ package app.world.elements
 			var tData:ItemData = getItemData(pType);
 			if(tData) {
 				pParams[pParam] = tData.id;
-				var tColors:Vector.<uint> = getColors(pType);
+				var tColors:Vector.<uint> = tData.colors;
 				if(String(tColors) != String(tData.defaultColors)) { // Quick way to compare two arrays with primitive types
 					pParams[pParam] += ";"+_intListToHexList(tColors).join(";");
 				}
@@ -323,40 +344,9 @@ package app.world.elements
 		private function _intListToHexList(pColors:Vector.<uint>) : Vector.<String> {
 			var hexList = new Vector.<String>();
 			for(var i = 0; i < pColors.length; i++) {
-				hexList.push( _intToHex(pColors[i]) );
+				hexList.push( FewfUtils.colorIntToHexString(pColors[i]) );
 			}
 			return hexList;
-		}
-		private function _intToHex(pVal:int) : String {
-			return pVal.toString(16).toUpperCase();
-		}
-		
-		public function copy() : Character {
-			return new Character(null, getParams(), true);
-		}
-
-		/****************************
-		* Color
-		*****************************/
-		public function getColors(pType:ItemType) : Vector.<uint> {
-			return getItemData(pType).colors;
-		}
-
-		/****************************
-		* Update Data
-		*****************************/
-		public function getItemData(pType:ItemType) : ItemData {
-			return _itemDataMap[pType];
-		}
-
-		public function setItemData(pItem:ItemData) : void {
-			_itemDataMap[pItem.type] = pItem;
-			updatePose();
-		}
-
-		public function removeItem(pType:ItemType) : void {
-			_itemDataMap[pType] = null;
-			updatePose();
 		}
 	}
 }

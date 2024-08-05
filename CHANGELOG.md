@@ -6,6 +6,7 @@
 	- Instead of forcing the user to open the link for the uploaded file, the imgur link now appears in a "copy" input
 - [Bug] Fixed customization bug when using item filtering share code
 - [Code] Some small `I18n` and `fewfre` lib tweaks
+- [Code] `WorldPaneManager` added, and some tweaks to logic in `World`
 
 
 ## V1.29e - 27 July 2024
