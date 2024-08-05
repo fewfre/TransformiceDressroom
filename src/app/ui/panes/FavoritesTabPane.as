@@ -10,6 +10,7 @@ package app.ui.panes
 	import app.ui.panes.infobar.Infobar;
 	import app.ui.screens.TrashConfirmScreen;
 	import app.world.data.ItemData;
+	import app.world.events.ItemDataEvent;
 	import com.fewfre.events.FewfEvent;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
@@ -19,7 +20,7 @@ package app.ui.panes
 	public class FavoritesTabPane extends ButtonGridSidePane
 	{
 		// Constants
-		public static const ITEMDATA_SELECTED : String = "itemdata_selected"; // FewfEvent<ItemData>
+		public static const ITEMDATA_SELECTED : String = "itemdata_selected"; // ItemDataEvent
 		
 		// Storage
 		private var _deleteAllConfirmScreen:TrashConfirmScreen;
@@ -96,7 +97,7 @@ package app.ui.panes
 		}
 		
 		private function _dispatchItemData(itemData:ItemData) : void {
-			dispatchEvent(new FewfEvent(ITEMDATA_SELECTED, itemData));
+			dispatchEvent(new ItemDataEvent(ITEMDATA_SELECTED, itemData));
 		}
 		
 		/////////////////////////////

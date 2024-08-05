@@ -33,7 +33,7 @@ package app.data
 		/****************************
 		* Global Events
 		*****************************/
-		public static const DOWNLOAD_ITEM_DATA_IMAGE : String = "download_item_data_image"; // FewfEvent<ItemData>
+		public static const DOWNLOAD_ITEM_DATA_IMAGE : String = "download_item_data_image"; // ItemDataEvent
 		public static const FAVORITE_ADDED_OR_REMOVED : String = "favorite_added_or_removed"; // FewfEvent<{ itemType:ItemType }}>
 		
 		/****************************

@@ -224,8 +224,8 @@ package app.world
 			// Favorites Pane
 			_panes.addPane(WorldPaneManager.FAVORITES_PANE, new FavoritesTabPane())
 				.on(Event.CLOSE, function(e){ _panes.openPane(shopTabs.getSelectedTabEventName()); })
-				.on(FavoritesTabPane.ITEMDATA_SELECTED, function(e:FewfEvent){
-					var itemData:ItemData = e.data as ItemData;
+				.on(FavoritesTabPane.ITEMDATA_SELECTED, function(e:ItemDataEvent){
+					var itemData:ItemData = e.itemData;
 					character.setItemData(itemData);
 					_updateUIBasedOnCharacter();
 					
@@ -501,9 +501,9 @@ package app.world
 			}
 		}
 		
-		private function _onSaveItemDataAsImage(pEvent:FewfEvent) : void {
-			if(!pEvent.data) { return; }
-			var itemData:ItemData = pEvent.data as ItemData;
+		private function _onSaveItemDataAsImage(e:ItemDataEvent) : void {
+			if(!e.itemData) { return; }
+			var itemData:ItemData = e.itemData;
 			var tName:String = "shop-"+itemData.type+itemData.id;
 			var tScale:int = ConstantsApp.ITEM_SAVE_SCALE;
 			if(itemData.type == ItemType.CONTACTS) { tScale *= 2; }
