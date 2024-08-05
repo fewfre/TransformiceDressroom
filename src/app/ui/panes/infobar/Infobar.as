@@ -181,7 +181,7 @@ package app.ui.panes.infobar
 		public function on(type:String, listener:Function): Infobar { this.addEventListener(type, listener); return this; }
 		public function off(type:String, listener:Function): Infobar { this.removeEventListener(type, listener); return this; }
 
-		public function ChangeImage(pMC:MovieClip) : void {
+		public function changeImage(pMC:MovieClip) : void {
 			if(this.Image != null) { _imageCont.removeChild(this.Image); }
 			
 			var tBounds:Rectangle = pMC.getBounds(pMC);
@@ -231,13 +231,14 @@ package app.ui.panes.infobar
 			_idText.setValues(tText);
 		}
 		
+		public function refreshItemImageUsingCurrentItemData() : void {
+			changeImage(GameAssets.getColoredItemImage(_itemData));
+		}
+		
 		public function addInfo(pData:ItemData, pMC:MovieClip) : void {
 			if(pData == null) { return; }
 			_itemData = pData;
-			if(_itemData.type == ItemType.POSE || _itemData.type == ItemType.SKIN) {
-				pMC.scaleX = pMC.scaleY = 1;
-			}
-			ChangeImage(pMC);
+			changeImage(pMC);
 			_updateID();
 			
 			_idText.alpha = 1;
@@ -266,7 +267,7 @@ package app.ui.panes.infobar
 		}
 		
 		private function _setNoItemImage() :void {
-			ChangeImage(new $NoItem());
+			changeImage(new $NoItem());
 			this.Image.scaleX = this.Image.scaleY = 0.75;
 		}
 		

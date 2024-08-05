@@ -29,7 +29,7 @@ package app.ui.panes
 			super(5);
 			this.addInfoBar( new Infobar({ showBackButton:true, gridManagement:{ hideRandomizeLock:true, hideArrows:true } }) )
 				.on(Infobar.BACK_CLICKED, function(e):void{ dispatchEvent(new Event(Event.CLOSE)); });
-			infobar.ChangeImage(new $HeartFull())
+			infobar.changeImage(new $HeartFull())
 			infobar.on(GridManagementWidget.RANDOMIZE_CLICKED, _onRandomizeClicked);
 			
 			// Delete all favorites logic

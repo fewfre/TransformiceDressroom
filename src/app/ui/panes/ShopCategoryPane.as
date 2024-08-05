@@ -30,7 +30,6 @@ package app.ui.panes
 		private var _type: ItemType;
 		private var _itemDataVector: Vector.<ItemData>;
 		private var _defaultItemData: ItemData;
-		public var selectedButtonIndex : int;
 		public var _favoritesGrid : Grid;
 		
 		private var _flagWaveInput: FancyInput;
@@ -55,7 +54,6 @@ package app.ui.panes
 				grid.reverse();
 			}
 			
-			selectedButtonIndex = -1;
 			this.addInfoBar( new Infobar({ showEyeDropper:_type!=ItemType.POSE, gridManagement:{ hideRandomizeLock:_type==ItemType.EMOJI }, showFavorites:true }) );
 			_infobar.on(Infobar.FAVORITE_CLICKED, _addRemoveFavoriteToggled);
 			_setupGrid(GameAssets.getItemDataListByType(_type));
@@ -107,6 +105,14 @@ package app.ui.panes
 			var list:Vector.<ItemData> = GameAssets.getItemDataListByType(_type);
 			if(pIds) { list = list.filter(function(data:ItemData, i, a){ return pIds.indexOf(data.id) >= 0 }) }
 			_setupGrid(list);
+		}
+		
+		public function refreshButtonImage(pItemData:ItemData) : void {
+			if(!pItemData || pItemData.type == ItemType.POSE) { return; }
+			if(pItemData.isBitmap()) { return; } // Bitmaps have no customization
+			
+			var btn:PushButton = this.getButtonWithItemData(pItemData);
+			btn.ChangeImage(GameAssets.getColoredItemImage(pItemData));
 		}
 		
 		/****************************

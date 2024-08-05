@@ -7,6 +7,7 @@
 - [Bug] Fixed customization bug when using item filtering share code
 - [Code] Some small `I18n` and `fewfre` lib tweaks
 - [Code] `WorldPaneManager` added, and some tweaks to logic in `World`
+- [Code] Rewrote MovieClip color update logic for when using color picker
 
 
 ## V1.29e - 27 July 2024
