@@ -741,15 +741,17 @@ package app.world
 				
 				var tPane:ShopCategoryPane = getShopPane(pType);
 				var tItemData:ItemData = this.character.getItemData(pType);
+				if(!tItemData) { return; }
 				
 				_refreshButtonCustomizationForItemData(tItemData);
 				tPane.infobar.refreshItemImageUsingCurrentItemData();
 				_panes.colorPickerPane.infobar.refreshItemImageUsingCurrentItemData();
 			}
 			
-			private function _refreshButtonCustomizationForItemData(data:ItemData) : void {
-				var tPane:ShopCategoryPane = getShopPane(data.type);
-				tPane.refreshButtonImage(data);
+			private function _refreshButtonCustomizationForItemData(pItemData:ItemData) : void {
+				if(!pItemData) { return; }
+				var tPane:ShopCategoryPane = getShopPane(pItemData.type);
+				tPane.refreshButtonImage(pItemData);
 			}
 
 			private function _colorButtonClicked(pType:ItemType) : void {
