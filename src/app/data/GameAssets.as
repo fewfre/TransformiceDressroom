@@ -386,6 +386,12 @@ pOnInitComplete
 				default:
 					tItem = new pData.itemClass();
 					colorDefault(tItem);
+					if(pData.type == ItemType.TAIL && pData.id == "68") {
+						for(var i:int = 0; i < tItem.numChildren; i++) {
+							tItem.getChildAt(i).x -= 6.5;
+							tItem.getChildAt(i).y -= 16.5;
+						}
+					}
 					break;
 			}
 			return tItem;

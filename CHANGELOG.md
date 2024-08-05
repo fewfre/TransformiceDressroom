@@ -4,6 +4,7 @@
 	- Now works in air app (only worked on browser before)
 	- Moved button from being on main toolbar to being on the share screen
 	- Instead of forcing the user to open the link for the uploaded file, the imgur link now appears in a "copy" input
+- [Bug] Harded a fix for Tail-68 button image not being centered; this is actually an in-game bug, but fixing it since it seems it's never going to be fixed.
 - [Bug] Fixed customization bug when using item filtering share code
 - [Code] Some small `I18n` and `fewfre` lib tweaks
 - [Code] `WorldPaneManager` added, and some tweaks to logic in `World`
