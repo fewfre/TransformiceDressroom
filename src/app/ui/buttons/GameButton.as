@@ -20,6 +20,7 @@ package app.ui.buttons
 				.toRadius(7).appendTo(this);
 			super(pData);
 		}
+		public function toOrigin(pX:Number, pY:Object=null) : GameButton { _bg.toOrigin(pX, pY); return this; }
 
 		/****************************
 		* Render

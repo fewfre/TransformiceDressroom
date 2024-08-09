@@ -70,7 +70,7 @@ package app.ui.panes
 			
 			var customizeButton : DisplayObject = _addCustomizeButton(itemData);
 
-			var shopItemButton : PushButton = new PushButton({ size:grid.cellSize, obj:shopItem, id:i, data:{ type:_type, id:i, itemID:itemData.id, itemData:itemData, customizeButton:customizeButton } }).appendTo(cell) as PushButton;
+			var shopItemButton : PushButton = new PushButton({ size:grid.cellSize, obj:shopItem, data:{ type:_type, id:i, itemID:itemData.id, itemData:itemData, customizeButton:customizeButton } }).appendTo(cell) as PushButton;
 			
 			cell.addChild( customizeButton );
 			

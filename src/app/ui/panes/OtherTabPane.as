@@ -39,7 +39,7 @@ package app.ui.panes
 			super();
 			_character = pCharacter;
 			
-			var i:int = 0, xx:Number = 20, yy:Number = 20, sizex:Number, sizey:Number, spacingx:Number;
+			var xx:Number = 20, yy:Number = 20, sizex:Number, sizey:Number, spacingx:Number;
 			
 			/////////////////////////////
 			// Shaman Section
@@ -50,19 +50,17 @@ package app.ui.panes
 			_shamanButtons = new Vector.<PushButton>();
 			DisplayWrapper.wrap(new $ShamFeather(), this).move((xx += spacingx) + sizex*0.5, yy + sizey*0.5).toScale(2).on(MouseEvent.CLICK, _onNoShamanButtonClicked).asSprite.buttonMode = true;
 			xx -= 5; yy -= 10;
-			_shamanButtons.push(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextTranslated("btn_normal_mode"), id:ShamanMode.NORMAL.toInt() }).appendTo(this) as PushButton);
-			_shamanButtons.push(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextTranslated("btn_hard_mode"), id:ShamanMode.HARD.toInt() }).appendTo(this) as PushButton);
-			_shamanButtons.push(new PushButton({ x:xx += spacingx, y:yy, width:sizex, height:sizey, obj:new TextTranslated("btn_divine_mode"), id:ShamanMode.DIVINE.toInt() }).appendTo(this) as PushButton);
-			if(_character.shamanMode != ShamanMode.OFF) {
-				_shamanButtons[_character.shamanMode.toInt()-2].toggleOn();
+			_shamanButtons.push(new PushButton({ width:sizex, height:sizey, data:{ mode:ShamanMode.NORMAL }, obj:new TextTranslated("btn_normal_mode") }).appendTo(this) as PushButton);
+			_shamanButtons.push(new PushButton({ width:sizex, height:sizey, data:{ mode:ShamanMode.HARD }, obj:new TextTranslated("btn_hard_mode") }).appendTo(this) as PushButton);
+			_shamanButtons.push(new PushButton({ width:sizex, height:sizey, data:{ mode:ShamanMode.DIVINE }, obj:new TextTranslated("btn_divine_mode") }).appendTo(this) as PushButton);
+			for each(var btn:PushButton in _shamanButtons) {
+				btn.move(xx += spacingx, yy);
+				btn.onToggle(_onShamanButtonClicked);
 			}
-			_registerClickHandler(_shamanButtons, _onShamanButtonClicked);
 			
-			_disableSkillsModeButton = new PushButton({ x:10 + sizex*1.5 + spacingx - 180/2, y:yy + sizey + 5, width:180, height:20, obj:new TextTranslated("btn_no_skills_mode") }).appendTo(this) as PushButton;
-			if(_character.disableSkillsMode) {
-				_disableSkillsModeButton.toggleOn();
-			}
-			_disableSkillsModeButton.addEventListener(PushButton.TOGGLE, _onShamanDisableSkillsModeButtonClicked);
+			_disableSkillsModeButton = new PushButton({ width:180, height:20, obj:new TextTranslated("btn_no_skills_mode") });
+			_disableSkillsModeButton.move(10 + sizex*1.5 + spacingx - 180/2, yy + sizey + 5).appendTo(this);
+			_disableSkillsModeButton.onToggle(_onShamanDisableSkillsModeButtonClicked);
 			
 			// Color buttons
 			yy += 10;
@@ -87,8 +85,8 @@ package app.ui.panes
 			
 			_backItemButtons = new Vector.<PushButton>();
 			for each(var itemData:ItemData in GameAssets.extraBack) {
-				var bttn:PushButton = new PushButton({ size:grid.cellSize, obj:new itemData.itemClass(), obj_scale:1.5, id:i++, data:{ id:itemData.id, itemData:itemData } });
-				bttn.on(PushButton.TOGGLE, function(e:FewfEvent):void{
+				var bttn:PushButton = new PushButton({ size:grid.cellSize, obj:new itemData.itemClass(), obj_scale:1.5, data:{ id:itemData.id, itemData:itemData } });
+				bttn.onToggle(function(e:FewfEvent):void{
 					// Deselect other toggled back items
 					for each(var bttn:PushButton in _backItemButtons) {
 						if(bttn.data.id != e.data.id) bttn.toggleOff(false);
@@ -97,43 +95,43 @@ package app.ui.panes
 				bttn.on(PushButton.TOGGLE, _onItemToggled);
 				grid.add(bttn);
 				_backItemButtons.push(bttn);
-				if(_character.getItemData(ItemType.BACK) && _character.getItemData(ItemType.BACK).id == itemData.id) {
-					bttn.toggleOn();
-				}
 			}
 
 			yy = grid.y + grid.cellSize + 5;
-			grid = new Grid(385, 5).move(xx,yy).appendTo(this);
+			grid = new Grid(385, 5).move(xx, yy).appendTo(this);
 			
-			_frontHandButton = new PushButton({ size:grid.cellSize, obj:new GameAssets.extraObjectWand.itemClass(), obj_scale:1.5, id:i++, data:{ itemData:GameAssets.extraObjectWand } });
-			_frontHandButton.on(PushButton.TOGGLE, _onItemToggled);
+			_frontHandButton = new PushButton({ size:grid.cellSize, obj:new GameAssets.extraObjectWand.itemClass(), obj_scale:1.5, data:{ itemData:GameAssets.extraObjectWand } });
+			_frontHandButton.onToggle(_onItemToggled);
 			grid.add(_frontHandButton);
-			if(_character.getItemData(ItemType.OBJECT)) { _frontHandButton.toggleOn(); }
 			
-			_backHandButton = new PushButton({ size:grid.cellSize, obj:new GameAssets.extraBackHand.itemClass(), obj_scale:1.5, id:i++, data:{ itemData:GameAssets.extraBackHand } });
-			_backHandButton.on(PushButton.TOGGLE, _onItemToggled);
+			_backHandButton = new PushButton({ size:grid.cellSize, obj:new GameAssets.extraBackHand.itemClass(), obj_scale:1.5, data:{ itemData:GameAssets.extraBackHand } });
+			_backHandButton.onToggle(_onItemToggled);
 			grid.add(_backHandButton);
-			if(_character.getItemData(ItemType.PAW_BACK)) { _backHandButton.toggleOn(); }
 			
 			/////////////////////////////
 			// Bottom Buttons
 			/////////////////////////////
-			var saveHeadButton:GameButton = new GameButton({ x:353, y:315, width:70, height:70 }).appendTo(this) as GameButton;
-			saveHeadButton.on(MouseEvent.CLICK, _onSaveMouseHeadClicked);
-			_characterHead = new Character(new <ItemData>[ GameAssets.defaultSkin, GameAssets.defaultPose ]).appendTo(saveHeadButton);
-			
-			if(ConstantsApp.ANIMATION_DOWNLOAD_ENABLED) {
-				_webpButton = new GameButton({ x:353-70-5, y:315, width:70, height:70 }).appendTo(this) as GameButton;
-				_webpButton.on(MouseEvent.CLICK, _onSaveAsWebpClicked);
-				new TextBase('.webp', { x:35, y:35, origin:0.5, size:16 }).appendTo(_webpButton);
-			}
-			
-			SpriteButton.withObject(new $FilterIcon(), 0.85, { x:xx, y:315, width:70, height:70 }).appendTo(this)
+			// Left
+			SpriteButton.withObject(new $FilterIcon(), 0.85, { size:70 }).move(xx, 315).appendTo(this)
 				.onButtonClick(function(e:Event):void{ dispatchEvent(new Event(FILTER_MODE_CLICKED)); });
 			
 			xx += 70 + 5;
-			SpriteButton.withObject(GameAssets.getItemImage(GameAssets.emoji[0]), "auto", { x:xx, y:315, width:70, height:70 }).appendTo(this)
+			SpriteButton.withObject(GameAssets.getItemImage(GameAssets.emoji[0]), "auto", { size:70 }).move(xx, 315).appendTo(this)
 				.onButtonClick(function(e:Event):void{ dispatchEvent(new Event(EMOJI_CLICKED)); });
+			
+			// Right
+			var saveHeadButton:GameButton = new GameButton({ size:70 }).move(353, 315).appendTo(this) as GameButton;
+			saveHeadButton.onButtonClick(_onSaveMouseHeadClicked);
+			_characterHead = new Character(new <ItemData>[ GameAssets.defaultSkin, GameAssets.defaultPose ]).appendTo(saveHeadButton);
+			
+			if(ConstantsApp.ANIMATION_DOWNLOAD_ENABLED) {
+				_webpButton = new GameButton({ size:70 }).move(353-70-5, 315).appendTo(this) as GameButton;
+				_webpButton.onButtonClick(_onSaveAsWebpClicked);
+				new TextBase('.webp', { origin:0.5, size:16 }).move(35, 35).appendTo(_webpButton);
+			}
+			
+			// Lastly, update state based on initial character state
+			updateButtonsBasedOnCurrentData();
 		}
 		
 		/****************************
@@ -150,14 +148,14 @@ package app.ui.panes
 				_shamanButtons[i].toggleOff();
 			}
 			if(_character.shamanMode != ShamanMode.OFF) {
-				_shamanButtons[_character.shamanMode.toInt()-2].toggleOn(false);
+				_shamanButtons[_getIndexFromShamanMode(_character.shamanMode)].toggleOn(false);
 			}
 			_disableSkillsModeButton.toggle(_character.disableSkillsMode, false);
 			
-			_frontHandButton.toggle(!!_character.getItemData(ItemType.OBJECT), false);
 			for each(var bttn:PushButton in _backItemButtons) {
-				bttn.toggle(!!_character.getItemData(ItemType.BACK) && _character.getItemData(ItemType.BACK).id == bttn.data.id, false);
+				bttn.toggle(!!_character.getItemData(ItemType.BACK) && _character.getItemData(ItemType.BACK).matches(bttn.data.itemData), false);
 			}
+			_frontHandButton.toggle(!!_character.getItemData(ItemType.OBJECT), false);
 			_backHandButton.toggle(!!_character.getItemData(ItemType.PAW_BACK), false);
 			_updateHead();
 		}
@@ -165,6 +163,10 @@ package app.ui.panes
 		/****************************
 		* Private
 		*****************************/
+		private function _getIndexFromShamanMode(pMode:ShamanMode) : int {
+			return pMode.toInt()-2; // Modes in array goes from Normal (2) to Divine (4), so -1 will correctly 0 index it
+		}
+		
 		private function _updateHead() {
 			// copy character data onto our copy
 			for each(var tItemType in ItemType.LAYERING) {
@@ -186,30 +188,27 @@ package app.ui.panes
 				}
 			}
 			
-			var btnSize = 70, size = 60;
-			var tBounds = _characterHead.getBounds(_characterHead);
-			var tOffset = tBounds.topLeft;
+			// var bsize = 70, size = 60;
+			// var tBounds = _characterHead.getBounds(_characterHead);
+			// var tOffset = tBounds.topLeft;
+			// FewfDisplayUtils.fitWithinBounds(_characterHead, size, size, size, size);
+			// _characterHead.x = bsize / 2 - (tBounds.width / 2 + tOffset.x) * _characterHead.scaleX;
+			// _characterHead.y = bsize / 2 - (tBounds.height / 2 + tOffset.y) * _characterHead.scaleY;
+			
+			var bsize = 70, size = 60;
 			FewfDisplayUtils.fitWithinBounds(_characterHead, size, size, size, size);
-			_characterHead.x = btnSize / 2 - (tBounds.width / 2 + tOffset.x) * _characterHead.scaleX;
-			_characterHead.y = btnSize / 2 - (tBounds.height / 2 + tOffset.y) * _characterHead.scaleY;
+			FewfDisplayUtils.alignChildrenAroundAnchor(_characterHead, 0.5);
+			_characterHead.move(bsize/2, bsize/2);
 		
 		}
 		
 		/****************************
 		* Events
 		*****************************/
-		private function _registerClickHandler(pList:Vector.<PushButton>, pCallback:Function) : void {
-			for(var i:int = 0; i < pList.length; i++) {
-				pList[i].addEventListener(PushButton.BEFORE_TOGGLE, pCallback);
-			}
-		}
-		
-		private function _onShamanButtonClicked(pEvent:Event) {
-			_untoggle(_shamanButtons, pEvent.target as PushButton);
-			_character.shamanMode = ShamanMode.fromInt(pEvent.target.id);
-			if(pEvent.target.pushed) {
-				_character.shamanMode = ShamanMode.OFF;
-			}
+		private function _onShamanButtonClicked(e:FewfEvent) {
+			var btn:PushButton = e.target as PushButton;
+			_untoggle(_shamanButtons, btn);
+			_character.shamanMode = !btn.pushed ? ShamanMode.OFF : e.data.mode as ShamanMode;
 			_character.updatePose();
 			_updateHead();
 		}
@@ -221,10 +220,10 @@ package app.ui.panes
 			_updateHead();
 		}
 		
-		private function _onShamanDisableSkillsModeButtonClicked(pEvent:Event) {
-			_character.disableSkillsMode = (pEvent.target as PushButton).pushed;
+		private function _onShamanDisableSkillsModeButtonClicked(e:Event) {
+			_character.disableSkillsMode = (e.target as PushButton).pushed;
 			if(_character.disableSkillsMode && _character.shamanMode == ShamanMode.OFF) {
-				_character.shamanMode = ShamanMode.fromInt(_shamanButtons[0].id);
+				_character.shamanMode = _shamanButtons[0].data.mode as ShamanMode;
 				_shamanButtons[0].toggleOn(false);
 			}
 			_character.updatePose();

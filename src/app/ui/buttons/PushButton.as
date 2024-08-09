@@ -15,17 +15,15 @@ package app.ui.buttons
 		public static const TOGGLE:String="state_changed_after";
 		
 		// Storage
-		public var id:int;
 		public var pushed:Boolean;
 		public var allowToggleOff:Boolean; // Only controls the behavior on internal click controls.
 		public var Text:TextTranslated;
 		public var Image:DisplayObject;
 		
 		// Constructor
-		// pArgs = { x:Number, y:Number, (width:Number, height:Number OR size:Number), ?obj:DisplayObject, ?obj_scale:Number, ?text:String, ?id:int, ?allowToggleOff:Boolean=true }
+		// pArgs = { x:Number, y:Number, (width:Number, height:Number OR size:Number), ?obj:DisplayObject, ?obj_scale:Number, ?text:String, ?allowToggleOff:Boolean=true }
 		public function PushButton(pArgs:Object) {
 			super(pArgs);
-			if(pArgs.id) { id = pArgs.id; }
 			
 			if(pArgs.text) {
 				this.Text = new TextTranslated(pArgs.text, { x:pArgs.width*(0.5 - _bg.originX), y:pArgs.height*(0.5 - _bg.originY) }).appendToT(this);
@@ -39,6 +37,8 @@ package app.ui.buttons
 			this.pushed = false;
 			_renderUnpressed();
 		}
+		public function setAllowToggleOff(pVal:Boolean) : PushButton { allowToggleOff = pVal; return this; }
+		public function onToggle(listener:Function, useCapture:Boolean = false): PushButton { return this.on(PushButton.TOGGLE, listener, useCapture) as PushButton; }
 
 		public function ChangeImage(pMC:DisplayObject, pScale:Number=-1) : void
 		{

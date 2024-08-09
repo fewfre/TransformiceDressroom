@@ -92,14 +92,14 @@ package com.fewfre.utils
 		}
 		
 		// because BitmapData's `drawWithQuality` function has had issues, this does the same thing
-		public static function bitmapDataDrawBestQuality(pBitmap:BitmapData, source:IBitmapDrawable, matric:Matrix) : BitmapData {
+		public static function bitmapDataDrawBestQuality(pBitmap:BitmapData, source:IBitmapDrawable, matrix:Matrix=null) : BitmapData {
 			// if(tBitmap.drawWithQuality) {
 			// 	tBitmap.drawWithQuality(pObj, tMatrix, null, null, null, true, StageQuality.BEST);
 			// } else {
 				// trace(Fewf.stage.quality);
 				var defaultQuality = Fewf.stage.quality;
 				Fewf.stage.quality = StageQuality.BEST;
-				pBitmap.draw(source, matric, null, null, null, true);
+				pBitmap.draw(source, matrix, null, null, null, true);
 				Fewf.stage.quality = defaultQuality;
 			// }
 			return pBitmap;
@@ -229,19 +229,32 @@ package com.fewfre.utils
 		
 		public static function displayObjectToBitmapData(pObj:DisplayObject, pScale:Number=1) : BitmapData {
 			var rect:Rectangle = pObj.getBounds(pObj);
-			var tBitmap:BitmapData = new BitmapData(rect.width*pScale, rect.height*pScale, true, 0xFFFFFF);
+			var tBitmapData:BitmapData = new BitmapData(rect.width*pScale, rect.height*pScale, true, 0xFFFFFF);
 
 			var tMatrix:Matrix = new Matrix(1, 0, 0, 1, -rect.left, -rect.top);
 			tMatrix.scale(pScale, pScale);
 
-			return bitmapDataDrawBestQuality(tBitmap, pObj, tMatrix);
+			return bitmapDataDrawBestQuality(tBitmapData, pObj, tMatrix);
 		}
 		
 		// Converts the image to a PNG bitmap and prompts the user to save.
 		public static function saveAsPNG(pObj:DisplayObject, pName:String, pScale:Number=1) : void {
 			if(!pObj){ return; }
-			var tBitmap:BitmapData = displayObjectToBitmapData(pObj, pScale);
-			saveImageDataToDevice(tBitmap, pName, 'png');
+			var tBitmapData:BitmapData = displayObjectToBitmapData(pObj, pScale);
+			saveImageDataToDevice(tBitmapData, pName, 'png');
+		}
+		
+		public static function displayObjectToBitmapDataFixedCanvasSize(pObj:DisplayObject, pSize:Number) : BitmapData {
+			var rect:Rectangle = pObj.getBounds(pObj);
+			var tBitmapData:BitmapData = new BitmapData(pSize, pSize, true, 0xFFFFFF);
+			return bitmapDataDrawBestQuality(tBitmapData, pObj, new Matrix(1, 0, 0, 1, pSize/2, pSize/2));
+		}
+		
+		// Converts the image to a PNG bitmap and prompts the user to save.
+		public static function saveAsPNGWithFixedCanvasSize(pObj:DisplayObject, pName:String, pSize:Number=512) : void {
+			if(!pObj){ return; }
+			var tBitmapData:BitmapData = displayObjectToBitmapDataFixedCanvasSize(pObj, pSize);
+			saveImageDataToDevice(tBitmapData, pName, "png");
 		}
 		
 		public static function convertMovieClipToSpriteSheet(mc:MovieClip, scale:Number=1, bg:int=-1) : SpritesheetData {

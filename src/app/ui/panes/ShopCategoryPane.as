@@ -136,7 +136,7 @@ package app.ui.panes
 			shopItem.scaleX = shopItem.scaleY = pScale;
 			var cell:Sprite = new Sprite();
 
-			var shopItemButton:PushButton = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:shopItem, id:i, data:{ type:_type, id:i, itemID:itemData.id, itemData:itemData } }).appendTo(cell) as PushButton;
+			var shopItemButton:PushButton = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:shopItem, data:{ type:_type, itemID:itemData.id, itemData:itemData } }).appendTo(cell) as PushButton;
 			
 			_addDefaultSkinColorButtonIfNeeded(itemData, cell, shopItemButton);
 			_addFlagWaveInputIfNeeded(itemData, cell, shopItemButton);
