@@ -231,7 +231,8 @@ package app.world
 					
 					getShopPane(itemData.type).toggleGridButtonWithData( itemData, true );
 				})
-				.on(FavoritesTabPane.ITEMDATA_REMOVED, function(e:ItemDataEvent){ _removeItem(e.itemData.type); });
+				.on(FavoritesTabPane.ITEMDATA_REMOVED, function(e:ItemDataEvent){ _removeItem(e.itemData.type); })
+				.on(FavoritesTabPane.ITEMDATA_GOTO, function(e:ItemDataEvent){ _goToItem(e.itemData); });
 			
 			// Select First Pane
 			shopTabs.tabs[0].toggleOn();

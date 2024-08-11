@@ -18,12 +18,14 @@ package app.ui.panes
 	import flash.events.MouseEvent;
 	import app.ui.buttons.PushButton;
 	import flash.display.DisplayObject;
+	import com.fewfre.display.DisplayWrapper;
 	
 	public class FavoritesTabPane extends ButtonGridSidePane
 	{
 		// Constants
 		public static const ITEMDATA_SELECTED : String = "itemdata_selected"; // ItemDataEvent
 		public static const ITEMDATA_REMOVED : String = "itemdata_removed"; // ItemDataEvent
+		public static const ITEMDATA_GOTO : String = "itemdata_goto"; // ItemDataEvent
 		
 		// Storage
 		private var _deleteAllConfirmScreen:TrashConfirmScreen;
@@ -89,7 +91,16 @@ package app.ui.panes
 			
 			// Corresponding Delete Button
 			ScaleButton.withObject(new $Trash(), 0.4).move(grid.cellSize-5, 5).appendTo(actionTray)
-				.on(MouseEvent.CLICK, function(e){ _deleteFavorite(itemData); });
+				.onButtonClick(function(e:Event){ _deleteFavorite(itemData); });
+			
+			// Corresponding GoTo Button
+			var gtcpIconHolder:Sprite = new Sprite();
+			DisplayWrapper.wrap(new $BackArrow(), gtcpIconHolder).toScale(-1, 1);
+			ScaleButton.withObject(gtcpIconHolder, 0.5).move(grid.cellSize-6, grid.cellSize-6).appendTo(actionTray)
+				.onButtonClick(function(e:Event){
+					_dispatchItemData(itemData); // Toggle item on before going to it
+					dispatchEvent(new ItemDataEvent(ITEMDATA_GOTO, itemData));
+				});
 			
 			// Finally add to grid (do it at end so auto event handlers can be hooked up properly)
 			addToGrid(cell);
