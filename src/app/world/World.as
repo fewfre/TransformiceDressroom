@@ -222,7 +222,7 @@ package app.world
 				.on(ItemFilteringPane.EVENT_RESET_FILTERING, function(e:FewfEvent){ _resetItemFilteringPane(); });
 			
 			// Favorites Pane
-			_panes.addPane(WorldPaneManager.FAVORITES_PANE, new FavoritesTabPane())
+			_panes.addPane(WorldPaneManager.FAVORITES_PANE, new FavoritesTabPane(function(pItemData:ItemData):Boolean{ return pItemData.matches(character.getItemData(pItemData.type)); }))
 				.on(Event.CLOSE, function(e){ _panes.openPane(shopTabs.getSelectedTabEventName()); })
 				.on(FavoritesTabPane.ITEMDATA_SELECTED, function(e:ItemDataEvent){
 					var itemData:ItemData = e.itemData;
@@ -230,7 +230,8 @@ package app.world
 					_updateUIBasedOnCharacter();
 					
 					getShopPane(itemData.type).toggleGridButtonWithData( itemData, true );
-				});
+				})
+				.on(FavoritesTabPane.ITEMDATA_REMOVED, function(e:ItemDataEvent){ _removeItem(e.itemData.type); });
 			
 			// Select First Pane
 			shopTabs.tabs[0].toggleOn();

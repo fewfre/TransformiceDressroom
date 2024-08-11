@@ -40,8 +40,7 @@ package app.ui.buttons
 		public function setAllowToggleOff(pVal:Boolean) : PushButton { allowToggleOff = pVal; return this; }
 		public function onToggle(listener:Function, useCapture:Boolean = false): PushButton { return this.on(PushButton.TOGGLE, listener, useCapture) as PushButton; }
 
-		public function ChangeImage(pMC:DisplayObject, pScale:Number=-1) : void
-		{
+		public function ChangeImage(pMC:DisplayObject, pScale:Number=-1) : void {
 			if(this.Image != null) { removeChild(this.Image); }
 			pScale = pScale >= 0 ? pScale : 1;
 			
@@ -56,38 +55,33 @@ package app.ui.buttons
 			addChild(this.Image = pMC);
 		}
 		
-		protected function _renderUnpressed() : void
-		{
+		protected function _renderUnpressed() : void {
 			super._renderUp();
 			if(this.Text) { this.Text.color = 0xC2C2DA; }
 		}
 
-		protected function _renderPressed() : void
-		{
+		protected function _renderPressed() : void {
 			_bg.draw3d(ConstantsApp.COLOR_BUTTON_MOUSE_DOWN, 0x5D7A91, 0x5D7A91, 0x6C8DA8);
 			if(this.Text) { this.Text.color = 0xFFD800; }
 		}
 
-		public function toggle(pOn:*=null, pFireEvent:Boolean=true) : void
-		{
+		public function toggle(pOn:*=null, pFireEvent:Boolean=true) : PushButton {
 			if(pFireEvent) _dispatch(BEFORE_TOGGLE);
 			
 			this.pushed = pOn != null ? pOn : !this.pushed;
-			if(this.pushed) {
-				_renderPressed();
-			} else {
-				_renderUnpressed();
-			}
+			if(this.pushed) _renderPressed();
+			else _renderUnpressed();
 			
 			if(pFireEvent) _dispatch(TOGGLE);
+			return this;
 		}
 		
-		public function toggleOn(pFireEvent:Boolean=true) : void {
-			toggle(true, pFireEvent);
+		public function toggleOn(pFireEvent:Boolean=true) : PushButton {
+			return toggle(true, pFireEvent);
 		}
 
-		public function toggleOff(pFireEvent:Boolean=false) : void {
-			toggle(false, pFireEvent);
+		public function toggleOff(pFireEvent:Boolean=false) : PushButton {
+			return toggle(false, pFireEvent);
 		}
 		
 		override protected function _onMouseUp(pEvent:MouseEvent) : void {

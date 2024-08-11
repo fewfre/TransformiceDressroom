@@ -16,18 +16,23 @@ package app.ui.panes
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import app.ui.buttons.PushButton;
+	import flash.display.DisplayObject;
 	
 	public class FavoritesTabPane extends ButtonGridSidePane
 	{
 		// Constants
 		public static const ITEMDATA_SELECTED : String = "itemdata_selected"; // ItemDataEvent
+		public static const ITEMDATA_REMOVED : String = "itemdata_removed"; // ItemDataEvent
 		
 		// Storage
 		private var _deleteAllConfirmScreen:TrashConfirmScreen;
+		private var _getIfItemDataWorn:Function; // (data:ItemData) => bool;
 		
 		// Constructor
-		public function FavoritesTabPane() {
+		public function FavoritesTabPane(pGetIfItemDataWorn:Function) {
 			super(5);
+			_getIfItemDataWorn = pGetIfItemDataWorn;
 			this.addInfoBar( new Infobar({ showBackButton:true, gridManagement:{ hideRandomizeLock:true, hideArrows:true } }) )
 				.on(Infobar.BACK_CLICKED, function(e):void{ dispatchEvent(new Event(Event.CLOSE)); });
 			infobar.changeImage(new $HeartFull())
@@ -74,8 +79,10 @@ package app.ui.panes
 			cell.addEventListener(MouseEvent.MOUSE_OUT, function(e){ actionTray.alpha = 0; });
 			
 			// main button
-			SpriteButton.withObject(itemImage, "auto", { size:grid.cellSize, data:{ itemData:itemData } }).appendTo(cell)
-				.onButtonClick(function(){ _dispatchItemData(itemData); });
+			PushButton.withObject(itemImage, "auto", { size:grid.cellSize, data:{ itemData:itemData } })
+				.toggle(_getIfItemDataWorn(itemData), false)
+				.onToggle(function(e:FewfEvent){ _dispatchItemData(itemData, (e.target as PushButton).pushed); })
+				.appendTo(cell);
 			
 			// Add on top of main button
 			cell.addChild(actionTray);
@@ -96,8 +103,8 @@ package app.ui.panes
 			}
 		}
 		
-		private function _dispatchItemData(itemData:ItemData) : void {
-			dispatchEvent(new ItemDataEvent(ITEMDATA_SELECTED, itemData));
+		private function _dispatchItemData(itemData:ItemData, pSelected:Boolean=true) : void {
+			dispatchEvent(new ItemDataEvent(pSelected ? ITEMDATA_SELECTED : ITEMDATA_REMOVED, itemData));
 		}
 		
 		/////////////////////////////
@@ -110,9 +117,24 @@ package app.ui.panes
 		}
 		
 		private function _onRandomizeClicked(e) : void {
-			var list:Vector.<ItemData> = FavoriteItemsLocalStorageManager.getAllFavorites();
-			if(list.length > 0) {
-				_dispatchItemData( list[ Math.floor(Math.random() * list.length) ] );
+			// var list:Vector.<ItemData> = FavoriteItemsLocalStorageManager.getAllFavorites();
+			// if(list.length > 0) {
+			// 	_dispatchItemData( list[ Math.floor(Math.random() * list.length) ] );
+			// }
+			var tLength = grid.cells.length;
+			var cell:DisplayObject = grid.cells[ Math.floor(Math.random() * tLength) ];
+			var btn:PushButton = _findPushButtonInCell(cell);
+			btn.toggleOn();
+			if(_flagOpen) scrollItemIntoView(cell);
+		}
+		
+		// We don't want this functionality for favorites since multiple can be selected at once
+		public override function handleKeyboardDirectionalInput(keyCode:uint) : void {}
+		// More than 1 item can be selected, so we need custom logic
+		protected override function _onCellPushButtonToggled(e:FewfEvent) : void {
+			for each(var btn:PushButton in buttons) {
+				var tItemData:ItemData = btn.data.itemData;
+				btn.toggle(_getIfItemDataWorn(tItemData), false);
 			}
 		}
 	}

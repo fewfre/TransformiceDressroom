@@ -1,3 +1,6 @@
+## V1.29g - 11 August 2024
+- Favorites Pane now uses `PushButton` so worn items can be seen, and can also now be removed
+
 ## V1.29f - 3 August 2024
 - Emojis can now be selected (button on "Other" pane)
 - Imgur feature overhaul
