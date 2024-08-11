@@ -47,17 +47,17 @@ package app.ui.panes
 			this.infobar.on(GridManagementWidget.RANDOMIZE_CLICKED, function(){ selectRandomOutfit(); });
 			
 			// Custom infobar buttons
-			var size = 40, xx = ConstantsApp.PANE_WIDTH - size, yy = 11;
+			var size = 40, xx = -size - 5, yy = 26;
 			
-			_importButton = new SpriteButton({ x:xx, y:yy, width:size, height:size, obj:new $Folder() });
-			_importButton.addEventListener(MouseEvent.CLICK, _onImportClicked);
-			addChild(_importButton);
+			_importButton = SpriteButton.withObject(new $Folder(), 1, { size:size, originY:0.5 }).move(xx, yy)
+				.onButtonClick(_onImportClicked) as SpriteButton;
+			infobar.addCustomObjectToRightSideTray(_importButton);
 			
 			xx -= size + 5;
 			
-			_exportButton = new SpriteButton({ x:xx, y:yy, width:size, height:size, obj:new $SimpleDownload(), obj_scale:0.7 });
-			_exportButton.addEventListener(MouseEvent.CLICK, _onExportClicked);
-			addChild(_exportButton);
+			_exportButton = SpriteButton.withObject(new $SimpleDownload(), 0.7, { size:size, originY:0.5 }).move(xx, yy)
+				.onButtonClick(_onExportClicked).appendTo(infobar) as SpriteButton;
+			infobar.addCustomObjectToRightSideTray(_exportButton);
 		}
 		
 		/****************************

@@ -1,6 +1,9 @@
 ## V1.29g - 11 August 2024
 - Favorites Pane now uses `PushButton` so worn items can be seen, and can also now be removed
 - Favorites Pane items now have a "goto" button
+- Grid buttons now properly center in empty area on all panes with custom buttons on right side of infobar
+- Folder button in color finder moved onto infobar
+- [Code] `ShopTabList` and (some) `PushButton` polish
 
 ## V1.29f - 3 August 2024
 - Emojis can now be selected (button on "Other" pane)

@@ -55,6 +55,20 @@ package app.ui.panes
 				.on(Infobar.BACK_CLICKED, _onBackClicked)
 				.on(Infobar.ITEM_PREVIEW_CLICKED, function(e){ dispatchEvent(new Event(EVENT_ITEM_ICON_CLICKED)); });
 			
+			/////////////////////////////
+			// Infobar - Image file selector
+			/////////////////////////////
+			var fileRef : FileReference = new FileReference();
+			fileRef.addEventListener(Event.SELECT, function(){ fileRef.load(); });
+			fileRef.addEventListener(Event.COMPLETE, _onFileSelect);
+			
+			var folderBttn:ScaleButton = ScaleButton.withObject(new $Folder(), 1.5).move(-25, 26)
+				.onButtonClick(function(e){ fileRef.browse([new FileFilter("Images", "*.jpg;*.jpeg;*.gif;*.png")]); }) as ScaleButton;
+			infobar.addCustomObjectToRightSideTray(folderBttn);
+			
+			/////////////////////////////
+			// Content Area
+			/////////////////////////////
 			// Scrollbox used for lazy cropping of dragged around item
 			_scrollbox = new FancyScrollbox(ConstantsApp.PANE_WIDTH, 390-60).move(5, 5+60);
 			addChild(_scrollbox);
@@ -164,16 +178,6 @@ package app.ui.panes
 			
 			_setColorText(-1);
 			_setHoverColor(-1);
-			
-			/****************************
-			* Image file selector
-			*****************************/
-			var fileRef : FileReference = new FileReference();
-			fileRef.addEventListener(Event.SELECT, function(){ fileRef.load(); });
-			fileRef.addEventListener(Event.COMPLETE, _onFileSelect);
-			
-			ScaleButton.withObject(new $Folder()).move(ConstantsApp.PANE_WIDTH/2-25, -_tray.y + 60 + 25).appendTo(_tray)
-				.onButtonClick(function(e){ fileRef.browse([new FileFilter("Images", "*.jpg;*.jpeg;*.gif;*.png")]); });
 		}
 		
 		public override function open() : void {
