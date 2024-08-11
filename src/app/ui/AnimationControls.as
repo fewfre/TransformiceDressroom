@@ -291,15 +291,8 @@ package app.ui
 		
 		private function _onSpeedButtonClicked(e:FewfEvent) : void {
 			_speedMulti = e.data.speed;
-			_untoggle(_speedButtons, e.target as PushButton);
+			PushButton.untoggleAll(_speedButtons, e.target as PushButton);
 			_applyStateToAnimationTarget();
-		}
-		private function _untoggle(pList:Vector.<PushButton>, pButton:PushButton=null) : void {
-			for(var i:int = 0; i < pList.length; i++) {
-				if (pList[i].pushed && pList[i] != pButton) {
-					pList[i].toggleOff();
-				}
-			}
 		}
 		
 		private function _onNextFrameClicked(e:Event) : void {

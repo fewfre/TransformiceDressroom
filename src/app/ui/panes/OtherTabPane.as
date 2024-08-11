@@ -237,13 +237,7 @@ package app.ui.panes
 		}
 
 		private function _untoggle(pList:Vector.<PushButton>, pButton:PushButton=null) : void {
-			/*if (pButton != null && pButton.pushed) { return; }*/
-
-			for(var i:int = 0; i < pList.length; i++) {
-				if (pList[i].pushed && pList[i] != pButton) {
-					pList[i].toggleOff();
-				}
-			}
+			PushButton.untoggleAll(pList, pButton);
 			_updateHead();
 		}
 		

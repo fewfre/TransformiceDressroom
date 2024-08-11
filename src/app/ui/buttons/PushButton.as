@@ -11,7 +11,6 @@ package app.ui.buttons
 	public class PushButton extends GameButton
 	{
 		// Constants
-		public static const BEFORE_TOGGLE:String="state_changed_before";
 		public static const TOGGLE:String="state_changed_after";
 		
 		// Storage
@@ -66,8 +65,6 @@ package app.ui.buttons
 		}
 
 		public function toggle(pOn:*=null, pFireEvent:Boolean=true) : PushButton {
-			if(pFireEvent) _dispatch(BEFORE_TOGGLE);
-			
 			this.pushed = pOn != null ? pOn : !this.pushed;
 			if(this.pushed) _renderPressed();
 			else _renderUnpressed();
@@ -128,6 +125,15 @@ package app.ui.buttons
 			pData.obj = pObj;
 			pData.obj_scale = pScale;
 			return new PushButton(pData);
+		}
+		// Convience method to deal with PushButtons that can only have 1 of each selected (todo: create a manager or something for this?)
+		// Doesn't fire event, as this is just to update the visual states
+		public static function untoggleAll(pList:Vector.<PushButton>, pActiveButtonToSkip:PushButton=null) : void {
+			for(var i:int = 0; i < pList.length; i++) {
+				if (pList[i].pushed && pList[i] != pActiveButtonToSkip) {
+					pList[i].toggleOff(false);
+				}
+			}
 		}
 	}
 }

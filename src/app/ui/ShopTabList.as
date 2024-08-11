@@ -8,92 +8,85 @@ package app.ui
 	public class ShopTabList extends Sprite
 	{
 		// Constants
-		public static const TAB_CLICKED			: String = "shop_tab_clicked";
+		public static const TAB_CLICKED : String = "shop_tab_clicked";
+		
+		private static const MARGIN_X : Number = 5;
+		private static const MARGIN_Y : Number = 5;
 
 		// Storage
 		private var _bg: RoundRectangle;
-		public var tabs: Vector.<PushButton> = new Vector.<PushButton>();
+		private var _tabs: Vector.<PushButton> = new Vector.<PushButton>();
 
 		// Constructor
-		// pTabDataList = Vector.<{ text:String, event:String }> }
 		public function ShopTabList(pWidth:Number, pHeight:Number) {
 			_bg = new RoundRectangle(pWidth, pHeight).appendTo(this).drawAsTray();
-			
-			tabs = new Vector.<PushButton>();
+			_tabs = new Vector.<PushButton>();
 		}
 		public function move(pX:Number, pY:Number) : ShopTabList { x = pX; y = pY; return this; }
 		public function appendTo(pParent:Sprite): ShopTabList { pParent.addChild(this); return this; }
 		
-		// Array<{ text:String, event:String }
+		// Vector<{ text:String, event:String }
 		public function populate(pTabs:Vector.<Object>) : ShopTabList {
-			var tXMargin:Number = 5;
-			var tYMargin:Number = 5;
-			var tHeight:Number = Math.min(65, (_bg.height - tYMargin) / pTabs.length - tYMargin);
-			var tWidth:Number = _bg.width - (tXMargin * 2);
-			var tYSpacing:Number = tHeight + tYMargin;
-			var tX:Number = tXMargin;
-			var tY:Number = tYMargin - tYSpacing; // Go back one space for when for loop adds one space.
+			var tHeight:Number = Math.min(65, (_bg.height - MARGIN_Y) / pTabs.length - MARGIN_Y);
+			var tWidth:Number = _bg.width - (MARGIN_X * 2);
+			var tYSpacing:Number = tHeight + MARGIN_Y;
+			var tX:Number = MARGIN_X;
+			var tY:Number = MARGIN_Y - tYSpacing; // Go back one space to account for loop adding a space.
 
 			_clearAll();
 			for(var i = 0; i < pTabs.length; i++) {
-				_createTab(pTabs[i].text, tX, tY += tYSpacing, tWidth, tHeight, pTabs[i].event);
+				var tBttn:PushButton = _createTab(pTabs[i].text, tX, tY += tYSpacing, tWidth, tHeight, pTabs[i].event);
+				_tabs.push(tBttn);
 			}
 			return this;
 		}
-
 		private function _createTab(pText:String, pX:Number, pY:Number, pWidth:Number, pHeight:Number, pEvent:String) : PushButton {
-			var tBttn:PushButton = new PushButton({ x:pX, y:pY, width:pWidth, height:pHeight, text:pText, allowToggleOff:false, data:{ event:pEvent } });
-			// tBttn.addEventListener(PushButton.BEFORE_TOGGLE, function(tBttn){ return function(){ untoggle(tBttn, pEvent); }; }(tBttn));//, false, 0, true
-			tBttn.addEventListener(PushButton.BEFORE_TOGGLE, function():void{ untoggle(tBttn, pEvent); });
-			addChild(tBttn)
-			tabs.push(tBttn);
-			return tBttn;
+			return new PushButton({ width:pWidth, height:pHeight, text:pText, data:{ event:pEvent } })
+				.setAllowToggleOff(false)
+				.onToggle(function(e:FewfEvent):void{
+					_untoggleAll(e.target as PushButton);
+					dispatchEvent(new FewfEvent(TAB_CLICKED, pEvent));
+				})
+				.move(pX, pY).appendTo(this) as PushButton;
+		}
+		
+		///////////////////////
+		// Public
+		///////////////////////
+		public function getSelectedTabEventName() : String {
+			for(var i:int = 0; i < _tabs.length; i++) {
+				if (_tabs[i].pushed) return _tabs[i].data.event.toString();
+			}
+			return null;
+		}
+		
+		public function getTabButton(pEventName:String) : PushButton {
+			for each(var tab:PushButton in _tabs) {
+				if(tab.data.event == pEventName) return tab;
+			}
+			return null;
+		}
+		
+		public function toggleTabOn(pEventName:String) : void {
+			getTabButton(pEventName).toggleOn(true);
+		}
+		
+		// We don't do it by default since coresponding pane may not exist when tab list populated.
+		public function toggleOnFirstTab() : void {
+			_tabs[0].toggleOn();
+		}
+
+		///////////////////////
+		// Private
+		///////////////////////
+		private function _untoggleAll(pTab:PushButton=null) : void {
+			PushButton.untoggleAll(_tabs, pTab);
 		}
 		
 		// Clear current tabs (if any)
 		private function _clearAll() : void {
-			for(var i = 0; i < tabs.length; i++) {
-				removeChild(tabs[i]);
-			}
-			tabs = new Vector.<PushButton>();
-		}
-		
-		public function getTabButton(pEventName:String) : PushButton {
-			for each(var tab:PushButton in tabs) {
-				if(tab.data.event == pEventName) {
-					return tab;
-				}
-			}
-			return null;
-		}
-		
-		public function toggleTabOn(pEventName:String, pFireEvent:Boolean = true) : void {
-			getTabButton(pEventName).toggleOn(pFireEvent);
-		}
-
-		public function UnpressAll() : void {
-			untoggle();
-		}
-		
-		public function getSelectedTabEventName() : String {
-			for(var i:int = 0; i < tabs.length; i++) {
-				if (tabs[i].pushed) {
-					return tabs[i].data.event.toString();
-				}
-			}
-			return null;
-		}
-
-		private function untoggle(pTab:PushButton=null, pEvent:String=null) : void {
-			// if (pTab != null && pTab.pushed) { return; }
-
-			for(var i:int = 0; i < tabs.length; i++) {
-				if (tabs[i].pushed && tabs[i] != pTab) {
-					tabs[i].toggleOff();
-				}
-			}
-
-			if(pEvent!=null) { dispatchEvent(new FewfEvent(TAB_CLICKED, pEvent)); }
+			for(var i = 0; i < _tabs.length; i++) { removeChild(_tabs[i]); }
+			_tabs = new Vector.<PushButton>();
 		}
 	}
 }

@@ -235,7 +235,7 @@ package app.world
 				.on(FavoritesTabPane.ITEMDATA_GOTO, function(e:ItemDataEvent){ _goToItem(e.itemData); });
 			
 			// Select First Pane
-			shopTabs.tabs[0].toggleOn();
+			shopTabs.toggleOnFirstTab();
 		}
 
 		private function _setupItemPane(pType:ItemType) : ShopCategoryPane {
@@ -428,7 +428,7 @@ package app.world
 			_updateAllShopPaneFilters();
 			_showOrHideGiantFilterIcon();
 			// Select first tab available
-			shopTabs.tabs[0].toggleOn();
+			shopTabs.toggleOnFirstTab();
 		}
 		
 		private function _onExitItemFilteringMode(e:Event) : void { _exitFilterMode(); };
@@ -439,7 +439,7 @@ package app.world
 			_clearItemFiltering();
 			_showOrHideGiantFilterIcon();
 			// Select first tab available (needed since tabs repopulated)
-			shopTabs.tabs[0].toggleOn();
+			shopTabs.toggleOnFirstTab();
 		}
 		
 		private function _updateAllShopPaneFilters() : void {
@@ -625,7 +625,6 @@ package app.world
 		private function _goToItem(pItemData:ItemData) : void {
 			var itemType:ItemType = pItemData.type;
 			
-			shopTabs.UnpressAll();
 			shopTabs.toggleTabOn(WorldPaneManager.itemTypeToId(itemType));
 			var tPane:ShopCategoryPane = getShopPane(itemType);
 			var itemBttn:PushButton = tPane.toggleGridButtonWithData( character.getItemData(itemType), true );
