@@ -209,7 +209,7 @@ package app.world
 			
 			// Outfit Pane
 			_panes.addPane(WorldPaneManager.OUTFITS_PANE, new OutfitManagerTabPane(character, _useOutfitShareCode, function(){ return character.getParamsTfmOfficialSyntax() }))
-				.on(Event.CLOSE, function(e:Event){ _panes.openPane(shopTabs.getSelectedTabEventName()); });
+				.on(Event.CLOSE, function(e:Event){ _panes.openPane(shopTabs.getSelectedTabId()); });
 			
 			// Worn Items Pane
 			_panes.addPane(WorldPaneManager.WORN_ITEMS_PANE, new WornItemsPane(character, _goToItemColorPicker))
@@ -223,7 +223,7 @@ package app.world
 			
 			// Favorites Pane
 			_panes.addPane(WorldPaneManager.FAVORITES_PANE, new FavoritesTabPane(function(pItemData:ItemData):Boolean{ return pItemData.matches(character.getItemData(pItemData.type)); }))
-				.on(Event.CLOSE, function(e){ _panes.openPane(shopTabs.getSelectedTabEventName()); })
+				.on(Event.CLOSE, function(e){ _panes.openPane(shopTabs.getSelectedTabId()); })
 				.on(FavoritesTabPane.ITEMDATA_SELECTED, function(e:ItemDataEvent){
 					var itemData:ItemData = e.itemData;
 					character.setItemData(itemData);
@@ -235,7 +235,7 @@ package app.world
 				.on(FavoritesTabPane.ITEMDATA_GOTO, function(e:ItemDataEvent){ _goToItem(e.itemData); });
 			
 			// Select First Pane
-			shopTabs.tabs[0].toggleOn();
+			shopTabs.toggleOnFirstTab();
 		}
 
 		private function _setupItemPane(pType:ItemType) : ShopCategoryPane {
@@ -272,30 +272,30 @@ package app.world
 			var tabs:Vector.<Object>;
 			if(_itemFiltering_selectionModeOn && !_itemFiltering_filterEnabled) {
 				tabs = new <Object>[
-					{ text:"tab_filtering", event:WorldPaneManager.ITEM_FILTERING_PANE },
-					{ text:"tab_furs", event:WorldPaneManager.itemTypeToFilterId(ItemType.SKIN) },
-					{ text:"tab_head", event:WorldPaneManager.itemTypeToFilterId(ItemType.HEAD) },
-					{ text:"tab_ears", event:WorldPaneManager.itemTypeToFilterId(ItemType.EARS) },
-					{ text:"tab_eyes", event:WorldPaneManager.itemTypeToFilterId(ItemType.EYES) },
-					{ text:"tab_mouth", event:WorldPaneManager.itemTypeToFilterId(ItemType.MOUTH) },
-					{ text:"tab_neck", event:WorldPaneManager.itemTypeToFilterId(ItemType.NECK) },
-					{ text:"tab_tail", event:WorldPaneManager.itemTypeToFilterId(ItemType.TAIL) },
-					{ text:"tab_hair", event:WorldPaneManager.itemTypeToFilterId(ItemType.HAIR) },
-					{ text:"tab_contacts", event:WorldPaneManager.itemTypeToFilterId(ItemType.CONTACTS) },
-					{ text:"tab_tattoo", event:WorldPaneManager.itemTypeToFilterId(ItemType.TATTOO) },
-					{ text:"tab_hand", event:WorldPaneManager.itemTypeToFilterId(ItemType.HAND) },
+					{ text:"tab_filtering", id:WorldPaneManager.ITEM_FILTERING_PANE },
+					{ text:"tab_furs", id:WorldPaneManager.itemTypeToFilterId(ItemType.SKIN) },
+					{ text:"tab_head", id:WorldPaneManager.itemTypeToFilterId(ItemType.HEAD) },
+					{ text:"tab_ears", id:WorldPaneManager.itemTypeToFilterId(ItemType.EARS) },
+					{ text:"tab_eyes", id:WorldPaneManager.itemTypeToFilterId(ItemType.EYES) },
+					{ text:"tab_mouth", id:WorldPaneManager.itemTypeToFilterId(ItemType.MOUTH) },
+					{ text:"tab_neck", id:WorldPaneManager.itemTypeToFilterId(ItemType.NECK) },
+					{ text:"tab_tail", id:WorldPaneManager.itemTypeToFilterId(ItemType.TAIL) },
+					{ text:"tab_hair", id:WorldPaneManager.itemTypeToFilterId(ItemType.HAIR) },
+					{ text:"tab_contacts", id:WorldPaneManager.itemTypeToFilterId(ItemType.CONTACTS) },
+					{ text:"tab_tattoo", id:WorldPaneManager.itemTypeToFilterId(ItemType.TATTOO) },
+					{ text:"tab_hand", id:WorldPaneManager.itemTypeToFilterId(ItemType.HAND) },
 				];
 			} else {
 				tabs = new Vector.<Object>();
-				if(ConstantsApp.CONFIG_TAB_ENABLED && !_itemFiltering_filterEnabled) tabs.push({ text:"tab_config", event:WorldPaneManager.CONFIG_PANE });
+				if(ConstantsApp.CONFIG_TAB_ENABLED && !_itemFiltering_filterEnabled) tabs.push({ text:"tab_config", id:WorldPaneManager.CONFIG_PANE });
 				
 				for each(var type:ItemType in ItemType.TYPES_WITH_SHOP_PANES) {
 					if(type == ItemType.EMOJI || !_shouldShowShopTab(type)) continue;
 					// Some i18n ids don't match the type string, so manually handling it here
 					var i18nStr : String = type == ItemType.SKIN ? 'furs' : type == ItemType.HAND ? 'hand' : type == ItemType.POSE ? 'poses' : type.toString();
-					tabs.push({ text:"tab_"+i18nStr, event:WorldPaneManager.itemTypeToId(type) });
+					tabs.push({ text:"tab_"+i18nStr, id:WorldPaneManager.itemTypeToId(type) });
 				}
-				tabs.push({ text:"tab_other", event:WorldPaneManager.OTHER_PANE });
+				tabs.push({ text:"tab_other", id:WorldPaneManager.OTHER_PANE });
 			}
 			
 			this.shopTabs.populate(tabs);
@@ -428,7 +428,7 @@ package app.world
 			_updateAllShopPaneFilters();
 			_showOrHideGiantFilterIcon();
 			// Select first tab available
-			shopTabs.tabs[0].toggleOn();
+			shopTabs.toggleOnFirstTab();
 		}
 		
 		private function _onExitItemFilteringMode(e:Event) : void { _exitFilterMode(); };
@@ -439,7 +439,7 @@ package app.world
 			_clearItemFiltering();
 			_showOrHideGiantFilterIcon();
 			// Select first tab available (needed since tabs repopulated)
-			shopTabs.tabs[0].toggleOn();
+			shopTabs.toggleOnFirstTab();
 		}
 		
 		private function _updateAllShopPaneFilters() : void {
@@ -625,7 +625,6 @@ package app.world
 		private function _goToItem(pItemData:ItemData) : void {
 			var itemType:ItemType = pItemData.type;
 			
-			shopTabs.UnpressAll();
 			shopTabs.toggleTabOn(WorldPaneManager.itemTypeToId(itemType));
 			var tPane:ShopCategoryPane = getShopPane(itemType);
 			var itemBttn:PushButton = tPane.toggleGridButtonWithData( character.getItemData(itemType), true );
