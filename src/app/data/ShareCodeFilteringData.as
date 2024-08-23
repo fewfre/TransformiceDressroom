@@ -3,6 +3,7 @@ package app.data
 	import flash.utils.Dictionary;
 	import flash.net.URLVariables;
 	import app.world.data.ItemData;
+	import com.fewfre.utils.Fewf;
 
 	public final class ShareCodeFilteringData
 	{
@@ -47,6 +48,11 @@ package app.data
 			if(i > -1) {
 				vector.splice(i, 1);
 			}
+		}
+		
+		public static function toggleItemData(itemData:ItemData, pOn:Boolean) : void {
+			if(pOn) addId(itemData.type, itemData.id);
+			else removeId(itemData.type, itemData.id);
 		}
 		
 		public static function idCount() : Number {
@@ -134,6 +140,19 @@ package app.data
 				}
 			}
 			return pParams.length > 0 ? PREFIX + pParams.join('&') : '';
+		}
+		
+		////////////////////////////
+		// Share Code Methods - Caching
+		////////////////////////////
+		public static function getShareCodeCache() : String {
+			return Fewf.sharedObject.getData(ConstantsApp.SHARED_OBJECT_KEY_LAST_FILTER_CODE);
+		}
+		public static function updateShareCodeCache() : void {
+			Fewf.sharedObject.setData(ConstantsApp.SHARED_OBJECT_KEY_LAST_FILTER_CODE, generateShareCode());
+		}
+		public static function clearShareCodeCache() : void {
+			Fewf.sharedObject.setData(ConstantsApp.SHARED_OBJECT_KEY_LAST_FILTER_CODE, null);
 		}
 	}
 }

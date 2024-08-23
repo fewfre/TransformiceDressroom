@@ -57,7 +57,12 @@ package app.ui.panes
 		
 		public override function open() : void {
 			super.open();
-			_copyField.text = ShareCodeFilteringData.generateShareCode() || '...';
+			var code:String = ShareCodeFilteringData.generateShareCode();
+			if(!code) {
+				code = ShareCodeFilteringData.getShareCodeCache();
+				ShareCodeFilteringData.parseShareCode(code);
+			}
+			_copyField.text = code || '...';
 		}
 		
 		/****************************

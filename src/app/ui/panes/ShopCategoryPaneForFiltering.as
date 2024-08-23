@@ -97,6 +97,7 @@ package app.ui.panes
 			}
 			btn.addEventListener(PushButton.TOGGLE, function(e:FewfEvent){
 				ShareCodeFilteringData.setCustomizable(data, (e.target as PushButton).pushed);
+				ShareCodeFilteringData.updateShareCodeCache();
 				btn.alpha = ShareCodeFilteringData.isCustomizable(data) ? 1 : 0.35;
 			});
 			return btn;
@@ -108,13 +109,9 @@ package app.ui.panes
 		protected override function _onCellPushButtonToggled(e:FewfEvent) : void {
 			var btn:PushButton = e.target as PushButton;
 			btn.alpha = btn.pushed ? 1 : 0.5;
-			if(btn.pushed) {
-				ShareCodeFilteringData.addId(btn.data.type, btn.data.itemID);
-				btn.data.customizeButton.visible = true;
-			} else {
-				ShareCodeFilteringData.removeId(btn.data.type, btn.data.itemID);
-				btn.data.customizeButton.visible = false;
-			}
+			ShareCodeFilteringData.toggleItemData(btn.data.itemData, btn.pushed);
+			btn.data.customizeButton.visible = btn.pushed;
+			ShareCodeFilteringData.updateShareCodeCache();
 			// dispatchEvent(new FewfEvent(ITEM_TOGGLED, e.data));
 		}
 	}

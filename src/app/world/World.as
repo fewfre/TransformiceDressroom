@@ -715,6 +715,7 @@ package app.world
 			}
 			private function _resetItemFilteringPane() : void {
 				ShareCodeFilteringData.reset();
+				ShareCodeFilteringData.clearShareCodeCache();
 				_clearItemFiltering();
 				_getAndOpenItemFilteringPane();
 			}

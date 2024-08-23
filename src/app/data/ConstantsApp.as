@@ -12,7 +12,7 @@ package app.data
 		/****************************
 		* General
 		*****************************/
-		public static const VERSION					: String = "1.29g";
+		public static const VERSION					: String = "1.29h";
 		public static const SOURCE_URL				: String = "https://github.com/fewfre/TransformiceDressroom/blob/master/CHANGELOG.md";
 		public static const DISCORD_URL				: String = "https://discord.gg/DREPH9GqWw";
 		
@@ -29,6 +29,7 @@ package app.data
 		public static const SHARED_OBJECT_KEY_GLOBAL_LANG: String = 'lang';
 		public static const SHARED_OBJECT_KEY_OUTFITS: String = 'saved-outfits';
 		public static const SHARED_OBJECT_KEY_TYPE_FAVORITES_PREFIX: String = 'favorite-items-';
+		public static const SHARED_OBJECT_KEY_LAST_FILTER_CODE: String = 'last-filter-code';
 		
 		/****************************
 		* Global Events
