@@ -11,6 +11,8 @@ package app.ui.panes.colorpicker
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.events.DataEvent;
+	import com.fewfre.display.DisplayWrapper;
+	import flash.display.Graphics;
 
 	public class ColorPickerTabPane extends GridSidePane
 	{
@@ -31,6 +33,7 @@ package app.ui.panes.colorpicker
 		
 		private var _recentColorsDisplay       : RecentColorsListDisplay;
 		private var _randomizeButton           : SpriteButton;
+		private var _allLockToggleIcon         : DisplayWrapper;
 		
 		private var _colorHistory              : ColorHistoryOverlay;
 		
@@ -58,8 +61,17 @@ package app.ui.panes.colorpicker
 			_psColorPick = this.addItem(new ColorPicker().move(105, 5).on(ColorPicker.COLOR_PICKED, _onColorPickChanged)) as ColorPicker;
 			
 			if(!pData.hide_default) {
-				this.addItem( new SpriteButton({ text:"btn_color_defaults", x:6, y:15, width:100, height:22 })
+				this.addItem( new SpriteButton({ text:"btn_color_defaults", x:15+4, y:14, width:88, height:22 })
 					.onButtonClick(function(){ _defaultAllColors(); }) );
+				
+				_allLockToggleIcon = new DisplayWrapper(new $Lock());
+				this.addItem( SpriteButton.withObject(_allLockToggleIcon.asSprite, 0.5, { width:15, height:22 }).move(0,14)
+					.onButtonClick(function(){
+						if(_getLockToggleButtonState() == "clear") _clearAllLocks();
+						else _lockAllLocks();
+						_updateLockToggleButtonState();
+					}) );
+				_updateLockToggleButtonState();
 			}
 			
 			_randomizeButton = SpriteButton.withObject(new $Dice(), 0.8, { size:24 }).move(ConstantsApp.PANE_WIDTH - 24 - 11, 14)
@@ -97,6 +109,7 @@ package app.ui.panes.colorpicker
 			
 			_setupSwatches(pColors);
 			_defaultColors = pDefaults ? pDefaults.concat() : null;
+			_updateLockToggleButtonState(); // Needed since lock history changes between items / trash all button deletes all lock history
 		}
 		
 		public function renderRecents() : void {
@@ -248,9 +261,6 @@ package app.ui.panes.colorpicker
 		}
 		
 		private function _defaultAllColors() {
-			_lockHistory.clearLockHistory();
-			_updateLocksToMatchHistory();
-			
 			_updateColors(_defaultColors.concat(), true);
 			
 			_untrackRecentColor();
@@ -300,12 +310,48 @@ package app.ui.panes.colorpicker
 			for(var i:int = 0; i < _colorSwatches.length; i++) {
 				_lockHistory.setLockHistory(i, _colorSwatches[i].locked);
 			}
+			_updateLockToggleButtonState();
 		}
 		private function _updateLocksToMatchHistory() : void {
 			for(var i:int = 0; i < _colorSwatches.length; i++) {
 				var locked:Boolean = _lockHistory.getLockHistory(i);
 				if(locked && !_colorSwatches[i].locked) _colorSwatches[i].lock();
 				else if(!locked && _colorSwatches[i].locked) _colorSwatches[i].unlock();
+			}
+			_updateLockToggleButtonState();
+		}
+		private function _lockAllLocks() : void {
+			for(var i:int = 0; i < _colorSwatches.length; i++) {
+				_lockHistory.setLockHistory(i, true);
+			}
+			_updateLocksToMatchHistory();
+		}
+		private function _clearAllLocks() : void {
+			_lockHistory.clearLockHistory();
+			_updateLocksToMatchHistory();
+		}
+		
+		private function _getLockToggleButtonState() : String {
+			var state:String = "lock";
+			for(var i:int = 0; i < _colorSwatches.length; i++) {
+				if(_colorSwatches[i].locked) {
+					state = "clear";
+					break;
+				}
+			}
+			return state;
+		}
+		
+		private function _updateLockToggleButtonState() : void {
+			if(!_allLockToggleIcon) { return; }
+			if(_getLockToggleButtonState() == "clear") {
+				_allLockToggleIcon.draw(function(g:Graphics):void{
+					g.lineStyle(4, 0XFF0000);
+					g.moveTo(-12, 6);
+					g.lineTo(12, -6);
+				})
+			} else {
+				_allLockToggleIcon.draw(function(g:Graphics):void{ g.clear(); })
 			}
 		}
 		

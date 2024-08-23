@@ -1,5 +1,7 @@
 ## V1.29h - 22 August 2024
-- Item Filter Mode will now cache the filter share code you are creating when you modify an item in the list, so it is remembered between sessions - only cleared upon delete button being used. 
+- ColorPicker pane now has a button for toggling all swatch locks on/off
+	- Default button once again no longer removes locks
+- Item Filter Mode will now cache the filter share code you are creating when you modify an item in the list, so it is remembered between sessions - only cleared upon delete button being used.
 
 
 ## V1.29g - 11 August 2024
