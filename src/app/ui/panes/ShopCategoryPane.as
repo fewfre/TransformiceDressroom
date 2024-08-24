@@ -39,7 +39,6 @@ package app.ui.panes
 		public function get defaultItemData():ItemData { return _defaultItemData; }
 		
 		public static const ITEM_TOGGLED : String = 'ITEM_TOGGLED'; // ItemDataEvent
-		public static const DEFAULT_SKIN_COLOR_BTN_CLICKED : String = 'DEFAULT_SKIN_COLOR_BTN_CLICKED';
 		public static const FLAG_WAVE_CODE_CHANGED : String = 'FLAG_WAVE_CODE_CHANGED';
 		
 		// Constructor
@@ -107,9 +106,9 @@ package app.ui.panes
 			_setupGrid(list);
 		}
 		
+		// Update image when colors have been changed
 		public function refreshButtonImage(pItemData:ItemData) : void {
-			if(!pItemData || pItemData.type == ItemType.POSE) { return; }
-			if(pItemData.isBitmap()) { return; } // Bitmaps have no customization
+			if(!pItemData || !pItemData.isCustomizable) { return; }
 			
 			var btn:PushButton = this.getButtonWithItemData(pItemData);
 			btn.ChangeImage(GameAssets.getColoredItemImage(pItemData));
@@ -138,7 +137,6 @@ package app.ui.panes
 
 			var shopItemButton:PushButton = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:shopItem, data:{ type:_type, itemID:itemData.id, itemData:itemData } }).appendTo(cell) as PushButton;
 			
-			_addDefaultSkinColorButtonIfNeeded(itemData, cell, shopItemButton);
 			_addFlagWaveInputIfNeeded(itemData, cell, shopItemButton);
 			
 			// Finally add to grid (do it at end so auto event handlers can be hooked up properly)
@@ -156,16 +154,6 @@ package app.ui.panes
 			if(_defaultItemData && list && !FewfUtils.vectorFind(list, function(d:ItemData){ return _defaultItemData.matches(d) })) {
 				_defaultItemData = list.length ? list[0] : null;
 			}
-		}
-		
-		private function _addDefaultSkinColorButtonIfNeeded(itemData:ItemData, cell:Sprite, parentButton:PushButton) : void {
-			if(!GameAssets.defaultSkin.matches(itemData)) { return; }
-			// Customizeable fur color button
-			new ScaleButton({ obj:new $ColorWheel(), obj_scale:0.5 }).move(60, 12).appendTo(cell)
-				.onButtonClick(function():void{
-					parentButton.toggleOn();
-					dispatchEvent(new Event(DEFAULT_SKIN_COLOR_BTN_CLICKED));
-				});
 		}
 		
 		private function _addFlagWaveInputIfNeeded(itemData:ItemData, cell:Sprite, parentButton:PushButton) : void {

@@ -1,7 +1,10 @@
 ## V1.29h - 22 August 2024
 - ColorPicker pane now has a button for toggling all swatch locks on/off
 	- Default button once again no longer removes locks
-- Item Filter Mode will now cache the filter share code you are creating when you modify an item in the list, so it is remembered between sessions - only cleared upon delete button being used.
+- Item Filter Mode will now cache the filter share code you are creating when you modify an item in the list, so it is remembered between sessions - only cleared upon delete button being used
+- [Code] Rewrote some customization related code to be much more straightforward, cleaner, and standardized
+	- The default skin no longer as an abnormal color wheel button, and instead uses the one on the infobar like everything else
+	- [Bug] Also fixed a bug I came across where if you customized the color of the default skin and then changed poses, the image in the infobar would change to that color
 
 
 ## V1.29g - 11 August 2024

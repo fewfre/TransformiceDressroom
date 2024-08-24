@@ -41,6 +41,8 @@ package app.data
 		public static var extraBackHand:ItemData;
 		public static var extraBack:Vector.<ItemData>;
 		
+		private static var _defaultSkinForGetItemImage:ItemData;
+		
 		// { type:ItemType, id:String, colorI:int }
 		public static var swatchHoverPreviewData:Object = null;
 
@@ -75,16 +77,17 @@ function(){
 	
 	var i:int;
 	for(i = 0; i < FUR_COLORS.length; i++) {
-		skins.push( new SkinData({ id:"color"+i, assetID:1, color:FUR_COLORS[i], isSkinColor:true }) );
+		skins.push( new SkinData("color"+i, { assetID:1, color:FUR_COLORS[i], isSkinColor:true }) );
 	}
 	
-	skins.push( new SkinData({ id:1, assetID:1, color:DEFAULT_FUR_COLOR, type:ItemType.SKIN }) );
+	skins.push( new SkinData("1", { assetID:1, color:DEFAULT_FUR_COLOR, type:ItemType.SKIN }) );
 	for(i = 2; i < _MAX_COSTUMES_TO_CHECK_TO; i++) {
 		if(Fewf.assets.getLoadedClass( "_Corps_2_"+i+"_1" ) != null) {
-			skins.push( new SkinData({ id:i }) );
+			skins.push( new SkinData(i.toString()) );
 		}
 	}
 	_defaultSkinIndex = 7;//FewfUtils.getIndexFromVectorWithKeyVal(skins, "id", ConstantsApp.DEFAULT_SKIN_ID);
+	_defaultSkinForGetItemImage = skins[_defaultSkinIndex].copy(); // We need a copy encase default skin's color is updated
 
 	/*for(var i = 0; i < 7; i++) {
 		furs.push( new FurData( i, ItemType.COLOR ).initColor() );
@@ -158,7 +161,7 @@ pOnInitComplete
 			var list:Vector.<ItemData> = new Vector.<ItemData>(), tClassName:String, tClass:Class;
 			var breakCount = 0; // quit early if enough nulls in a row
 			
-			for(var i = 0; i <= _MAX_COSTUMES_TO_CHECK_TO; i++) {
+			for(var i:int = 0; i <= _MAX_COSTUMES_TO_CHECK_TO; i++) {
 				// hardcoded skip for duplicate items in game files - TODO: add values to config maybe?
 				if(i == 85 && type == ItemType.MOUTH) {
 					continue;
@@ -167,7 +170,7 @@ pOnInitComplete
 				tClass = Fewf.assets.getLoadedClass( base+(pData.pad ? zeroPad(i, pData.pad) : i)+(pData.after ? pData.after : "") );
 				if(tClass != null) {
 					breakCount = 0;
-					list.push( new ItemData(type, i, { itemClass:tClass }) );
+					list.push( new ItemData(type, i.toString(), { itemClass:tClass }) );
 					if(pData.itemClassToClassMap) {
 						list[list.length-1].classMap = {};
 						if(pData.itemClassToClassMap is Array) {
@@ -265,11 +268,6 @@ pOnInitComplete
 				}
 			}
 			return pList;
-		}
-
-		public static function getNumOfCustomColors(pMC:MovieClip) : int {
-			// Use recursive one since the array it returns is a bit more safe for this than the vector
-			return _findDefaultColorsRecursive(pMC, []).length;
 		}
 		
 		public static function getColorsWithPossibleHoverEffect(pData:ItemData) : Vector.<uint> {
@@ -404,7 +402,7 @@ pOnInitComplete
 		// pData = { ?pose:ItemData, ?skin:SkinData }
 		public static function getDefaultPoseSetup(pData:Object) : Pose {
 			var tPoseData = pData.pose ? pData.pose : defaultPose;
-			var tSkinData = pData.skin ? pData.skin : defaultSkin;
+			var tSkinData = pData.skin ? pData.skin : _defaultSkinForGetItemImage;
 
 			var tPose:Pose = new Pose(tPoseData);
 			tPose.apply(new <ItemData>[ tSkinData ], ShamanMode.OFF);

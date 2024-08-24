@@ -6,6 +6,7 @@ package app.world.data
 
 	public class ItemData
 	{
+		// Storage
 		public var type			: ItemType;
 		public var id			: String;
 		public var itemClass	: Class;
@@ -13,7 +14,11 @@ package app.world.data
 
 		public var defaultColors: Vector.<uint>;
 		public var colors		: Vector.<uint>;
+		
+		// Properties
+		public function get isCustomizable() : Boolean { return defaultColors.length > 0; }
 
+		// Constructor
 		// pData = { itemClass:Class, ?classMap:Object<Class> }
 		public function ItemData(pType:ItemType, pId:String, pData:Object) {
 			super();
@@ -43,9 +48,6 @@ package app.world.data
 		public function uniqId() : String {
 			return this.type + '--' + this.id;
 		}
-		
-		public function isSkin() : Boolean { return type == ItemType.SKIN; }
-		public function isBitmap() : Boolean { return false; }
 
 		public function getPart(pID:String, pOptions:Object=null) : Class {
 			return !classMap ? null : (classMap[pID] ? classMap[pID] : null);

@@ -240,9 +240,8 @@ package app.world
 
 		private function _setupItemPane(pType:ItemType) : ShopCategoryPane {
 			var tPane:ShopCategoryPane = new ShopCategoryPane(pType);
-			tPane.addEventListener(ShopCategoryPane.ITEM_TOGGLED, _onItemToggled);
-			tPane.addEventListener(ShopCategoryPane.DEFAULT_SKIN_COLOR_BTN_CLICKED, function(){ _colorButtonClicked(pType); });
-			tPane.addEventListener(ShopCategoryPane.FLAG_WAVE_CODE_CHANGED, function(e:FewfEvent){ character.flagWavingCode = e.data.code; });
+			tPane.on(ShopCategoryPane.ITEM_TOGGLED, _onItemToggled);
+			tPane.on(ShopCategoryPane.FLAG_WAVE_CODE_CHANGED, function(e:FewfEvent){ character.flagWavingCode = e.data.code; });
 			
 			tPane.infobar.on(Infobar.COLOR_WHEEL_CLICKED, function(){ _colorButtonClicked(pType); });
 			tPane.infobar.on(Infobar.ITEM_PREVIEW_CLICKED, function(){ _removeItem(pType); });
@@ -254,8 +253,7 @@ package app.world
 
 		private function _setupItemPaneForFiltering(pType:ItemType) : ShopCategoryPaneForFiltering {
 			var tPane:ShopCategoryPaneForFiltering = new ShopCategoryPaneForFiltering(pType);
-			tPane.addEventListener(ShopCategoryPane.ITEM_TOGGLED, _onItemToggled);
-			tPane.addEventListener(ShopCategoryPane.DEFAULT_SKIN_COLOR_BTN_CLICKED, function(){ _colorButtonClicked(pType); });
+			tPane.on(ShopCategoryPane.ITEM_TOGGLED, _onItemToggled);
 			
 			// Grid Management Events
 			tPane.infobar.on(GridManagementWidget.RANDOMIZE_CLICKED, function(){ _randomItemOfType(pType); });
@@ -548,9 +546,8 @@ package app.world
 			var tButton:PushButton = tPane.getButtonWithItemData(tItemData);
 			// If clicked button is toggled on, equip it. Otherwise remove it.
 			if(tButton.pushed) {
-				var showColorWheel : Boolean = false;
-				if(GameAssets.getNumOfCustomColors(tButton.Image as MovieClip) > 0) {
-					showColorWheel = true;
+				var showColorWheel : Boolean = tItemData.isCustomizable;
+				if(showColorWheel) {
 					if(_itemFiltering_filterEnabled) {
 						showColorWheel = ShareCodeFilteringData.isCustomizable(tItemData);
 						// If the item can normally be customized but they're turned off by filtering, force reset the color to default
