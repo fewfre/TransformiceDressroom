@@ -53,7 +53,7 @@ package app.world.elements
 		
 		private function _getBestPoseFrame() : uint {
 			return _poseData.id == 'Kiss' ? 20
-			     : _poseData.id == 'Neige' ? 12
+			     : _poseData.id == 'Neige' ? 1//12
 			     : _poseData.id == 'Clap' ? 26
 			     : _poseData.id == 'Rondoudou' ? 63
 			     : _poseData.id == 'Attaque' ? 1
