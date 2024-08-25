@@ -99,7 +99,7 @@ package app.ui
 				.on(PushButton.TOGGLE, dispatchEventHandler(ANIMATION_TOGGLED))
 				.on(PushButton.TOGGLE, function(e):void{
 					var icon:Sprite = !_animateButton.pushed ? new $PlayButton() : newStopIcon();
-					_animateButton.ChangeImage(icon, 0.65);
+					_animateButton.setImage(icon, 0.65);
 				})
 				.appendTo(tTray) as PushButton;
 			tButtonOnRight++;

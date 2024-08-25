@@ -111,7 +111,7 @@ package app.ui.panes
 			if(!pItemData || !pItemData.isCustomizable) { return; }
 			
 			var btn:PushButton = this.getButtonWithItemData(pItemData);
-			btn.ChangeImage(GameAssets.getColoredItemImage(pItemData));
+			btn.setImage(GameAssets.getColoredItemImage(pItemData));
 		}
 		
 		/****************************

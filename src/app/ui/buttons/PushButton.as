@@ -14,59 +14,43 @@ package app.ui.buttons
 		public static const TOGGLE:String="state_changed_after";
 		
 		// Storage
-		public var pushed:Boolean;
-		public var allowToggleOff:Boolean; // Only controls the behavior on internal click controls.
-		public var Text:TextTranslated;
-		public var Image:DisplayObject;
+		protected var _pushed:Boolean;
+		protected var _allowToggleOff:Boolean; // Only controls the behavior on internal click controls.
+		
+		// Properties
+		public function get pushed() : Boolean { return _pushed; }
+		public function get allowToggleOff() : Boolean { return _allowToggleOff; }
 		
 		// Constructor
 		// pArgs = { x:Number, y:Number, (width:Number, height:Number OR size:Number), ?obj:DisplayObject, ?obj_scale:Number, ?text:String, ?allowToggleOff:Boolean=true }
 		public function PushButton(pArgs:Object) {
 			super(pArgs);
 			
-			if(pArgs.text) {
-				this.Text = new TextTranslated(pArgs.text, { x:pArgs.width*(0.5 - _bg.originX), y:pArgs.height*(0.5 - _bg.originY) }).appendToT(this);
-			}
-			
+			if(pArgs.text) { setText(pArgs.text); }
 			if(pArgs.obj) {
-				ChangeImage(pArgs.obj, pArgs.obj_scale || -1);
+				setImage(pArgs.obj, pArgs.obj_scale || NaN);
 			}
 			
-			this.allowToggleOff = pArgs.allowToggleOff == null ? true : pArgs.allowToggleOff;
-			this.pushed = false;
+			_allowToggleOff = pArgs.allowToggleOff == null ? true : pArgs.allowToggleOff;
+			_pushed = false;
 			_renderUnpressed();
 		}
-		public function setAllowToggleOff(pVal:Boolean) : PushButton { allowToggleOff = pVal; return this; }
+		public function setAllowToggleOff(pVal:Boolean) : PushButton { _allowToggleOff = pVal; return this; }
 		public function onToggle(listener:Function, useCapture:Boolean = false): PushButton { return this.on(PushButton.TOGGLE, listener, useCapture) as PushButton; }
-
-		public function ChangeImage(pMC:DisplayObject, pScale:Number=-1) : void {
-			if(this.Image != null) { removeChild(this.Image); }
-			pScale = pScale >= 0 ? pScale : 1;
-			
-			var tBounds:Rectangle = pMC.getBounds(pMC);
-			var tOffset:Point = tBounds.topLeft;
-			
-			FewfDisplayUtils.fitWithinBounds(pMC, this.Width * 0.9, this.Height * 0.9, this.Width * 0.5, this.Height * 0.5);
-			pMC.x = this.Width * (0.5 - _bg.originX) - (tBounds.width / 2 + tOffset.x)*pScale * pMC.scaleX;
-			pMC.y = this.Height * (0.5 - _bg.originY) - (tBounds.height / 2 + tOffset.y)*pScale * pMC.scaleY;
-			pMC.scaleX *= pScale;
-			pMC.scaleY *= pScale;
-			addChild(this.Image = pMC);
-		}
 		
 		protected function _renderUnpressed() : void {
 			super._renderUp();
-			if(this.Text) { this.Text.color = 0xC2C2DA; }
+			if(_text) { _text.color = 0xC2C2DA; }
 		}
 
 		protected function _renderPressed() : void {
 			_bg.draw3d(ConstantsApp.COLOR_BUTTON_MOUSE_DOWN, 0x5D7A91, 0x5D7A91, 0x6C8DA8);
-			if(this.Text) { this.Text.color = 0xFFD800; }
+			if(_text) { _text.color = 0xFFD800; }
 		}
 
 		public function toggle(pOn:*=null, pFireEvent:Boolean=true) : PushButton {
-			this.pushed = pOn != null ? pOn : !this.pushed;
-			if(this.pushed) _renderPressed();
+			_pushed = pOn != null ? pOn : !_pushed;
+			if(_pushed) _renderPressed();
 			else _renderUnpressed();
 			
 			if(pFireEvent) _dispatch(TOGGLE);
@@ -85,34 +69,31 @@ package app.ui.buttons
 			if(!_flagEnabled) { return; }
 			var pOn = null;
 			// if toggle off enabled, then still allow clicking the button again to refire event
-			if(!this.allowToggleOff && this.pushed) { pOn = true; }
+			if(!_allowToggleOff && _pushed) { pOn = true; }
 			toggle(pOn);
 			super._onMouseUp(pEvent);
 		}
 		
 		override protected function _renderUp() : void {
-			if (this.pushed == false) {
+			if (_pushed == false) {
 				super._renderUp();
 			}
 		}
 		
 		override protected function _renderDown() : void {
-			if (this.pushed == false) {
-				if(this.Text) this.Text.color = 0xC2C2DA;
+			if (_pushed == false) {
 				super._renderDown();
 			}
 		}
 		
 		override protected function _renderOver() : void {
-			if (this.pushed == false) {
-				if(this.Text) this.Text.color = 0x012345;
+			if (_pushed == false) {
 				super._renderOver();
 			}
 		}
 		
 		override protected function _renderOut() : void {
-			if(this.pushed == false) {
-				if(this.Text) this.Text.color = 0xC2C2DA;
+			if(_pushed == false) {
 				super._renderOut();
 			}
 		}
@@ -134,6 +115,13 @@ package app.ui.buttons
 					pList[i].toggleOff(false);
 				}
 			}
+		}
+		
+		public static function square(pSize:Number) : PushButton {
+			return new PushButton({ size:pSize });
+		}
+		public static function rect(pWidth:Number, pHeight:Number) : PushButton {
+			return new PushButton({ width:pWidth, height:pHeight });
 		}
 	}
 }

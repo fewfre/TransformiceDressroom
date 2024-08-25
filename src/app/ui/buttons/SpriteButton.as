@@ -9,13 +9,12 @@ package app.ui.buttons
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.text.*;
+	import com.fewfre.display.TextBase;
 	
 	public class SpriteButton extends GameButton
 	{
 		// Storage
 		public var id:int;
-		public var Image:flash.display.DisplayObject;
-		public var Text:TextTranslated;
 		
 		// Constructor
 		// pData = { x:Number, y:Number, (width:Number, height:Number OR size:Number), ?obj:DisplayObject, ?obj_scale:Number, ?id:int, ?text:String, ?origin:Number, ?originX:Number, ?originY:Number }
@@ -24,63 +23,46 @@ package app.ui.buttons
 			super(pData);
 			if(pData.id) { id = pData.id; }
 			
+			if(pData.text) { setText(pData.text); }
 			if(pData.obj) {
 				if(pData.obj_scale == "auto") {
-					ChangeImageScaleToFit(pData.obj);
+					setImage(pData.obj);
 				} else {
 					ChangeImage(pData.obj);
 					if(pData.obj_scale) {
-						this.Image.scaleX = pData.obj_scale ? pData.obj_scale : 0.75;
-						this.Image.scaleY = pData.obj_scale ? pData.obj_scale : 0.75;
+						_image.scaleX = pData.obj_scale ? pData.obj_scale : 0.75;
+						_image.scaleY = pData.obj_scale ? pData.obj_scale : 0.75;
 					}
 				}
 			}
-			
-			if(pData.text) {
-				this.Text = new TextTranslated(pData.text, { size:11, x:this.Width * (0.5 - _bg.originX) - 2, y:this.Height * (0.5 - _bg.originY) - 2 }).appendToT(this);
-			}
 		}
 
-		public function ChangeImage(pMC:DisplayObject) : void
-		{
+		public function ChangeImage(pMC:DisplayObject) : void {
 			var tScale:Number = 1;
-			if(this.Image != null) { tScale = this.Image.scaleX; removeChild(this.Image); }
-			this.Image = addChild( pMC );
-			this.Image.x = this.Width * (0.5 - _bg.originX);
-			this.Image.y = this.Height * (0.5 - _bg.originY);
-			this.Image.scaleX = this.Image.scaleY = tScale;
+			if(_image != null) { tScale = _image.scaleX; removeChild(_image); }
+			_image = addChild( pMC );
+			_image.x = this.Width * (0.5 - _bg.originX);
+			_image.y = this.Height * (0.5 - _bg.originY);
+			_image.scaleX = _image.scaleY = tScale;
+		}
+		
+		public override function setTextObject(pTextObj:TextBase) : GameButton {
+			super.setTextObject(pTextObj);
+			_text.x -= 2;
+			_text.y -= 2;
+			return this;
+		}
+		public override function setText(pKey:String, params:Object = null) : GameButton {
+			params = params || {};
+			params.size = params.size || 11;
+			return super.setText(pKey, params);
+		}
+		public override function setTextUntranslated(pText:String, params:Object = null) : GameButton {
+			params = params || {};
+			params.size = params.size || 11;
+			return super.setTextUntranslated(pText, params);
 		}
 
-		public function ChangeImageScaleToFit(pMC:DisplayObject, pScale:Number=-1) : void
-		{
-			if(this.Image != null) { removeChild(this.Image); }
-			pScale = pScale >= 0 ? pScale : 1;
-			
-			var tBounds:Rectangle = pMC.getBounds(pMC);
-			var tOffset:Point = tBounds.topLeft;
-			
-			FewfDisplayUtils.fitWithinBounds(pMC, this.Width * 0.9, this.Height * 0.9, this.Width * 0.5, this.Height * 0.5);
-			pMC.x = this.Width * (0.5 - _bg.originX) - (tBounds.width / 2 + tOffset.x)*pScale * pMC.scaleX;
-			pMC.y = this.Height * (0.5 - _bg.originY) - (tBounds.height / 2 + tOffset.y)*pScale * pMC.scaleY;
-			pMC.scaleX *= pScale;
-			pMC.scaleY *= pScale;
-			addChild(this.Image = pMC);
-		}
-		
-		override protected function _renderDown() : void {
-			if(this.Text) this.Text.color = 0xC2C2DA;
-			super._renderDown();
-		}
-		
-		override protected function _renderOver() : void {
-			if(this.Text) this.Text.color = 0x012345;
-			super._renderOver();
-		}
-		
-		override protected function _renderOut() : void {
-			if(this.Text) this.Text.color = 0xC2C2DA;
-			super._renderOut();
-		}
 		
 		/////////////////////////////
 		// Static
@@ -90,6 +72,13 @@ package app.ui.buttons
 			pData.obj = pObj;
 			pData.obj_scale = pScale;
 			return new SpriteButton(pData);
+		}
+		
+		public static function square(pSize:Number) : SpriteButton {
+			return new SpriteButton({ size:pSize });
+		}
+		public static function rect(pWidth:Number, pHeight:Number) : SpriteButton {
+			return new SpriteButton({ width:pWidth, height:pHeight });
 		}
 	}
 }

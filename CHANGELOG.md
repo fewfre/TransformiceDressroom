@@ -5,6 +5,7 @@
 - [Code] Rewrote some customization related code to be much more straightforward, cleaner, and standardized
 	- The default skin no longer as an abnormal color wheel button, and instead uses the one on the infobar like everything else
 	- [Bug] Also fixed a bug I came across where if you customized the color of the default skin and then changed poses, the image in the infobar would change to that color
+- [Code] `GameButton` updated to have the text and image display logic that Push/Sprite buttons shared moved into it, and added more helper and convenience methods for adding data without using props
 
 
 ## V1.29g - 11 August 2024

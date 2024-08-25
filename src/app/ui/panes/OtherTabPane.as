@@ -50,15 +50,15 @@ package app.ui.panes
 			_shamanButtons = new Vector.<PushButton>();
 			DisplayWrapper.wrap(new $ShamFeather(), this).move((xx += spacingx) + sizex*0.5, yy + sizey*0.5).toScale(2).on(MouseEvent.CLICK, _onNoShamanButtonClicked).asSprite.buttonMode = true;
 			xx -= 5; yy -= 10;
-			_shamanButtons.push(new PushButton({ width:sizex, height:sizey, data:{ mode:ShamanMode.NORMAL }, obj:new TextTranslated("btn_normal_mode") }).appendTo(this) as PushButton);
-			_shamanButtons.push(new PushButton({ width:sizex, height:sizey, data:{ mode:ShamanMode.HARD }, obj:new TextTranslated("btn_hard_mode") }).appendTo(this) as PushButton);
-			_shamanButtons.push(new PushButton({ width:sizex, height:sizey, data:{ mode:ShamanMode.DIVINE }, obj:new TextTranslated("btn_divine_mode") }).appendTo(this) as PushButton);
+			_shamanButtons.push(PushButton.rect(sizex, sizey).setText("btn_normal_mode").setData({ mode:ShamanMode.NORMAL }).appendTo(this) as PushButton);
+			_shamanButtons.push(PushButton.rect(sizex, sizey).setText("btn_hard_mode").setData({ mode:ShamanMode.HARD }).appendTo(this) as PushButton);
+			_shamanButtons.push(PushButton.rect(sizex, sizey).setText("btn_divine_mode").setData({ mode:ShamanMode.DIVINE }).appendTo(this) as PushButton);
 			for each(var btn:PushButton in _shamanButtons) {
 				btn.move(xx += spacingx, yy);
 				btn.onToggle(_onShamanButtonClicked);
 			}
 			
-			_disableSkillsModeButton = new PushButton({ width:180, height:20, obj:new TextTranslated("btn_no_skills_mode") });
+			_disableSkillsModeButton = PushButton.rect(180, 20).setText("btn_no_skills_mode") as PushButton;
 			_disableSkillsModeButton.move(10 + sizex*1.5 + spacingx - 180/2, yy + sizey + 5).appendTo(this);
 			_disableSkillsModeButton.onToggle(_onShamanDisableSkillsModeButtonClicked);
 			
@@ -112,22 +112,24 @@ package app.ui.panes
 			// Bottom Buttons
 			/////////////////////////////
 			// Left
-			SpriteButton.withObject(new $FilterIcon(), 0.85, { size:70 }).move(xx, 315).appendTo(this)
+			GameButton.square(70).setImage(new $FilterIcon(), 0.85).move(xx, 315).appendTo(this)
 				.onButtonClick(function(e:Event):void{ dispatchEvent(new Event(FILTER_MODE_CLICKED)); });
 			
 			xx += 70 + 5;
-			SpriteButton.withObject(GameAssets.getItemImage(GameAssets.emoji[0]), "auto", { size:70 }).move(xx, 315).appendTo(this)
+			GameButton.square(70).setImage(GameAssets.getItemImage(GameAssets.emoji[0])).move(xx, 315).appendTo(this)
 				.onButtonClick(function(e:Event):void{ dispatchEvent(new Event(EMOJI_CLICKED)); });
 			
 			// Right
-			var saveHeadButton:GameButton = new GameButton({ size:70 }).move(353, 315).appendTo(this) as GameButton;
-			saveHeadButton.onButtonClick(_onSaveMouseHeadClicked);
-			_characterHead = new Character(new <ItemData>[ GameAssets.defaultSkin, GameAssets.defaultPose ]).appendTo(saveHeadButton);
+			// Save Head Image
+			GameButton.square(70)
+				.setImage(_characterHead = new Character(new <ItemData>[ GameAssets.defaultSkin, GameAssets.defaultPose ]))
+				.move(353, 315).appendTo(this)
+				.onButtonClick(_onSaveMouseHeadClicked);
 			
 			if(ConstantsApp.ANIMATION_DOWNLOAD_ENABLED) {
-				_webpButton = new GameButton({ size:70 }).move(353-70-5, 315).appendTo(this) as GameButton;
-				_webpButton.onButtonClick(_onSaveAsWebpClicked);
-				new TextBase('.webp', { origin:0.5, size:16 }).move(35, 35).appendTo(_webpButton);
+				_webpButton = GameButton.square(70).setTextObject(new TextBase('.webp', { size:16 }))
+					.move(353-70-5, 315).appendTo(this)
+					.onButtonClick(_onSaveAsWebpClicked) as GameButton;
 			}
 			
 			// Lastly, update state based on initial character state

@@ -120,8 +120,8 @@ package app.world
 				favButton.visible = FavoriteItemsLocalStorageManager.getAllFavorites().length > 0;
 			});
 			
-			_animationControls = new AnimationControls().move(78, pStage.stageHeight - 35/2 - 5).appendTo(this);
-			_animationControls.addEventListener(Event.CLOSE, function(e):void{ _toolbox.toggleAnimationButtonOffWithEvent(); });
+			_animationControls = new AnimationControls().move(78, pStage.stageHeight - 35/2 - 5).appendTo(this)
+				.on(Event.CLOSE, function(e):void{ _toolbox.toggleAnimationButtonOffWithEvent(); });
 			
 			/////////////////////////////
 			// Bottom Left Area

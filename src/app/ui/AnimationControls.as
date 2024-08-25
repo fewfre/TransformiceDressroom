@@ -67,10 +67,10 @@ package app.ui
 				graphics.drawCircle(tHandleWidth/2, 10, 2); // Bottom circle
 				graphics.endFill();
 			}).move(1, 0)
-			.on(MouseEvent.MOUSE_DOWN, _onDragStart)
-			.on(MouseEvent.MOUSE_OVER, function(e):void{ Mouse.cursor = MouseCursor.HAND; })
-			.on(MouseEvent.MOUSE_OUT, function(e):void{ Mouse.cursor = MouseCursor.AUTO; })
-			.asSprite;
+				.on(MouseEvent.MOUSE_DOWN, _onDragStart)
+				.on(MouseEvent.MOUSE_OVER, function(e):void{ Mouse.cursor = MouseCursor.HAND; })
+				.on(MouseEvent.MOUSE_OUT, function(e):void{ Mouse.cursor = MouseCursor.AUTO; })
+				.asSprite;
 			_dragHandle.buttonMode = true;
 			_dragHandle.useHandCursor = true;
 			
@@ -92,16 +92,13 @@ package app.ui
 			xx += tButtonXInc;
 			var msize = bsize/2-1;
 			_speedButtons = new <PushButton>[
-				new PushButton({ text:'loading_progress', width:msize, height:msize, origin:0.5, data:{ speed:0.25 }, allowToggleOff:false }).move(xx - msize/2-1, yy - msize/2-1).on(PushButton.TOGGLE, _onSpeedButtonClicked).appendTo(this) as PushButton,
-				new PushButton({ text:'loading_progress', width:msize, height:msize, origin:0.5, data:{ speed:0.50 }, allowToggleOff:false }).move(xx + msize/2+1, yy - msize/2-1).on(PushButton.TOGGLE, _onSpeedButtonClicked).appendTo(this) as PushButton,
-				new PushButton({ text:'loading_progress', width:msize, height:msize, origin:0.5, data:{ speed:1.00 }, allowToggleOff:false }).move(xx - msize/2-1, yy + msize/2+1).on(PushButton.TOGGLE, _onSpeedButtonClicked).appendTo(this) as PushButton,
-				new PushButton({ text:'loading_progress', width:msize, height:msize, origin:0.5, data:{ speed:2.00 }, allowToggleOff:false }).move(xx + msize/2+1, yy + msize/2+1).on(PushButton.TOGGLE, _onSpeedButtonClicked).appendTo(this) as PushButton,
+				PushButton.square(msize).setAllowToggleOff(false).toOrigin(0.5).setTextUntranslated('¼', { size:10 }).setData({ speed:0.25 }).move(xx - msize/2-1, yy - msize/2-1).on(PushButton.TOGGLE, _onSpeedButtonClicked).appendTo(this) as PushButton,
+				PushButton.square(msize).setAllowToggleOff(false).toOrigin(0.5).setTextUntranslated('½', { size:10 }).setData({ speed:0.50 }).move(xx + msize/2+1, yy - msize/2-1).on(PushButton.TOGGLE, _onSpeedButtonClicked).appendTo(this) as PushButton,
+				PushButton.square(msize).setAllowToggleOff(false).toOrigin(0.5).setTextUntranslated('1', { size:10 }).setData({ speed:1.00 }).move(xx - msize/2-1, yy + msize/2+1).on(PushButton.TOGGLE, _onSpeedButtonClicked).appendTo(this) as PushButton,
+				PushButton.square(msize).setAllowToggleOff(false).toOrigin(0.5).setTextUntranslated('2', { size:10 }).setData({ speed:2.00 }).move(xx + msize/2+1, yy + msize/2+1).on(PushButton.TOGGLE, _onSpeedButtonClicked).appendTo(this) as PushButton,
 			];
-			_speedButtons[0].Text.setUntranslatedText('¼');
-			_speedButtons[1].Text.setUntranslatedText('½');
-			_speedButtons[2].Text.setUntranslatedText('1'); _speedButtons[2].toggleOn(false);
-			_speedButtons[3].Text.setUntranslatedText('2');
-			for each(var sb:PushButton in _speedButtons) { sb.Text.size = 10; sb.Text.x -= sb.data.speed < 1 ? -0.5 : 0; sb.Text.y -= 0.5; }
+			_speedButtons[2].toggleOn(false);
+			for each(var sb:PushButton in _speedButtons) { sb.Text.x += sb.data.speed < 1 ? -0.5 : 0; sb.Text.y -= 0.5; }
 			tButtonsOnLeft++;
 			
 			xx += tButtonXInc;
@@ -141,7 +138,9 @@ package app.ui
 		}
 		public function move(pX:Number, pY:Number) : AnimationControls { x = pX; y = pY; return this; }
 		public function appendTo(pParent:Sprite): AnimationControls { pParent.addChild(this); return this; }
-
+		public function on(type:String, listener:Function): AnimationControls { this.addEventListener(type, listener); return this; }
+		public function off(type:String, listener:Function): AnimationControls { this.removeEventListener(type, listener); return this; }
+		
 		/****************************
 		* Public
 		*****************************/
