@@ -60,25 +60,30 @@ package app.ui.panes.colorpicker
 			
 			_psColorPick = this.addItem(new ColorPicker().move(105, 5).on(ColorPicker.COLOR_PICKED, _onColorPickChanged)) as ColorPicker;
 			
+			var hueCenterY:Number = _psColorPick.y + 10 + 20/2; // picker.y + hueBar.y + hueBar.height/2
+			
 			if(!pData.hide_default) {
-				this.addItem( new SpriteButton({ text:"btn_color_defaults", x:15+4, y:14, width:88, height:22 })
-					.onButtonClick(function(){ _defaultAllColors(); }) );
-				
+				// Lock Button
 				_allLockToggleIcon = new DisplayWrapper(new $Lock());
-				this.addItem( SpriteButton.withObject(_allLockToggleIcon.asSprite, 0.5, { width:15, height:22 }).move(0,14)
+				this.addItem( SpriteButton.rect(15, 22).toOrigin(0, 0.5).setImage(_allLockToggleIcon.asSprite, 0.5).move(0, hueCenterY)
 					.onButtonClick(function(){
 						if(_getLockToggleButtonState() == "clear") _clearAllLocks();
 						else _lockAllLocks();
 						_updateLockToggleButtonState();
 					}) );
 				_updateLockToggleButtonState();
+				
+				// Defaults Button
+				this.addItem( SpriteButton.rect(88, 22).toOrigin(0, 0.5).setText("btn_color_defaults").move(15+5, hueCenterY)
+					.onButtonClick(function(){ _defaultAllColors(); }) );
 			}
 			
-			_randomizeButton = SpriteButton.withObject(new $Dice(), 0.8, { size:24 }).move(ConstantsApp.PANE_WIDTH - 24 - 11, 14)
+			_randomizeButton = SpriteButton.square(24).toOrigin(0.5).setImage(new $Dice(), 0.8)
+				.move(ConstantsApp.PANE_WIDTH - 10 - 25/2, hueCenterY)
 				.onButtonClick(function(){ _randomizeAllColors(); }) as SpriteButton;
 				this.addItem(_randomizeButton);
 			
-			_recentColorsDisplay = new RecentColorsListDisplay().move(ConstantsApp.PANE_WIDTH/2, 316+60+17).appendTo(this)
+			_recentColorsDisplay = new RecentColorsListDisplay().move(ConstantsApp.PANE_WIDTH/2, 316+60+18).appendTo(this)
 				.on(RecentColorsListDisplay.EVENT_COLOR_PICKED, _onRecentColorBtnClicked);
 			
 			var historySize = 270;

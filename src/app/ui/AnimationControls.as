@@ -98,7 +98,7 @@ package app.ui
 				PushButton.square(msize).setAllowToggleOff(false).toOrigin(0.5).setTextUntranslated('2', { size:10 }).setData({ speed:2.00 }).move(xx + msize/2+1, yy + msize/2+1).on(PushButton.TOGGLE, _onSpeedButtonClicked).appendTo(this) as PushButton,
 			];
 			_speedButtons[2].toggleOn(false);
-			for each(var sb:PushButton in _speedButtons) { sb.Text.x += sb.data.speed < 1 ? -0.5 : 0; sb.Text.y -= 0.5; }
+			// for each(var sb:PushButton in _speedButtons) { sb.Text.x += sb.data.speed < 1 ? -0.5 : 0; }
 			tButtonsOnLeft++;
 			
 			xx += tButtonXInc;

@@ -5,6 +5,7 @@ package app.ui.common
 	import flash.display.Sprite;
 	import flash.display.MovieClip;
 	import fl.containers.ScrollPane;
+	import flash.geom.Rectangle;
 
 	public class FancyScrollbox extends Sprite
 	{
@@ -69,11 +70,14 @@ package app.ui.common
 		}
 
 		public function scrollItemIntoView(pItem:DisplayObject) : void {
-			if(pItem.y+5 < _scrollPane.verticalScrollPosition) {
-				_scrollPane.verticalScrollPosition = pItem.y+5;
+			var rect:Rectangle = pItem.getRect(_content);
+			// If item is above the viewport, scroll so until the top of the item appears along the top
+			if(rect.top+0.4 < _scrollPane.verticalScrollPosition) {
+				_scrollPane.verticalScrollPosition = rect.top+0.4;
 			}
-			else if(pItem.y + pItem.height+5 - _scrollPane.height > _scrollPane.verticalScrollPosition) {
-				_scrollPane.verticalScrollPosition = pItem.y + pItem.height+5 - _scrollPane.height;
+			// If item is below the viewport, scroll so until the bottom of the item appears along the bottom
+			else if(rect.bottom+1.1 - _scrollPane.height > _scrollPane.verticalScrollPosition) {
+				_scrollPane.verticalScrollPosition = rect.bottom+1.1 - _scrollPane.height;
 			}
 		}
 		

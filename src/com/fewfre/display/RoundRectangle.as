@@ -157,13 +157,13 @@ package com.fewfre.display
 		
 		private function _render() : void {
 			switch(_type) {
-				case TYPE_SOLID_BORDER: _renderSimpleSolidBorder(_radius, _bgColor, _borderColor); break;
-				case TYPE_3D_BORDER: _render3dBorder(_radius, _bgColor, _borderColor, _borderColor2, _borderColor3); break;
-				case TYPE_GRADIENT_WITH_3D_BORDER: _renderGradient3dBorder(_radius, _bgGradientColors, _borderColor, _borderColor2, _borderColor3); break;
+				case TYPE_SOLID_BORDER: _render_Simple_SolidBorder(_radius, _bgColor, _borderColor); break;
+				case TYPE_3D_BORDER: _render_3dBorder(_radius, _bgColor, _borderColor, _borderColor2, _borderColor3); break;
+				case TYPE_GRADIENT_WITH_3D_BORDER: _render_Gradient_3dBorder(_radius, _bgGradientColors, _borderColor, _borderColor2, _borderColor3); break;
 			}
 		}
 		
-		private function _renderSimpleSolidBorder(pRadius:Number, pColor:uint, pLineColor:uint) : void {
+		private function _render_Simple_SolidBorder(pRadius:Number, pColor:uint, pLineColor:uint) : void {
 			var xx:Number = _getRenderX(), yy:Number = _getRenderY();
 			
 			graphics.clear();
@@ -173,33 +173,43 @@ package com.fewfre.display
 			graphics.endFill();
 		}
 		
-		private function _render3dBorder(pRadius:Number, pColor:uint, pLineColor1:uint, pLineColor2:uint, pLineColor3:uint) : void {
+		private function _render_3dBorder(pRadius:Number, pColor:uint, pLineColor1:uint, pLineColor2:uint, pLineColor3:uint) : void {
 			var xx:Number = _getRenderX(), yy:Number = _getRenderY();
+			var tInnerWidth:Number = _width - 2, tInnerHeight:Number = _height - 2;
 			
 			graphics.clear();
-			graphics.moveTo(xx, yy);
+			// Top left 3D border
 			graphics.lineStyle(1, pLineColor1, 1, true);
-			graphics.drawRoundRect(xx+0, yy+0, _width - 3, _height - 3, pRadius, pRadius);
+			graphics.drawRoundRect(xx+0, yy+0, tInnerWidth, tInnerHeight, pRadius, pRadius);
+			// Bottom right 3D border
 			graphics.lineStyle(1, pLineColor2, 1, true);
-			graphics.drawRoundRect(xx+2, yy+2, _width - 3, _height - 3, pRadius, pRadius);
+			graphics.drawRoundRect(xx+2, yy+2, tInnerWidth, tInnerHeight, pRadius, pRadius);
+			// Actual rectangle box, which appears over the 3D borders
+			// Since the 3D borders effectively add an extra 2px padding around it, we have to offset it by one and
+			// use the inner width which has the padding subtracted
 			graphics.lineStyle(1, pLineColor3, 1, true);
 			graphics.beginFill(pColor);
-			graphics.drawRoundRect(xx+1, yy+1, _width - 3, _height - 3, pRadius, pRadius);
+			graphics.drawRoundRect(xx+1, yy+1, tInnerWidth, tInnerHeight, pRadius, pRadius);
 			graphics.endFill();
 		}
 		
 		private static const GRADIENT_ROTATION:Number = Math.PI/2; // 90°
-		private function _renderGradient3dBorder(pRadius:Number, pColors:Array, pLineColor1:uint, pLineColor2:uint, pLineColor3:uint) : void {
+		private function _render_Gradient_3dBorder(pRadius:Number, pColors:Array, pLineColor1:uint, pLineColor2:uint, pLineColor3:uint) : void {
 			var xx:Number = _getRenderX(), yy:Number = _getRenderY();
+			var tInnerWidth:Number = _width - 2, tInnerHeight:Number = _height - 2;
 			
 			graphics.clear();
-			graphics.moveTo(xx, yy);
+			// Top left 3D border
 			graphics.lineStyle(1, pLineColor1, 1, true);
-			graphics.drawRoundRect(xx+0, yy+0, _width - 3, _height - 3, pRadius, pRadius);
+			graphics.drawRoundRect(xx+0, yy+0, tInnerWidth, tInnerHeight, pRadius, pRadius);
+			// Bottom right 3D border
 			graphics.lineStyle(1, pLineColor2, 1, true);
-			graphics.drawRoundRect(xx+2, yy+2, _width - 3, _height - 3, pRadius, pRadius);
+			graphics.drawRoundRect(xx+2, yy+2, tInnerWidth, tInnerHeight, pRadius, pRadius);
+			// Actual rectangle box, which appears over the 3D borders
+			// Since the 3D borders effectively add an extra 2px padding around it, we have to offset it by one and
+			// use the inner width which has the padding subtracted
 			_doGradientFill(pColors);
-			graphics.drawRoundRect(xx+1, yy+1, _width - 3, _height - 3, pRadius, pRadius);
+			graphics.drawRoundRect(xx+1, yy+1, tInnerWidth, tInnerHeight, pRadius, pRadius);
 			graphics.endFill();
 		}
 		

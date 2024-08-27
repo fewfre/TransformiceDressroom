@@ -49,7 +49,7 @@ package app.ui.panes.colorpicker
 			
 			// Add BG
 			_bg = new RoundRectangle(bgWidth, bgHeight).move(-deleteWidth*0.5+2, 0).toOrigin(0.5).toRadius(5).appendTo(this);
-			_verticalRule = DisplayWrapper.wrap(new Shape(), _bg.root).move(_bg.width*0.5 - 2.5, -_bg.height*0.5 + 2.5).asShape;
+			_verticalRule = DisplayWrapper.wrap(new Shape(), _bg.root).move(_bg.width*0.5 - 1.5, -_bg.height*0.5 - 1).asShape;
 		}
 		public function move(pX:Number, pY:Number) : RecentColorsListDisplay { x = pX; y = pY; return this; }
 		public function appendTo(pParent:Sprite): RecentColorsListDisplay { pParent.addChild(this); return this; }
@@ -76,12 +76,15 @@ package app.ui.panes.colorpicker
 			
 			this.visible = RECENTS.length > 0;
 			var bgBorderColor = isDeleteModeOn ? 0x780f11 : 0;//0x0f474f;
-			_bg.draw3d(0x6f6b64, bgBorderColor);
+			_bg.drawSolid(0x6f6b64, bgBorderColor, 2);
 			
 			_verticalRule.graphics.clear();
-			_verticalRule.graphics.lineStyle(5, bgBorderColor, 1, false, "normal", "square");
-			_verticalRule.graphics.moveTo(0, 0);
-			_verticalRule.graphics.lineTo(0, _bg.height-5);
+			_verticalRule.graphics.beginFill(bgBorderColor);
+			_verticalRule.graphics.drawRect(0, 0, 3, _bg.height+2);
+			_verticalRule.graphics.endFill();
+			// _verticalRule.graphics.lineStyle(5, bgBorderColor, 1, false, "normal", "square");
+			// _verticalRule.graphics.moveTo(0, 0);
+			// _verticalRule.graphics.lineTo(0, _bg.height-5);
 			
 			// Render new buttons
 			var maxColors:int = 12, len = Math.min(RECENTS.length, maxColors);
@@ -156,9 +159,9 @@ class DeleteButton extends PushButton
 		*****************************/
 		override protected function _renderUp() : void {
 			if (this.pushed == false) {
-				_bg.draw3d(0xeb9d9e, 0xFF0000);
+				_bg.drawSolid(0xeb9d9e, 0xFF0000, 2);
 			} else {
-				_bg.draw3d(0xFF0000, 0x780f11);
+				_bg.drawSolid(0xFF0000, 0x780f11, 2);
 			}
 		}
 		
@@ -168,9 +171,9 @@ class DeleteButton extends PushButton
 		
 		override protected function _renderOver() : void {
 			if (this.pushed == false) {
-				_bg.draw3d(0xf57375, 0xFF0000);
+				_bg.drawSolid(0xf57375, 0xFF0000, 2);
 			} else {
-				_bg.draw3d(0xDD0000, 0x780f11);
+				_bg.drawSolid(0xDD0000, 0x780f11, 2);
 			}
 		}
 		
@@ -183,6 +186,6 @@ class DeleteButton extends PushButton
 		}
 
 		override protected function _renderPressed() : void {
-			_bg.draw3d(0xFF0000, 0x780f11);
+			_bg.drawSolid(0xFF0000, 0x780f11, 2);
 		}
 }

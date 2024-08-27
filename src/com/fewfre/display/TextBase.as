@@ -35,8 +35,11 @@ package com.fewfre.display
 		
 		public function get field() : TextField { return _field; }
 		
+		public function get color() : int { return _color; }
 		public function set color(pVal:int) : void { _color = pVal; _render(); }
+		public function get size() : Number { return _size; }
 		public function set size(pVal:Number) : void { _size = pVal; _render(); }
+		public function get font() : String { return _font; }
 		public function set font(pVal:String) : void { _font = pVal; _render(); }
 
 		// Constructor

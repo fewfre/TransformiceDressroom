@@ -54,7 +54,7 @@ package app.ui.panes.infobar
 		private var _gridManagementWidget : GridManagementWidget;
 		
 		private static const BTN_SIZE : int = 24;
-		private static const BTN_Y : int = 26;
+		private static const BTN_Y : int = 25;
 		
 		// Properties
 		public function get hasData() : Boolean { return _itemData != null; }
@@ -121,7 +121,7 @@ package app.ui.panes.infobar
 			/********************
 			* Text
 			*********************/
-			_idText = new TextTranslated("infobar_id", { x:0, y:0, size:18, origin:0, alpha:0 }).appendToT(_leftButtonsTray);
+			_idText = new TextTranslated("infobar_id", { x:0, y:-1, size:18, origin:0, alpha:0 }).appendToT(_leftButtonsTray);
 			if(pData.showBackButton) {
 				_idText.y = 13;
 			}

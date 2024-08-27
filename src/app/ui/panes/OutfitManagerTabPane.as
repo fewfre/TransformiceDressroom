@@ -47,7 +47,7 @@ package app.ui.panes
 			this.infobar.on(GridManagementWidget.RANDOMIZE_CLICKED, function(){ selectRandomOutfit(); });
 			
 			// Custom infobar buttons
-			var size = 40, xx = -size - 5, yy = 26;
+			var size = 40, xx = -size - 5, yy = 25;
 			
 			_importButton = SpriteButton.withObject(new $Folder(), 1, { size:size, originY:0.5 }).move(xx, yy)
 				.onButtonClick(_onImportClicked) as SpriteButton;

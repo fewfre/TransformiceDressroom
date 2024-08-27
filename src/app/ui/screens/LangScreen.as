@@ -97,6 +97,8 @@ package app.ui.screens
 			
 			function _changeImageToCurrentLanguage() : void {
 				bttn.ChangeImage( Fewf.i18n.getConfigLangData().newFlagSprite() );
+				bttn.Image.x += 0.25;
+				bttn.Image.y += 0.25;
 			}
 			
 			_changeImageToCurrentLanguage();

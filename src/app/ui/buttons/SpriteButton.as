@@ -37,21 +37,16 @@ package app.ui.buttons
 			}
 		}
 
-		public function ChangeImage(pMC:DisplayObject) : void {
+		public function ChangeImage(pMC:DisplayObject) : GameButton {
 			var tScale:Number = 1;
 			if(_image != null) { tScale = _image.scaleX; removeChild(_image); }
 			_image = addChild( pMC );
 			_image.x = this.Width * (0.5 - _bg.originX);
 			_image.y = this.Height * (0.5 - _bg.originY);
 			_image.scaleX = _image.scaleY = tScale;
-		}
-		
-		public override function setTextObject(pTextObj:TextBase) : GameButton {
-			super.setTextObject(pTextObj);
-			_text.x -= 2;
-			_text.y -= 2;
 			return this;
 		}
+		
 		public override function setText(pKey:String, params:Object = null) : GameButton {
 			params = params || {};
 			params.size = params.size || 11;

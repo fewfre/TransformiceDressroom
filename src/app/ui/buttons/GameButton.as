@@ -38,8 +38,9 @@ package app.ui.buttons
 		/////////////////////////////
 		public function setTextObject(pTextObj:TextBase) : GameButton {
 			_clearChildren();
-			// _text = pTextObj.move(this.Width * (0.5 - _bg.originX) - 2, this.Height * (0.5 - _bg.originY) - 2).appendTo(this);
-			_text = pTextObj.move(this.Width * (0.5 - _bg.originX), this.Height * (0.5 - _bg.originY)).appendTo(this);
+			_text = pTextObj;
+			var offsetY : Number = -_text.size*0.04; // The center origin logic for text seems to result in it being slightly lower than expected; knock it up a hair
+			pTextObj.move(this.Width * (0.5 - _bg.originX), this.Height * (0.5 - _bg.originY) + offsetY).appendTo(this);
 			return this;
 		}
 		public function setText(pKey:String, params:Object = null) : GameButton { return setTextObject(new TextTranslated(pKey, params)); }

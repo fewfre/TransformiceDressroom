@@ -45,7 +45,7 @@ package app.ui.panes
 				.on(Event.CLOSE, function(e):void{ removeChild(_deleteAllConfirmScreen); })
 				.on(TrashConfirmScreen.CONFIRM, _onDeleteAll);
 			// Delete button (opens confirm screen)
-			var bttn:SpriteButton = SpriteButton.withObject(new $Trash(), 'auto', { size:40, originY:0.5 }).move(-40 - 5, 26)
+			var bttn:SpriteButton = SpriteButton.withObject(new $Trash(), 'auto', { size:40, originY:0.5 }).move(-40 - 5, 25)
 				.onButtonClick(function(e):void{ addChild(_deleteAllConfirmScreen); }) as SpriteButton;
 			infobar.addCustomObjectToRightSideTray(bttn);
 		}

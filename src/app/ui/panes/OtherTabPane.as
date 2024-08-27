@@ -44,12 +44,14 @@ package app.ui.panes
 			/////////////////////////////
 			// Shaman Section
 			/////////////////////////////
+			var shamanAreaHeight:Number = 82;
 			// Shaman options
 			sizex = 80; sizey = 40; spacingx = sizex + 10; xx = 10 - spacingx;
 			
+			DisplayWrapper.wrap(new $ShamFeather(), this).move((xx += spacingx) + sizex*0.5, shamanAreaHeight/2+3).toScale(2).on(MouseEvent.CLICK, _onNoShamanButtonClicked).asSprite.buttonMode = true;
+			
 			_shamanButtons = new Vector.<PushButton>();
-			DisplayWrapper.wrap(new $ShamFeather(), this).move((xx += spacingx) + sizex*0.5, yy + sizey*0.5).toScale(2).on(MouseEvent.CLICK, _onNoShamanButtonClicked).asSprite.buttonMode = true;
-			xx -= 5; yy -= 10;
+			xx -= 5; yy -= 11;
 			_shamanButtons.push(PushButton.rect(sizex, sizey).setText("btn_normal_mode").setData({ mode:ShamanMode.NORMAL }).appendTo(this) as PushButton);
 			_shamanButtons.push(PushButton.rect(sizex, sizey).setText("btn_hard_mode").setData({ mode:ShamanMode.HARD }).appendTo(this) as PushButton);
 			_shamanButtons.push(PushButton.rect(sizex, sizey).setText("btn_divine_mode").setData({ mode:ShamanMode.DIVINE }).appendTo(this) as PushButton);
@@ -59,11 +61,11 @@ package app.ui.panes
 			}
 			
 			_disableSkillsModeButton = PushButton.rect(180, 20).setText("btn_no_skills_mode") as PushButton;
-			_disableSkillsModeButton.move(10 + sizex*1.5 + spacingx - 180/2, yy + sizey + 5).appendTo(this);
+			_disableSkillsModeButton.move(10 + sizex*1.5 + spacingx - 180/2, yy + sizey + 7).appendTo(this);
 			_disableSkillsModeButton.onToggle(_onShamanDisableSkillsModeButtonClicked);
 			
 			// Color buttons
-			yy += 10;
+			yy = shamanAreaHeight/2 - 24;
 			sizex = 80; sizey = 50;
 			ScaleButton.withObject(new $ColorWheel()).move(xx += spacingx + 30, yy + sizey*0.5 - 10).appendTo(this).onButtonClick(function(e):void{ dispatchEvent(new Event(CUSTOM_SHAMAN_COLOR_CLICKED)); });
 			
@@ -73,14 +75,14 @@ package app.ui.panes
 			new ColorButton({ color:0xFCA6F1, x:xx + (sizex*0.5+3), y:yy + sizey*0.5 + 35, width:sizex, height:sizey }).appendTo(this).onButtonClick(function(e:FewfEvent){ dispatchEvent(new FewfEvent(SHAMAN_COLOR_PICKED, e.data)); });
 			
 			// Line
-			yy += 50 + 10;
+			yy = shamanAreaHeight+2;
 			GameAssets.createHorizontalRule(10, yy, ConstantsApp.PANE_WIDTH - 15).appendTo(this);
 			
 			/////////////////////////////
 			// Item Section
 			/////////////////////////////
 			// Grid
-			yy += 15; xx = 20;
+			yy += 11; xx = 20;
 			var grid:Grid = new Grid(385, GameAssets.extraBack.length).move(xx,yy).appendTo(this);
 			
 			_backItemButtons = new Vector.<PushButton>();

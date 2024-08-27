@@ -62,7 +62,7 @@ package app.ui.panes
 			fileRef.addEventListener(Event.SELECT, function(){ fileRef.load(); });
 			fileRef.addEventListener(Event.COMPLETE, _onFileSelect);
 			
-			var folderBttn:ScaleButton = ScaleButton.withObject(new $Folder(), 1.5).move(-25, 26)
+			var folderBttn:ScaleButton = ScaleButton.withObject(new $Folder(), 1.5).move(-25, 25)
 				.onButtonClick(function(e){ fileRef.browse([new FileFilter("Images", "*.jpg;*.jpeg;*.gif;*.png")]); }) as ScaleButton;
 			infobar.addCustomObjectToRightSideTray(folderBttn);
 			
@@ -137,7 +137,7 @@ package app.ui.panes
 			/********************
 			* Recent colors display
 			*********************/
-			_recentColorsDisplay = new RecentColorsListDisplay().move(ConstantsApp.PANE_WIDTH/2, 316+60+17).appendTo(this);
+			_recentColorsDisplay = new RecentColorsListDisplay().move(ConstantsApp.PANE_WIDTH/2, 316+60+18).appendTo(this);
 			
 			/****************************
 			* Selectable text field
@@ -145,7 +145,7 @@ package app.ui.panes
 			var tTFWidth:Number = 65, tTFHeight:Number = 18, tTFPaddingX:Number = 5, tTFPaddingY:Number = 5;
 			// So much easier than doing it with those darn native text field options which have no padding.
 			var tTextBackground:RoundRectangle = new RoundRectangle(tTFWidth+tTFPaddingX*2, tTFHeight+tTFPaddingY*2).toOrigin(0.5)
-				.move(15, 170).appendTo(_tray).toRadius(7).draw3d(0xFFFFFF, 0x444444);
+				.move(15, 170).appendTo(_tray).toRadius(7).drawSolid(0xFFFFFF, 0x444444);
 			
 			_text = tTextBackground.addChild(new TextField()) as TextField;
 			_text.type = TextFieldType.DYNAMIC;
@@ -163,7 +163,7 @@ package app.ui.panes
 			_hoverColorBox = new RoundRectangle(35, 35).toOrigin(0, 1).toRadius(7).appendTo(_tray);//.move(ConstantsApp.PANE_WIDTH*0.5-5, -122);
 			_hoverColorBox.visible = false;
 			// var tHoverTextBackground:RoundRectangle = new RoundRectangle(_hoverColorBox.width+8, 20, { originX:0.5, originY:1 }).move(-_hoverColorBox.width*0.5, _hoverColorBox.height+20).appendTo(_hoverColorBox.root);
-			// tHoverTextBackground.toRadius(5).draw3d(0xFFFFFF, 0xDDDDDD, 0xDDDDDD, 0xDDDDDD);
+			// tHoverTextBackground.toRadius(5).drawSolid(0xFFFFFF, 0xDDDDDD, 0xDDDDDD, 0xDDDDDD);
 			// tHoverTextBackground.alpha = 0.75;
 			// _hoverText = _hoverColorBox.addChild(new TextField());
 			// _hoverText.type = TextFieldType.DYNAMIC;
@@ -242,21 +242,21 @@ package app.ui.panes
 		private function _setColorText(pColor:int) : void {
 			if(pColor != -1) {
 				_text.text = FewfUtils.lpad(pColor.toString(16).toUpperCase(), 6, "0");
-				_textColorBox.draw3d(pColor, 0x444444);
+				_textColorBox.drawSolid(pColor, 0x444444);
 				_recentColorsDisplay.addColor(pColor);
 			} else {
 				_text.text = "000000";
-				_textColorBox.draw3d(0x000000, 0x444444);
+				_textColorBox.drawSolid(0x000000, 0x444444);
 			}
 		}
 		
 		private function _setHoverColor(pColor:int) : void {
 			if(pColor != -1) {
 				/*_hoverText.text = FewfUtils.lpad(pColor.toString(16).toUpperCase(), 6, "0");*/
-				_hoverColorBox.draw3d(pColor, 0x444444);
+				_hoverColorBox.drawSolid(pColor, 0x444444);
 			} else {
 				/*_hoverText.text = "000000";*/
-				_hoverColorBox.draw3d(0x000000, 0x444444);
+				_hoverColorBox.drawSolid(0x000000, 0x444444);
 			}
 		}
 		
