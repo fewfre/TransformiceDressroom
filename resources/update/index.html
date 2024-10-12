@@ -124,6 +124,11 @@
 			color: lightgreen;
 			font-size: 28px;
 		}
+		#progress-cont .error {
+			background: lightcoral;
+			color: darkred;
+			font-size: 28px;
+		}
 		@-webkit-keyframes animate-stripes {
 			100% { background-position: -100px 0px; }
 		}
@@ -271,6 +276,9 @@
 						return `<div class="updating">Updating Resources ${obj.message ? ` - ${obj.message}` : '...'}<div>
 							<progress value="${obj.value}" max="${obj.max}">${obj.value}/${obj.max}</progress> (${obj.value}/${obj.max})
 						</div>${renderTimestamp(obj.timestamp)}</div>`;
+					}
+					case 'error': {
+						return `<div class="error">Error${obj.message ? `: ${obj.message}` : ''}${renderTimestamp(obj.timestamp)}</div>`;
 					}
 					case 'completed': {
 						return `<div class="completed">Completed!${renderTimestamp(obj.timestamp)}</div>`;

@@ -1,13 +1,12 @@
 <?php
+require_once 'utils.php';
+
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 
 ini_set('max_execution_time', 3*60);
 set_time_limit(3*60);
-
-$resources = array();
-$external = array();
 
 setProgress('starting');
 
@@ -19,7 +18,17 @@ setProgress('starting');
 // }
 // // Ping to confirm if server is booting us
 // function ping($host, $port, $timeout) { $tB = microtime(true); $fP = fSockOpen($host, $port, $errno, $errstr, $timeout); if (!$fP) { return "down"; } $tA = microtime(true); return round((($tA - $tB) * 1000), 0)." ms"; }
-// ADD_LOG( ping('www.transformice.com', 80, 100) );
+// ADD_LOG( "PING: " . ping('www.transformice.com', 80, 100) );
+
+// Check if Atelier801 server can be accessed
+$isA801ServerOnline = fetchUrlMetaData("http://www.transformice.com/images/x_bibliotheques/x_meli_costumes.swf");
+if(!$isA801ServerOnline['exists']) {
+	setProgress('error', [ 'message' => "Update script cannot currently access the Atelier 801 servers - it may either be down, or script might be blocked/timed out" ]);
+	exit;
+}
+
+$resources = array();
+$external = array();
 
 // Normal resources
 $resources_base = array("x_meli_costumes", "costume", "x_fourrures");
@@ -119,47 +128,3 @@ sleep(10);
 setProgress('idle');
 // echo "Update Successful! Redirecting...";
 // echo '<script>window.setTimeout(function(){ window.location = "../"; },1000);</script>';
-
-function downloadFileIfNewer($url, $file) {
-	$resp = fetchUrlMetaData($url);
-	if($resp['exists']) {
-		ifUrlIsNewerThenDownloadToFile($url, $resp['lastModified'], $file);
-	}
-}
-
-function ifUrlIsNewerThenDownloadToFile($url, $urlLastModified, $file) {
-	if(checkIfUrlLastModifiedNewerThanFile($urlLastModified, $file)) {
-		downloadUrlToFile($url, $file);
-		return true;
-	}
-	return false;
-}
-function downloadUrlToFile($url, $file) { file_put_contents($file, fopen($url, 'r')); }
-function checkIfUrlLastModifiedNewerThanFile($urlLastModified, $file) {
-	$fileTime = getFileLastModifiedDateTime($file);
-	return $fileTime ? $urlLastModified > $fileTime : true; // If file doesn't exist then url is newer
-}
-function getFileLastModifiedDateTime($file) {
-	$timestamp = filemtime($file);
-	return $timestamp ? new \DateTime("@$timestamp") : null;
-}
-function fetchUrlMetaData($url) {
-	$h = fetchHeadersOnly($url);
-	$statusCode = $h && isset($h[0]) ? explode(" ", $h[0])[1] : 0;
-	return [
-		'exists' => $statusCode == 200 || $statusCode == 300,
-		'statusCode' => $statusCode,
-		'lastModified' => $h && isset($h['Last-Modified']) ? new \DateTime($h['Last-Modified']) : null,
-	];
-}
-function fetchHeadersOnly($url) {
-	$context = stream_context_create([ 'http' => array('method' => 'HEAD') ]); // Fetch only head to make it faster and to be friendly to server
-	return get_headers($url, true, $context);
-}
-
-function setProgress($state, $data = array()) {
-	$data['state'] = $state;
-	$date_utc = new \DateTime("now", new \DateTimeZone("UTC"));
-	$data['timestamp'] = $date_utc->format('Y-m-d\TH:i:s\Z');
-	file_put_contents("progress.json", json_encode($data));
-}
