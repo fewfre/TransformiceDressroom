@@ -264,6 +264,11 @@
 				return `<div class="timestamp"><strong>Progress Last Updated:</strong> ${date.toLocaleString()}</div>`;
 			}
 			
+			function renderProgressBar(value, max) {
+				if(!max) return '';
+				return `<div><progress value="${value}" max="${max}">${value}/${max}</progress> (${value}/${max})</div>`;
+			}
+			
 			function renderProgressMessage(obj) {
 				switch(obj.state) {
 					case 'idle': {
@@ -273,9 +278,9 @@
 						return `<div class="starting">&#8987; Starting &#8987;${renderTimestamp(obj.timestamp)}</div>`;
 					}
 					case 'updating': {
-						return `<div class="updating">Updating Resources ${obj.message ? ` - ${obj.message}` : '...'}<div>
-							<progress value="${obj.value}" max="${obj.max}">${obj.value}/${obj.max}</progress> (${obj.value}/${obj.max})
-						</div>${renderTimestamp(obj.timestamp)}</div>`;
+						return `<div class="updating">Updating Resources${obj.message ? ` - ${obj.message}` : '...'}
+							${renderProgressBar(obj.value, obj.max)}
+							${renderTimestamp(obj.timestamp)}</div>`;
 					}
 					case 'error': {
 						return `<div class="error">Error${obj.message ? `: ${obj.message}` : ''}${renderTimestamp(obj.timestamp)}</div>`;
@@ -288,6 +293,7 @@
 			}
 		})();
 		(()=>{
+			if(localStorage.getItem('disable-bg')) return;
 			// Matrix effect BG
 			// https://alvarotrigo.com/blog/animated-backgrounds-css/
 			// https://codepen.io/alvarotrigo/pen/LYjgxPy
