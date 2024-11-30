@@ -1,5 +1,6 @@
 ## V1.30 - ?????
-- [Bug] Changed code using stage width/height to use a new constant to avoid an issue where things would be placed offscreen.
+- Clicking the button of a favorited item that's already selected will now unselect it
+- [Bug] Changed code using stage width/height to use a new constant to avoid an issue where things would be placed offscreen
 
 
 ## V1.29h - 22 August 2024

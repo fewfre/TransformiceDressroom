@@ -214,7 +214,13 @@ package app.ui.panes
 		
 		private function _favoriteClicked(e:FewfEvent) : void {
 			var itemData:ItemData = (e.currentTarget as SpriteButton).data as ItemData;
-			toggleGridButtonWithData(itemData, true);
+			var btn:PushButton = getButtonWithItemData(itemData);
+			if(btn && btn.pushed) {
+				// This allows clicking the button to toggle it off if already toggled
+				btn.toggleOff(true);
+			} else {
+				toggleGridButtonWithData(itemData, true);
+			}
 		}
 		
 		private function _addRemoveFavoriteToggled(e:FewfEvent) : void {
