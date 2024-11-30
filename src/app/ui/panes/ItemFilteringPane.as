@@ -37,19 +37,19 @@ package app.ui.panes
 			desc.field.wordWrap = true;
 			
 			// Share code textbox
-			xx = 5+ConstantsApp.PANE_WIDTH/2; yy = ConstantsApp.APP_HEIGHT - 165
+			xx = 5+ConstantsApp.PANE_WIDTH/2; yy = ConstantsApp.SHOP_HEIGHT - 165
 			_copyField = new FancyCopyField(ConstantsApp.PANE_WIDTH-20).appendTo(this).centerOrigin().move(xx, yy);
 			
 			// Stop Filtering Button
 			sizex = ConstantsApp.PANE_WIDTH/2 - 10;
 			sizey = 40;
-			yy = ConstantsApp.APP_HEIGHT - sizey/2 - 15;
+			yy = ConstantsApp.SHOP_HEIGHT - sizey/2 - 15;
 			xx = 10+sizex/2;
 			new SpriteButton({ x:xx, y:yy, origin:0.5, width:sizex, height:sizey, obj:new $WhiteX() }).appendTo(this)
 				.on(MouseEvent.CLICK, function(e):void{ dispatchEvent(new FewfEvent(EVENT_STOP_FILTERING)); });
 			
 			// Trash Changes Button
-			yy = ConstantsApp.APP_HEIGHT - sizey/2 - 15;
+			yy = ConstantsApp.SHOP_HEIGHT - sizey/2 - 15;
 			xx += sizex/2+10+sizex/2;
 			new DeleteButton({ x:xx, y:yy, origin:0.5, width:sizex, height:sizey, obj:new $Trash(), obj_scale:0.6 }).appendTo(this)
 				.on(MouseEvent.CLICK, function(e):void{ dispatchEvent(new FewfEvent(EVENT_RESET_FILTERING)); });

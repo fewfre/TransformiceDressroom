@@ -78,7 +78,7 @@ package app.ui.panes
 			_tray.y = 50 + (275 * 0.5);
 			
 			// https://stackoverflow.com/questions/78849/best-way-to-get-the-color-where-a-mouse-was-clicked-in-as3
-			_stageBitmap = new BitmapData(Fewf.stage.stageWidth, Fewf.stage.stageHeight);
+			_stageBitmap = new BitmapData(ConstantsApp.APP_WIDTH, ConstantsApp.APP_HEIGHT);
 			
 			/********************
 			* Item setup

@@ -78,7 +78,7 @@ package app.world
 			_giantFilterIcon.visible = false;
 			
 			this.character = new Character(new <ItemData>[ GameAssets.defaultSkin, GameAssets.defaultPose ], parms)
-				.move(180, 275).setDragBounds(0+4, 73+4, 375-8, Fewf.stage.stageHeight-73-8).appendTo(this);
+				.move(180, 275).setDragBounds(0+4, 73+4, 375-8, ConstantsApp.APP_HEIGHT-73-8).appendTo(this);
 			this.character.doubleClickEnabled = true;
 			this.character.addEventListener(MouseEvent.DOUBLE_CLICK, function(e:MouseEvent){ _panes.openPane(WorldPaneManager.WORN_ITEMS_PANE); })
 			this.character.addEventListener(Character.POSE_UPDATED, _onCharacterPoseUpdated);
@@ -86,11 +86,11 @@ package app.world
 			/////////////////////////////
 			// Setup UI
 			/////////////////////////////
-			var tShop:RoundRectangle = new RoundRectangle(ConstantsApp.SHOP_WIDTH, ConstantsApp.APP_HEIGHT).move(450, 10)
+			var tShop:RoundRectangle = new RoundRectangle(ConstantsApp.SHOP_WIDTH, ConstantsApp.SHOP_HEIGHT).move(450, 10)
 				.appendTo(this).drawAsTray();
 			_panes = new WorldPaneManager().appendTo(tShop.root) as WorldPaneManager;
 			
-			this.shopTabs = new ShopTabList(70, ConstantsApp.APP_HEIGHT).move(375, 10).appendTo(this);
+			this.shopTabs = new ShopTabList(70, ConstantsApp.SHOP_HEIGHT).move(375, 10).appendTo(this);
 			this.shopTabs.addEventListener(ShopTabList.TAB_CLICKED, _onTabClicked);
 			_populateShopTabs();
 
@@ -121,25 +121,25 @@ package app.world
 				favButton.visible = FavoriteItemsLocalStorageManager.getAllFavorites().length > 0;
 			});
 			
-			_animationControls = new AnimationControls().move(78, pStage.stageHeight - 35/2 - 5).appendTo(this)
+			_animationControls = new AnimationControls().move(78, ConstantsApp.APP_HEIGHT - 35/2 - 5).appendTo(this)
 				.on(Event.CLOSE, function(e):void{ _toolbox.toggleAnimationButtonOffWithEvent(); });
 			
 			/////////////////////////////
 			// Bottom Left Area
 			/////////////////////////////
 			var tLangButton:SpriteButton = LangScreen.createLangButton({ width:30, height:25, origin:0.5 })
-				.move(22, pStage.stageHeight-17).appendTo(this)
+				.move(22, ConstantsApp.APP_HEIGHT-17).appendTo(this)
 				.onButtonClick(_onLangButtonClicked) as SpriteButton;
 			
 			// About Screen Button
 			var aboutButton:SpriteButton = new SpriteButton({ size:25, origin:0.5 }).appendTo(this)
-				.move(tLangButton.x+(tLangButton.Width/2)+2+(25/2), pStage.stageHeight - 17)
+				.move(tLangButton.x+(tLangButton.Width/2)+2+(25/2), ConstantsApp.APP_HEIGHT - 17)
 				.onButtonClick(_onAboutButtonClicked) as SpriteButton;
 			new TextBase("?", { size:22, color:0xFFFFFF, bold:true, origin:0.5 }).move(0, -1).appendTo(aboutButton)
 			
 			if(!!(ParentApp.reopenSelectionLauncher())) {
 				new ScaleButton({ obj:new $BackArrow(), obj_scale:0.5, origin:0.5 }).appendTo(this)
-					.move(22, pStage.stageHeight-17-28)
+					.move(22, ConstantsApp.APP_HEIGHT-17-28)
 					.onButtonClick(function():void{ ParentApp.reopenSelectionLauncher()(); });
 			}
 			

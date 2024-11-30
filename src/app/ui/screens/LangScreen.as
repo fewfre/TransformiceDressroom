@@ -18,8 +18,8 @@ package app.ui.screens
 	{
 		// Constructor
 		public function LangScreen() {
-			this.x = Fewf.stage.stageWidth * 0.5;
-			this.y = Fewf.stage.stageHeight * 0.5;
+			this.x = ConstantsApp.CENTER_X;
+			this.y = ConstantsApp.CENTER_Y;
 			
 			GameAssets.createScreenBackdrop().appendTo(this).on(MouseEvent.CLICK, _onCloseClicked);
 			

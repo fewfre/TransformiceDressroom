@@ -7,6 +7,7 @@ package app
 	import com.fewfre.utils.*;
 	import flash.display.*;
 	import flash.events.*;
+	import app.data.ConstantsApp;
 
 	[SWF(backgroundColor="0x6A7495" , width="900" , height="425")]
 	public class Main extends MovieClip
@@ -38,7 +39,7 @@ package app
 
 			BrowserMouseWheelPrevention.init(stage);
 
-			_loaderDisplay = addChild( new LoaderDisplay(stage.stageWidth/2, stage.stageHeight/2) ) as LoaderDisplay;
+			_loaderDisplay = addChild( new LoaderDisplay(ConstantsApp.CENTER_X, ConstantsApp.CENTER_Y) ) as LoaderDisplay;
 			
 			_errorScreen = new ErrorScreen().on(Event.CLOSE, function(e){ removeChild(_errorScreen); });
 			Fewf.dispatcher.addEventListener(ErrorEvent.ERROR, function(e:ErrorEvent){ addChild(_errorScreen); _errorScreen.open(e.text || 'Unknown Error'); });

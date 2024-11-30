@@ -8,6 +8,7 @@ package app.ui.screens
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import app.data.ConstantsApp;
 
 	public class ErrorScreen extends Sprite
 	{
@@ -17,8 +18,8 @@ package app.ui.screens
 		
 		// Constructor
 		public function ErrorScreen() {
-			this.x = Fewf.stage.stageWidth * 0.5;
-			this.y = Fewf.stage.stageHeight * 0.5;
+			this.x = ConstantsApp.CENTER_X;
+			this.y = ConstantsApp.CENTER_Y;
 			
 			/****************************
 			* Click Tray

@@ -5,23 +5,28 @@ package app.data
 		/****************************
 		* Dimensions
 		*****************************/
-		public static const SHOP_WIDTH				: Number = 440;
-		public static const PANE_WIDTH				: Number = 430;
-		public static const APP_HEIGHT				: Number = 400;
+		public static const APP_WIDTH   : Number = 900;
+		public static const APP_HEIGHT  : Number = 425;
+		public static const CENTER_X    : Number = APP_WIDTH/2;
+		public static const CENTER_Y    : Number = APP_HEIGHT/2;
+		
+		public static const SHOP_WIDTH  : Number = 440;
+		public static const SHOP_HEIGHT : Number = 400;
+		public static const PANE_WIDTH  : Number = 430; // Inner shop width
 		
 		/****************************
 		* General
 		*****************************/
-		public static const VERSION					: String = "1.29h";
-		public static const SOURCE_URL				: String = "https://github.com/fewfre/TransformiceDressroom/blob/master/CHANGELOG.md";
-		public static const DISCORD_URL				: String = "https://discord.gg/DREPH9GqWw";
+		public static const VERSION           : String = "1.30";
+		public static const SOURCE_URL        : String = "https://github.com/fewfre/TransformiceDressroom/blob/master/CHANGELOG.md";
+		public static const DISCORD_URL       : String = "https://discord.gg/DREPH9GqWw";
 		
-		public static const DEFAULT_SKIN_ID			: int = 0;
-		public static const DEFAULT_POSE_ID			: int = 0;
+		public static const DEFAULT_SKIN_ID   : int = 0;
+		public static const DEFAULT_POSE_ID   : int = 0;
 		
-		public static const NUM_ITEMS_PER_ROW		: int = 7;
+		public static const NUM_ITEMS_PER_ROW : int = 7;
 		
-		public static const ITEM_SAVE_SCALE			: int = 8; // Power of two is probably best
+		public static const ITEM_SAVE_SCALE   : int = 8; // Power of two is probably best
 		
 		public static var CONFIG_TAB_ENABLED: Boolean = true;
 		public static var ANIMATION_DOWNLOAD_ENABLED: Boolean = true;
