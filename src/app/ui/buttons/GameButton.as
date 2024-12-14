@@ -30,8 +30,8 @@ package app.ui.buttons
 				.toRadius(7).appendTo(this);
 			super(pData);
 		}
-		public function toOrigin(pX:Number, pY:Object=null) : GameButton { _bg.toOrigin(pX, pY); return this; }
-		public function resize(pWidth:Number, pHeight:Object = null) : GameButton { _bg.resize(pWidth, pHeight); return this; }
+		public function toOrigin(pX:Number, pY:Object=null) : GameButton { _bg.toOrigin(pX, pY); _rerenderChildren(); return this; }
+		public function resize(pWidth:Number, pHeight:Object = null) : GameButton { _bg.resize(pWidth, pHeight); _rerenderChildren(); return this; }
 
 		/////////////////////////////
 		// Public
@@ -69,6 +69,11 @@ package app.ui.buttons
 		protected function _clearChildren() : void {
 			if(_image != null) { removeChild(_image); }
 			if(_text != null) { removeChild(_text); }
+		}
+		
+		protected function _rerenderChildren() : void {
+			if(_text) setTextObject(_text);
+			if(_image) setImage(_image);
 		}
 
 		/////////////////////////////

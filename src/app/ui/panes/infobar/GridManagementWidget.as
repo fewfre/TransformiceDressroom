@@ -5,11 +5,13 @@ package app.ui.panes.infobar
 	import app.ui.buttons.PushButton;
 	import flash.events.Event;
 	import flash.geom.Rectangle;
+	import com.fewfre.events.FewfEvent;
 
 	public class GridManagementWidget extends Sprite
 	{
 		// Constants
 		public static const RANDOMIZE_CLICKED : String = "randomize_clicked";
+		public static const RANDOMIZE_LOCK_CLICKED : String = "randomize_lock_clicked"; // FewfEvent<{ locked:bool }>
 		public static const REVERSE_CLICKED : String = "reverse_clicked";
 		public static const LEFT_ARROW_CLICKED : String = "left_arrow_clicked";
 		public static const RIGHT_ARROW_CLICKED : String = "right_arrow_clicked";
@@ -37,7 +39,10 @@ package app.ui.panes.infobar
 				
 				if(!pData.hideRandomizeLock) {
 					_randomizeLockButton = new PushButton({ x:xx, y:yy, size:bsize, obj_scale:0.8, obj:new $Lock() }).appendTo(this) as PushButton;
-					_randomizeLockButton.addEventListener(PushButton.TOGGLE, function():void{ isRefreshLocked ? _randomizeButton.disable() : _randomizeButton.enable(); });
+					_randomizeLockButton.addEventListener(PushButton.TOGGLE, function():void{
+						isRefreshLocked ? _randomizeButton.disable() : _randomizeButton.enable();
+						dispatchEvent(new FewfEvent(RANDOMIZE_LOCK_CLICKED, { locked:isRefreshLocked }));
+					});
 					xx += bsize + spacing;
 				}
 			}

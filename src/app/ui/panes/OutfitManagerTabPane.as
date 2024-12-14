@@ -40,7 +40,7 @@ package app.ui.panes
 			_onUserLookClicked = pOnUserLookClicked;
 			_getLookCodeForCurrentOutfit = pGetLookCodeForCurrentOutfit;
 			
-			this.addInfoBar( new Infobar({ showBackButton:true, hideItemPreview:true, gridManagement:{ hideRandomizeLock:true } }) )
+			this.addInfobar( new Infobar({ showBackButton:true, hideItemPreview:true, gridManagement:{ hideRandomizeLock:true } }) )
 				.on(Infobar.BACK_CLICKED, function(e):void{ dispatchEvent(new Event(Event.CLOSE)); });
 			
 			this.grid.reverse(); // Start reversed so that new outfits get added to start of list

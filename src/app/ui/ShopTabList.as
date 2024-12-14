@@ -1,53 +1,71 @@
 package app.ui
 {
-	import app.ui.buttons.PushButton;
 	import com.fewfre.display.RoundRectangle;
 	import com.fewfre.events.FewfEvent;
 	import flash.display.Sprite;
+	import app.data.ConstantsApp;
 
-	public class ShopTabList extends Sprite
+	public class ShopTabList
 	{
 		// Constants
 		public static const TAB_CLICKED : String = "shop_tab_clicked"; // FewfEvent<string>
 		
 		private static const MARGIN_X : Number = 5;
 		private static const MARGIN_Y : Number = 5;
+		private static const GAP : Number = 5;
+		private static const MAX_BUTTON_HEIGHT : Number = 65;
 
 		// Storage
+		private var _root : Sprite;
 		private var _bg: RoundRectangle;
-		private var _tabs: Vector.<PushButton> = new Vector.<PushButton>();
+		private var _tabs: Vector.<TabButton> = new Vector.<TabButton>();
+		private var _buttonLayer: Sprite;
+		private var _buttonWidth: Number;
+		
+		// Properties
+		public function get x() : Number { return _root.x; }
+		public function set x(pVal:Number) : void { _root.x = pVal; }
+		public function get y() : Number { return _root.y; }
+		public function set y(pVal:Number) : void { _root.y = pVal; }
 
 		// Constructor
 		public function ShopTabList(pWidth:Number, pHeight:Number) {
-			_bg = new RoundRectangle(pWidth, pHeight).appendTo(this).drawAsTray();
-			_tabs = new Vector.<PushButton>();
+			_root = new Sprite();
+			_buttonWidth = pWidth-MARGIN_X*2;
+			_bg = new RoundRectangle(pWidth, pHeight).toOrigin(0).appendTo(_root).drawAsTray();
+			_tabs = new Vector.<TabButton>();
+			_buttonLayer = new Sprite(); _root.addChild(_buttonLayer);
 		}
-		public function move(pX:Number, pY:Number) : ShopTabList { x = pX; y = pY; return this; }
-		public function appendTo(pParent:Sprite): ShopTabList { pParent.addChild(this); return this; }
+		public function move(pX:Number, pY:Number) : ShopTabList { this.x = pX; this.y = pY; return this; }
+		public function appendTo(pParent:Sprite): ShopTabList { pParent.addChild(_root); return this; }
+		public function on(type:String, listener:Function): ShopTabList { _root.addEventListener(type, listener); return this; }
+		public function off(type:String, listener:Function): ShopTabList { _root.removeEventListener(type, listener); return this; }
 		
-		// Vector<{ text:String, id:String }
-		public function populate(pTabs:Vector.<Object>) : ShopTabList {
-			var tHeight:Number = Math.min(65, (_bg.height - MARGIN_Y) / pTabs.length - MARGIN_Y);
-			var tWidth:Number = _bg.width - (MARGIN_X * 2);
-			var tYSpacing:Number = tHeight + MARGIN_Y;
-			var tX:Number = MARGIN_X;
-			var tY:Number = MARGIN_Y - tYSpacing; // Go back one space to account for loop adding a space.
-
-			_clearAll();
-			for(var i = 0; i < pTabs.length; i++) {
-				var tBttn:PushButton = _createTab(pTabs[i].text, tX, tY += tYSpacing, tWidth, tHeight, pTabs[i].id);
-				_tabs.push(tBttn);
-			}
-			return this;
+		///////////////////////
+		// Setup
+		///////////////////////
+		public function reset() : void {
+			_tabs = new Vector.<TabButton>();
+			_buttonLayer.removeChildren();
 		}
-		private function _createTab(pText:String, pX:Number, pY:Number, pWidth:Number, pHeight:Number, pId:String) : PushButton {
-			return new PushButton({ width:pWidth, height:pHeight, text:pText, data:{ id:pId } })
-				.setAllowToggleOff(false)
-				.onToggle(function(e:FewfEvent):void{
-					_untoggleAll(e.target as PushButton);
-					dispatchEvent(new FewfEvent(TAB_CLICKED, pId));
-				})
-				.move(pX, pY).appendTo(this) as PushButton;
+		
+		public function addTab(pText:String, pId:String) : TabButton {
+			var bttn:TabButton = new TabButton(_buttonWidth, MAX_BUTTON_HEIGHT, pText, pId);
+			bttn.onToggle(_onTabClicked).appendTo(_buttonLayer);
+			_tabs.push(bttn);
+			_render();
+			return bttn;
+		}
+		
+		private function _render() : void {
+			var tAreaHeight:Number = _bg.height - MARGIN_Y*2;
+			
+			var tButtonHeight:Number = Math.min(MAX_BUTTON_HEIGHT, (tAreaHeight - (GAP*(_tabs.length-1))) / _tabs.length);
+			var xx:Number = MARGIN_X, yy:Number = MARGIN_Y;
+			
+			for(var i:int = 0; i < _tabs.length; i++) {
+				_tabs[i].resize(_buttonWidth, tButtonHeight).move(xx, yy + (tButtonHeight+GAP)*i);
+			}
 		}
 		
 		///////////////////////
@@ -60,8 +78,8 @@ package app.ui
 			return null;
 		}
 		
-		public function getTabButton(pId:String) : PushButton {
-			for each(var tab:PushButton in _tabs) {
+		public function getTabButton(pId:String) : TabButton {
+			for each(var tab:TabButton in _tabs) {
 				if(tab.data.id == pId) return tab;
 			}
 			return null;
@@ -80,14 +98,44 @@ package app.ui
 		///////////////////////
 		// Private
 		///////////////////////
-		private function _untoggleAll(pTab:PushButton=null) : void {
-			PushButton.untoggleAll(_tabs, pTab);
+		private function _onTabClicked(e:FewfEvent) : void {
+			_untoggleAll(e.target as TabButton);
+			_root.dispatchEvent(new FewfEvent(TAB_CLICKED, e.data.id));
 		}
+			
+		private function _untoggleAll(pTabToSkip:TabButton=null) : void {
+			for(var i:int = 0; i < _tabs.length; i++) {
+				if (_tabs[i].pushed && _tabs[i] != pTabToSkip) {
+					_tabs[i].toggleOff(false);
+				}
+			}
+		}
+	}
+}
+
+import app.ui.buttons.PushButton;
+import com.fewfre.display.DisplayWrapper;
+import app.data.ConstantsApp;
+import flash.display.Shape;
+import com.fewfre.utils.Fewf;
+import flash.display.Bitmap;
+class TabButton extends PushButton {
+	private var _lock:DisplayWrapper;
+	
+	public function TabButton(pWidth:Number, pHeight:Number, pText:String, pId:String) {
+		super({ width:pWidth, height:pHeight });
+		setData({ id:pId });
+		setAllowToggleOff(false);
 		
-		// Clear current tabs (if any)
-		private function _clearAll() : void {
-			for(var i = 0; i < _tabs.length; i++) { removeChild(_tabs[i]); }
-			_tabs = new Vector.<PushButton>();
-		}
+		_lock = DisplayWrapper.wrap(new $Lock(), this).move(2, 2).toScale(0);
+		setLocked(false);
+		setText(pText);
+		
+		_renderUp();
+	}
+	
+	public function setLocked(pOn:Boolean) : TabButton {
+		_lock.toScale(pOn ? 0.6 : 0);
+		return this;
 	}
 }

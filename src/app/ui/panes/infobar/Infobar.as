@@ -158,6 +158,7 @@ package app.ui.panes.infobar
 				var widgetProps:Object = pData.gridManagement is Boolean ? {} : pData.gridManagement; // If a boolean ("true") use defaults
 				_gridManagementWidget = new GridManagementWidget(widgetProps).move(this.Width*0.5-20+(144/2), BTN_Y).appendTo(this);
 				_gridManagementWidget.on(GridManagementWidget.RANDOMIZE_CLICKED, function(e):void{ dispatchEvent(e); })
+				_gridManagementWidget.on(GridManagementWidget.RANDOMIZE_LOCK_CLICKED, function(e):void{ dispatchEvent(e); })
 				_gridManagementWidget.on(GridManagementWidget.REVERSE_CLICKED, function(e):void{ dispatchEvent(e); })
 				_gridManagementWidget.on(GridManagementWidget.LEFT_ARROW_CLICKED, function(e):void{ dispatchEvent(e); })
 				_gridManagementWidget.on(GridManagementWidget.RIGHT_ARROW_CLICKED, function(e):void{ dispatchEvent(e); });
@@ -262,6 +263,7 @@ package app.ui.panes.infobar
 		}
 		
 		public function refreshItemImageUsingCurrentItemData() : void {
+			if(!_itemData) return;
 			changeImage(GameAssets.getColoredItemImage(_itemData));
 		}
 		

@@ -29,6 +29,7 @@ package com.fewfre.display
 		private var _radius : Number = 7; // Default value; should still set manually before rendering
 		private var _bgColor : uint = 0;
 		private var _bgGradientColors : Array;
+		private var _bgAlpha : Number = 1;
 		private var _borderColor : uint = 0;
 		private var _borderColor2 : uint = 0;
 		private var _borderColor3 : uint = 0;
@@ -50,6 +51,8 @@ package com.fewfre.display
 		// Properties - render values
 		public function get radius() : Number { return _radius; }
 		public function set radius(pVal:Number) : void { _radius = pVal; _render(); }
+		public function get bgAlpha() : Number { return _bgAlpha; }
+		public function set bgAlpha(pVal:Number) : void { _bgAlpha = pVal; _render(); }
 		
 		// Properties - _root convience methods
 		public function get x() : Number { return _root.x; }
@@ -66,7 +69,6 @@ package com.fewfre.display
 		// Constructor
 		// pData = { x:Number, y:Number, ?origin:Number, ?originX:Number=0, ?originY:Number=0, ?radius:Number }
 		public function RoundRectangle(pWidth:Number, pHeight:Number, pProps:Object=null) {
-			super();
 			_root = new Sprite();
 			_width = pWidth;
 			_height = pHeight;
@@ -103,6 +105,7 @@ package com.fewfre.display
 		
 		// render values
 		public function toRadius(pRadius:Number) : RoundRectangle { this.radius = pRadius; return this; }
+		public function toBgAlpha(pAlpha:Number) : RoundRectangle { this.bgAlpha = pAlpha; return this; }
 		
 		public function addChild(child:DisplayObject) : DisplayObject { return _root.addChild(child); }
 		public function removeChild(child:DisplayObject) : DisplayObject { return _root.removeChild(child); }
@@ -167,8 +170,8 @@ package com.fewfre.display
 			var xx:Number = _getRenderX(), yy:Number = _getRenderY();
 			
 			graphics.clear();
-			graphics.lineStyle(_borderThickness, pLineColor, 1, true);
-			graphics.beginFill(pColor);
+			if(_borderThickness > 0) graphics.lineStyle(_borderThickness, pLineColor, 1, true);
+			graphics.beginFill(pColor, _bgAlpha);
 			graphics.drawRoundRect(xx, yy, _width, _height, pRadius, pRadius);
 			graphics.endFill();
 		}
@@ -188,7 +191,7 @@ package com.fewfre.display
 			// Since the 3D borders effectively add an extra 2px padding around it, we have to offset it by one and
 			// use the inner width which has the padding subtracted
 			graphics.lineStyle(1, pLineColor3, 1, true);
-			graphics.beginFill(pColor);
+			graphics.beginFill(pColor, _bgAlpha);
 			graphics.drawRoundRect(xx+1, yy+1, tInnerWidth, tInnerHeight, pRadius, pRadius);
 			graphics.endFill();
 		}
@@ -224,7 +227,7 @@ package com.fewfre.display
 			graphics.beginGradientFill(
 				GradientType.LINEAR,
 				pColors,
-				[1, 1], // Alphas
+				[_bgAlpha, _bgAlpha], // Alphas
 				[0, 0xFF], // Ratios
 				matrix
 			);

@@ -37,6 +37,7 @@ package app.ui.panes
 		
 		public function get type():ItemType { return _type; }
 		public function get defaultItemData():ItemData { return _defaultItemData; }
+		public function get isItemTypeLocked():Boolean { return _infobar.isRefreshLocked; }
 		
 		public static const ITEM_TOGGLED : String = 'ITEM_TOGGLED'; // ItemDataEvent
 		public static const FLAG_WAVE_CODE_CHANGED : String = 'FLAG_WAVE_CODE_CHANGED';
@@ -53,7 +54,7 @@ package app.ui.panes
 				grid.reverse();
 			}
 			
-			this.addInfoBar( new Infobar({ showEyeDropper:_type!=ItemType.POSE, showDownload:true, gridManagement:{ hideRandomizeLock:_type==ItemType.EMOJI }, showFavorites:true }) );
+			this.addInfobar( new Infobar({ showEyeDropper:_type!=ItemType.POSE, showDownload:true, gridManagement:{ hideRandomizeLock:_type==ItemType.EMOJI }, showFavorites:true }) );
 			_infobar.on(Infobar.FAVORITE_CLICKED, _addRemoveFavoriteToggled);
 			_setupGrid(GameAssets.getItemDataListByType(_type));
 			

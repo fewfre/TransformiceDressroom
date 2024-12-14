@@ -44,8 +44,8 @@ package app.ui.panes.base
 			_scrollbox.refresh();
 		}
 
-		public override function addInfoBar(pInfobar:Infobar) : Infobar {
-			super.addInfoBar(pInfobar);
+		public override function addInfobar(pInfobar:Infobar) : Infobar {
+			super.addInfobar(pInfobar);
 			_scrollbox.y += 60;
 			_scrollbox.resize(ConstantsApp.PANE_WIDTH, defaultScrollboxHeight);
 			

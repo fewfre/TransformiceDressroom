@@ -78,7 +78,7 @@ package app.world
 			_giantFilterIcon.visible = false;
 			
 			this.character = new Character(new <ItemData>[ GameAssets.defaultSkin, GameAssets.defaultPose ], parms)
-				.move(180, 275).setDragBounds(0+4, 73+4, 375-8, ConstantsApp.APP_HEIGHT-73-8).appendTo(this);
+				.move(180, 275).setDragBounds(0+4, 73+4, 375-4-4, ConstantsApp.APP_HEIGHT-(73+4)-4).appendTo(this);
 			this.character.doubleClickEnabled = true;
 			this.character.addEventListener(MouseEvent.DOUBLE_CLICK, function(e:MouseEvent){ _panes.openPane(WorldPaneManager.WORN_ITEMS_PANE); })
 			this.character.addEventListener(Character.POSE_UPDATED, _onCharacterPoseUpdated);
@@ -86,13 +86,12 @@ package app.world
 			/////////////////////////////
 			// Setup UI
 			/////////////////////////////
+			this.shopTabs = new ShopTabList(70, ConstantsApp.SHOP_HEIGHT).move(375, 10).appendTo(this).on(ShopTabList.TAB_CLICKED, _onTabClicked);
+			_populateShopTabs();
+			
 			var tShop:RoundRectangle = new RoundRectangle(ConstantsApp.SHOP_WIDTH, ConstantsApp.SHOP_HEIGHT).move(450, 10)
 				.appendTo(this).drawAsTray();
 			_panes = new WorldPaneManager().appendTo(tShop.root) as WorldPaneManager;
-			
-			this.shopTabs = new ShopTabList(70, ConstantsApp.SHOP_HEIGHT).move(375, 10).appendTo(this);
-			this.shopTabs.addEventListener(ShopTabList.TAB_CLICKED, _onTabClicked);
-			_populateShopTabs();
 
 			/////////////////////////////
 			// Top Area
@@ -248,6 +247,10 @@ package app.world
 			tPane.infobar.on(Infobar.ITEM_PREVIEW_CLICKED, function(){ _removeItem(pType); });
 			tPane.infobar.on(Infobar.EYE_DROPPER_CLICKED, function(){ _eyeDropButtonClicked(pType); });
 			tPane.infobar.on(GridManagementWidget.RANDOMIZE_CLICKED, function(){ _randomItemOfType(pType); });
+			tPane.infobar.on(GridManagementWidget.RANDOMIZE_LOCK_CLICKED, function(e:FewfEvent){
+				character.setItemTypeLock(pType, e.data.locked);
+				shopTabs.getTabButton(WorldPaneManager.itemTypeToId(pType)).setLocked(e.data.locked);
+			});
 			return tPane;
 		}
 		private function getShopPane(pType:ItemType) : ShopCategoryPane { return _panes.getShopPane(pType); }
@@ -268,36 +271,46 @@ package app.world
 		}
 		
 		private function _populateShopTabs() {
-			var tabs:Vector.<Object>;
+			shopTabs.reset(); // Reset so we start with an empty list
+			
 			if(_itemFiltering_selectionModeOn && !_itemFiltering_filterEnabled) {
-				tabs = new <Object>[
-					{ text:"tab_filtering", id:WorldPaneManager.ITEM_FILTERING_PANE },
-					{ text:"tab_furs", id:WorldPaneManager.itemTypeToFilterId(ItemType.SKIN) },
-					{ text:"tab_head", id:WorldPaneManager.itemTypeToFilterId(ItemType.HEAD) },
-					{ text:"tab_ears", id:WorldPaneManager.itemTypeToFilterId(ItemType.EARS) },
-					{ text:"tab_eyes", id:WorldPaneManager.itemTypeToFilterId(ItemType.EYES) },
-					{ text:"tab_mouth", id:WorldPaneManager.itemTypeToFilterId(ItemType.MOUTH) },
-					{ text:"tab_neck", id:WorldPaneManager.itemTypeToFilterId(ItemType.NECK) },
-					{ text:"tab_tail", id:WorldPaneManager.itemTypeToFilterId(ItemType.TAIL) },
-					{ text:"tab_hair", id:WorldPaneManager.itemTypeToFilterId(ItemType.HAIR) },
-					{ text:"tab_contacts", id:WorldPaneManager.itemTypeToFilterId(ItemType.CONTACTS) },
-					{ text:"tab_tattoo", id:WorldPaneManager.itemTypeToFilterId(ItemType.TATTOO) },
-					{ text:"tab_hand", id:WorldPaneManager.itemTypeToFilterId(ItemType.HAND) },
-				];
+				shopTabs.addTab("tab_filtering", WorldPaneManager.ITEM_FILTERING_PANE);
+				shopTabs.addTab("tab_furs", WorldPaneManager.itemTypeToFilterId(ItemType.SKIN));
+				shopTabs.addTab("tab_head", WorldPaneManager.itemTypeToFilterId(ItemType.HEAD));
+				shopTabs.addTab("tab_ears", WorldPaneManager.itemTypeToFilterId(ItemType.EARS));
+				shopTabs.addTab("tab_eyes", WorldPaneManager.itemTypeToFilterId(ItemType.EYES));
+				shopTabs.addTab("tab_mouth", WorldPaneManager.itemTypeToFilterId(ItemType.MOUTH));
+				shopTabs.addTab("tab_neck", WorldPaneManager.itemTypeToFilterId(ItemType.NECK));
+				shopTabs.addTab("tab_tail", WorldPaneManager.itemTypeToFilterId(ItemType.TAIL));
+				shopTabs.addTab("tab_hair", WorldPaneManager.itemTypeToFilterId(ItemType.HAIR));
+				shopTabs.addTab("tab_contacts", WorldPaneManager.itemTypeToFilterId(ItemType.CONTACTS));
+				shopTabs.addTab("tab_tattoo", WorldPaneManager.itemTypeToFilterId(ItemType.TATTOO));
+				shopTabs.addTab("tab_hand", WorldPaneManager.itemTypeToFilterId(ItemType.HAND));
 			} else {
-				tabs = new Vector.<Object>();
-				if(ConstantsApp.CONFIG_TAB_ENABLED && !_itemFiltering_filterEnabled) tabs.push({ text:"tab_config", id:WorldPaneManager.CONFIG_PANE });
+				if(ConstantsApp.CONFIG_TAB_ENABLED && !_itemFiltering_filterEnabled) shopTabs.addTab("tab_config", WorldPaneManager.CONFIG_PANE);
 				
 				for each(var type:ItemType in ItemType.TYPES_WITH_SHOP_PANES) {
 					if(type == ItemType.EMOJI || !_shouldShowShopTab(type)) continue;
 					// Some i18n ids don't match the type string, so manually handling it here
 					var i18nStr : String = type == ItemType.SKIN ? 'furs' : type == ItemType.HAND ? 'hand' : type == ItemType.POSE ? 'poses' : type.toString();
-					tabs.push({ text:"tab_"+i18nStr, id:WorldPaneManager.itemTypeToId(type) });
+					shopTabs.addTab("tab_"+i18nStr, WorldPaneManager.itemTypeToId(type)).setLocked(character.isItemTypeLocked(type));
+					// .addIcon(
+					// 	type == ItemType.SKIN ? "http://www.transformice.com/images/x_transformice/x_interface/x_souris.png?d=855" : 
+					// 	type == ItemType.EYES ? "http://www.transformice.com/images/x_transformice/x_interface/glasses.png?d=855" : 
+					// 	type == ItemType.CONTACTS ? "http://www.transformice.com/images/x_transformice/x_interface/eye.png?d=855" : 
+					// 	type == ItemType.MOUTH ? "http://www.transformice.com/images/x_transformice/x_interface/mouth.png?d=855" : 
+					// 	type == ItemType.HAND ? "http://www.transformice.com/images/x_transformice/x_interface/glove.png?d=855" : 
+					// 	type == ItemType.NECK ? "http://www.transformice.com/images/x_transformice/x_interface/scarf.png?d=855" : 
+					// 	type == ItemType.HEAD ? "http://www.transformice.com/images/x_transformice/x_interface/hat.png?d=855" : 
+					// 	type == ItemType.EARS ? "http://www.transformice.com/images/x_transformice/x_interface/earrings.png?d=855" : 
+					// 	type == ItemType.TAIL ? "http://www.transformice.com/images/x_transformice/x_interface/tail.png?d=855" : 
+					// 	type == ItemType.HAIR ? "http://www.transformice.com/images/x_transformice/x_interface/wig.png?d=855" : 
+					// 	type == ItemType.TATTOO ? "http://www.transformice.com/images/x_transformice/x_interface/tatoo.png?d=855" : 
+					// 	null
+					// );
 				}
-				tabs.push({ text:"tab_other", id:WorldPaneManager.OTHER_PANE });
+				shopTabs.addTab("tab_other", WorldPaneManager.OTHER_PANE);
 			}
-			
-			this.shopTabs.populate(tabs);
 		}
 
 		private function _onMouseWheel(pEvent:MouseEvent) : void {
@@ -358,13 +371,17 @@ package app.world
 		
 			// First remove old stuff to prevent conflicts
 			character.shamanMode = ShamanMode.OFF;
-			for each(var tLayerType:ItemType in ItemType.ALL) { _removeItem(tLayerType); }
+			for each(var tLayerType:ItemType in ItemType.ALL) {
+				if(!character.isItemTypeLocked((tLayerType))) _removeItem(tLayerType);
+			}
 			
 			var parseSuccess:Boolean = character.parseParams(code);
 			
 			character.updatePose();
 			
-			for each(var tType:ItemType in ItemType.TYPES_WITH_SHOP_PANES) { _refreshButtonCustomizationForItemData(character.getItemData(tType)); }
+			for each(var tType:ItemType in ItemType.TYPES_WITH_SHOP_PANES) {
+				if(!character.isItemTypeLocked(tType)) _refreshButtonCustomizationForItemData(character.getItemData(tType));
+			}
 			
 			// now update the infobars
 			_updateUIBasedOnCharacter();
@@ -543,7 +560,7 @@ package app.world
 			var tItemData:ItemData = e.itemData;
 
 			// De-select all buttons that aren't the clicked one.
-			var tPane:ShopCategoryPane = getShopPane(tItemData.type), tInfoBar:Infobar = tPane.infobar;
+			var tPane:ShopCategoryPane = getShopPane(tItemData.type), tInfobar:Infobar = tPane.infobar;
 			var tButton:PushButton = tPane.getButtonWithItemData(tItemData);
 			// If clicked button is toggled on, equip it. Otherwise remove it.
 			if(tButton.pushed) {
@@ -558,8 +575,8 @@ package app.world
 					}
 				}
 				this.character.setItemData(tItemData);
-				tInfoBar.addInfo( tItemData, GameAssets.getColoredItemImage(tItemData) );
-				tInfoBar.showColorWheel(showColorWheel);
+				tInfobar.addInfo( tItemData, GameAssets.getColoredItemImage(tItemData) );
+				tInfobar.showColorWheel(showColorWheel);
 			} else {
 				_removeItem(tItemData.type);
 			}
@@ -607,7 +624,7 @@ package app.world
 
 		private function _randomItemOfType(pType:ItemType, pSetToDefault:Boolean=false) : void {
 			var pane:ShopCategoryPane = getShopPane(pType);
-			if(pane.infobar.isRefreshLocked || !pane.buttons.length) { return; }
+			if(character.isItemTypeLocked(pType) || !pane.buttons.length) { return; }
 			
 			if(!pSetToDefault) {
 				pane.chooseRandomItem();
@@ -675,7 +692,7 @@ package app.world
 				// Refresh panes
 				for each(var tType:ItemType in ItemType.TYPES_WITH_SHOP_PANES) {
 					var pane:ShopCategoryPane = getShopPane(tType);
-					pane.infobar.unlockRandomizeButton();
+					pane.infobar.unlockRandomizeButton(); // this will also update `character.setItemTypeLock()`
 					
 					// Reset customizations
 					if(tType != ItemType.POSE) {

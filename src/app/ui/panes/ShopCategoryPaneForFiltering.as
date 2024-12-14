@@ -35,7 +35,7 @@ package app.ui.panes
 			if(_type == ItemType.SKIN || _type == ItemType.POSE) { buttonPerRow = 5; }
 			super(buttonPerRow);
 			
-			this.addInfoBar( new Infobar({ showEyeDropper:false, hideItemPreview:true, gridManagement:{ hideRandomize:true, hideArrows:true } }) );
+			this.addInfobar( new Infobar({ showEyeDropper:false, hideItemPreview:true, gridManagement:{ hideRandomize:true, hideArrows:true } }) );
 			this.infobar.showColorWheel(false);
 			
 			// We want them to start reversed

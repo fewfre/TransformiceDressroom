@@ -31,7 +31,7 @@ package app.ui.panes
 			_character = pCharacter;
 			_onItemClicked = pOnItemClicked;
 			
-			this.addInfoBar( new Infobar({ showBackButton:true, hideItemPreview:true, gridManagement:false }) )
+			this.addInfobar( new Infobar({ showBackButton:true, hideItemPreview:true, gridManagement:false }) )
 				.on(Infobar.BACK_CLICKED, function(e):void{ dispatchEvent(new Event(Event.CLOSE)); });
 		}
 		

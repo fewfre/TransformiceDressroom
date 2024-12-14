@@ -1,5 +1,7 @@
-## V1.30 - ?????
+## V1.30 - 14 December 2024
 - Clicking the button of a favorited item that's already selected will now unselect it
+- Locked item categories now show a lock icon on their respective tab button
+- [Code] Rewrote `ShopTabList` to be more dynamic
 - [Bug] Changed code using stage width/height to use a new constant to avoid an issue where things would be placed offscreen
 
 

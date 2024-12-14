@@ -51,7 +51,7 @@ package app.ui.panes
 		// Constructor
 		public function ColorFinderPane() {
 			super();
-			this.addInfoBar( new Infobar({ showBackButton:true }) )
+			this.addInfobar( new Infobar({ showBackButton:true }) )
 				.on(Infobar.BACK_CLICKED, _onBackClicked)
 				.on(Infobar.ITEM_PREVIEW_CLICKED, function(e){ dispatchEvent(new Event(EVENT_ITEM_ICON_CLICKED)); });
 			

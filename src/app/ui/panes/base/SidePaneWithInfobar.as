@@ -23,7 +23,7 @@ package app.ui.panes.base
 			super();
 		}
 
-		public function addInfoBar(pInfobar:Infobar) : Infobar {
+		public function addInfobar(pInfobar:Infobar) : Infobar {
 			_infobar = pInfobar
 				.on(GridManagementWidget.REVERSE_CLICKED, _onInfobarReverseGridClicked)
 				.on(GridManagementWidget.LEFT_ARROW_CLICKED, _onInfobarLeftArrowClicked)

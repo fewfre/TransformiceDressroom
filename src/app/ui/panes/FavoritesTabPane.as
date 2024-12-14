@@ -35,7 +35,7 @@ package app.ui.panes
 		public function FavoritesTabPane(pGetIfItemDataWorn:Function) {
 			super(5);
 			_getIfItemDataWorn = pGetIfItemDataWorn;
-			this.addInfoBar( new Infobar({ showBackButton:true, gridManagement:{ hideRandomizeLock:true, hideArrows:true } }) )
+			this.addInfobar( new Infobar({ showBackButton:true, gridManagement:{ hideRandomizeLock:true, hideArrows:true } }) )
 				.on(Infobar.BACK_CLICKED, function(e):void{ dispatchEvent(new Event(Event.CLOSE)); });
 			infobar.changeImage(new $HeartFull())
 			infobar.on(GridManagementWidget.RANDOMIZE_CLICKED, _onRandomizeClicked);

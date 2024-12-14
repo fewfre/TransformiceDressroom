@@ -38,7 +38,8 @@ package app.world.elements
 		private var _dragging:Boolean = false;
 		private var _dragBounds:Rectangle;
 
-		private var _itemDataMap:Dictionary;
+		private var _itemDataMap:Dictionary; // { [ItemType]: ItemData }
+		private var _itemLockMap:Dictionary; // { [ItemType]: Boolean }
 
 		// Properties
 		public function set scale(pVal:Number) : void { outfit.scaleX = outfit.scaleY = pVal; }
@@ -64,6 +65,7 @@ package app.world.elements
 			for each(var item:ItemData in pWornItems) {
 				_itemDataMap[item.type] = item;
 			}
+			_itemLockMap = new Dictionary();
 			
 			if(pParams) parseParams(pParams);
 
@@ -144,6 +146,18 @@ package app.world.elements
 		}
 
 		/////////////////////////////
+		// ItemType Locked
+		/////////////////////////////
+		public function isItemTypeLocked(pType:ItemType) : Boolean {
+			return !!_itemLockMap[pType];
+		}
+		
+		public function setItemTypeLock(pType:ItemType, pLocked:Boolean) : void {
+			_itemLockMap[pType] = pLocked;
+			// no need to update pose as this has no direct effect on character, only controlling what changes can be made to it
+		}
+
+		/////////////////////////////
 		// Share Code
 		/////////////////////////////
 		public function parseParams(pCode:String) : Boolean {
@@ -201,6 +215,7 @@ package app.world.elements
 			return true;
 		}
 		private function _setParamToType(pParams:URLVariables, pType:ItemType, pParam:String, pAllowNull:Boolean=true) {
+			if(isItemTypeLocked(pType)) return;
 			// try {
 				var tData:ItemData = null, tID = pParams[pParam], tColors;
 				if(tID != null && tID != "") {
@@ -235,6 +250,7 @@ package app.world.elements
 			return true;
 		}
 		private function _setParamToTypeTfmOfficialSyntax(pType:ItemType, pParamVal:String, pAllowNull:Boolean=true) {
+			if(isItemTypeLocked(pType)) return;
 			try {
 				var tData:ItemData = null, tID:String = pParamVal, tColors;
 				if(tID != null && tID != "") {
