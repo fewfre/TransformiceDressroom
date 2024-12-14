@@ -3,6 +3,7 @@
 - Locked item categories now show a lock icon on their respective tab button
 - [Code] Rewrote `ShopTabList` to be more dynamic
 - [Bug] Changed code using stage width/height to use a new constant to avoid an issue where things would be placed offscreen
+- [Bug] Fixed Export/Import buttons on outfit manager
 
 
 ## V1.29h - 22 August 2024

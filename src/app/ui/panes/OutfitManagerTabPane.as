@@ -214,7 +214,7 @@ package app.ui.panes
 		/****************************
 		* Events
 		*****************************/
-		private function _onExportClicked(e:MouseEvent) : void {
+		private function _onExportClicked(e:Event) : void {
 			var looks:Array = Fewf.sharedObject.getData(ConstantsApp.SHARED_OBJECT_KEY_OUTFITS) || [];
 			var csv:String = looks.join('\n');
 			
@@ -223,7 +223,7 @@ package app.ui.panes
 			( new FileReference() ).save( bytes, "saved-outfits-backup.csv" );
 		}
 		
-		private function _onImportClicked(e:MouseEvent) : void {
+		private function _onImportClicked(e:Event) : void {
 			var fileRef : FileReference = new FileReference();
 			fileRef.addEventListener(Event.SELECT, function(){ fileRef.load(); });
 			fileRef.addEventListener(Event.COMPLETE, _onImportSelected);
