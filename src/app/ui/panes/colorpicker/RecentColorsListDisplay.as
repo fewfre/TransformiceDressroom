@@ -98,7 +98,7 @@ package app.ui.panes.colorpicker
 		}
 		
 		private function _createColorButton(pColor:int, pWidth:Number) : ColorButton {
-			var btn:ColorButton = new ColorButton({ width:pWidth, height:17, color:pColor });
+			var btn:ColorButton = new ColorButton(pColor, pWidth, 17);
 			if(isDeleteModeOn) {
 				var nou:Sprite = DisplayWrapper.wrap(new $No(), btn).toScale(0.2).toAlpha(0).asSprite;
 				btn.addEventListener(ButtonBase.OVER, function(){ nou.alpha = 0.5 });

@@ -71,8 +71,8 @@ package app.ui.panes
 			
 			sizex = 26; sizey = 18;
 			// Default Blue/Pink Shaman color buttons
-			new ColorButton({ color:0x95D9D6, x:xx - (sizex*0.5+3), y:yy + sizey*0.5 + 35, width:sizex, height:sizey }).appendTo(this).onButtonClick(function(e:FewfEvent){ dispatchEvent(new FewfEvent(SHAMAN_COLOR_PICKED, e.data)); });
-			new ColorButton({ color:0xFCA6F1, x:xx + (sizex*0.5+3), y:yy + sizey*0.5 + 35, width:sizex, height:sizey }).appendTo(this).onButtonClick(function(e:FewfEvent){ dispatchEvent(new FewfEvent(SHAMAN_COLOR_PICKED, e.data)); });
+			new ColorButton(0x95D9D6, sizex, sizey).move(xx - (sizex*0.5+3), yy + sizey*0.5 + 35).appendTo(this).onButtonClick(function(e:FewfEvent){ dispatchEvent(new FewfEvent(SHAMAN_COLOR_PICKED, e.data)); });
+			new ColorButton(0xFCA6F1, sizex, sizey).move(xx + (sizex*0.5+3), yy + sizey*0.5 + 35).appendTo(this).onButtonClick(function(e:FewfEvent){ dispatchEvent(new FewfEvent(SHAMAN_COLOR_PICKED, e.data)); });
 			
 			// Line
 			yy = shamanAreaHeight+2;

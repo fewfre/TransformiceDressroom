@@ -48,17 +48,17 @@ package app.ui
 			/********************
 			* Download Button
 			*********************/
-			var tDownloadTray:FrameBase = new FrameBase({ x:-bg.width*0.5 + 33, y:9, width:66, height:66, origin:0.5 }).appendTo(this);
+			var tDownloadTray:FrameBase = new FrameBase(66, 66).move(-bg.width*0.5 + 33, 9).appendTo(this);
 			
 			_downloadButton = new SpriteButton({ size:46, obj:new $LargeDownload(), origin:0.5 })
 				.onButtonClick(dispatchEventHandler(SAVE_CLICKED))
-				.appendTo(tDownloadTray) as SpriteButton;
+				.appendTo(tDownloadTray.root) as SpriteButton;
 			
 			/********************
 			* Toolbar Buttons
 			*********************/
 			var tTray:Sprite = bg.addChild(new Sprite()) as Sprite;
-			var tTrayWidth = bg.width - tDownloadTray.Width;
+			var tTrayWidth = bg.width - tDownloadTray.width;
 			tTray.x = -(bg.width*0.5) + (tTrayWidth*0.5) + (bg.width - tTrayWidth);
 			
 			var tButtonSize = 28, tButtonSizeSpace=5, tButtonXInc=tButtonSize+tButtonSizeSpace;

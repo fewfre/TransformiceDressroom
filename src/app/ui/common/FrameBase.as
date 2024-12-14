@@ -1,51 +1,53 @@
 package app.ui.common
 {
-	import com.fewfre.utils.*;
-	import flash.display.*;
+	import flash.display.Sprite;
 	import flash.geom.Rectangle;
-	import flash.geom.Matrix;
-	
-	public class FrameBase extends Sprite
+	import flash.display.DisplayObject;
+	import flash.display.MovieClip;
+
+	public class FrameBase
 	{
+		// Constants
+		private static const CORNER_PADDING : Number = 28;
+		
 		// Storage
-		private var _image:MovieClip;
-		public var Width:Number;
-		public var Height:Number;
-		public var originX:Number;
-		public var originY:Number;
+		private var _root    : Sprite;
+		private var _image   : Sprite;
+		
+		private var _width   : Number;
+		private var _height  : Number;
+		private var _originX : Number = 0.5;
+		private var _originY : Number = 0.5;
+		
+		public function get root():Sprite { return _root };
+		public function get width():Number { return _width };
+		public function get height():Number { return _height };
 		
 		// Constructor
-		// pData = { x:Number, y:Number, width:Number, height:Number, ?origin:Number, ?originX:Number=0, ?originY:Number=0 }
-		public function FrameBase(pData:Object)
-		{
-			super();
+		public function FrameBase(pWidth:Number, pHeight:Number) {
+			_root = new Sprite();
+			_width = pWidth;
+			_height = pHeight;
 			
-			this.x = pData.x;
-			this.y = pData.y;
-			Width = pData.width;
-			Height = pData.height;
-			originX = 0;
-			originY = 0;
-			if(pData.origin != null) {
-				originX = pData.origin;
-				originY = pData.origin;
-			}
-			if(pData.originX != null) { originX = pData.originX; }
-			if(pData.originY != null) { originY = pData.originY; }
-			_image = addChild( new $FenetreBase() ) as MovieClip;
-			var tCornerPadding = 28;
-			_image.scale9Grid = new Rectangle(tCornerPadding, tCornerPadding, 172-(tCornerPadding*2), 128-(tCornerPadding*2));
+			_image = _root.addChild( new $FenetreBase() ) as Sprite;
+			_image.scale9Grid = new Rectangle(CORNER_PADDING, CORNER_PADDING, 172-(CORNER_PADDING*2), 128-(CORNER_PADDING*2));
 			
 			_render();
 		}
-		public function move(pX:Number, pY:Number) : FrameBase { this.x = pX; this.y = pY; return this; }
-		public function appendTo(pParent:Sprite): FrameBase { pParent.addChild(this); return this; }
+		public function move(pX:Number, pY:Number) : FrameBase { _root.x = pX; _root.y = pY; return this; }
+		public function appendTo(pParent:Sprite): FrameBase { pParent.addChild(_root); return this; }
+		public function toOrigin(pX:Number, pY:Object=null) : FrameBase {
+			_originX = pX; _originY = pY != null ? pY as Number : pX; // if no originY, then set both to originX value
+			_render();
+			return this;
+		}
 		
 		private function _render() : void {
-			_image.x = 0 - (Width * originX);
-			_image.y = 0 - (Height * originY);
-			_image.scaleX = Width /_image.width;
-			_image.scaleY = Height / _image.height;
+			_image.x = 0 - (_width * _originX);
+			_image.y = 0 - (_height * _originY);
+			_image.scaleX = _image.scaleY = 1; // Reset back to 1, so that image width/height below return expected values for calculations
+			_image.scaleX = _width /_image.width;
+			_image.scaleY = _height / _image.height;
 		}
 	}
 }

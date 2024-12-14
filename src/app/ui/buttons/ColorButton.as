@@ -11,10 +11,10 @@ package app.ui.buttons
 		// Storage
 		private var _color : int;
 		
-		public var Width:Number;
-		public var Height:Number;
-		public var originX:Number;
-		public var originY:Number;
+		public var Width : Number;
+		public var Height : Number;
+		private var _originX : Number = 0.5;
+		private var _originY : Number = 0.5;
 		
 		private var _selected : Boolean;
 		private var _borderColor : uint;
@@ -33,28 +33,28 @@ package app.ui.buttons
 		public function set selected(pVal:Boolean) : void { _selected = pVal; _render(); }
 		
 		// Constructor
-		// pData = { color:int, x?:Number, y?:Number,
-		//           width:Number, height:Number, OR size:Number,
-		//           ?origin:Number=0.5, ?originX:Number, ?originY:Number }
-		public function ColorButton(pData:Object) {
+		public function ColorButton(pColor:*, pWidth:Number, pHeight:Number) {
 			// If string assume it's hex string ("FF00CC") - if not it's an int (0xFF00CC)
-			_color = pData.color is String ? parseInt(pData.color, color) : pData.color;
-			pData.data = _color;
+			_color = pColor is String ? parseInt(pColor, color) : pColor;
 			
-			Width = pData.width != null ? pData.width : pData.size;
-			Height = pData.height != null ? pData.height : pData.size;
-			originX = pData.originX != null ? pData.originX : (pData.origin != null ? pData.origin : 0.5);
-			originY = pData.originY != null ? pData.originY : (pData.origin != null ? pData.origin : 0.5);
+			Width = pWidth;
+			Height = pHeight;
 			
 			_baseBorderRadius = Math.min(Width, Height) / 3;
 			
-			super(pData);
+			super({ width:Width, height:Height, data:_color });
+		}
+		public function toOrigin(pX:Number, pY:Object=null) : ColorButton {
+			_originX = pX; _originY = pY != null ? pY as Number : pX; // if no originY, then set both to originX value
+			_render();
+			return this;
 		}
 		
-		public function setColor(color:int) : void {
+		public function setColor(color:int) : ColorButton {
 			_color = color;
 			_returnData = _color;
 			_render();
+			return this;
 		}
 		
 		// Default dispatch is a bit buggy when `0` is passed, so manually throwing event
@@ -66,8 +66,8 @@ package app.ui.buttons
 		* Render
 		*****************************/
 		protected function _render() : void {
-			var tX:Number = 0 - (Width * originX);
-			var tY:Number = 0 - (Height * originY);
+			var tX:Number = 0 - (Width * _originX);
+			var tY:Number = 0 - (Height * _originY);
 			var tBorderWidth:Number = _selected ? 2 : 1;
 			var tBorderColor:uint = _selected ? 0xFFFFFF : _borderColor;
 			
@@ -115,6 +115,13 @@ package app.ui.buttons
 			_borderColor = 0x555555;
 			_selected = false;
 			_render();
+		}
+		
+		/////////////////////////////
+		// Static
+		/////////////////////////////
+		public static function square(pColor:int, pSize:Number) : ColorButton {
+			return new ColorButton(pColor, pSize, pSize);
 		}
 	}
 }

@@ -60,7 +60,7 @@ package app.ui.panes.colorpicker
 				var btnSize = 70, spacing = 10, columns = 3,
 				xx = -(btnSize+spacing) * (columns-1)/2, yy = -(btnSize+spacing) * (columns-1)/2;
 				for(var i = 0; i < length; i++) {
-					new ColorButton({ color:colors[i], size:btnSize }).appendTo(this)
+					ColorButton.square(colors[i], btnSize).appendTo(this)
 						.move(xx+((i%columns) * (btnSize+spacing)), yy+(Math.floor(i/columns)*(btnSize+spacing)))
 						.onButtonClick(_onHistoryColorClicked);
 				}
