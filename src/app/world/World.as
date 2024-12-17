@@ -640,14 +640,27 @@ package app.world
 		private function _goToItem(pItemData:ItemData) : void {
 			var itemType:ItemType = pItemData.type;
 			
-			shopTabs.toggleTabOn(WorldPaneManager.itemTypeToId(itemType));
-			var tPane:ShopCategoryPane = getShopPane(itemType);
-			var itemBttn:PushButton = tPane.toggleGridButtonWithData( character.getItemData(itemType), true );
+			// These are special types that don't have thier own unique panes
+			if([ItemType.BACK, ItemType.PAW_BACK, ItemType.OBJECT].indexOf(itemType) > -1) {
+				shopTabs.toggleTabOn(WorldPaneManager.OTHER_PANE);
+				character.setItemData(pItemData);
+				_panes.otherPane.updateButtonsBasedOnCurrentData();
+				return;
+			}
+			
+			if(itemType == ItemType.EMOJI) {
+				shopTabs.toggleTabOn(WorldPaneManager.OTHER_PANE);
+				_panes.openShopPane(ItemType.EMOJI);
+			} else {
+				shopTabs.toggleTabOn(WorldPaneManager.itemTypeToId(itemType));
+			}
+			getShopPane(itemType).toggleGridButtonWithData( character.getItemData(itemType), true );
 		}
 		
 		private function _goToItemColorPicker(pItemData:ItemData) : void {
 			_goToItem(pItemData);
-			if(getShopPane(pItemData.type).infobar.colorWheelEnabled) _colorButtonClicked(pItemData.type);
+			var tPane:ShopCategoryPane = getShopPane(pItemData.type);
+			if(tPane && tPane.infobar && tPane.infobar.colorWheelEnabled) _colorButtonClicked(pItemData.type);
 		}
 		
 		//{REGION Screen Logic

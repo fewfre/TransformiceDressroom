@@ -50,8 +50,7 @@ package app.ui.panes
 		private function _renderItems() : void {
 			resetGrid();
 			
-			_addItemButton( _character.getItemData(ItemType.SKIN) );
-			for each(var itemType:ItemType in ItemType.LOOK_CODE_ITEM_ORDER) {
+			for each(var itemType:ItemType in ItemType.ALL) {
 				if(itemType === null) { continue; }
 				_addItemButton( _character.getItemData(itemType) );
 			}
@@ -59,7 +58,8 @@ package app.ui.panes
 		}
 		
 		public function _addItemButton(itemData:ItemData) : void {
-			if(!itemData) { return; }
+			// If no item data OR item is default pose (since pointless too, plus the skin will already show the default pose) don't add a button 
+			if(!itemData || itemData.matches(GameAssets.defaultPose)) { return; }
 			var shopItem : MovieClip = GameAssets.getColoredItemImage(itemData);
 			shopItem.scaleX = shopItem.scaleY = 2;
 
