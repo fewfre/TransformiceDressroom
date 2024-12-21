@@ -199,6 +199,7 @@ package app.world
 				.on(OtherTabPane.CUSTOM_SHAMAN_COLOR_CLICKED, function(e:Event):void{ _shamanColorButtonClicked(); })
 				.on(OtherTabPane.SHAMAN_COLOR_PICKED, function(e:FewfEvent):void{ _setConfigShamanColor(e.data as int); })
 				.on(OtherTabPane.ITEM_TOGGLED, _otherTabItemToggled)
+				.on(OtherTabPane.EYE_DROPPER_CLICKED, function(e:FewfEvent){ _openColorFinderWithItemData(e.data.itemData); })
 				.on(OtherTabPane.FILTER_MODE_CLICKED, function(e:Event){ _getAndOpenItemFilteringPane(); })
 				.on(OtherTabPane.EMOJI_CLICKED, function(e:Event){ _panes.openShopPane(ItemType.EMOJI); });
 			
@@ -592,7 +593,7 @@ package app.world
 		}
 
 		private function _removeItem(pType:ItemType) : void {
-			if(pType == ItemType.BACK || pType == ItemType.PAW_BACK || pType == ItemType.OBJECT) {
+			if(ItemType.OTHER_PANE_ITEM_TYPES.indexOf(pType) > -1) {
 				this.character.removeItem(pType);
 			}
 			var tPane:ShopCategoryPane = getShopPane(pType);
@@ -641,7 +642,7 @@ package app.world
 			var itemType:ItemType = pItemData.type;
 			
 			// These are special types that don't have thier own unique panes
-			if([ItemType.BACK, ItemType.PAW_BACK, ItemType.OBJECT].indexOf(itemType) > -1) {
+			if(ItemType.OTHER_PANE_ITEM_TYPES.indexOf(itemType) > -1) {
 				shopTabs.toggleTabOn(WorldPaneManager.OTHER_PANE);
 				character.setItemData(pItemData);
 				_panes.otherPane.updateButtonsBasedOnCurrentData();
@@ -801,17 +802,23 @@ package app.world
 
 			private function _eyeDropButtonClicked(pType:ItemType) : void {
 				if(this.character.getItemData(pType) == null) { return; }
-
 				var tData:ItemData = getShopPane(pType).infobar.itemData;
-				var tItem:MovieClip = GameAssets.getColoredItemImage(tData);
-				var tItem2:MovieClip = GameAssets.getColoredItemImage(tData);
-				_panes.colorFinderPane.infobar.addInfo( tData, tItem );
-				this.currentlyColoringType = pType;
+				_openColorFinderWithItemData(tData);
+			}
+			private function _openColorFinderWithItemData(pItemData:ItemData) : void {
+				var tItem:MovieClip = GameAssets.getColoredItemImage(pItemData);
+				var tItem2:MovieClip = GameAssets.getColoredItemImage(pItemData);
+				_panes.colorFinderPane.infobar.addInfo( pItemData, tItem );
+				this.currentlyColoringType = pItemData.type;
 				_panes.colorFinderPane.setItem(tItem2);
 				_panes.openPane(WorldPaneManager.COLOR_FINDER_PANE);
 			}
 
 			private function _onColorFinderBackClicked(pEvent:Event):void {
+				if(ItemType.OTHER_PANE_ITEM_TYPES.indexOf(_panes.colorFinderPane.infobar.itemData.type) > -1) {
+					_panes.openPane(WorldPaneManager.OTHER_PANE);
+					return;
+				}
 				_panes.openShopPane(_panes.colorFinderPane.infobar.itemData.type);
 			}
 

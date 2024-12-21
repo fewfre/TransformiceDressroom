@@ -38,6 +38,8 @@ package app.data
 		public static const LOOK_CODE_ITEM_ORDER : Vector.<ItemType> = new <ItemType>[
 			HEAD, EYES, EARS, MOUTH, NECK, HAIR, TAIL, CONTACTS, HAND, null, null, TATTOO];
 		
+		public static const OTHER_PANE_ITEM_TYPES : Vector.<ItemType> = new <ItemType>[BACK, OBJECT, PAW_BACK];
+		
 		// Enum Storage + Constructor
 		private var _value: String;
 		private var _num: int;

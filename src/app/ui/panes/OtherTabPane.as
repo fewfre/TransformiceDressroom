@@ -20,13 +20,15 @@ package app.ui.panes
 		public static const ITEM_TOGGLED:String = "item_toggled"; // FewfEvent<{ type:ItemType, itemData:ItemData|null }>
 		public static const FILTER_MODE_CLICKED:String = "filter_mode_clicked";
 		public static const EMOJI_CLICKED:String = "emoji_clicked";
+		public static const EYE_DROPPER_CLICKED:String = "eye_dropper_clicked"; // FewfEvent<{ itemData:ItemData }>
 		
 		// Storage
 		private var _character       : Character;
 		
-		private var _frontHandButton : PushButton;
-		private var _backHandButton  : PushButton;
-		private var _backItemButtons : Vector.<PushButton>;
+		private var _frontHandButton  : PushButton;
+		private var _backHandButton   : PushButton;
+		private var _backItemButtons  : Vector.<PushButton>;
+		private var _eyeDropperButton : SpriteButton;
 		
 		private var _shamanButtons   : Vector.<PushButton>;
 		private var _disableSkillsModeButton : PushButton;
@@ -44,7 +46,7 @@ package app.ui.panes
 			/////////////////////////////
 			// Shaman Section
 			/////////////////////////////
-			var shamanAreaHeight:Number = 82;
+			var shamanAreaHeight:Number = 82
 			// Shaman options
 			sizex = 80; sizey = 40; spacingx = sizex + 10; xx = 10 - spacingx;
 			
@@ -94,7 +96,9 @@ package app.ui.panes
 						if(bttn.data.id != e.data.id) bttn.toggleOff(false);
 					}
 				});
-				bttn.on(PushButton.TOGGLE, _onItemToggled);
+				bttn.onToggle(_onItemToggled)
+					.on(MouseEvent.MOUSE_OVER, _onItemHoverInShowEyeDropper)
+					.on(MouseEvent.MOUSE_OUT, _onItemHoverOutHideEyeDropper);
 				grid.add(bttn);
 				_backItemButtons.push(bttn);
 			}
@@ -103,12 +107,23 @@ package app.ui.panes
 			grid = new Grid(385, 5).move(xx, yy).appendTo(this);
 			
 			_frontHandButton = new PushButton({ size:grid.cellSize, obj:new GameAssets.extraObjectWand.itemClass(), obj_scale:1.5, data:{ itemData:GameAssets.extraObjectWand } });
-			_frontHandButton.onToggle(_onItemToggled);
+			_frontHandButton.onToggle(_onItemToggled)
+				.on(MouseEvent.MOUSE_OVER, _onItemHoverInShowEyeDropper)
+				.on(MouseEvent.MOUSE_OUT, _onItemHoverOutHideEyeDropper);
 			grid.add(_frontHandButton);
 			
 			_backHandButton = new PushButton({ size:grid.cellSize, obj:new GameAssets.extraBackHand.itemClass(), obj_scale:1.5, data:{ itemData:GameAssets.extraBackHand } });
-			_backHandButton.onToggle(_onItemToggled);
+			_backHandButton.onToggle(_onItemToggled)
+				.on(MouseEvent.MOUSE_OVER, _onItemHoverInShowEyeDropper)
+				.on(MouseEvent.MOUSE_OUT, _onItemHoverOutHideEyeDropper);
 			grid.add(_backHandButton);
+			
+			// Eye dropper button
+			_eyeDropperButton = SpriteButton.withObject(new $EyeDropper(), 0.35, { size:16 }).appendTo(this) as SpriteButton;
+			_eyeDropperButton.onButtonClick(function():void { dispatchEvent(new FewfEvent(EYE_DROPPER_CLICKED, { itemData:_eyeDropperButton.data.itemData })); })
+				.on(MouseEvent.MOUSE_OVER, function(e:Event){ _eyeDropperButton.enable().alpha = 1; })
+				.on(MouseEvent.MOUSE_OUT, function(e:Event){ _eyeDropperButton.disable().alpha = 0; })
+			_eyeDropperButton.disable().alpha = 0;
 			
 			/////////////////////////////
 			// Bottom Buttons
@@ -233,6 +248,17 @@ package app.ui.panes
 			_character.updatePose();
 			_updateHead();
 			
+		}
+		
+		private function _onItemHoverInShowEyeDropper(e:Event) : void {
+			var tTargetButton:PushButton = e.target as PushButton;
+			_eyeDropperButton.enable().alpha = 1;
+			_eyeDropperButton.move(tTargetButton.parent.x + tTargetButton.x + tTargetButton.Width - _eyeDropperButton.Width, tTargetButton.parent.y + tTargetButton.y + 1);
+			_eyeDropperButton.setData({ itemData: tTargetButton.data.itemData });
+		}
+		
+		private function _onItemHoverOutHideEyeDropper(e:Event) : void {
+			_eyeDropperButton.disable().alpha = 0;
 		}
 		
 		private function _onItemToggled(e:FewfEvent) : void {

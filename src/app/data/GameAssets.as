@@ -62,8 +62,8 @@ function(){ contacts = _setupCostumeList(ItemType.CONTACTS, "$Costume_7_", { ite
 function(){ hands = _setupCostumeList(ItemType.HAND, "$Costume_8_", { itemClassToClassMap:"Gant_1" }); },
 function(){ tattoo = _setupCostumeList(ItemType.TATTOO, "$Costume_11_", { itemClassToClassMap:"CuisseD_1" }); },
 function(){
-	extraObjectWand = new ItemData(ItemType.OBJECT, null, { itemClass:Fewf.assets.getLoadedClass("$Costume_9_1"), classMap:{ Arme_1:Fewf.assets.getLoadedClass("$Costume_9_1") } });
-	extraBackHand = new ItemData(ItemType.PAW_BACK, null, { itemClass:$HandButtonShield, classMap:{ PatteG_1:$HandButtonShield } });
+	extraObjectWand = new ItemData(ItemType.OBJECT, 'wand', { itemClass:Fewf.assets.getLoadedClass("$Costume_9_1"), classMap:{ Arme_1:Fewf.assets.getLoadedClass("$Costume_9_1") } });
+	extraBackHand = new ItemData(ItemType.PAW_BACK, 'button', { itemClass:$HandButtonShield, classMap:{ PatteG_1:$HandButtonShield } });
 	extraBack = new <ItemData>[
 		new ItemData(ItemType.BACK, 'frm', { itemClass:FromageSouris, classMap:{ ClipGrosse:FromageSouris } }),
 		new ItemData(ItemType.BACK, 'stnk', { itemClass:FromageSourisPasFrais, classMap:{ ClipGrosse:FromageSourisPasFrais } }),
