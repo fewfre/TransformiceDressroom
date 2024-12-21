@@ -5,6 +5,7 @@
 - [Code] Rewrote `ShopTabList` to be more dynamic
 - [Bug] Changed code using stage width/height to use a new constant to avoid an issue where things would be placed offscreen
 - [Bug] Fixed Export/Import buttons on outfit manager
+- [20 Dec] Added new "Epice" cheese back item
 
 
 ## V1.29h - 22 August 2024
