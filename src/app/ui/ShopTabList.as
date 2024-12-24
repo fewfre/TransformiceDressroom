@@ -4,6 +4,7 @@ package app.ui
 	import com.fewfre.events.FewfEvent;
 	import flash.display.Sprite;
 	import app.data.ConstantsApp;
+	import flash.display.Shape;
 
 	public class ShopTabList
 	{
@@ -20,6 +21,7 @@ package app.ui
 		private var _bg: RoundRectangle;
 		private var _tabs: Vector.<TabButton> = new Vector.<TabButton>();
 		private var _buttonLayer: Sprite;
+		private var _itemIdicatorLayer: Sprite;
 		private var _buttonWidth: Number;
 		
 		// Properties
@@ -34,6 +36,7 @@ package app.ui
 			_buttonWidth = pWidth-MARGIN_X*2;
 			_bg = new RoundRectangle(pWidth, pHeight).toOrigin(0).appendTo(_root).drawAsTray();
 			_tabs = new Vector.<TabButton>();
+			_itemIdicatorLayer = new Sprite(); _root.addChild(_itemIdicatorLayer);
 			_buttonLayer = new Sprite(); _root.addChild(_buttonLayer);
 		}
 		public function move(pX:Number, pY:Number) : ShopTabList { this.x = pX; this.y = pY; return this; }
@@ -47,10 +50,12 @@ package app.ui
 		public function reset() : void {
 			_tabs = new Vector.<TabButton>();
 			_buttonLayer.removeChildren();
+			_itemIdicatorLayer.removeChildren();
 		}
 		
 		public function addTab(pText:String, pId:String) : TabButton {
-			var bttn:TabButton = new TabButton(_buttonWidth, MAX_BUTTON_HEIGHT, pText, pId);
+			var tItemIndicator:Shape = new Shape(); _itemIdicatorLayer.addChild(tItemIndicator);
+			var bttn:TabButton = new TabButton(_buttonWidth, MAX_BUTTON_HEIGHT, pText, pId, tItemIndicator);
 			bttn.onToggle(_onTabClicked).appendTo(_buttonLayer);
 			_tabs.push(bttn);
 			_render();
@@ -115,17 +120,21 @@ package app.ui
 
 import app.ui.buttons.PushButton;
 import com.fewfre.display.DisplayWrapper;
-import app.data.ConstantsApp;
 import flash.display.Shape;
-import com.fewfre.utils.Fewf;
-import flash.display.Bitmap;
+import flash.display.Graphics;
+import com.fewfre.display.ButtonBase;
 class TabButton extends PushButton {
 	private var _lock:DisplayWrapper;
+	private var _itemIndicator:DisplayWrapper;
 	
-	public function TabButton(pWidth:Number, pHeight:Number, pText:String, pId:String) {
+	public function TabButton(pWidth:Number, pHeight:Number, pText:String, pId:String, pItemIndicator:Shape) {
 		super({ width:pWidth, height:pHeight });
 		setData({ id:pId });
 		setAllowToggleOff(false);
+		
+		_itemIndicator = new DisplayWrapper(pItemIndicator);
+		_renderItemIndicator();
+		setItemIndicator(false);
 		
 		_lock = DisplayWrapper.wrap(new $Lock(), this).move(2, 2).toScale(0);
 		setLocked(false);
@@ -134,8 +143,33 @@ class TabButton extends PushButton {
 		_renderUp();
 	}
 	
+	override protected function _rerenderChildren() : void {
+		super._rerenderChildren();
+		if(_itemIndicator) _renderItemIndicator();
+	}
+	// Hacky way to make sure item indicator position gets updated when button moved
+	override public function move(pX:Number, pY:Number) : ButtonBase { super.move(pX, pY); _renderItemIndicator(); return this; }
+	
 	public function setLocked(pOn:Boolean) : TabButton {
 		_lock.toScale(pOn ? 0.6 : 0);
 		return this;
+	}
+	
+	public function setItemIndicator(pOn:Boolean) : TabButton {
+		_itemIndicator.toAlpha(pOn ? 1 : 0);
+		return this;
+	}
+
+	///////////////////////
+	// Private
+	///////////////////////
+	private function _renderItemIndicator() : void {
+		// Have to use this.x/y since item indicator isn't actually attached to the button, to avoid it messing with mouse events
+		_itemIndicator.move(this.x + Width+2.75, this.y + Height/2).draw(function(g:Graphics):void{
+			var hh:Number = Height*0.4;
+			g.clear();
+			g.lineStyle(1.5, 0xFFFFFF, 0.5);
+			g.moveTo(0, -hh/2); g.lineTo(0, hh/2);
+		})
 	}
 }

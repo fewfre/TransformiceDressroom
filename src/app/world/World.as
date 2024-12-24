@@ -250,7 +250,7 @@ package app.world
 			tPane.infobar.on(GridManagementWidget.RANDOMIZE_CLICKED, function(){ _randomItemOfType(pType); });
 			tPane.infobar.on(GridManagementWidget.RANDOMIZE_LOCK_CLICKED, function(e:FewfEvent){
 				character.setItemTypeLock(pType, e.data.locked);
-				shopTabs.getTabButton(WorldPaneManager.itemTypeToId(pType)).setLocked(e.data.locked);
+				_updateTabListLockByItemType(pType);
 			});
 			return tPane;
 		}
@@ -294,7 +294,7 @@ package app.world
 					if(type == ItemType.EMOJI || !_shouldShowShopTab(type)) continue;
 					// Some i18n ids don't match the type string, so manually handling it here
 					var i18nStr : String = type == ItemType.SKIN ? 'furs' : type == ItemType.HAND ? 'hand' : type == ItemType.POSE ? 'poses' : type.toString();
-					shopTabs.addTab("tab_"+i18nStr, WorldPaneManager.itemTypeToId(type)).setLocked(character.isItemTypeLocked(type));
+					shopTabs.addTab("tab_"+i18nStr, WorldPaneManager.itemTypeToId(type));
 					// .addIcon(
 					// 	type == ItemType.SKIN ? "http://www.transformice.com/images/x_transformice/x_interface/x_souris.png?d=855" : 
 					// 	type == ItemType.EYES ? "http://www.transformice.com/images/x_transformice/x_interface/glasses.png?d=855" : 
@@ -309,9 +309,21 @@ package app.world
 					// 	type == ItemType.TATTOO ? "http://www.transformice.com/images/x_transformice/x_interface/tatoo.png?d=855" : 
 					// 	null
 					// );
+					_updateTabListLockByItemType(type);
+					_updateTabListItemIndicatorByType(type);
 				}
 				shopTabs.addTab("tab_other", WorldPaneManager.OTHER_PANE);
 			}
+		}
+		private function _updateTabListLockByItemType(pType:ItemType) {
+			shopTabs.getTabButton(WorldPaneManager.itemTypeToId(pType)).setLocked(character.isItemTypeLocked(pType));
+		}
+		private function _updateTabListItemIndicatorByType(pType:ItemType) {
+			if(pType === ItemType.EMOJI || ItemType.OTHER_PANE_ITEM_TYPES.indexOf(pType) > -1) return;
+			
+			var tItemData:ItemData = character.getItemData(pType);
+			var tHadIndicator:Boolean = !!tItemData && !tItemData.matches(GameAssets.defaultSkin) && !tItemData.matches(GameAssets.defaultPose);
+			shopTabs.getTabButton(WorldPaneManager.itemTypeToId(pType)).setItemIndicator(tHadIndicator);
 		}
 
 		private function _onMouseWheel(pEvent:MouseEvent) : void {
@@ -581,6 +593,7 @@ package app.world
 			} else {
 				_removeItem(tItemData.type);
 			}
+			_updateTabListItemIndicatorByType(tItemData.type);
 		}
 
 		private function _otherTabItemToggled(e:FewfEvent) : void { _toggleItemSelectionOneOff(e.data.type, e.data.itemData); }
@@ -608,6 +621,7 @@ package app.world
 				tPane.infobar.removeInfo();
 				if(tOldData) tPane.getButtonWithItemData(tOldData).toggleOff();
 			}
+			_updateTabListItemIndicatorByType(pType);
 		}
 		
 		private function _onTabClicked(pEvent:FewfEvent) : void {
