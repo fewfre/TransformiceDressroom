@@ -16,6 +16,10 @@ package app.data
 		private static const _MAX_COSTUMES_TO_CHECK_TO:Number = 999;
 		public static const FUR_COLORS:Vector.<uint> = new <uint>[ 0xBD9067, 0x593618, 0x8C887F, 0xDED7CE, 0x4E443A, 0xE3C07E, 0x272220 ];
 		public static const DEFAULT_FUR_COLOR:uint = 0x78583A;
+		
+		// hardcoded skip for duplicate items in game files - TODO: add values to config maybe?
+		private static const DUPLICATES_TO_SKIP:Vector.<Object> = new <Object>[
+			{ type:ItemType.MOUTH, id:"85"} ];
 
 		public static var hair: Vector.<ItemData>;
 		public static var head: Vector.<ItemData>;
@@ -163,8 +167,7 @@ pOnInitComplete
 			var breakCount = 0; // quit early if enough nulls in a row
 			
 			for(var i:int = 0; i <= _MAX_COSTUMES_TO_CHECK_TO; i++) {
-				// hardcoded skip for duplicate items in game files - TODO: add values to config maybe?
-				if(i == 85 && type == ItemType.MOUTH) {
+				if( DUPLICATES_TO_SKIP.some(function(o:Object,_,_):Boolean{ return o.type == type && o.id == i; })) {
 					continue;
 				}
 				
