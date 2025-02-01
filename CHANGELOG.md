@@ -1,5 +1,7 @@
 ## V1.30c - 1 February 2025
 - Added button above scale slider (only appears when hovering over slider) to set character scale to default scale
+- Added gif/webp download buttons in a dropdown when hovering over the top left save button
+	- Removed ".webp" button from "Other" pane, and removed old "download gif when animation is on" logic
 
 
 ## V1.30b - 20 December 2024

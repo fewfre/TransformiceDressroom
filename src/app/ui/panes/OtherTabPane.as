@@ -34,7 +34,6 @@ package app.ui.panes
 		private var _disableSkillsModeButton : PushButton;
 		
 		private var _characterHead   : Character;
-		private var _webpButton      : GameButton;
 		
 		// Constructor
 		public function OtherTabPane(pCharacter:Character) {
@@ -142,12 +141,6 @@ package app.ui.panes
 				.setImage(_characterHead = new Character(new <ItemData>[ GameAssets.defaultSkin, GameAssets.defaultPose ]))
 				.move(353, 315).appendTo(this)
 				.onButtonClick(_onSaveMouseHeadClicked);
-			
-			if(ConstantsApp.ANIMATION_DOWNLOAD_ENABLED) {
-				_webpButton = GameButton.square(70).setTextObject(new TextBase('.webp', { size:16 }))
-					.move(353-70-5, 315).appendTo(this)
-					.onButtonClick(_onSaveAsWebpClicked) as GameButton;
-			}
 			
 			// Lastly, update state based on initial character state
 			updateButtonsBasedOnCurrentData();
@@ -273,13 +266,6 @@ package app.ui.panes
 		
 		private function _onSaveMouseHeadClicked(pEvent:Event) {
 			FewfDisplayUtils.saveAsPNG(_characterHead, 'mouse_head', _character.outfit.scaleX);
-		}
-		
-		private function _onSaveAsWebpClicked(e:Event) {
-			_webpButton.disable();
-			FewfDisplayUtils.saveAsAnimatedGif(_character.copy().outfit.pose, "character", _character.outfit.scaleX, "webp", function(){
-				_webpButton.enable();
-			});
 		}
 	}
 }

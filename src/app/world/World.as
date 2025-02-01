@@ -98,6 +98,8 @@ package app.world
 			/////////////////////////////
 			_toolbox = new Toolbox(character, _onShareCodeEntered).move(188, 28).appendTo(this)
 				.on(Toolbox.SAVE_CLICKED, _onSaveClicked)
+				.on(Toolbox.GIF_CLICKED, function(e:Event):void{ _saveAsAnimation(); })
+				.on(Toolbox.WEBP_CLICKED, function(e:Event):void{ _saveAsAnimation('webp'); })
 				.on(Toolbox.SHARE_CLICKED, _onShareButtonClicked)
 				.on(Toolbox.CLIPBOARD_CLICKED, _onClipboardButtonClicked)
 				
@@ -527,15 +529,17 @@ package app.world
 		}
 
 		private function _onSaveClicked(pEvent:Event) : void {
-			if(ConstantsApp.ANIMATION_DOWNLOAD_ENABLED && isCharacterAnimating()) {
-				// FewfDisplayUtils.saveAsSpriteSheet(this.character.copy().outfit.pose, "spritesheet", this.character.outfit.scaleX);
-				_toolbox.downloadButtonEnable(false);
-				FewfDisplayUtils.saveAsAnimatedGif(this.character.copy().outfit.pose, "character", this.character.outfit.scaleX, null, function(){
-					_toolbox.downloadButtonEnable(true);
-				});
-			} else {
-				FewfDisplayUtils.saveAsPNG(this.character, "character");
-			}
+			FewfDisplayUtils.saveAsPNG(this.character, "character");
+		}
+		
+		private function _saveAsAnimation(pFormat:String=null) : void {
+			if(!ConstantsApp.ANIMATION_DOWNLOAD_ENABLED) return _onSaveClicked(null);
+			
+			// FewfDisplayUtils.saveAsSpriteSheet(this.character.copy().outfit.pose, "spritesheet", this.character.outfit.scaleX);
+			_toolbox.downloadButtonEnable(false);
+			FewfDisplayUtils.saveAsAnimatedGif(this.character.copy().outfit.pose, "character", this.character.outfit.scaleX, pFormat, function(){
+				_toolbox.downloadButtonEnable(true);
+			});
 		}
 		
 		private function _onSaveItemDataAsImage(e:ItemDataEvent) : void {
