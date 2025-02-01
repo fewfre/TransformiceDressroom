@@ -17,7 +17,7 @@ package app.data
 		/****************************
 		* General
 		*****************************/
-		public static const VERSION           : String = "1.30b";
+		public static const VERSION           : String = "1.30c";
 		public static const SOURCE_URL        : String = "https://github.com/fewfre/TransformiceDressroom/blob/master/CHANGELOG.md";
 		public static const DISCORD_URL       : String = "https://discord.gg/DREPH9GqWw";
 		
@@ -26,6 +26,7 @@ package app.data
 		
 		public static const NUM_ITEMS_PER_ROW : int = 7;
 		
+		public static const DEFAULT_CHARACTER_SCALE : Number = 3;
 		public static const ITEM_SAVE_SCALE   : int = 8; // Power of two is probably best
 		
 		public static var CONFIG_TAB_ENABLED: Boolean = true;

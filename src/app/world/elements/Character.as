@@ -77,7 +77,7 @@ package app.world.elements
 		public function copy() : Character { return new Character(null, getParams(), true); }
 
 		public function updatePose() {
-			var tScale = 3, tOldPose:Pose = outfit;
+			var tScale = ConstantsApp.DEFAULT_CHARACTER_SCALE, tOldPose:Pose = outfit;
 			if(outfit != null) { tScale = outfit.scaleX; removeChild(outfit); }
 			outfit = new Pose(getItemData(ItemType.POSE)).appendTo(this);
 			outfit.scaleX = outfit.scaleY = tScale;

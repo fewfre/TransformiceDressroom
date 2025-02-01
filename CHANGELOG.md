@@ -1,3 +1,7 @@
+## V1.30c - 1 February 2025
+- Added button above scale slider (only appears when hovering over slider) to set character scale to default scale
+
+
 ## V1.30b - 20 December 2024
 - Added new "Epice" cheese back item
 - "Other" pane items now have a color picker button (appears on hover)

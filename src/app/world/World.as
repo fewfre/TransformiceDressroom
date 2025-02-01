@@ -102,6 +102,7 @@ package app.world
 				.on(Toolbox.CLIPBOARD_CLICKED, _onClipboardButtonClicked)
 				
 				.on(Toolbox.SCALE_SLIDER_CHANGE, _onScaleSliderChange)
+				.on(Toolbox.DEFAULT_SCALE_CLICKED, _onScaleSliderDefaultClicked)
 				
 				.on(Toolbox.ANIMATION_TOGGLED, _onPlayerAnimationToggle)
 				.on(Toolbox.RANDOM_CLICKED, _onRandomizeDesignClicked)
@@ -348,8 +349,13 @@ package app.world
 			}
 		}
 
-		private function _onScaleSliderChange(pEvent:Event):void {
+		private function _onScaleSliderChange(e:Event):void {
 			character.scale = _toolbox.scaleSlider.value;
+			character.clampCoordsToDragBounds();
+		}
+
+		private function _onScaleSliderDefaultClicked(e:Event):void {
+			character.scale = _toolbox.scaleSlider.value = ConstantsApp.DEFAULT_CHARACTER_SCALE;
 			character.clampCoordsToDragBounds();
 		}
 

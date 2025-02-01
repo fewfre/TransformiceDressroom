@@ -167,7 +167,7 @@ pOnInitComplete
 			var breakCount = 0; // quit early if enough nulls in a row
 			
 			for(var i:int = 0; i <= _MAX_COSTUMES_TO_CHECK_TO; i++) {
-				if( DUPLICATES_TO_SKIP.some(function(o:Object,_,_):Boolean{ return o.type == type && o.id == i; })) {
+				if( DUPLICATES_TO_SKIP.some(function(o:Object,ii,a):Boolean{ return o.type == type && o.id == i; })) {
 					continue;
 				}
 				
