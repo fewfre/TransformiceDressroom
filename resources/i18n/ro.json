@@ -24,6 +24,7 @@
     "user_lookup_title":       { "text":"Căutare nume de utilizator" },
     "user_lookup_placeholder": { "text":"Username#0000" },
     "user_lookup_details":     { "text":"Orice modificare în joc poate lua ceva timp pentru a fi afișată.\nRezultatele pot fi învechite de câteva ore." },
+	"setting_hardcoded_save_size": { "text":"Hardcoded PNG save size (leave blank to auto fit)" },
     
     "btn_normal_mode":         { "text":"Normal" },
     "btn_hard_mode":           { "text":"Dificil" },

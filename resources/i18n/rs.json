@@ -24,6 +24,7 @@
     "user_lookup_title":       { "text":"Pretraživanje po korisničkom imenu" },
     "user_lookup_placeholder": { "text":"Username#0000" },
     "user_lookup_details":     { "text":"Sve interne promene u igri zahtevaju neko vreme,\nda se manifestuje..\nRezultati mogu biti stari nekoliko sati.", "scale":0.9 },
+	"setting_hardcoded_save_size": { "text":"Hardcoded PNG save size (leave blank to auto fit)" },
       
     "btn_normal_mode":         { "text":"Normalno" },
     "btn_hard_mode":           { "text":"Komplex" },

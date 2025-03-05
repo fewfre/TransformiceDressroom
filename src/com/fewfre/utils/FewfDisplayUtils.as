@@ -244,16 +244,16 @@ package com.fewfre.utils
 			saveImageDataToDevice(tBitmapData, pName, 'png');
 		}
 		
-		public static function displayObjectToBitmapDataFixedCanvasSize(pObj:DisplayObject, pSize:Number) : BitmapData {
+		public static function displayObjectToBitmapDataFixedCanvasSize(pObj:DisplayObject, pSize:Number, pOffsetX:Number=0, pOffsetY:Number=0) : BitmapData {
 			var rect:Rectangle = pObj.getBounds(pObj);
 			var tBitmapData:BitmapData = new BitmapData(pSize, pSize, true, 0xFFFFFF);
-			return bitmapDataDrawBestQuality(tBitmapData, pObj, new Matrix(1, 0, 0, 1, pSize/2, pSize/2));
+			return bitmapDataDrawBestQuality(tBitmapData, pObj, new Matrix(1, 0, 0, 1, pSize/2+pOffsetX, pSize/2+pOffsetY));
 		}
 		
 		// Converts the image to a PNG bitmap and prompts the user to save.
-		public static function saveAsPNGWithFixedCanvasSize(pObj:DisplayObject, pName:String, pSize:Number=512) : void {
+		public static function saveAsPNGWithFixedCanvasSize(pObj:DisplayObject, pName:String, pSize:Number, pOffsetX:Number=0, pOffsetY:Number=0) : void {
 			if(!pObj){ return; }
-			var tBitmapData:BitmapData = displayObjectToBitmapDataFixedCanvasSize(pObj, pSize);
+			var tBitmapData:BitmapData = displayObjectToBitmapDataFixedCanvasSize(pObj, pSize, pOffsetX, pOffsetY);
 			saveImageDataToDevice(tBitmapData, pName, "png");
 		}
 		

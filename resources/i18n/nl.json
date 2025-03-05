@@ -24,6 +24,7 @@
     "user_lookup_title":       { "text":"Gebruikersnaam opzoeken" },
     "user_lookup_placeholder": { "text":"Gebruikersnaam#0000" },
     "user_lookup_details":     { "text":"Het duurt even voordat alle wijzigingen in het spel worden weergegeven.\nDe resultaten kunnen een paar uur oud zijn.", "scale":0.9 },
+	"setting_hardcoded_save_size": { "text":"Hardcoded PNG save size (leave blank to auto fit)" },
   
     "btn_normal_mode":         { "text":"Normaal" },
     "btn_hard_mode":           { "text":"Moeilijk" },

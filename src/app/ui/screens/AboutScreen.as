@@ -17,6 +17,7 @@ package app.ui.screens
 	import flash.events.MouseEvent;
 	import flash.net.navigateToURL;
 	import flash.net.URLRequest;
+	import app.ui.common.FancyInput;
 
 	public class AboutScreen extends Sprite
 	{
@@ -62,12 +63,31 @@ package app.ui.screens
 				.onButtonClick(_onDiscordClicked);
 		
 			///////////////////////
+			// Settings
+			///////////////////////
+			DisplayWrapper.wrap(_setupSettingsTray(), this).move(0, 140);
+		
+			///////////////////////
 			// Close Button
 			///////////////////////
 			ScaleButton.withObject(new $WhiteX()).move(tWidth/2 - 5, -tHeight/2 + 5).appendTo(this).onButtonClick(_onCloseClicked);
 		}
 		public function on(type:String, listener:Function): AboutScreen { this.addEventListener(type, listener); return this; }
 		public function off(type:String, listener:Function): AboutScreen { this.removeEventListener(type, listener); return this; }
+		
+		private function _setupSettingsTray() : Sprite {
+			var tTray:Sprite = new Sprite();
+			new RoundRectangle(400, 50).toOrigin(0.5).drawAsTray().appendTo(tTray);
+			
+			var hardcodedCanvasSaveSize:Object = Fewf.sharedObject.getData(ConstantsApp.SHARED_OBJECT_KEY_HARDCODED_CANVAS_SAVE_SIZE);
+			var canvasSizeInput:FancyInput = new FancyInput({ width:360, text:hardcodedCanvasSaveSize, placeholder:"setting_hardcoded_save_size" }).appendTo(tTray);
+			canvasSizeInput.field.restrict = "0-9";
+			canvasSizeInput.field.addEventListener(Event.CHANGE, function(e:Event){
+				var size:Number = parseInt(e.target.text);
+				Fewf.sharedObject.setData(ConstantsApp.SHARED_OBJECT_KEY_HARDCODED_CANVAS_SAVE_SIZE, !size || isNaN(size) ? null : size);
+			});
+			return tTray;
+		}
 		
 		///////////////////////
 		// Public

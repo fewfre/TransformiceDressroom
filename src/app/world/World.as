@@ -529,7 +529,7 @@ package app.world
 		}
 
 		private function _onSaveClicked(pEvent:Event) : void {
-			FewfDisplayUtils.saveAsPNG(this.character, "character");
+			_saveAsPNG(this.character, "character");
 		}
 		
 		private function _saveAsAnimation(pFormat:String=null) : void {
@@ -548,7 +548,18 @@ package app.world
 			var tName:String = "shop-"+itemData.type+itemData.id;
 			var tScale:int = ConstantsApp.ITEM_SAVE_SCALE;
 			if(itemData.type == ItemType.CONTACTS) { tScale *= 2; }
-			FewfDisplayUtils.saveAsPNG(GameAssets.getColoredItemImage(itemData), tName, tScale);
+			_saveAsPNG(GameAssets.getColoredItemImage(itemData), tName, tScale);
+		}
+		
+		private function _saveAsPNG(pObj:DisplayObject, pName:String, pScale:Number = 1) : void {
+			var hardcodedCanvasSaveSize:Object = Fewf.sharedObject.getData(ConstantsApp.SHARED_OBJECT_KEY_HARDCODED_CANVAS_SAVE_SIZE);
+			if(!hardcodedCanvasSaveSize) {
+				FewfDisplayUtils.saveAsPNG(pObj, pName, pScale);
+			} else {
+				var tOffsetY:Number = 0;
+				if(pName === 'character' && pObj is Character) tOffsetY = Math.floor(8*(pObj as Character).outfit.scaleX);
+				FewfDisplayUtils.saveAsPNGWithFixedCanvasSize(pObj, pName, hardcodedCanvasSaveSize as Number, 0, tOffsetY);
+			}
 		}
 
 		private function _onClipboardButtonClicked(e:Event) : void {

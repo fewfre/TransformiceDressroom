@@ -24,6 +24,7 @@
     "user_lookup_title":       { "text":"Wyszukiwanie nazwy użytkownika" },
     "user_lookup_placeholder": { "text":"Nazwa#0000" },
     "user_lookup_details":     { "text":"Wszelkie zmiany w grze pojawią się za jakiś czas.\nWyniki mogą być sprzed kilku godzin." },
+	"setting_hardcoded_save_size": { "text":"Hardcoded PNG save size (leave blank to auto fit)" },
     
     "btn_normal_mode":         { "text":"Normalny" },
     "btn_hard_mode":           { "text":"Trudny" },

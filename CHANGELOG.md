@@ -1,3 +1,7 @@
+## V1.30d - 4 March 2025
+- Added a new "Hardcoded image save size" setting on About screen that lets users save an image at a consistent placement and scale
+
+
 ## V1.30c - 1 February 2025
 - Added button above scale slider (only appears when hovering over slider) to set character scale to default scale
 - Added gif/webp download buttons in a dropdown when hovering over the top left save button

@@ -35,6 +35,8 @@
     "btn_hard_mode":           { "text":"Ťažký" },
     "btn_divine_mode":         { "text":"Božský" },
     "btn_no_skills_mode":      { "text":"Zakázať dovednosti" },
+	
+	"setting_hardcoded_save_size": { "text":"Hardcoded PNG save size (leave blank to auto fit)" },
     
     "tab_config":              { "text":"Config" },
     "tab_head":                { "text":"Hlava" },
