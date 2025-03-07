@@ -1,5 +1,6 @@
 ## V1.30d - 4 March 2025
 - Added a new "Hardcoded image save size" setting on About screen that lets users save an image at a consistent placement and scale
+- (7 Mar) Added new gold cheese
 
 
 ## V1.30c - 1 February 2025
