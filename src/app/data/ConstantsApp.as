@@ -17,7 +17,7 @@ package app.data
 		/****************************
 		* General
 		*****************************/
-		public static const VERSION           : String = "1.30d";
+		public static const VERSION           : String = "1.30e";
 		public static const SOURCE_URL        : String = "https://github.com/fewfre/TransformiceDressroom/blob/master/CHANGELOG.md";
 		public static const DISCORD_URL       : String = "https://discord.gg/DREPH9GqWw";
 		

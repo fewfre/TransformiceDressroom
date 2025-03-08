@@ -317,6 +317,7 @@ package app.world.elements
 		}
 		public function getParamsTfmOfficialSyntax() : String {
 			var tSkinData:SkinData = getItemData(ItemType.SKIN) as SkinData;
+			if(tSkinData.id == "hide") tSkinData = GameAssets.defaultSkin as SkinData; // Official syntax can't support hidden skin, so fallback to default skin
 			var skinId = tSkinData.isSkinColor ? 1 : tSkinData.id;
 			var code:String = skinId+";";
 			

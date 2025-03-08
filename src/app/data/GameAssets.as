@@ -81,6 +81,9 @@ function(){
 function(){
 	skins = new Vector.<ItemData>();
 	
+	skins.push( new SkinData( "hide", null ) );
+	skins[skins.length-1].classMap = {};
+	
 	var i:int;
 	for(i = 0; i < FUR_COLORS.length; i++) {
 		skins.push( new SkinData("color"+i, { assetID:1, color:FUR_COLORS[i], isSkinColor:true }) );
@@ -92,7 +95,8 @@ function(){
 			skins.push( new SkinData(i.toString()) );
 		}
 	}
-	_defaultSkinIndex = 7;//FewfUtils.getIndexFromVectorWithKeyVal(skins, "id", ConstantsApp.DEFAULT_SKIN_ID);
+	
+	_defaultSkinIndex = 8;//FewfUtils.getIndexFromVectorWithKeyVal(skins, "id", ConstantsApp.DEFAULT_SKIN_ID);
 	_defaultSkinForGetItemImage = skins[_defaultSkinIndex].copy(); // We need a copy encase default skin's color is updated
 
 	/*for(var i = 0; i < 7; i++) {
@@ -358,7 +362,12 @@ pOnInitComplete
 			var tItem:MovieClip;
 			switch(pData.type) {
 				case ItemType.SKIN:
-					tItem = getDefaultPoseSetup({ skin:pData });
+					if(pData.id === "hide") {
+						tItem = new MovieClip();
+						tItem.addChild(new DisplayWrapper(new $HideEyeIcon()).toScale(0.1).root);
+					} else {
+						tItem = getDefaultPoseSetup({ skin:pData });
+					}
 					break;
 				case ItemType.POSE:
 					tItem = getDefaultPoseSetup({ pose:pData });
