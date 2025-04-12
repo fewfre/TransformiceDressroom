@@ -76,6 +76,7 @@ function(){
 		new ItemData(ItemType.BACK, 'nounours', { itemClass:FromageSourisNounours, classMap:{ ClipGrosse:FromageSourisNounours } }),
 		new ItemData(ItemType.BACK, 'epice', { itemClass:FromageSourisEpice, classMap:{ ClipGrosse:FromageSourisEpice } }),
 		new ItemData(ItemType.BACK, 'gold', { itemClass:FromageSourisOr, classMap:{ ClipGrosse:FromageSourisOr } }),
+		new ItemData(ItemType.BACK, 'herbe', { itemClass:FromageHerbe, classMap:{ ClipGrosse:FromageHerbe } }),
 	];
 },
 function(){

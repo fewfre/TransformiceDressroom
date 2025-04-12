@@ -1,6 +1,7 @@
 ## V1.30e - 4 March 2025
 - Implemented a request to add an option to hide fur / make it invisible - button appears in the furs list at the bottom (or top if reversed) next to the fur colors
 	- Furs still default to the normal default fur when a fur is unselected/outfit is deleted/etc; invisible option only activates when specifically chosen (or can appear when using randomize)
+- (10 Apr) Added new "Herbe" cheese back item
 
 
 ## V1.30d - 4 March 2025
