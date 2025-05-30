@@ -7,7 +7,6 @@ package app.data
 	import app.world.elements.*;
 	import flash.display.*;
 	import flash.geom.*;
-	import flash.utils.Dictionary;
 	import flash.utils.setTimeout;
 	import com.fewfre.display.DisplayWrapper;
 
@@ -35,8 +34,6 @@ package app.data
 
 		public static var skins: Vector.<ItemData>;
 		public static var poses: Vector.<ItemData>;
-		
-		public static var accessorySlotBones:Dictionary;
 
 		private static var _defaultSkinIndex:int;
 		private static var _defaultPoseIndex:int;
@@ -142,22 +139,6 @@ function(){
 },
 pOnInitComplete
 			]);
-
-			accessorySlotBones = new Dictionary();
-			accessorySlotBones[0]   = new <String>["Tete_1"];
-			accessorySlotBones[1]   = new <String>["OeilVide_1","Oeil2_1","Oeil3_1","Oeil4_1"];
-			accessorySlotBones[2]   = new <String>["OreilleD_1"];
-			accessorySlotBones[3]   = new <String>["Tete_1"];
-			accessorySlotBones[4]   = new <String>["Tete_1"];
-			accessorySlotBones[5]   = new <String>["Tete_1"];
-			accessorySlotBones[6]   = new <String>["Boule_1"];
-			accessorySlotBones[7]   = new <String>["Oeil_1"];
-			accessorySlotBones[8]   = new <String>["Gant_1"];
-			accessorySlotBones[9]   = new <String>["Arme_1"];
-			accessorySlotBones[10]  = new <String>["Bouclier_1"];
-			accessorySlotBones[11]  = new <String>["CuisseD_1","CuisseG_1"];
-			accessorySlotBones[12]  = new <String>["Queue_1"];
-			accessorySlotBones[101] = new <String>["OreilleG_1"];
 		}
 		
 		private static function _doInitSteps(steps:Vector.<Function>) : void {

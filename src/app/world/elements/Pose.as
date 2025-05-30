@@ -6,6 +6,7 @@ package app.world.elements
 	import flash.display.*;
 	import flash.geom.*;
 	import flash.events.Event;
+	import flash.utils.Dictionary;
 	
 	public class Pose extends MovieClip
 	{
@@ -29,6 +30,24 @@ package app.world.elements
 		// boneSpecificItemTypeOrdering["Arme_1"] = new <ItemType>[ ItemType.OBJECT ];//ItemType.WEAPON ];
 		// boneSpecificItemTypeOrdering["Bouclier_1"] = new <ItemType>[ ItemType.PAW_BACK ];//ItemType.SHIELD ];
 		// boneSpecificItemTypeOrdering["Gant_1"] = new <ItemType>[ ItemType.HAND ];
+		
+		
+		public static const accessorySlotBones:Dictionary = new Dictionary();
+		accessorySlotBones[0]   = new <String>["Tete_1"];
+		accessorySlotBones[1]   = new <String>["OeilVide_1","Oeil2_1","Oeil3_1","Oeil4_1"];
+		accessorySlotBones[2]   = new <String>["OreilleD_1"];
+		accessorySlotBones[3]   = new <String>["Tete_1"];
+		accessorySlotBones[4]   = new <String>["Tete_1"];
+		accessorySlotBones[5]   = new <String>["Tete_1"];
+		accessorySlotBones[6]   = new <String>["Boule_1"];
+		accessorySlotBones[7]   = new <String>["Oeil_1"];
+		accessorySlotBones[8]   = new <String>["Gant_1"];
+		accessorySlotBones[9]   = new <String>["Arme_1"];
+		accessorySlotBones[10]  = new <String>["Bouclier_1"];
+		accessorySlotBones[11]  = new <String>["CuisseD_1","CuisseG_1"];
+		accessorySlotBones[12]  = new <String>["Queue_1"];
+		accessorySlotBones[13]  = new <String>["PatteG_1"];
+		accessorySlotBones[101] = new <String>["OreilleG_1"];
 		
 		// Constructor
 		public function Pose(pPoseData:ItemData) {
@@ -216,7 +235,7 @@ package app.world.elements
 					accItemCat = int(nameParts[1]);
 				}
 				
-				var validBoneNamesForItemCat:Vector.<String> = GameAssets.accessorySlotBones[accItemCat];
+				var validBoneNamesForItemCat:Vector.<String> = accessorySlotBones[accItemCat];
 				if(validBoneNamesForItemCat) {
 					for(var bnaI:int = 0; bnaI < validBoneNamesForItemCat.length; bnaI++) {
 						var tBoneMC:MovieClip = _pose.getChildByName(validBoneNamesForItemCat[bnaI]) as MovieClip;

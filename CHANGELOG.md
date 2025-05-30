@@ -1,3 +1,7 @@
+## V1.30f - 29 May 2025
+- Added support for `slot_13` accessory type, which can add parts of an item to back paw
+
+
 ## V1.30e - 4 March 2025
 - Implemented a request to add an option to hide fur / make it invisible - button appears in the furs list at the bottom (or top if reversed) next to the fur colors
 	- Furs still default to the normal default fur when a fur is unselected/outfit is deleted/etc; invisible option only activates when specifically chosen (or can appear when using randomize)
