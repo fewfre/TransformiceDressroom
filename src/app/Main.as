@@ -107,6 +107,7 @@ package app
 			removeChild( _loaderDisplay );
 			_loaderDisplay = null;
 			
+			// Don't remove this reference as at least 1 webhook needs it
 			_world = addChild(new World(stage)) as World;
 		}
 		
