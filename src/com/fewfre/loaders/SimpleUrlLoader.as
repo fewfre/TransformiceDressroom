@@ -39,6 +39,7 @@ package com.fewfre.loaders
 			return this;
 		}
 		public function addFormDataHeader() : SimpleUrlLoader { return addHeader("enctype", "multipart/form-data"); }
+		public function addNoCacheHeader() : SimpleUrlLoader { return addHeader("pragma", "no-cache"); }
 		
 		public function addData(name:String = "", value:String = "") : SimpleUrlLoader {
 			if(!_urlRequest.data) _urlRequest.data = new URLVariables();

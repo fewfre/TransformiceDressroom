@@ -13,6 +13,7 @@ package com.fewfre.loaders
 	import flash.system.LoaderContext;
 	import flash.utils.Dictionary;
 	import flash.utils.ByteArray;
+	import com.fewfre.utils.Fewf;
 
 	[Event(name="complete", type="flash.events.Event")]
 	[Event(name="progress", type="flash.events.ProgressEvent")]
@@ -31,20 +32,25 @@ package com.fewfre.loaders
 		private var _applicationDomain: ApplicationDomain;
 		public function get applicationDomain(): ApplicationDomain { return _applicationDomain; }
 
-		// Constructer
+		// Constructor
 		public function AssetManagerBinaryLoader() {
 			super();
 			_loading = false;
 		}
+		
+		// All event listeners added with a weak reference by default for easy garbage collection
+		public function on(type:String, listener:Function): AssetManagerBinaryLoader { addEventListener(type, listener); return this; }
+		public function off(type:String, listener:Function): AssetManagerBinaryLoader { removeEventListener(type, listener); return this; }
 
 		/****************************
 		 * Loading
 		 *****************************/
-		public function load(pUrl:String, pUseCurrentDomain:Boolean = false) : void {
+		public function load(pUrl:String, pUseCurrentDomain:Boolean = false) : AssetManagerBinaryLoader {
 			_loading = true;
 			_url = pUrl;
 			_useCurrentDomain = pUseCurrentDomain;
 			_loadAsBinary(_url);
+			return this;
 		}
 		private function _loadAsBinary(pUrl:String) : void {
 			try {
@@ -55,6 +61,7 @@ package com.fewfre.loaders
 				_urlLoader.addEventListener(IOErrorEvent.IO_ERROR, _onURLLoadError);
 				_urlLoader.addEventListener(ProgressEvent.PROGRESS, _onProgress);
 				var tRequest:URLRequest = new URLRequest(pUrl);
+				// if(Fewf.isExternallyLoaded || Fewf.isBrowserLoaded) tRequest.data = new URLVariables("cache=no+cache");
 				tRequest.requestHeaders.push(new URLRequestHeader("pragma", "no-cache"));
 				_urlLoader.load(tRequest);
 			} catch(err:Error) {
