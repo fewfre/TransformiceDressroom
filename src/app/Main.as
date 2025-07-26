@@ -57,8 +57,16 @@ package app
 			_config = Fewf.assets.getData("config");
 			_defaultLang = Fewf.i18n.getDefaultLang();
 			
+			if(_config) {
+				if(_config.username_lookup_url) _config.username_lookup_url.replace("https://", Fewf.networkProtocol+"://");
+				if(_config.spritesheet2gif_url) _config.spritesheet2gif_url.replace("https://", Fewf.networkProtocol+"://");
+				if(_config.fetchpastebin_url) _config.fetchpastebin_url.replace("https://", Fewf.networkProtocol+"://");
+				if(_config.createpastebin_url) _config.createpastebin_url.replace("https://", Fewf.networkProtocol+"://");
+				if(_config.upload2imgur_url) _config.upload2imgur_url.replace("https://", Fewf.networkProtocol+"://");
+			}
+			
 			// Some slight analytics
-			Fewf.assets.lazyLoadImageUrlAsBitmap("https://fewfre.com/images/avatar.jpg?tag=tfmdress-swf&pref="+encodeURIComponent(JSON.stringify({
+			Fewf.assets.lazyLoadImageUrlAsBitmap(Fewf.networkProtocol+"://fewfre.com/images/avatar.jpg?tag=tfmdress-swf&pref="+encodeURIComponent(JSON.stringify({
 				source: Fewf.isExternallyLoaded ? 'app' : Fewf.isBrowserLoaded ? 'browser' : 'direct',
 				lang: _defaultLang
 			})));

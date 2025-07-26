@@ -21,7 +21,7 @@ list($resourcesBasic, $externalBasic) = updateBasicResources();
 list($resourcesSingles, $externalSingles) = updateFurSingleItemFiles();
 
 // Finally include poses - only needed for external as included in a different way for non-external
-$staticExternal = ["https://projects.fewfre.com/a801/transformice/dressroom/resources/poses.swf"];
+$staticExternal = ["http://projects.fewfre.com/a801/transformice/dressroom/resources/poses.swf"];
 
 setProgress('updating');
 $json = getConfigJson();

@@ -20,6 +20,7 @@ package com.fewfre.utils
 		private static var _isExternallyLoaded : Boolean;
 		private static var _isBrowserLoaded : Boolean;
 		private static var _swfUrlBase : String;
+		private static var _networkProtocol : String; // http / https
 		
 		// Properties
 		public static function get assets() : AssetManager { return _assets; }
@@ -31,6 +32,7 @@ package com.fewfre.utils
 		public static function get isExternallyLoaded() : Boolean { return _isExternallyLoaded; }
 		public static function get isBrowserLoaded() : Boolean { return _isBrowserLoaded; }
 		public static function get swfUrlBase() : String { return _swfUrlBase; }
+		public static function get networkProtocol() : String { return _networkProtocol; }
 		
 		public static function init(pStage:Stage, pSwfUrlBase:String, uniqID:String) : void {
 			_assets = new AssetManager();
@@ -42,6 +44,7 @@ package com.fewfre.utils
 			_isExternallyLoaded = !!pSwfUrlBase;
 			_isBrowserLoaded = ExternalInterface.available ? ExternalInterface.call("eval", "window.location.href") : false;
 			_swfUrlBase = pSwfUrlBase || "";
+			_networkProtocol = _isBrowserLoaded ? "https" : "http"; // We don't want to use https on AIR since it was causing some people issue on W7
 		}
 	}
 }
