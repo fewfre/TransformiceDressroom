@@ -4,6 +4,7 @@ package com.fewfre.data
 	import com.fewfre.utils.Fewf;
 	import flash.system.Capabilities;
 	import flash.utils.Dictionary;
+	import app.data.ConstantsApp;
 	
 	public class I18n
 	{
@@ -36,8 +37,13 @@ package com.fewfre.data
 			_messagesMap["loading_progress"] = { text:"{0}" };
 		}
 		
-		public function parseFile(pLang:String, pJson:Object) : void {
-			_lang = pLang;
+		public function setLangToLoadedLang(pLangCode:String) : void {
+			_lang = pLangCode;
+			_parseFile(Fewf.assets.getData(getConfigDefaultLangCode()));
+			_parseFile(Fewf.assets.getData(pLangCode));
+		}
+		
+		private function _parseFile(pJson:Object) : void {
 			_defaultFont = pJson.defaultFont;
 			_defaultScale = pJson.defaultScale;
 			for(var key:String in pJson.strings) {
@@ -66,13 +72,37 @@ package com.fewfre.data
 		}
 		
 		///////////////////////
+		// Loading Helpers
+		///////////////////////
+		private function _getConfig() : * { return Fewf.assets.getData("config") || {}; }
+			
+		private function _loadLanguages(pLangCodes:Array, pCallback:Function) : void {
+			var tConfigDefaultLangCode:String = getConfigDefaultLangCode();
+			if(!tConfigDefaultLangCode) throw new Error("Can't load languages until config file has loaded!");
+			
+			var tUrls:Array = pLangCodes
+				.filter(function(pLangCode:String,i,a):Boolean{ return !Fewf.assets.getData(pLangCode) }) // Filter out any we've already loaded
+				.map(function(pLangCode:String,i,a):String{ return Fewf.swfUrlBase+"resources/i18n/"+pLangCode+".json" });
+			
+			if(tUrls.length == 0) { pCallback(); return; }
+			Fewf.assets.loadWithCallback(tUrls, pCallback, { cacheBreaker:_getConfig().cachebreaker });
+		}
+		
+		public function loadLanguagesIfNeededAndUseLastLang(pLangCodes:Array, pCallback:Function) : void {
+			_loadLanguages(pLangCodes, function():void {
+				setLangToLoadedLang(pLangCodes[pLangCodes.length-1]);
+				pCallback();
+			});
+		}
+		
+		///////////////////////
 		// Languages List
 		///////////////////////
 		private var _languagesCached : Vector.<I18nLangData>;
 		public function getLanguagesList() : Vector.<I18nLangData> {
 			if(_languagesCached) return _languagesCached;
 			_languagesCached = new Vector.<I18nLangData>();
-			var tLanguagesFromConfig:Array = Fewf.assets.getData("config").languages.list;
+			var tLanguagesFromConfig:Array = _getConfig().languages.list;
 			for each(var tLangJson:Object in tLanguagesFromConfig) {
 				_languagesCached.push(new I18nLangData(tLangJson));
 			}
@@ -91,9 +121,11 @@ package com.fewfre.data
 		/**
 		 * Should only be called after `config` file loaded for best results
 		 */
-		public function getDefaultLang() : String {
-			var tConfig:Object = Fewf.assets.getData("config") || {};
-			var tConfigLang:String = tConfig.languages["default"];
+		public function getConfigDefaultLangCode() : String {
+			return _getConfig().languages["default"];
+		}
+		public function getSystemDetectedDefaultLangCodeOrFallback() : String {
+			var tConfigLang:String = getConfigDefaultLangCode();
 			
 			// If user manually picked a language previously, override system check
 			var detectedLang = Fewf.sharedObjectGlobal.getData(I18n.GLOBAL_SHARED_OBJECT_KEY_LANG) || Capabilities.language;
@@ -106,7 +138,7 @@ package com.fewfre.data
 					if(detectedLang == langData.code || detectedLang == langData.code.split("-")[0]) {
 						return langData.code;
 					}
-					if(tConfigLang == langData.code) {
+					if(langData.code == tConfigLang) {
 						tFlagDefaultLangExists = true;
 					}
 				}

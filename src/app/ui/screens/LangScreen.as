@@ -72,20 +72,12 @@ package app.ui.screens
 			var tLangData:I18nLangData = pEvent.data as I18nLangData;
 			Fewf.sharedObjectGlobal.setData(ConstantsApp.SHARED_OBJECT_KEY_GLOBAL_LANG, tLangData.code);
 			_close();
-			if(Fewf.assets.getData(tLangData.code)) {
-				Fewf.i18n.parseFile(tLangData.code, Fewf.assets.getData(tLangData.code));
-				return;
-			}
 			
 			var tLoaderDisplay:LoaderDisplay = addChild( new LoaderDisplay() ) as LoaderDisplay;
-			Fewf.assets.load([ Fewf.swfUrlBase+"resources/i18n/"+tLangData.code+".json" ]);
-			Fewf.assets.addEventListener(AssetManager.LOADING_FINISHED, function(e:Event){
-				Fewf.assets.removeEventListener(AssetManager.LOADING_FINISHED, arguments.callee);
+			Fewf.i18n.loadLanguagesIfNeededAndUseLastLang([ tLangData.code ], function():void{
 				tLoaderDisplay.destroy();
 				removeChild( tLoaderDisplay );
 				tLoaderDisplay = null;
-				
-				Fewf.i18n.parseFile(tLangData.code, Fewf.assets.getData(tLangData.code));
 			});
 		}
 		

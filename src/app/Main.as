@@ -17,7 +17,7 @@ package app
 		private var _errorScreen   : ErrorScreen;
 		private var _world         : World;
 		private var _config        : Object;
-		private var _defaultLang   : String;
+		private var _systemDetectedDefaultLang : String;
 		
 		// Constructor
 		public function Main() {
@@ -55,7 +55,7 @@ package app
 		
 		private function _onPreloadComplete() : void {
 			_config = Fewf.assets.getData("config");
-			_defaultLang = Fewf.i18n.getDefaultLang();
+			_systemDetectedDefaultLang = Fewf.i18n.getSystemDetectedDefaultLangCodeOrFallback();
 			
 			if(_config) {
 				if(_config.username_lookup_url) _config.username_lookup_url.replace("https://", Fewf.networkProtocol+"://");
@@ -68,21 +68,19 @@ package app
 			// Some slight analytics
 			Fewf.assets.lazyLoadImageUrlAsBitmap(Fewf.networkProtocol+"://fewfre.com/images/avatar.jpg?tag=tfmdress-swf&pref="+encodeURIComponent(JSON.stringify({
 				source: Fewf.isExternallyLoaded ? 'app' : Fewf.isBrowserLoaded ? 'browser' : 'direct',
-				lang: _defaultLang
+				lang: _systemDetectedDefaultLang
 			})));
 			
 			_startInitialLoad();
 		}
 		
 		private function _startInitialLoad() : void {
-			_load([
-				Fewf.swfUrlBase+"resources/i18n/"+_defaultLang+".json",
-			], Fewf.assets.getData("config").cachebreaker, _onInitialLoadComplete);
+			var tLangCodes : Array = [ Fewf.i18n.getConfigDefaultLangCode() ];
+			if(tLangCodes.indexOf(_systemDetectedDefaultLang) == -1) tLangCodes.push(_systemDetectedDefaultLang);
+			Fewf.i18n.loadLanguagesIfNeededAndUseLastLang(tLangCodes, _onInitialLoadComplete);
 		}
 		
 		private function _onInitialLoadComplete() : void {
-			Fewf.i18n.parseFile(_defaultLang, Fewf.assets.getData(_defaultLang));
-			
 			_startLoad();
 		}
 		
