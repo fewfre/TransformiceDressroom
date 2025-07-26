@@ -527,9 +527,15 @@ package app.world
 		public function isCharacterAnimating() : Boolean {
 			return _animationControls.visible;
 		}
+		
+		private function _getHardcodedSaveScale() : Number {
+			var hardcodedSaveScale:Object = Fewf.sharedObject.getData(ConstantsApp.SHARED_OBJECT_KEY_HARDCODED_SAVE_SCALE);
+			trace("_getHardcodedSaveScale()", hardcodedSaveScale, hardcodedSaveScale as Number);
+			return hardcodedSaveScale ? hardcodedSaveScale as Number : null;
+		}
 
 		private function _onSaveClicked(pEvent:Event) : void {
-			_saveAsPNG(this.character, "character");
+			_saveAsPNG(this.character.outfit, "character", this.character.outfit.scaleX);
 		}
 		
 		private function _saveAsAnimation(pFormat:String=null) : void {
@@ -537,7 +543,7 @@ package app.world
 			
 			// FewfDisplayUtils.saveAsSpriteSheet(this.character.copy().outfit.pose, "spritesheet", this.character.outfit.scaleX);
 			_toolbox.downloadButtonEnable(false);
-			FewfDisplayUtils.saveAsAnimatedGif(this.character.copy().outfit.pose, "character", this.character.outfit.scaleX, pFormat, function(){
+			FewfDisplayUtils.saveAsAnimatedGif(this.character.copy().outfit.pose, "character", _getHardcodedSaveScale() || this.character.outfit.scaleX, pFormat, function(){
 				_toolbox.downloadButtonEnable(true);
 			});
 		}
@@ -551,13 +557,13 @@ package app.world
 			_saveAsPNG(GameAssets.getColoredItemImage(itemData), tName, tScale);
 		}
 		
-		private function _saveAsPNG(pObj:DisplayObject, pName:String, pScale:Number = 1) : void {
+		private function _saveAsPNG(pObj:DisplayObject, pName:String, pScale:Number) : void {
 			var hardcodedCanvasSaveSize:Object = Fewf.sharedObject.getData(ConstantsApp.SHARED_OBJECT_KEY_HARDCODED_CANVAS_SAVE_SIZE);
 			if(!hardcodedCanvasSaveSize) {
-				FewfDisplayUtils.saveAsPNG(pObj, pName, pScale);
+				FewfDisplayUtils.saveAsPNG(pObj, pName, _getHardcodedSaveScale() || pScale);
 			} else {
 				var tOffsetY:Number = 0;
-				if(pName === 'character' && pObj is Character) tOffsetY = Math.floor(8*(pObj as Character).outfit.scaleX);
+				if(pName === 'character' && pObj is Pose) tOffsetY = Math.floor(8*(pObj as Pose).scaleX); // Since the feet aren't in the center; rough calc but gets it closer to center
 				FewfDisplayUtils.saveAsPNGWithFixedCanvasSize(pObj, pName, hardcodedCanvasSaveSize as Number, 0, tOffsetY);
 			}
 		}
@@ -569,7 +575,7 @@ package app.world
 						_toolbox.updateClipboardButton(false, false);
 					})
 				} else {
-					FewfDisplayUtils.copyToClipboard(character);
+					FewfDisplayUtils.copyToClipboard(character, _getHardcodedSaveScale() || this.character.outfit.scaleX);
 					_toolbox.updateClipboardButton(false, true);
 				}
 			} catch(e) {

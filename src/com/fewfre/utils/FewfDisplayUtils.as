@@ -111,15 +111,8 @@ package com.fewfre.utils
 		 */
 		public static function copyToClipboard(pObj:DisplayObject, pScale:Number=1) : void {
 			if(!pObj){ return; }
-
-			var tRect:Rectangle = pObj.getBounds(pObj);
-			var tBitmap:BitmapData = new BitmapData(tRect.width*pScale, tRect.height*pScale, true, 0xFFFFFF);
-
-			var tMatrix:Matrix = new Matrix(1, 0, 0, 1, -tRect.left, -tRect.top);
-			tMatrix.scale(pScale, pScale);
-			tBitmap.draw(pObj, tMatrix);
-			
-			Clipboard.generalClipboard.setData(ClipboardFormats.BITMAP_FORMAT, tBitmap);
+			var tBitmapData:BitmapData = displayObjectToBitmapData(pObj, pScale);
+			Clipboard.generalClipboard.setData(ClipboardFormats.BITMAP_FORMAT, tBitmapData);
 		}
 		public static function copyToClipboardAnimatedGif(mc:MovieClip, scale:Number=1, pFinished:Function=null) {
 			// _fetchGif(mc, scale, function(data:*, error:Error){
@@ -228,13 +221,18 @@ package com.fewfre.utils
 		// }
 		
 		public static function displayObjectToBitmapData(pObj:DisplayObject, pScale:Number=1) : BitmapData {
+			var tOrigScale = pObj.scaleX;
+			pObj.scaleX = pObj.scaleY = pScale;
+			
 			var rect:Rectangle = pObj.getBounds(pObj);
 			var tBitmapData:BitmapData = new BitmapData(rect.width*pScale, rect.height*pScale, true, 0xFFFFFF);
 
 			var tMatrix:Matrix = new Matrix(1, 0, 0, 1, -rect.left, -rect.top);
 			tMatrix.scale(pScale, pScale);
-
-			return bitmapDataDrawBestQuality(tBitmapData, pObj, tMatrix);
+			bitmapDataDrawBestQuality(tBitmapData, pObj, tMatrix);
+			
+			pObj.scaleX = pObj.scaleY = tOrigScale;
+			return tBitmapData;
 		}
 		
 		// Converts the image to a PNG bitmap and prompts the user to save.

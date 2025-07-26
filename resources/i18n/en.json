@@ -41,7 +41,10 @@
     "btn_divine_mode":         { "text":"Divine" },
     "btn_no_skills_mode":      { "text":"Disable skills" },
 	
-	"setting_hardcoded_save_size": { "text":"Hardcoded PNG save size (leave blank to auto fit)" },
+	"setting_hardcoded_save_scale_label":       { "text":"Hardcoded save scale" },
+	"setting_hardcoded_save_scale_placeholder": { "text":"Dressroom uses 1-8 (default: 3)" },
+	"setting_hardcoded_save_size_label":        { "text":"Hardcoded PNG save size" },
+	"setting_hardcoded_save_size_placeholder":  { "text":"Leave blank to auto fit" },
     
     "tab_config":              { "text":"Config" },
     "tab_head":                { "text":"Head" },

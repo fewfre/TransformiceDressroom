@@ -65,7 +65,7 @@ package app.ui.screens
 			///////////////////////
 			// Settings
 			///////////////////////
-			DisplayWrapper.wrap(_setupSettingsTray(), this).move(0, 140);
+			DisplayWrapper.wrap(_setupSettingsTray(), this).move(0, tHeight/2 + 10);
 		
 			///////////////////////
 			// Close Button
@@ -76,16 +76,29 @@ package app.ui.screens
 		public function off(type:String, listener:Function): AboutScreen { this.removeEventListener(type, listener); return this; }
 		
 		private function _setupSettingsTray() : Sprite {
-			var tTray:Sprite = new Sprite();
-			new RoundRectangle(400, 50).toOrigin(0.5).drawAsTray().appendTo(tTray);
+			var tTray:Sprite = new Sprite(), yy:Number = 4;
+			var tBg:RoundRectangle = new RoundRectangle(150+250, 66).toOrigin(0.5, 0).drawAsTray().appendTo(tTray);
 			
+			yy += 28/2;
+			new TextTranslated("setting_hardcoded_save_scale_label", { size:10, originX:0 }).moveT(-tBg.width/2+10, yy).appendToT(tTray);
+			var hardcodedCanvasSaveScale:Object = Fewf.sharedObject.getData(ConstantsApp.SHARED_OBJECT_KEY_HARDCODED_SAVE_SCALE);
+			var saveScaleInput:FancyInput = new FancyInput({ width:210, text:hardcodedCanvasSaveScale, placeholder:"setting_hardcoded_save_scale_placeholder" }).move(75, yy).appendTo(tTray);
+			saveScaleInput.field.restrict = "0-9";
+			saveScaleInput.field.addEventListener(Event.CHANGE, function(e:Event){
+				var size:Number = parseInt(e.target.text);
+				Fewf.sharedObject.setData(ConstantsApp.SHARED_OBJECT_KEY_HARDCODED_SAVE_SCALE, !size || isNaN(size) ? null : size);
+			});
+			
+			yy += 28 + 2;
+			new TextTranslated("setting_hardcoded_save_size_label", { size:10, originX:0 }).moveT(-tBg.width/2+10, yy).appendToT(tTray);
 			var hardcodedCanvasSaveSize:Object = Fewf.sharedObject.getData(ConstantsApp.SHARED_OBJECT_KEY_HARDCODED_CANVAS_SAVE_SIZE);
-			var canvasSizeInput:FancyInput = new FancyInput({ width:360, text:hardcodedCanvasSaveSize, placeholder:"setting_hardcoded_save_size" }).appendTo(tTray);
+			var canvasSizeInput:FancyInput = new FancyInput({ width:210, text:hardcodedCanvasSaveSize, placeholder:"setting_hardcoded_save_size_placeholder" }).move(75, yy).appendTo(tTray);
 			canvasSizeInput.field.restrict = "0-9";
 			canvasSizeInput.field.addEventListener(Event.CHANGE, function(e:Event){
 				var size:Number = parseInt(e.target.text);
 				Fewf.sharedObject.setData(ConstantsApp.SHARED_OBJECT_KEY_HARDCODED_CANVAS_SAVE_SIZE, !size || isNaN(size) ? null : size);
 			});
+			
 			return tTray;
 		}
 		
