@@ -30,7 +30,7 @@ package app.data
 		
 		// Which ones have panes, and the order the tabs appear in
 		public static const TYPES_WITH_SHOP_PANES : Vector.<ItemType> = new <ItemType>[
-			SKIN, HEAD, EARS, EYES, MOUTH, NECK, TAIL, HAIR, CONTACTS, TATTOO, HAND, EMOJI, POSE ];
+			SKIN, HEAD, EARS, EYES, MOUTH, NECK, TAIL, HAIR, CONTACTS, TATTOO, HAND, EMOJI, BACK, POSE ];
 		
 		public static const TYPES_WITH_SHARE_FILTER_PANES : Vector.<ItemType> = new <ItemType>[
 			HEAD, HAIR, EARS, EYES, MOUTH, NECK, TAIL, CONTACTS, HAND, TATTOO, SKIN ];
@@ -38,7 +38,8 @@ package app.data
 		public static const LOOK_CODE_ITEM_ORDER : Vector.<ItemType> = new <ItemType>[
 			HEAD, EYES, EARS, MOUTH, NECK, HAIR, TAIL, CONTACTS, HAND, null, null, TATTOO];
 		
-		public static const OTHER_PANE_ITEM_TYPES : Vector.<ItemType> = new <ItemType>[BACK, OBJECT, PAW_BACK];
+		public static const OTHER_PANE_ITEM_TYPES_WITH_NO_SUB_PANE : Vector.<ItemType> = new <ItemType>[OBJECT, PAW_BACK];
+		public static const OTHER_PANE_ITEM_TYPES : Vector.<ItemType> = new <ItemType>[BACK, OBJECT, PAW_BACK, EMOJI];
 		
 		// Enum Storage + Constructor
 		private var _value: String;

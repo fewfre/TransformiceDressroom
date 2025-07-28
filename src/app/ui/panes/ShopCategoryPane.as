@@ -54,7 +54,7 @@ package app.ui.panes
 				grid.reverse();
 			}
 			
-			this.addInfobar( new Infobar({ showEyeDropper:_type!=ItemType.POSE, showDownload:true, gridManagement:{ hideRandomizeLock:_type==ItemType.EMOJI }, showFavorites:true }) );
+			this.addInfobar( new Infobar({ showEyeDropper:_type!=ItemType.POSE, showDownload:true, gridManagement:{ hideRandomizeLock:_type==ItemType.EMOJI }, showFavorites:true, showBackButton:_type == ItemType.EMOJI || _type == ItemType.BACK }) );
 			_infobar.on(Infobar.FAVORITE_CLICKED, _addRemoveFavoriteToggled);
 			_setupGrid(GameAssets.getItemDataListByType(_type));
 			

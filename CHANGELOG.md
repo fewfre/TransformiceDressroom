@@ -4,6 +4,9 @@
 - Updated I18n system to be a bit more streamlined + it now always loads the default app language (english) before loading other languages so that other language files not having a message still shows something
 - Added a new setting to default the save scale to a hardcoded value instead of using current scale of mouse
 - Added an option to Filter Mode banner that lets non-customizable items be hidden
+- Cheeses are now their own pane
+- Tweaked Other pane so that cheese/emoji buttons are grouped on top left, and remaining single items are grouped on top right
+- Emoji and new cheese pane now have a back button that brings you back to Other pane
 
 
 ## V1.30f - 29 May 2025

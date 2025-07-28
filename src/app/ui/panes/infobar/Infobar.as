@@ -122,7 +122,7 @@ package app.ui.panes.infobar
 			* Text
 			*********************/
 			_idText = new TextTranslated("infobar_id", { x:0, y:-1, size:18, origin:0, alpha:0 }).appendToT(_leftButtonsTray);
-			if(pData.showBackButton) {
+			if(pData.showBackButton && (!pData.showEyeDropper && !pData.showFavorites && !pData.gridManagement)) {
 				_idText.y = 13;
 			}
 			
@@ -208,8 +208,10 @@ package app.ui.panes.infobar
 		}
 		
 		public function showColorWheel(pShow:Boolean=true) : void {
-			_colorWheel.enableToggle(pShow).alpha = pShow ? 1 : 0;
-			_colorWheel.visible = pShow;
+			if(_colorWheel) {
+				_colorWheel.enableToggle(pShow).alpha = pShow ? 1 : 0;
+				_colorWheel.visible = pShow;
+			}
 			_rearrangeLeftButtonsTray();
 			_repositionGridManagementWidget();
 		}

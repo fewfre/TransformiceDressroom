@@ -20,6 +20,7 @@ package app.ui.panes
 		public static const ITEM_TOGGLED:String = "item_toggled"; // FewfEvent<{ type:ItemType, itemData:ItemData|null }>
 		public static const FILTER_MODE_CLICKED:String = "filter_mode_clicked";
 		public static const EMOJI_CLICKED:String = "emoji_clicked";
+		public static const CHEESE_CLICKED:String = "cheese_clicked";
 		public static const EYE_DROPPER_CLICKED:String = "eye_dropper_clicked"; // FewfEvent<{ itemData:ItemData }>
 		
 		// Storage
@@ -82,28 +83,19 @@ package app.ui.panes
 			/////////////////////////////
 			// Item Section
 			/////////////////////////////
+			var itemsSectionFakeHalfWidth:Number = ConstantsApp.PANE_WIDTH/2 - 40;
 			// Grid
 			yy += 11; xx = 20;
-			var grid:Grid = new Grid(385, GameAssets.extraBack.length).move(xx,yy).appendTo(this);
+			var grid:Grid = new Grid(itemsSectionFakeHalfWidth, 2).move(xx,yy).appendTo(this);
 			
-			_backItemButtons = new Vector.<PushButton>();
-			for each(var itemData:ItemData in GameAssets.extraBack) {
-				var bttn:PushButton = new PushButton({ size:grid.cellSize, obj:new itemData.itemClass(), obj_scale:1.5, data:{ id:itemData.id, itemData:itemData } });
-				bttn.onToggle(function(e:FewfEvent):void{
-					// Deselect other toggled back items
-					for each(var bttn:PushButton in _backItemButtons) {
-						if(bttn.data.id != e.data.id) bttn.toggleOff(false);
-					}
-				});
-				bttn.onToggle(_onItemToggled)
-					.on(MouseEvent.MOUSE_OVER, _onItemHoverInShowEyeDropper)
-					.on(MouseEvent.MOUSE_OUT, _onItemHoverOutHideEyeDropper);
-				grid.add(bttn);
-				_backItemButtons.push(bttn);
-			}
+			grid.add(GameButton.square(grid.cellSize).setImage(GameAssets.getItemImage(GameAssets.extraBack[0])).appendTo(this)
+				.onButtonClick(function(e:Event):void{ dispatchEvent(new Event(CHEESE_CLICKED)); }));
+				
+			grid.add(GameButton.square(grid.cellSize).setImage(GameAssets.getItemImage(GameAssets.emoji[0])).appendTo(this)
+				.onButtonClick(function(e:Event):void{ dispatchEvent(new Event(EMOJI_CLICKED)); }));
+			
 
-			yy = grid.y + grid.cellSize + 5;
-			grid = new Grid(385, 5).move(xx, yy).appendTo(this);
+			grid = new Grid(itemsSectionFakeHalfWidth, 2).move(ConstantsApp.PANE_WIDTH-14-itemsSectionFakeHalfWidth, yy).appendTo(this);
 			
 			_frontHandButton = new PushButton({ size:grid.cellSize, obj:new GameAssets.extraObjectWand.itemClass(), obj_scale:1.5, data:{ itemData:GameAssets.extraObjectWand } });
 			_frontHandButton.onToggle(_onItemToggled)
@@ -130,10 +122,6 @@ package app.ui.panes
 			// Left
 			GameButton.square(70).setImage(new $FilterIcon(), 0.85).move(xx, 315).appendTo(this)
 				.onButtonClick(function(e:Event):void{ dispatchEvent(new Event(FILTER_MODE_CLICKED)); });
-			
-			xx += 70 + 5;
-			GameButton.square(70).setImage(GameAssets.getItemImage(GameAssets.emoji[0])).move(xx, 315).appendTo(this)
-				.onButtonClick(function(e:Event):void{ dispatchEvent(new Event(EMOJI_CLICKED)); });
 			
 			// Right
 			// Save Head Image

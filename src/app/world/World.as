@@ -208,7 +208,8 @@ package app.world
 				.on(OtherTabPane.ITEM_TOGGLED, _otherTabItemToggled)
 				.on(OtherTabPane.EYE_DROPPER_CLICKED, function(e:FewfEvent){ _openColorFinderWithItemData(e.data.itemData); })
 				.on(OtherTabPane.FILTER_MODE_CLICKED, function(e:Event){ _getAndOpenItemFilteringPane(); })
-				.on(OtherTabPane.EMOJI_CLICKED, function(e:Event){ _panes.openShopPane(ItemType.EMOJI); });
+				.on(OtherTabPane.EMOJI_CLICKED, function(e:Event){ _panes.openShopPane(ItemType.EMOJI); })
+				.on(OtherTabPane.CHEESE_CLICKED, function(e:Event){ _panes.openShopPane(ItemType.BACK); });
 			
 			// "Other" Tab Color Picker Pane
 			_panes.addPane(WorldPaneManager.OTHER_COLOR_PANE, new ColorPickerTabPane({ hide_default:true, hideItemPreview:true }))
@@ -259,6 +260,9 @@ package app.world
 				character.setItemTypeLock(pType, e.data.locked);
 				_updateTabListLockByItemType(pType);
 			});
+			if(ItemType.OTHER_PANE_ITEM_TYPES.indexOf(pType) > -1) {
+				tPane.infobar.on(Infobar.BACK_CLICKED, function(){ _panes.openPane(WorldPaneManager.OTHER_PANE); });
+			}
 			return tPane;
 		}
 		private function getShopPane(pType:ItemType) : ShopCategoryPane { return _panes.getShopPane(pType); }
@@ -298,7 +302,7 @@ package app.world
 				if(ConstantsApp.CONFIG_TAB_ENABLED && !_itemFiltering_filterEnabled) shopTabs.addTab("tab_config", WorldPaneManager.CONFIG_PANE);
 				
 				for each(var type:ItemType in ItemType.TYPES_WITH_SHOP_PANES) {
-					if(type == ItemType.EMOJI || !_shouldShowShopTab(type)) continue;
+					if(ItemType.OTHER_PANE_ITEM_TYPES.indexOf(type) > -1 || !_shouldShowShopTab(type)) continue;
 					// Some i18n ids don't match the type string, so manually handling it here
 					var i18nStr : String = type == ItemType.SKIN ? 'furs' : type == ItemType.HAND ? 'hand' : type == ItemType.POSE ? 'poses' : type.toString();
 					shopTabs.addTab("tab_"+i18nStr, WorldPaneManager.itemTypeToId(type));
@@ -326,7 +330,7 @@ package app.world
 			shopTabs.getTabButton(WorldPaneManager.itemTypeToId(pType)).setLocked(character.isItemTypeLocked(pType));
 		}
 		private function _updateTabListItemIndicatorByType(pType:ItemType) {
-			if(pType === ItemType.EMOJI || ItemType.OTHER_PANE_ITEM_TYPES.indexOf(pType) > -1) return;
+			if(ItemType.OTHER_PANE_ITEM_TYPES.indexOf(pType) > -1) return;
 			
 			var tItemData:ItemData = character.getItemData(pType);
 			var tHadIndicator:Boolean = !!tItemData && !tItemData.matches(GameAssets.defaultSkin) && !tItemData.matches(GameAssets.defaultPose);
@@ -644,7 +648,7 @@ package app.world
 		}
 
 		private function _removeItem(pType:ItemType) : void {
-			if(ItemType.OTHER_PANE_ITEM_TYPES.indexOf(pType) > -1) {
+			if(ItemType.OTHER_PANE_ITEM_TYPES_WITH_NO_SUB_PANE.indexOf(pType) > -1) {
 				this.character.removeItem(pType);
 			}
 			var tPane:ShopCategoryPane = getShopPane(pType);
@@ -668,7 +672,7 @@ package app.world
 
 		private function _onRandomizeDesignClicked(pEvent:Event) : void {
 			for each(var tType:ItemType in ItemType.TYPES_WITH_SHOP_PANES) {
-				if(tType == ItemType.EMOJI) { _removeItem(ItemType.EMOJI); continue; }
+				if(tType == ItemType.EMOJI || tType == ItemType.BACK) { _removeItem(tType); continue; }
 				var odds:Number = tType == ItemType.POSE ? 0.5 : 0.65;
 				_randomItemOfType(tType, Math.random() <= odds);
 			}
@@ -694,16 +698,16 @@ package app.world
 			var itemType:ItemType = pItemData.type;
 			
 			// These are special types that don't have thier own unique panes
-			if(ItemType.OTHER_PANE_ITEM_TYPES.indexOf(itemType) > -1) {
+			if(ItemType.OTHER_PANE_ITEM_TYPES_WITH_NO_SUB_PANE.indexOf(itemType) > -1) {
 				shopTabs.toggleTabOn(WorldPaneManager.OTHER_PANE);
 				character.setItemData(pItemData);
 				_panes.otherPane.updateButtonsBasedOnCurrentData();
 				return;
 			}
 			
-			if(itemType == ItemType.EMOJI) {
+			if(ItemType.OTHER_PANE_ITEM_TYPES.indexOf(itemType) > -1) {
 				shopTabs.toggleTabOn(WorldPaneManager.OTHER_PANE);
-				_panes.openShopPane(ItemType.EMOJI);
+				_panes.openShopPane(itemType);
 			} else {
 				shopTabs.toggleTabOn(WorldPaneManager.itemTypeToId(itemType));
 			}
@@ -867,7 +871,7 @@ package app.world
 			}
 
 			private function _onColorFinderBackClicked(pEvent:Event):void {
-				if(ItemType.OTHER_PANE_ITEM_TYPES.indexOf(_panes.colorFinderPane.infobar.itemData.type) > -1) {
+				if(ItemType.OTHER_PANE_ITEM_TYPES_WITH_NO_SUB_PANE.indexOf(_panes.colorFinderPane.infobar.itemData.type) > -1) {
 					_panes.openPane(WorldPaneManager.OTHER_PANE);
 					return;
 				}
