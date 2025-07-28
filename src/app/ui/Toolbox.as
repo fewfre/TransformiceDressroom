@@ -1,22 +1,22 @@
 package app.ui
 {
-	import com.fewfre.display.TextTranslated;
-	import com.fewfre.utils.Fewf;
 	import app.data.ConstantsApp;
 	import app.ui.buttons.*;
-	import flash.display.Sprite;
-	import flash.net.*;
-	import ext.ParentApp;
-	import com.fewfre.utils.FewfDisplayUtils;
-	import app.world.elements.Character;
-	import flash.utils.setTimeout;
-	import flash.events.Event;
-	import com.fewfre.events.FewfEvent;
-	import com.fewfre.display.RoundRectangle;
-	import app.ui.common.FrameBase;
 	import app.ui.common.FancySlider;
-	import flash.events.MouseEvent;
+	import app.ui.common.FrameBase;
+	import app.world.elements.Character;
 	import com.fewfre.display.DisplayWrapper;
+	import com.fewfre.display.RoundRectangle;
+	import com.fewfre.display.TextTranslated;
+	import com.fewfre.events.FewfEvent;
+	import com.fewfre.utils.Fewf;
+	import com.fewfre.utils.FewfDisplayUtils;
+	import ext.ParentApp;
+	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.net.*;
+	import flash.utils.setTimeout;
 	
 	public class Toolbox extends Sprite
 	{
@@ -35,8 +35,6 @@ package app.ui
 		public static const RANDOM_CLICKED        = "random_clicked";
 		public static const TRASH_CLICKED         = "trash_clicked";
 		
-		public static const FILTER_BANNER_CLOSED  = "filter_banner_closed";
-		
 		// Storage
 		private var _downloadButton     : SpriteButton;
 		private var _downloadHoverTray  : Sprite;
@@ -48,8 +46,6 @@ package app.ui
 		
 		private var _scaleSlider        : FancySlider;
 		private var _defaultScaleButton : SpriteButton;
-		
-		private var _itemFilterBanner   : Sprite;
 		
 		// Properties
 		public function get scaleSlider() : FancySlider { return _scaleSlider; }
@@ -171,40 +167,15 @@ package app.ui
 				new PasteShareCodeInput().appendTo(this).move(18, 34)
 					.on(PasteShareCodeInput.CHANGE, function(e:FewfEvent):void{ onShareCodeEntered(e.data.code, e.data.update); });
 			}
-			
-			// Item Filter Banner
-			// Don't addChild to anything until it should show up
-			_itemFilterBanner = _newItemFilterBanner(-112, 33);
-			_itemFilterBanner.addEventListener(Event.CLOSE, dispatchEventHandler(FILTER_BANNER_CLOSED));
 		}
 		public function move(pX:Number, pY:Number) : Toolbox { x = pX; y = pY; return this; }
 		public function appendTo(pParent:Sprite): Toolbox { pParent.addChild(this); return this; }
 		public function on(type:String, listener:Function): Toolbox { this.addEventListener(type, listener); return this; }
 		public function off(type:String, listener:Function): Toolbox { this.removeEventListener(type, listener); return this; }
 		
-		private function _newItemFilterBanner(pX:Number, pY:Number) : Sprite {
-			var tray:Sprite = new Sprite(); tray.x = pX; tray.y = pY;
-			
-			var hh:Number = 28-2/*minus 2 because of extra border*/;
-			new RoundRectangle(260, hh).toOrigin(0, 0.5).toRadius(4).drawSolid(0xDDDDFF, 0x0000FF, 2).appendTo(tray);
-			new TextTranslated("share_filter_banner", { x:10, originX:0, originY:0.5, color:0x111111 }).appendToT(tray);
-			ScaleButton.withObject(new $No(), 0.5).move(245, 0).appendTo(tray)
-				.onButtonClick(function(e):void{ tray.dispatchEvent(new Event(Event.CLOSE)); });
-				
-			return tray;
-		}
-		
 		///////////////////////
 		// Public
 		///////////////////////
-		public function showItemFilterBanner() : void {
-			addChild(_itemFilterBanner);
-		}
-		
-		public function hideItemFilterBanner() : void {
-			if(_itemFilterBanner.parent) _itemFilterBanner.parent.removeChild(_itemFilterBanner);
-		}
-		
 		public function downloadButtonEnable(pOn:Boolean) : void {
 			if(pOn) _downloadButton.enable(); else _downloadButton.disable();
 			if(pOn) _gifButton.enable(); else _gifButton.disable();

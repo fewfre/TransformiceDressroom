@@ -34,6 +34,7 @@ package app.world
 
 		private var shopTabs           : ShopTabList;
 		private var _toolbox           : Toolbox;
+		private var _itemFilterBanner  : ItemFilterBanner;
 		private var _animationControls : AnimationControls;
 		
 		private var _shareScreen       : ShareScreen;
@@ -108,8 +109,11 @@ package app.world
 				
 				.on(Toolbox.ANIMATION_TOGGLED, _onPlayerAnimationToggle)
 				.on(Toolbox.RANDOM_CLICKED, _onRandomizeDesignClicked)
-				.on(Toolbox.TRASH_CLICKED, _onTrashButtonClicked)
-				.on(Toolbox.FILTER_BANNER_CLOSED, _onExitItemFilteringMode);
+				.on(Toolbox.TRASH_CLICKED, _onTrashButtonClicked);
+				
+			_itemFilterBanner = new ItemFilterBanner().move(76, 61).appendTo(this)
+				.on(ItemFilterBanner.ONLY_INCLUDE_CUSTOMIZATIONS_TOGGLED, _toggleItemFilterModeToOnlyShowCustomizableItems)
+				.on(ItemFilterBanner.FILTER_BANNER_CLOSED, _onExitItemFilteringMode);
 			
 			// Outfit Button
 			new ScaleButton({ origin:0.5, obj:new $Outfit(), obj_scale:0.4 }).appendTo(this).move(_toolbox.x+167, _toolbox.y+12.5+21)
@@ -460,7 +464,7 @@ package app.world
 		// Enables it using data already in ShareCodeFilteringData
 		private function _enableFilterMode() : void {
 			_itemFiltering_filterEnabled = true;
-			_toolbox.showItemFilterBanner();
+			_itemFilterBanner.show();
 			_populateShopTabs();
 			_updateAllShopPaneFilters();
 			_showOrHideGiantFilterIcon();
@@ -471,12 +475,16 @@ package app.world
 		private function _onExitItemFilteringMode(e:Event) : void { _exitFilterMode(); };
 		private function _exitFilterMode() : void {
 			_itemFiltering_filterEnabled = false;
-			_toolbox.hideItemFilterBanner();
+			_itemFilterBanner.hide();
 			_populateShopTabs();
 			_clearItemFiltering();
 			_showOrHideGiantFilterIcon();
 			// Select first tab available (needed since tabs repopulated)
 			shopTabs.toggleOnFirstTab();
+		}
+		
+		private function _toggleItemFilterModeToOnlyShowCustomizableItems(e:Event) : void {
+			_updateAllShopPaneFilters();
 		}
 		
 		private function _updateAllShopPaneFilters() : void {
@@ -485,6 +493,9 @@ package app.world
 				_removeItem(tType);
 				
 				var ids : Vector.<String> = ShareCodeFilteringData.getSelectedIds(tType).concat();
+				if(_itemFilterBanner.onlyShowCustomizableItemsToggleOn && tType != ItemType.SKIN) { // Skins don't have customizations
+					ids = ids.filter(function(id:String,i,a):Boolean{ return ShareCodeFilteringData.isCustomizableId(tType, id); });
+				}
 				if(tType == ItemType.SKIN && ids.length == 0) {
 					ids.push(GameAssets.defaultSkin.id);
 				}

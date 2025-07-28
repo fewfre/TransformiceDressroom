@@ -3,6 +3,7 @@
 - [Bug] Changed some assets to http protocol when using the app since some W10 users were having issues with certs
 - Updated I18n system to be a bit more streamlined + it now always loads the default app language (english) before loading other languages so that other language files not having a message still shows something
 - Added a new setting to default the save scale to a hardcoded value instead of using current scale of mouse
+- Added an option to Filter Mode banner that lets non-customizable items be hidden
 
 
 ## V1.30f - 29 May 2025

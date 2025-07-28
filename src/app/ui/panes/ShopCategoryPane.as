@@ -105,6 +105,7 @@ package app.ui.panes
 			var list:Vector.<ItemData> = GameAssets.getItemDataListByType(_type);
 			if(pIds) { list = list.filter(function(data:ItemData, i, a){ return pIds.indexOf(data.id) >= 0 }) }
 			_setupGrid(list);
+			_renderFavorites();
 		}
 		
 		// Update image when colors have been changed
@@ -192,14 +193,24 @@ package app.ui.panes
 		/****************************
 		* Favorites
 		*****************************/
+		private function _getIdsOfFilteredItems() : Vector.<String> {
+			var availableIds:Vector.<String> = new Vector.<String>();
+			for each(var tItemData:ItemData in _itemDataVector) {
+				availableIds.push(tItemData.id);
+			}
+			return availableIds;
+		}
+		
 		private function _renderFavorites() : void {
 			var favIds:Array = FavoriteItemsLocalStorageManager.getFavoritesIdList(_type).concat().reverse(); // Reverse so newest show first
 			
 			_favoritesGrid.reset();
 			_favoritesGrid.columns = Math.min(16, Math.max(10, favIds.length));
 			
+			var availableIds:Vector.<String> = _getIdsOfFilteredItems();
 			var tItemData:ItemData;
 			for each(var tId:String in favIds) {
+				if(availableIds.indexOf(tId) == -1) continue;
 				tItemData = GameAssets.getItemFromTypeID(_type, tId);
 				if(tItemData) {
 					_favoritesGrid.add(SpriteButton.withObject(GameAssets.getItemImage(tItemData), "auto", { size:_favoritesGrid.cellSize, data:tItemData })
