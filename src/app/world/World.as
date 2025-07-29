@@ -546,7 +546,7 @@ package app.world
 		private function _getHardcodedSaveScale() : Number {
 			var hardcodedSaveScale:Object = Fewf.sharedObject.getData(ConstantsApp.SHARED_OBJECT_KEY_HARDCODED_SAVE_SCALE);
 			trace("_getHardcodedSaveScale()", hardcodedSaveScale, hardcodedSaveScale as Number);
-			return hardcodedSaveScale ? hardcodedSaveScale as Number : null;
+			return hardcodedSaveScale ? hardcodedSaveScale as Number : 0;
 		}
 
 		private function _onSaveClicked(pEvent:Event) : void {
