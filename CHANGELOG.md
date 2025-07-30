@@ -11,7 +11,8 @@
 - The "go to" button on "favorite items pane" now opens the color picker for it (if it has one) instead of just bringing you to the item
 - Added some tips to the empty area on the "other" tab pane, as well as some help text to the outfit manager (until there's more than 1 row)
 - `TextBase` updated to have `enableWordWrapUsingWidth` instead of having a hacky implementation multiple places
-- Fixed invisible fur layer issue
+- [Bug] Fixed invisible fur layer issue
+- Undo button added to outfit manager (only appears when an outfit is deleted)
 
 
 ## V1.30f - 29 May 2025
