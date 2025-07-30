@@ -23,10 +23,12 @@ package app.ui.panes
 	
 	public class OutfitManagerTabPane extends ButtonGridSidePane
 	{
+		// Constants
+		public static const LOOK_CODE_SELECTED : String = "look_code_selected"; // FewfEvent<string>
+		
 		// Storage
 		private var _character : Character;
 		
-		private var _onUserLookClicked : Function;
 		private var _getLookCodeForCurrentOutfit : Function;
 		private var _exportButton      : SpriteButton;
 		private var _importButton      : SpriteButton;
@@ -34,10 +36,9 @@ package app.ui.panes
 		private var _newOutfitButtonHolder : Sprite;
 		
 		// Constructor
-		public function OutfitManagerTabPane(pCharacter:Character, pOnUserLookClicked:Function, pGetLookCodeForCurrentOutfit:Function) {
+		public function OutfitManagerTabPane(pCharacter:Character, pGetLookCodeForCurrentOutfit:Function) {
 			super(5);
 			_character = pCharacter;
-			_onUserLookClicked = pOnUserLookClicked;
 			_getLookCodeForCurrentOutfit = pGetLookCodeForCurrentOutfit;
 			
 			this.addInfobar( new Infobar({ showBackButton:true, hideItemPreview:true, gridManagement:{ hideRandomizeLock:true } }) )
@@ -129,7 +130,7 @@ package app.ui.panes
 			
 			var btn:PushButton = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:lookMC, data:{ entryId:lookEntry.id } }).appendTo(cell) as PushButton;
 			btn.on(PushButton.TOGGLE, function(){
-				_onUserLookClicked(lookEntry.lookCode);
+				dispatchEvent(new FewfEvent(LOOK_CODE_SELECTED, lookEntry.lookCode))
 			});
 			
 			// Add on top of main button

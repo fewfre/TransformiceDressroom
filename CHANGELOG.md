@@ -8,6 +8,7 @@
 - Tweaked Other pane so that cheese/emoji buttons are grouped on top left, and remaining single items are grouped on top right
 - Emoji and new cheese pane now have a back button that brings you back to Other pane
 - "Hand" -> "Hands" on vertical tab list, to match what's in-game
+- The "go to" button on "favorite items pane" now opens the color picker for it (if it has one) instead of just bringing you to the item
 
 
 ## V1.30f - 29 May 2025

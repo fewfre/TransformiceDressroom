@@ -18,18 +18,20 @@ package app.ui.panes
 	import app.world.data.ItemData;
 	import app.ui.panes.base.ButtonGridSidePane;
 	import app.ui.panes.infobar.Infobar;
+	import app.world.events.ItemDataEvent;
 	
 	public class WornItemsPane extends ButtonGridSidePane
 	{
+		// Constants
+		public static const ITEM_CLICKED : String = "item_clicked"; // ItemDataEvent
+		
 		// Storage
 		private var _character : Character;
-		private var _onItemClicked	: Function;
 		
 		// Constructor
-		public function WornItemsPane(pCharacter:Character, pOnItemClicked:Function) {
+		public function WornItemsPane(pCharacter:Character) {
 			super(4);
 			_character = pCharacter;
-			_onItemClicked = pOnItemClicked;
 			
 			this.addInfobar( new Infobar({ showBackButton:true, hideItemPreview:true, gridManagement:false }) )
 				.on(Infobar.BACK_CLICKED, function(e):void{ dispatchEvent(new Event(Event.CLOSE)); });
@@ -64,7 +66,7 @@ package app.ui.panes
 			shopItem.scaleX = shopItem.scaleY = 2;
 
 			var shopItemButton : PushButton = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:shopItem, data:itemData });
-			shopItemButton.on(PushButton.TOGGLE, function(e:FewfEvent){ _onItemClicked(e.data); });
+			shopItemButton.on(PushButton.TOGGLE, function(e:FewfEvent){ dispatchEvent(new ItemDataEvent(ITEM_CLICKED, e.data as ItemData)) });
 			
 			// Finally add to grid (do it at end so auto event handlers can be hooked up properly)
 			addToGrid(shopItemButton);

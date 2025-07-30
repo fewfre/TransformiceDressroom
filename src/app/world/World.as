@@ -217,11 +217,13 @@ package app.world
 				.on(Event.CLOSE, function(e:Event){ _panes.openPane(WorldPaneManager.OTHER_PANE); });
 			
 			// Outfit Pane
-			_panes.addPane(WorldPaneManager.OUTFITS_PANE, new OutfitManagerTabPane(character, _useOutfitShareCode, function(){ return character.getParamsTfmOfficialSyntax() }))
+			_panes.addPane(WorldPaneManager.OUTFITS_PANE, new OutfitManagerTabPane(character, function(){ return character.getParamsTfmOfficialSyntax() }))
+				.on(OutfitManagerTabPane.LOOK_CODE_SELECTED, function(e:FewfEvent){ _useOutfitShareCode(e.data as String) })
 				.on(Event.CLOSE, function(e:Event){ _panes.openPane(shopTabs.getSelectedTabId()); });
 			
 			// Worn Items Pane
-			_panes.addPane(WorldPaneManager.WORN_ITEMS_PANE, new WornItemsPane(character, _goToItemColorPicker))
+			_panes.addPane(WorldPaneManager.WORN_ITEMS_PANE, new WornItemsPane(character))
+				.on(WornItemsPane.ITEM_CLICKED, function(e:ItemDataEvent){ _goToItemColorPicker(e.itemData); })
 				.on(Event.CLOSE, function(e:Event){ _panes.openPane(WorldPaneManager.OTHER_PANE); });
 			
 			// Item Filtering Pane
@@ -241,7 +243,7 @@ package app.world
 					getShopPane(itemData.type).toggleGridButtonWithData( itemData, true );
 				})
 				.on(FavoritesTabPane.ITEMDATA_REMOVED, function(e:ItemDataEvent){ _removeItem(e.itemData.type); })
-				.on(FavoritesTabPane.ITEMDATA_GOTO, function(e:ItemDataEvent){ _goToItem(e.itemData); });
+				.on(FavoritesTabPane.ITEMDATA_GOTO, function(e:ItemDataEvent){ _goToItem(e.itemData); _goToItemColorPicker(e.itemData); });
 			
 			// Select First Pane
 			shopTabs.toggleOnFirstTab();
