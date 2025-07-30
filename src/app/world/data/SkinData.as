@@ -38,6 +38,7 @@ package app.world.data
 		
 		// pOptions = { shamanMode:ShamanMode }
 		public override function getPart(pID:String, pOptions:Object=null) : Class {
+			if(_assetID === "hide") { return Sprite; }
 			var shamanMode:ShamanMode = ShamanMode.OFF;
 			if(pOptions != null) {
 				if(pOptions.shamanMode) { shamanMode = pOptions.shamanMode; }
