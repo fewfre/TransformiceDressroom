@@ -87,7 +87,12 @@ package com.fewfre.display
 			_field.defaultTextFormat = new TextFormat(_font, _size * _scale, _color, _bold, _italic, null, null, null, _align);
 			_field.autoSize = TextFieldAutoSize.CENTER;
 			_field.text = _getRenderText();
-			_field.x = -_field.textWidth * _originX - 2;
+			if(!_field.wordWrap) {
+				_field.x = -_field.textWidth * _originX - 2;
+			} else {
+				// Since word wrapping uses a defined width, center on that instead
+				_field.x = -_field.width * _originX - 2;
+			}
 			_field.y = -_field.textHeight * _originY - 2;
 		}
 
@@ -97,6 +102,13 @@ package com.fewfre.display
 		public function setText(pText:String) : void {
 			_text = pText;
 			_render();
+		}
+		
+		public function enableWordWrapUsingWidth(pWidth:Number) : TextBase {
+			_field.width = pWidth;
+			_field.wordWrap = true;
+			_render();
+			return this;
 		}
 		
 		/****************************

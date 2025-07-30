@@ -37,8 +37,7 @@ package app.ui.screens
 			*****************************/
 			// We manually x center the text since we're using wordWrap which uses width instead of textWidth
 			_text = new TextBase("", { color:0x330000, originX:0, originY:0.5, x:-(tWidth - 20) / 2 }).appendTo(this);
-			_text.field.width = tWidth - 20;
-			_text.field.wordWrap = true;
+			_text.enableWordWrapUsingWidth(tWidth - 20);
 			
 			/****************************
 			* Close Button

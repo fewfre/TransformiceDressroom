@@ -32,9 +32,7 @@ package app.ui.panes
 			
 			// Description
 			yy = 125; xx = 5+2 + 5;
-			var desc:TextTranslated = new TextTranslated("filtermode_description", { x:xx, y:yy, origin:0 }).appendToT(this);
-			desc.field.width = ConstantsApp.PANE_WIDTH - 5*2;
-			desc.field.wordWrap = true;
+			new TextTranslated("filtermode_description", { x:xx, y:yy, origin:0 }).appendToT(this).enableWordWrapUsingWidth(ConstantsApp.PANE_WIDTH - 5*2);
 			
 			// Share code textbox
 			xx = 5+ConstantsApp.PANE_WIDTH/2; yy = ConstantsApp.SHOP_HEIGHT - 165

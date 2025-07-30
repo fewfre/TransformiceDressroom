@@ -31,10 +31,14 @@ package app.ui.panes
 		private var _backItemButtons  : Vector.<PushButton>;
 		private var _eyeDropperButton : SpriteButton;
 		
-		private var _shamanButtons   : Vector.<PushButton>;
+		private var _shamanButtons    : Vector.<PushButton>;
 		private var _disableSkillsModeButton : PushButton;
 		
-		private var _characterHead   : Character;
+		private var _characterHead    : Character;
+		
+		private var _tipsText         : TextTranslated;
+		private static const TIPS     : Vector.<String> = new <String>["tip_worn_items", "tip_save_scale", "tip_arrow_keys"];
+		private var _tipsIndex        : int = Math.floor(Math.random() * TIPS.length);
 		
 		// Constructor
 		public function OtherTabPane(pCharacter:Character) {
@@ -117,6 +121,13 @@ package app.ui.panes
 			_eyeDropperButton.disable().alpha = 0;
 			
 			/////////////////////////////
+			// Tips
+			/////////////////////////////
+			yy += grid.cellSize + 70; sizex = ConstantsApp.PANE_WIDTH - 5*2;
+			_tipsText = new TextTranslated("").moveT(ConstantsApp.PANE_WIDTH / 2+5, yy).appendToT(this);
+			_tipsText.enableWordWrapUsingWidth(sizex);
+			
+			/////////////////////////////
 			// Bottom Buttons
 			/////////////////////////////
 			// Left
@@ -141,6 +152,7 @@ package app.ui.panes
 			super.open();
 			
 			_updateHead();
+			_tipsText.setText(TIPS[_tipsIndex = (_tipsIndex+1) % TIPS.length]);
 		}
 		
 		public function updateButtonsBasedOnCurrentData() : void {

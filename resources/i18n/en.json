@@ -45,6 +45,12 @@
 	"setting_hardcoded_save_scale_placeholder": { "text":"Dressroom uses 1-8 (default: 3)" },
 	"setting_hardcoded_save_size_label":        { "text":"Hardcoded PNG save size" },
 	"setting_hardcoded_save_size_placeholder":  { "text":"Leave blank to auto fit" },
+	
+	"outfit_manager_help":     { "text":"Here you can save your current outfit for later use! In case you want to backup, share, or transfer your list of outfits, you can also export/import outfits using the button on the top right." },
+	
+	"tip_worn_items":          { "text":"Tip: Double clicking the outfit on the left will open a tab showing all the current worn items." },
+	"tip_save_scale":          { "text":"Tip: When you save the picture of your outfit, its image size matches the scale you currently have it at in this app." },
+	"tip_arrow_keys":          { "text":"Tip: It is possible to traverse item grids using keyboard arrow keys. Arrow keys work on the color picker too, letting you change the selected color input." },
     
     "tab_config":              { "text":"Config" },
     "tab_head":                { "text":"Head" },

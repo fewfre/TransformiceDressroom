@@ -34,6 +34,7 @@ package app.ui.panes
 		private var _importButton      : SpriteButton;
 		
 		private var _newOutfitButtonHolder : Sprite;
+		private var _helpText          : TextTranslated;
 		
 		// Constructor
 		public function OutfitManagerTabPane(pCharacter:Character, pGetLookCodeForCurrentOutfit:Function) {
@@ -59,6 +60,9 @@ package app.ui.panes
 			_exportButton = SpriteButton.withObject(new $SimpleDownload(), 0.7, { size:size, originY:0.5 }).move(xx, yy)
 				.onButtonClick(_onExportClicked).appendTo(infobar) as SpriteButton;
 			infobar.addCustomObjectToRightSideTray(_exportButton);
+			
+			_helpText = new TextTranslated("outfit_manager_help").moveT(ConstantsApp.PANE_WIDTH/2+5, 190); // Don't append, let _updateHelpTextVisibility do that
+			_helpText.enableWordWrapUsingWidth(ConstantsApp.PANE_WIDTH-80);
 		}
 		
 		/****************************
@@ -169,6 +173,16 @@ package app.ui.panes
 			}
 		}
 		
+		private function _updateHelpTextVisibility() : void {
+			var show:Boolean = _lookCodesEntries.length <= this.grid.columns-1;
+			if(show && !_helpText.parent) {
+				this.addChild(_helpText);
+			}
+			else if(!show && !!_helpText.parent) {
+				_helpText.parent.removeChild(_helpText);
+			}
+		}
+		
 		/****************************
 		* Private - Look code stuff
 		*****************************/
@@ -264,6 +278,11 @@ package app.ui.panes
 			grid.reverse();
 			_addNewOutfitButton();
 			refreshScrollbox();
+		}
+		
+		public override function refreshScrollbox() : void {
+			super.refreshScrollbox();
+			_updateHelpTextVisibility();
 		}
 	}
 }
