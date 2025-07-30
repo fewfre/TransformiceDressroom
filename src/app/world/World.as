@@ -329,6 +329,7 @@ package app.world
 			}
 		}
 		private function _updateTabListLockByItemType(pType:ItemType) {
+			if(ItemType.OTHER_PANE_ITEM_TYPES.indexOf(pType) > -1) return;
 			shopTabs.getTabButton(WorldPaneManager.itemTypeToId(pType)).setLocked(character.isItemTypeLocked(pType));
 		}
 		private function _updateTabListItemIndicatorByType(pType:ItemType) {
