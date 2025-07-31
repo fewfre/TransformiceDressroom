@@ -148,7 +148,7 @@ package app.world.elements
 						tPoseBone.addChild( _getWingsMC(shamanColor) );
 					}
 					// Add mask face tattoo (if noskills mode)
-					if(tBoneName == 'Tete_1' && shamanMode != ShamanMode.OFF && disableSkillsMode) {
+					if(tBoneName == 'Tete_1' && shamanMode != ShamanMode.OFF && disableSkillsMode && tSkinData.id != "hide") {
 						// remove all other face tattoos first
 						var oldTattoo:DisplayObject = null;
 						for(var tatI:int = 0; tatI < part.numChildren; tatI++) {
