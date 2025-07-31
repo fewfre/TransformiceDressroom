@@ -64,21 +64,24 @@ package app.world
 			/////////////////////////////
 			// Create Character
 			/////////////////////////////
-			var parms:String = null;
+			var paramsString:String = null;
 			if(!Fewf.isExternallyLoaded) {
 				try {
 					var urlPath:String = ExternalInterface.call("eval", "window.location.href");
 					if(urlPath && urlPath.indexOf("?") > 0) {
 						urlPath = urlPath.substr(urlPath.indexOf("?") + 1, urlPath.length);
 					}
-					parms = urlPath;
+					paramsString = urlPath;
 				} catch (error:Error) { };
+			}
+			if(!paramsString && Fewf.sharedObject.getData(ConstantsApp.SHARED_OBJECT_KEY_AUTO_SAVE_LOOK)) {
+				paramsString = Fewf.sharedObject.getData(ConstantsApp.SHARED_OBJECT_KEY_AUTO_SAVE_LOOK);
 			}
 			
 			_giantFilterIcon = DisplayWrapper.wrap(new $FilterIcon(), this).toScale(4).move(180, 180 + 50).asSprite;
 			_giantFilterIcon.visible = false;
 			
-			this.character = new Character(new <ItemData>[ GameAssets.defaultSkin, GameAssets.defaultPose ], parms)
+			this.character = new Character(new <ItemData>[ GameAssets.defaultSkin, GameAssets.defaultPose ], paramsString)
 				.move(180, 275).setDragBounds(0+4, 73+4, 375-4-4, ConstantsApp.APP_HEIGHT-(73+4)-4).appendTo(this);
 			this.character.doubleClickEnabled = true;
 			this.character.addEventListener(MouseEvent.DOUBLE_CLICK, function(e:MouseEvent){ _panes.openPane(WorldPaneManager.WORN_ITEMS_PANE); })
@@ -532,6 +535,7 @@ package app.world
 		
 		private function _onCharacterPoseUpdated(e:Event) : void {
 			_animationControls.setTargetMovieClip(character.outfit.pose);
+			Fewf.sharedObject.setData(ConstantsApp.SHARED_OBJECT_KEY_AUTO_SAVE_LOOK, character.getParams())
 		}
 
 		private function _onPlayerAnimationToggle(e:Event):void {
