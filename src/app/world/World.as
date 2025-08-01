@@ -596,7 +596,7 @@ package app.world
 						_toolbox.updateClipboardButton(false, false);
 					})
 				} else {
-					FewfDisplayUtils.copyToClipboard(character, _getHardcodedSaveScale() || this.character.outfit.scaleX);
+					FewfDisplayUtils.copyToClipboard(character.outfit, _getHardcodedSaveScale() || this.character.outfit.scaleX);
 					_toolbox.updateClipboardButton(false, true);
 				}
 			} catch(e) {
