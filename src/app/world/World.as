@@ -36,6 +36,7 @@ package app.world
 		private var _toolbox           : Toolbox;
 		private var _itemFilterBanner  : ItemFilterBanner;
 		private var _animationControls : AnimationControls;
+		private var _restoreAutoSaveBtn: GameButton;
 		
 		private var _shareScreen       : ShareScreen;
 		private var trashConfirmScreen : TrashConfirmScreen;
@@ -73,9 +74,6 @@ package app.world
 					}
 					paramsString = urlPath;
 				} catch (error:Error) { };
-			}
-			if(!paramsString && Fewf.sharedObject.getData(ConstantsApp.SHARED_OBJECT_KEY_AUTO_SAVE_LOOK)) {
-				paramsString = Fewf.sharedObject.getData(ConstantsApp.SHARED_OBJECT_KEY_AUTO_SAVE_LOOK);
 			}
 			
 			_giantFilterIcon = DisplayWrapper.wrap(new $FilterIcon(), this).toScale(4).move(180, 180 + 50).asSprite;
@@ -132,6 +130,8 @@ package app.world
 			
 			_animationControls = new AnimationControls().move(78, ConstantsApp.APP_HEIGHT - 35/2 - 5).appendTo(this)
 				.on(Event.CLOSE, function(e):void{ _toolbox.toggleAnimationButtonOffWithEvent(); });
+			
+			_addRestoreAutoSaveButtonIfNeeded(Fewf.sharedObject.getData(ConstantsApp.SHARED_OBJECT_KEY_AUTO_SAVE_LOOK));
 			
 			/////////////////////////////
 			// Bottom Left Area
@@ -535,7 +535,27 @@ package app.world
 		
 		private function _onCharacterPoseUpdated(e:Event) : void {
 			_animationControls.setTargetMovieClip(character.outfit.pose);
-			Fewf.sharedObject.setData(ConstantsApp.SHARED_OBJECT_KEY_AUTO_SAVE_LOOK, character.getParams())
+			Fewf.sharedObject.setData(ConstantsApp.SHARED_OBJECT_KEY_AUTO_SAVE_LOOK, character.getParams());
+			_removeRestoreAutoSaveButton();
+		}
+		
+		private function _addRestoreAutoSaveButtonIfNeeded(autoSavedLook:String) : void {
+			// Don't show button if it's the default look
+			if(autoSavedLook && autoSavedLook != "s=1&p=Statique") {
+				// Make it a timeout so it's added after the initial character pose update event fires
+				var tParent : World = this;
+				setTimeout(function():void{
+					// If auto saved outfit, prompt user to use or not
+					(_restoreAutoSaveBtn = GameButton.rect(120, 16)).setText("restore_auto_save_btn", { size:10 }).toOrigin(0.5).move(185, 90).setData({ look:autoSavedLook }).appendTo(tParent)
+						.onButtonClick(function(e:FewfEvent):void{ _useOutfitShareCode(e.data.look); });
+				}, 100);
+			}
+		}
+		private function _removeRestoreAutoSaveButton() : void {
+			if(_restoreAutoSaveBtn && _restoreAutoSaveBtn.parent) {
+				_restoreAutoSaveBtn.parent.removeChild(_restoreAutoSaveBtn);
+				_restoreAutoSaveBtn = null;
+			}
 		}
 
 		private function _onPlayerAnimationToggle(e:Event):void {

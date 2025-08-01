@@ -23,6 +23,7 @@
     "share_paste":             { "text":"Paste your share code / url here" },
     "share_paste_success":     { "text":"Success!" },
     "share_paste_invalid":     { "text":"Invalid" },
+	"restore_auto_save_btn":   { "text":"Restore Auto Save" },
 	
     "share_filter_banner":     { "text":"Item filter mode is activated" },
     "filtermode_preview_btn":  { "text":"Preview filter with selected items" },
