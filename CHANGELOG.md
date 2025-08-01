@@ -13,6 +13,7 @@
 - `TextBase` updated to have `enableWordWrapUsingWidth` instead of having a hacky implementation multiple places
 - [Bug] Fixed invisible fur layer issue
 - Undo button added to outfit manager (only appears when an outfit is deleted)
+	- (1 Aug) Updated to allow undoing all outfits deleted during the current session
 - Auto save feature added that will remember your current outfit when you close the app, and will use it again when you re-open it.
 	- (31 Jul) Tweaked auto save so that instead of being automatic it give a small prompt when opening app to restore auto save; prompt disappears after making any changes
 

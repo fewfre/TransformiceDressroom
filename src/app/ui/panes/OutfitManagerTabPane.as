@@ -34,6 +34,7 @@ package app.ui.panes
 		private var _importButton      : SpriteButton;
 		
 		private var _newOutfitButtonHolder : Sprite;
+		private var _deletedLooks      : Vector.<String>;
 		private var _undoButton        : GameButton;
 		private var _helpText          : TextTranslated;
 		
@@ -65,11 +66,11 @@ package app.ui.panes
 			_helpText = new TextTranslated("outfit_manager_help").moveT(ConstantsApp.PANE_WIDTH/2+5, 190); // Don't append, let _updateHelpTextVisibility do that
 			_helpText.enableWordWrapUsingWidth(ConstantsApp.PANE_WIDTH-80);
 			
+			_deletedLooks = new Vector.<String>();
 			(_undoButton = GameButton.square(24)).setImage(new $UndoArrow(), 0.5).move(ConstantsApp.SHOP_WIDTH/2-35, -1).appendTo(this.infobar)
-				.onButtonClick(function(e:FewfEvent):void{
-					addNewLook(e.data as String);
-					_undoButton.setData(null);
-					_undoButton.visible = false;
+				.onButtonClick(function(e:Event):void{
+					addNewLook(_deletedLooks.pop());
+					if(!_deletedLooks.length) _undoButton.visible = false;
 				});
 			_undoButton.visible = false;
 		}
@@ -98,7 +99,7 @@ package app.ui.panes
 		public function deleteLookById(entryId:Number) : void {
 			var removedEntry:LookEntry = _deleteLookEntryIdAndSave(entryId);
 			
-			_undoButton.setData(removedEntry.lookCode);
+			_deletedLooks.push(removedEntry.lookCode);
 			_undoButton.visible = true;
 			
 			toggleExportButton(_lookCodesEntries.length > 0);
