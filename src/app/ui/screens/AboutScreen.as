@@ -83,9 +83,9 @@ package app.ui.screens
 			new TextTranslated("setting_hardcoded_save_scale_label", { size:10, originX:0 }).moveT(-tBg.width/2+10, yy).appendToT(tTray);
 			var hardcodedCanvasSaveScale:Object = Fewf.sharedObject.getData(ConstantsApp.SHARED_OBJECT_KEY_HARDCODED_SAVE_SCALE);
 			var saveScaleInput:FancyInput = new FancyInput({ width:210, text:hardcodedCanvasSaveScale, placeholder:"setting_hardcoded_save_scale_placeholder" }).move(75, yy).appendTo(tTray);
-			saveScaleInput.field.restrict = "0-9";
+			saveScaleInput.field.restrict = "0-9\.";
 			saveScaleInput.field.addEventListener(Event.CHANGE, function(e:Event){
-				var size:Number = parseInt(e.target.text);
+				var size:Number = parseFloat(e.target.text);
 				Fewf.sharedObject.setData(ConstantsApp.SHARED_OBJECT_KEY_HARDCODED_SAVE_SCALE, !size || isNaN(size) ? null : size);
 			});
 			

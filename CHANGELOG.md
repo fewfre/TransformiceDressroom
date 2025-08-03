@@ -16,6 +16,7 @@
 	- (1 Aug) Updated to allow undoing all outfits deleted during the current session
 - Auto save feature added that will remember your current outfit when you close the app, and will use it again when you re-open it.
 	- (31 Jul) Tweaked auto save so that instead of being automatic it give a small prompt when opening app to restore auto save; prompt disappears after making any changes
+- [Code] update script will now properly replace bad files that have no data
 
 
 ## V1.30f - 29 May 2025

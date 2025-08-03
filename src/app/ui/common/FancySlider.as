@@ -48,8 +48,8 @@ package app.ui.common
 		public function setSliderParams(min:Number, max:Number, value:Number, interval:Number=0.1) : FancySlider {
 			_slider.minimum = min;
 			_slider.maximum = max;
-			_slider.value = value;
 			_slider.snapInterval = interval;
+			_slider.value = value; // Needs to be set last to avoid value being effected by previous settings
 			return this;
 		}
 		

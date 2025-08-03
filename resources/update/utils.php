@@ -78,6 +78,7 @@ function downloadFileIfHeadersAreNewer($url, $file, $fancyHeaders) {
 	return false;
 }
 function checkIfUrlLastModifiedNewerThanFile($urlLastModified, $file) {
+	if(!filesize($file)) return true; // If file we're replacing has a file size of zero just replace it, file ages don't matter
 	$fileTime = getFileLastModifiedDateTime($file);
 	return $fileTime ? $urlLastModified > $fileTime : true; // If file doesn't exist then url is newer
 }

@@ -82,7 +82,7 @@ package app.world
 			this.character = new Character(new <ItemData>[ GameAssets.defaultSkin, GameAssets.defaultPose ], paramsString)
 				.move(180, 275).setDragBounds(0+4, 73+4, 375-4-4, ConstantsApp.APP_HEIGHT-(73+4)-4).appendTo(this);
 			this.character.doubleClickEnabled = true;
-			this.character.addEventListener(MouseEvent.DOUBLE_CLICK, function(e:MouseEvent){ _panes.openPane(WorldPaneManager.WORN_ITEMS_PANE); })
+			this.character.addEventListener(MouseEvent.DOUBLE_CLICK, function(e:MouseEvent){ _panes.openPane(WorldPaneManager.WORN_ITEMS_PANE); });
 			this.character.addEventListener(Character.POSE_UPDATED, _onCharacterPoseUpdated);
 			
 			/////////////////////////////
@@ -750,7 +750,7 @@ package app.world
 			private function _onShareButtonClicked(e:Event) : void {
 				var tURL = "", tOfficialCode = "";
 				try {
-					if(Fewf.isExternallyLoaded) {
+					if(Fewf.isExternallyLoaded || !Fewf.isBrowserLoaded) {
 						tURL = this.character.getParams();
 					} else {
 						tURL = ExternalInterface.call("eval", "window.location.origin+window.location.pathname");
