@@ -97,7 +97,7 @@ package app.world
 			/////////////////////////////
 			// Top Area
 			/////////////////////////////
-			_toolbox = new Toolbox(_onShareCodeEntered).move(188, 28).appendTo(this)
+			_toolbox = new Toolbox().move(188, 28).appendTo(this)
 				.on(Toolbox.SAVE_CLICKED, _onSaveClicked)
 				.on(Toolbox.GIF_CLICKED, function(e:Event):void{ _saveAsAnimation(); })
 				.on(Toolbox.WEBP_CLICKED, function(e:Event):void{ _saveAsAnimation('webp'); })
@@ -110,6 +110,11 @@ package app.world
 				.on(Toolbox.ANIMATION_TOGGLED, _onPlayerAnimationToggle)
 				.on(Toolbox.RANDOM_CLICKED, _onRandomizeDesignClicked)
 				.on(Toolbox.TRASH_CLICKED, _onTrashButtonClicked);
+				
+			if(!ConstantsApp.CONFIG_TAB_ENABLED) {
+				new PasteShareCodeInput().appendTo(this).move(206, 62)
+					.on(PasteShareCodeInput.CHANGE, function(e:FewfEvent):void{ _onShareCodeEntered(e.data.code, e.data.update); });
+			}
 				
 			_itemFilterBanner = new ItemFilterBanner().move(76, 61).appendTo(this)
 				.on(ItemFilterBanner.ONLY_INCLUDE_CUSTOMIZATIONS_TOGGLED, _toggleItemFilterModeToOnlyShowCustomizableItems)

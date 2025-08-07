@@ -50,8 +50,7 @@ package app.ui
 		public function get scaleSlider() : FancySlider { return _scaleSlider; }
 		
 		// Constructor
-		// onShareCodeEntered: (code, (state:String)=>void)=>void
-		public function Toolbox(onShareCodeEntered:Function) {
+		public function Toolbox() {
 			var bg:RoundRectangle = new RoundRectangle(365, 35).toOrigin(0.5).drawAsTray().appendTo(this);
 			
 			/********************
@@ -158,14 +157,6 @@ package app.ui
 			_defaultScaleButton.on(MouseEvent.MOUSE_OVER, function():void{ _defaultScaleButton.alpha = 0.8; });
 			scaleSlider.on(MouseEvent.MOUSE_OUT, function():void{ _defaultScaleButton.alpha = 0; });
 			_defaultScaleButton.on(MouseEvent.MOUSE_OUT, function():void{ _defaultScaleButton.alpha = 0; });
-			
-			/********************
-			* Under Toolbox
-			*********************/
-			if(!ConstantsApp.CONFIG_TAB_ENABLED) {
-				new PasteShareCodeInput().appendTo(this).move(18, 34)
-					.on(PasteShareCodeInput.CHANGE, function(e:FewfEvent):void{ onShareCodeEntered(e.data.code, e.data.update); });
-			}
 		}
 		public function move(pX:Number, pY:Number) : Toolbox { x = pX; y = pY; return this; }
 		public function appendTo(pParent:Sprite): Toolbox { pParent.addChild(this); return this; }
