@@ -1,37 +1,25 @@
 package app.ui.panes
-{
-	import com.fewfre.display.*;
-	import com.fewfre.utils.Fewf;
-	import com.fewfre.utils.FewfDisplayUtils;
-	import com.fewfre.events.FewfEvent;
-	import app.data.*;
-	import app.ui.*;
-	import app.ui.buttons.*;
-	import app.world.elements.*;
-	import flash.display.*;
-	import flash.events.*;
-	import flash.display.MovieClip;
-	import flash.utils.ByteArray;
-	import flash.net.FileReference;
-	import flash.net.FileFilter;
-	import flash.utils.setTimeout;
-	import app.world.data.ItemData;
+{	
+	import app.data.GameAssets;
+	import app.data.ItemType;
+	import app.ui.buttons.PushButton;
 	import app.ui.panes.base.ButtonGridSidePane;
 	import app.ui.panes.infobar.Infobar;
+	import app.world.data.ItemData;
+	import app.world.data.OutfitData;
 	import app.world.events.ItemDataEvent;
-	
+	import com.fewfre.events.FewfEvent;
+	import flash.display.MovieClip;
+	import flash.events.Event;
+
 	public class WornItemsPane extends ButtonGridSidePane
 	{
 		// Constants
 		public static const ITEM_CLICKED : String = "item_clicked"; // ItemDataEvent
 		
-		// Storage
-		private var _character : Character;
-		
 		// Constructor
-		public function WornItemsPane(pCharacter:Character) {
+		public function WornItemsPane() {
 			super(4);
-			_character = pCharacter;
 			
 			this.addInfobar( new Infobar({ showBackButton:true, hideItemPreview:true, gridManagement:false }) )
 				.on(Infobar.BACK_CLICKED, function(e):void{ dispatchEvent(new Event(Event.CLOSE)); });
@@ -42,19 +30,20 @@ package app.ui.panes
 		*****************************/
 		public override function open() : void {
 			super.open();
-			
-			_renderItems();
+		}
+		public function init(pOutfitData:OutfitData) : void {
+			_renderItems(pOutfitData);
 		}
 		
 		/****************************
 		* Private
 		*****************************/
-		private function _renderItems() : void {
+		private function _renderItems(pOutfitData:OutfitData) : void {
 			resetGrid();
 			
 			for each(var itemType:ItemType in ItemType.ALL) {
 				if(itemType === null) { continue; }
-				_addItemButton( _character.getItemData(itemType) );
+				_addItemButton( pOutfitData.getItemData(itemType) );
 			}
 			refreshScrollbox();
 		}

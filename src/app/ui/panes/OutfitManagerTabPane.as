@@ -20,6 +20,7 @@ package app.ui.panes
 	import com.fewfre.utils.FewfUtils;
 	import app.ui.panes.infobar.GridManagementWidget;
 	import app.ui.panes.infobar.Infobar;
+	import app.world.data.OutfitData;
 	
 	public class OutfitManagerTabPane extends ButtonGridSidePane
 	{
@@ -27,8 +28,6 @@ package app.ui.panes
 		public static const LOOK_CODE_SELECTED : String = "look_code_selected"; // FewfEvent<string>
 		
 		// Storage
-		private var _character : Character;
-		
 		private var _getLookCodeForCurrentOutfit : Function;
 		private var _exportButton      : SpriteButton;
 		private var _importButton      : SpriteButton;
@@ -39,9 +38,8 @@ package app.ui.panes
 		private var _helpText          : TextTranslated;
 		
 		// Constructor
-		public function OutfitManagerTabPane(pCharacter:Character, pGetLookCodeForCurrentOutfit:Function) {
+		public function OutfitManagerTabPane(pGetLookCodeForCurrentOutfit:Function) {
 			super(5);
-			_character = pCharacter;
 			_getLookCodeForCurrentOutfit = pGetLookCodeForCurrentOutfit;
 			
 			this.addInfobar( new Infobar({ showBackButton:true, hideItemPreview:true, gridManagement:{ hideRandomizeLock:true } }) )
@@ -138,14 +136,14 @@ package app.ui.panes
 		}
 		
 		public function _addLookButton(lookEntry:LookEntry) : void {
-			var lookMC = new Character(new <ItemData>[ GameAssets.defaultPose ], lookEntry.lookCode, true);
+			var lookMC:Pose = new Pose().applyOutfitData(new OutfitData(true).setItemData(GameAssets.defaultPose).parseShareCodeSelf(lookEntry.lookCode, true));
 			
 			var cell:Sprite = new Sprite();
 			var actionTray:Sprite = new Sprite(); actionTray.alpha = 0;
 			cell.addEventListener(MouseEvent.MOUSE_OVER, function(e){ actionTray.alpha = 1; });
 			cell.addEventListener(MouseEvent.MOUSE_OUT, function(e){ actionTray.alpha = 0; });
 			
-			var btn:PushButton = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:lookMC, data:{ entryId:lookEntry.id } }).appendTo(cell) as PushButton;
+			var btn:PushButton = PushButton.square(grid.cellSize).setImage(lookMC, 3).setData({ entryId:lookEntry.id }).appendTo(cell) as PushButton;
 			btn.on(PushButton.TOGGLE, function(){
 				dispatchEvent(new FewfEvent(LOOK_CODE_SELECTED, lookEntry.lookCode));
 			});
@@ -261,11 +259,12 @@ package app.ui.panes
 		
 		private function _onImportSelected(e:Event) : void {
 			try {
+				var tempOutfitDataForTesting:OutfitData = new OutfitData();
 				var importedLooks = e.target.data.toString().split('\n');
 				var oldLooks:Array = Fewf.sharedObject.getData(ConstantsApp.SHARED_OBJECT_KEY_OUTFITS) || [];
 				for(var i:int = importedLooks.length-1; i >= 0; i--) {
 					// Don't allow an import file with invalid code
-					if(this._character.parseParams(importedLooks[i]) === false) {
+					if(tempOutfitDataForTesting.parseShareCode(importedLooks[i]) === false) {
 						throw 'Invalid code in list';
 					}
 					// Remove duplicates being imported

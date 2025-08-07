@@ -36,6 +36,7 @@ package app.world
 		public function get colorFinderPane() : ColorFinderPane { return getPane(COLOR_FINDER_PANE) as ColorFinderPane; }
 		public function get otherPane() : OtherTabPane { return getPane(OTHER_PANE) as OtherTabPane; }
 		public function get otherColorPickerPane() : ColorPickerTabPane { return getPane(OTHER_COLOR_PANE) as ColorPickerTabPane; }
+		public function get wornItemsPane() : WornItemsPane { return getPane(WORN_ITEMS_PANE) as WornItemsPane; }
 		
 		/////////////////////////////
 		// Static

@@ -401,8 +401,7 @@ pOnInitComplete
 			var tPoseData = pData.pose ? pData.pose : defaultPose;
 			var tSkinData = pData.skin ? pData.skin : _defaultSkinForGetItemImage;
 
-			var tPose:Pose = new Pose(tPoseData);
-			tPose.apply(new <ItemData>[ tSkinData ], ShamanMode.OFF);
+			var tPose:Pose = new Pose().applyOutfitData(new OutfitData().setItemDataVector(new <ItemData>[tPoseData, tSkinData]));
 			tPose.stopAtLastFrame();
 
 			return tPose;

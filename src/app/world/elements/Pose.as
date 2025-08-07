@@ -12,11 +12,12 @@ package app.world.elements
 	{
 		// Storage
 		private var _poseData : ItemData;
-		private var _pose : MovieClip;
+		private var _poseMC : MovieClip;
 		
-		public function get pose():MovieClip { return _pose; }
-		public function get poseCurrentFrame():Number { return _pose.currentFrame; }
-		public function get poseTotalFrames():Number { return _pose.totalFrames; }
+		public function get pose():MovieClip { return _poseMC; }
+		public function get poseMC():MovieClip { return _poseMC; }
+		public function get poseCurrentFrame():Number { return _poseMC.currentFrame; }
+		public function get poseTotalFrames():Number { return _poseMC.totalFrames; }
 		
 		// private static const boneSpecificItemTypeOrdering:Dictionary = new Dictionary();
 		// boneSpecificItemTypeOrdering["Tete_1"] = new <ItemType>[ ItemType.HEAD, ItemType.MOUTH, ItemType.HAIR, ItemType.NECK ];
@@ -50,24 +51,20 @@ package app.world.elements
 		accessorySlotBones[101] = new <String>["OreilleG_1"];
 		
 		// Constructor
-		public function Pose(pPoseData:ItemData) {
+		public function Pose() {
 			super();
-			_poseData = pPoseData;
-			
-			_pose = addChild( new pPoseData.itemClass() ) as MovieClip;
-			stop();
 		}
 		public function move(pX:Number, pY:Number) : Pose { x = pX; y = pY; return this; }
 		public function appendTo(pParent:Sprite): Pose { pParent.addChild(this); return this; }
 		
 		override public function play() : void {
 			super.play();
-			_pose.play();
+			_poseMC.play();
 		}
 		
 		override public function stop() : void {
 			super.stop();
-			_pose.stop();
+			_poseMC.stop();
 		}
 		
 		private function _getBestPoseFrame() : uint {
@@ -82,40 +79,45 @@ package app.world.elements
 		}
 		
 		public function stopAtLastFrame() : void {
-			_pose.gotoAndPlay(_getBestPoseFrame());
+			_poseMC.gotoAndPlay(_getBestPoseFrame());
 			stop();
 			// Stop children from animating when stopped
 			if(_poseData.id == 'Kiss' || _poseData.id == 'Bisou_1' || _poseData.id == 'Bisou_2') {
-				for(var i:int = 0; i < _pose.numChildren; i++){
-					(_pose.getChildAt(i) as MovieClip).stop();
+				for(var i:int = 0; i < _poseMC.numChildren; i++){
+					(_poseMC.getChildAt(i) as MovieClip).stop();
 				}
 			}
 		}
 		
 		public function poseNextFrame() : void {
 			if(poseCurrentFrame == poseTotalFrames) {
-				_pose.gotoAndPlay(0);
+				_poseMC.gotoAndPlay(0);
 			} else {
-				_pose.nextFrame();
+				_poseMC.nextFrame();
 			}
 			stop();
 		}
 		
 		public function goToPreviousFrameIfPoseHasntChanged(pOldPose:Pose) : void {
 			if(pOldPose && _poseData.matches(pOldPose._poseData)) {
-				_pose.gotoAndPlay(pOldPose.pose.currentFrame);
+				_poseMC.gotoAndPlay(pOldPose.pose.currentFrame);
 				if(!pOldPose.pose.isPlaying) {
-					_pose.stop();
+					_poseMC.stop();
 				}
 			}
 		}
 		
-		// pData = { ?removeBlanks:Boolean=false }
-		public function apply(items:Vector.<ItemData>, shamanMode:ShamanMode, shamanColor:uint=0x95D9D6, disableSkillsMode:Boolean=false, pFlagWavingCode:String="", removeBlanks:Boolean=false) : MovieClip {
-			if(!items) items = new Vector.<ItemData>();
+		public function applyOutfitData(pOutfitData:OutfitData, removeBlanks:Boolean=false) : Pose {
+			var items:Vector.<ItemData> = pOutfitData ? pOutfitData.getItemDataVector().concat() : new Vector.<ItemData>(); // Create a copy so we don't alter an existing array
+			
+			var tPoseDataIndex = FewfUtils.getIndexFromVectorWithKeyVal(items, "type", ItemType.POSE);
+			_poseData = tPoseDataIndex == -1 ? null : items.splice(tPoseDataIndex, 1)[0];
 			
 			var tSkinDataIndex = FewfUtils.getIndexFromVectorWithKeyVal(items, "type", ItemType.SKIN);
 			var tSkinData:SkinData = tSkinDataIndex == -1 ? null : items.splice(tSkinDataIndex, 1)[0] as SkinData;//FewfUtils.getFromVectorWithKeyVal(items, "type", ItemType.SKIN);
+			
+			var tEmojiDataIndex = FewfUtils.getIndexFromVectorWithKeyVal(items, "type", ItemType.EMOJI);
+			var tEmojiData:BitmapItemData = tEmojiDataIndex == -1 ? null : items.splice(tEmojiDataIndex, 1)[0] as BitmapItemData;
 			
 			var tShopData:Vector.<ItemData> = _orderType(items);
 			var part:MovieClip = null;
@@ -124,31 +126,36 @@ package app.world.elements
 			
 			var tAccessories:Vector.<DisplayObject> = new Vector.<DisplayObject>();
 			
-			var addToPoseData = { shamanMode:shamanMode };
+			var addToPoseData = { shamanMode:pOutfitData.shamanMode };
+			
+			if(_poseData) {
+				_poseMC = addChild( new _poseData.itemClass() ) as MovieClip;
+				stop();
+			}
 			
 			// This works because poses, skins, and items have a group of letters/numbers that let each other know they should be grouped together.
 			// For example; the "head" of a pose is T, as is the skin's head, hats, and hair. Thus they all go onto same area of the skin.
 			// Loop in reverse so unused parts can be removed if required
-			for(var i:int = 0; i < _pose.numChildren; i++) {
-				tPoseBone = _pose.getChildAt(i) as MovieClip;
+			for(var i:int = 0; i < _poseMC.numChildren; i++) {
+				tPoseBone = _poseMC.getChildAt(i) as MovieClip;
 				if(!tPoseBone) continue;
 				tBoneName = tPoseBone.name;
-				_pose[tBoneName] = tPoseBone; // Needed for inline scripts (ex: Tail 69)
+				_poseMC[tBoneName] = tPoseBone; // Needed for inline scripts (ex: Tail 69)
 				
 				// First add skin to bone
 				if(tSkinData) {
 					part = _addToPoseIfCan(tPoseBone, tSkinData, tBoneName, addToPoseData) as MovieClip;
 					if(part) {
-						_colorSkinPart(part, tSkinData.colors ? tSkinData.colors[0] : -1, shamanColor);
+						_colorSkinPart(part, tSkinData.colors ? tSkinData.colors[0] : -1, pOutfitData.shamanColor);
 						tAccessories = tAccessories.concat(getMcItemSubAccessories(part));
 					}
 					
 					// Add divine mode wings (if divine mode)
-					if(tBoneName == "CuisseD_1" && shamanMode == ShamanMode.DIVINE && isPoseWingsAddable(_poseData.id)) {
-						tPoseBone.addChild( _getWingsMC(shamanColor) );
+					if(tBoneName == "CuisseD_1" && pOutfitData.shamanMode == ShamanMode.DIVINE && isPoseWingsAddable(_poseData.id)) {
+						tPoseBone.addChild( _getWingsMC(pOutfitData.shamanColor) );
 					}
 					// Add mask face tattoo (if noskills mode)
-					if(tBoneName == 'Tete_1' && shamanMode != ShamanMode.OFF && disableSkillsMode && tSkinData.id != "hide") {
+					if(tBoneName == 'Tete_1' && pOutfitData.shamanMode != ShamanMode.OFF && pOutfitData.disableSkillsMode && tSkinData.id != "hide") {
 						// remove all other face tattoos first
 						var oldTattoo:DisplayObject = null;
 						for(var tatI:int = 0; tatI < part.numChildren; tatI++) {
@@ -164,20 +171,20 @@ package app.world.elements
 						var noSkillsTattoo = new $TatouageSansComp();
 						noSkillsTattoo.name = "c1";
 						part.addChild(noSkillsTattoo);
-						_colorSkinPart(part, -1, shamanColor);
+						_colorSkinPart(part, -1, pOutfitData.shamanColor);
 						
 					}
 				}
 				
-				if(_poseData.id == "Drapeau" && pFlagWavingCode && pFlagWavingCode.length >= 2 && tBoneName == 'x_d') {
-					tPoseBone.addChild(_getFlagImage(pFlagWavingCode));
+				if(_poseData.id == "Drapeau" && pOutfitData.flagWavingCode && pOutfitData.flagWavingCode.length >= 2 && tBoneName == 'x_d') {
+					tPoseBone.addChild(_getFlagImage(pOutfitData.flagWavingCode));
 				}
 				
 				// Next add equipped items to current bone if they need to be
 				for(var j:int = 0; j < tShopData.length; j++) {
 					part = _addToPoseIfCan(tPoseBone, tShopData[j], tBoneName, addToPoseData) as MovieClip;
 					if(part) {
-						_colorItemPart(part, tShopData[j], tBoneName, shamanColor);
+						_colorItemPart(part, tShopData[j], tBoneName, pOutfitData.shamanColor);
 						tAccessories = tAccessories.concat(getMcItemSubAccessories(part));
 					}
 				}
@@ -188,11 +195,17 @@ package app.world.elements
 				
 			if(removeBlanks) {
 				// If removing blanks, then loop through the bones again in reverse order (to prevent index errors)
-				for(var rbI:int = _pose.numChildren-1; rbI >= 0; rbI--) {
-					if(!!_pose.getChildAt(rbI) && (_pose.getChildAt(rbI) as MovieClip).numChildren == 0) {
-						_pose.removeChildAt(rbI);
+				for(var rbI:int = _poseMC.numChildren-1; rbI >= 0; rbI--) {
+					if(!!_poseMC.getChildAt(rbI) && (_poseMC.getChildAt(rbI) as MovieClip).numChildren == 0) {
+						_poseMC.removeChildAt(rbI);
 					}
 				}
+			}
+			
+			if(tEmojiData) {
+				var emoji = _poseMC.addChild(tEmojiData.getBitmap());
+				emoji.x = -35/2;
+				emoji.y = -45 - 35/2;
 			}
 			
 			return this;
@@ -238,7 +251,7 @@ package app.world.elements
 				var validBoneNamesForItemCat:Vector.<String> = accessorySlotBones[accItemCat];
 				if(validBoneNamesForItemCat) {
 					for(var bnaI:int = 0; bnaI < validBoneNamesForItemCat.length; bnaI++) {
-						var tBoneMC:MovieClip = _pose.getChildByName(validBoneNamesForItemCat[bnaI]) as MovieClip;
+						var tBoneMC:MovieClip = _poseMC.getChildByName(validBoneNamesForItemCat[bnaI]) as MovieClip;
 
 						if(tBoneMC) {
 							var tNewAccPos:Point = tBoneMC.globalToLocal(accMC.parent.localToGlobal(new Point(accMC.x,accMC.y)));

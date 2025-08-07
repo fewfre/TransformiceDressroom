@@ -1,3 +1,8 @@
+## V1.31b - ???
+- [Code] Split a large chunk of data storage out of Character and into `OutfitData`
+- [Code] `Pose` logic cleaned up a little and now uses `OutfitData`
+
+
 ## V1.31 - 26 Jul 2025
 - Added new `FromageSourisSaumon` back item
 - [Bug] Changed some assets to http protocol when using the app since some W10 users were having issues with certs

@@ -29,10 +29,10 @@ package app.world
 	public class World extends Sprite
 	{
 		// Storage
-		private var character          : Character;
+		private var _character         : Character;
 		private var _panes             : WorldPaneManager;
 
-		private var shopTabs           : ShopTabList;
+		private var _shopTabs          : ShopTabList;
 		private var _toolbox           : Toolbox;
 		private var _itemFilterBanner  : ItemFilterBanner;
 		private var _animationControls : AnimationControls;
@@ -79,16 +79,15 @@ package app.world
 			_giantFilterIcon = DisplayWrapper.wrap(new $FilterIcon(), this).toScale(4).move(180, 180 + 50).asSprite;
 			_giantFilterIcon.visible = false;
 			
-			this.character = new Character(new <ItemData>[ GameAssets.defaultSkin, GameAssets.defaultPose ], paramsString)
-				.move(180, 275).setDragBounds(0+4, 73+4, 375-4-4, ConstantsApp.APP_HEIGHT-(73+4)-4).appendTo(this);
-			this.character.doubleClickEnabled = true;
-			this.character.addEventListener(MouseEvent.DOUBLE_CLICK, function(e:MouseEvent){ _panes.openPane(WorldPaneManager.WORN_ITEMS_PANE); });
-			this.character.addEventListener(Character.POSE_UPDATED, _onCharacterPoseUpdated);
+			_character = new Character(new OutfitData().setItemDataVector(new <ItemData>[ GameAssets.defaultSkin, GameAssets.defaultPose ]).parseShareCodeSelf(paramsString))
+				.move(180, 275).setDragBounds(0+4, 73+4, 375-4-4, ConstantsApp.APP_HEIGHT-(73+4)-4).appendTo(this)
+				.on(Character.POSE_UPDATED, _onCharacterPoseUpdated)
+				.enableDoubleClick().on(MouseEvent.DOUBLE_CLICK, function(e:MouseEvent){ _panes.openPane(WorldPaneManager.WORN_ITEMS_PANE); _panes.wornItemsPane.init(_character.outfitData); });
 			
 			/////////////////////////////
 			// Setup UI
 			/////////////////////////////
-			this.shopTabs = new ShopTabList(70, ConstantsApp.SHOP_HEIGHT).move(375, 10).appendTo(this).on(ShopTabList.TAB_CLICKED, _onTabClicked);
+			_shopTabs = new ShopTabList(70, ConstantsApp.SHOP_HEIGHT).move(375, 10).appendTo(this).on(ShopTabList.TAB_CLICKED, _onTabClicked);
 			_populateShopTabs();
 			
 			var tShop:RoundRectangle = new RoundRectangle(ConstantsApp.SHOP_WIDTH, ConstantsApp.SHOP_HEIGHT).move(450, 10)
@@ -98,7 +97,7 @@ package app.world
 			/////////////////////////////
 			// Top Area
 			/////////////////////////////
-			_toolbox = new Toolbox(character, _onShareCodeEntered).move(188, 28).appendTo(this)
+			_toolbox = new Toolbox(_onShareCodeEntered).move(188, 28).appendTo(this)
 				.on(Toolbox.SAVE_CLICKED, _onSaveClicked)
 				.on(Toolbox.GIF_CLICKED, function(e:Event):void{ _saveAsAnimation(); })
 				.on(Toolbox.WEBP_CLICKED, function(e:Event):void{ _saveAsAnimation('webp'); })
@@ -172,7 +171,7 @@ package app.world
 					_panes.addPane(WorldPaneManager.itemTypeToFilterId(tType), _setupItemPaneForFiltering(tType));
 				}
 				// Based on what the character is wearing at start, toggle on the appropriate buttons.
-				getShopPane(tType).toggleGridButtonWithData( character.getItemData(tType) );
+				getShopPane(tType).toggleGridButtonWithData( _character.getItemData(tType) );
 			}
 			
 			Fewf.dispatcher.addEventListener(ConstantsApp.DOWNLOAD_ITEM_DATA_IMAGE, _onSaveItemDataAsImage);
@@ -205,7 +204,7 @@ package app.world
 			}
 			
 			// "Other" Pane
-			_panes.addPane(WorldPaneManager.OTHER_PANE, new OtherTabPane(character))
+			_panes.addPane(WorldPaneManager.OTHER_PANE, new OtherTabPane(_character))
 				.on(OtherTabPane.CUSTOM_SHAMAN_COLOR_CLICKED, function(e:Event):void{ _shamanColorButtonClicked(); })
 				.on(OtherTabPane.SHAMAN_COLOR_PICKED, function(e:FewfEvent):void{ _setConfigShamanColor(e.data as int); })
 				.on(OtherTabPane.ITEM_TOGGLED, _otherTabItemToggled)
@@ -220,12 +219,12 @@ package app.world
 				.on(Event.CLOSE, function(e:Event){ _panes.openPane(WorldPaneManager.OTHER_PANE); });
 			
 			// Outfit Pane
-			_panes.addPane(WorldPaneManager.OUTFITS_PANE, new OutfitManagerTabPane(character, function(){ return character.getParamsTfmOfficialSyntax() }))
+			_panes.addPane(WorldPaneManager.OUTFITS_PANE, new OutfitManagerTabPane(function(){ return _character.outfitData.stringify_tfmOfficialSyntax() }))
 				.on(OutfitManagerTabPane.LOOK_CODE_SELECTED, function(e:FewfEvent){ _useOutfitShareCode(e.data as String) })
-				.on(Event.CLOSE, function(e:Event){ _panes.openPane(shopTabs.getSelectedTabId()); });
+				.on(Event.CLOSE, function(e:Event){ _panes.openPane(_shopTabs.getSelectedTabId()); });
 			
 			// Worn Items Pane
-			_panes.addPane(WorldPaneManager.WORN_ITEMS_PANE, new WornItemsPane(character))
+			_panes.addPane(WorldPaneManager.WORN_ITEMS_PANE, new WornItemsPane())
 				.on(WornItemsPane.ITEM_CLICKED, function(e:ItemDataEvent){ _goToItemColorPicker(e.itemData); })
 				.on(Event.CLOSE, function(e:Event){ _panes.openPane(WorldPaneManager.OTHER_PANE); });
 			
@@ -236,11 +235,11 @@ package app.world
 				.on(ItemFilteringPane.EVENT_RESET_FILTERING, function(e:FewfEvent){ _resetItemFilteringPane(); });
 			
 			// Favorites Pane
-			_panes.addPane(WorldPaneManager.FAVORITES_PANE, new FavoritesTabPane(function(pItemData:ItemData):Boolean{ return pItemData.matches(character.getItemData(pItemData.type)); }))
-				.on(Event.CLOSE, function(e){ _panes.openPane(shopTabs.getSelectedTabId()); })
+			_panes.addPane(WorldPaneManager.FAVORITES_PANE, new FavoritesTabPane(function(pItemData:ItemData):Boolean{ return pItemData.matches(_character.getItemData(pItemData.type)); }))
+				.on(Event.CLOSE, function(e){ _panes.openPane(_shopTabs.getSelectedTabId()); })
 				.on(FavoritesTabPane.ITEMDATA_SELECTED, function(e:ItemDataEvent){
 					var itemData:ItemData = e.itemData;
-					character.setItemData(itemData);
+					_character.setItemData(itemData);
 					_updateUIBasedOnCharacter();
 					
 					getShopPane(itemData.type).toggleGridButtonWithData( itemData, true );
@@ -249,20 +248,20 @@ package app.world
 				.on(FavoritesTabPane.ITEMDATA_GOTO, function(e:ItemDataEvent){ _goToItem(e.itemData); _goToItemColorPicker(e.itemData); });
 			
 			// Select First Pane
-			shopTabs.toggleOnFirstTab();
+			_shopTabs.toggleOnFirstTab();
 		}
 
 		private function _setupItemPane(pType:ItemType) : ShopCategoryPane {
 			var tPane:ShopCategoryPane = new ShopCategoryPane(pType);
 			tPane.on(ShopCategoryPane.ITEM_TOGGLED, _onItemToggled);
-			tPane.on(ShopCategoryPane.FLAG_WAVE_CODE_CHANGED, function(e:FewfEvent){ character.flagWavingCode = e.data.code; });
+			tPane.on(ShopCategoryPane.FLAG_WAVE_CODE_CHANGED, function(e:FewfEvent){ _character.outfitData.flagWavingCode = e.data.code; });
 			
 			tPane.infobar.on(Infobar.COLOR_WHEEL_CLICKED, function(){ _colorButtonClicked(pType); });
 			tPane.infobar.on(Infobar.ITEM_PREVIEW_CLICKED, function(){ _removeItem(pType); });
 			tPane.infobar.on(Infobar.EYE_DROPPER_CLICKED, function(){ _eyeDropButtonClicked(pType); });
 			tPane.infobar.on(GridManagementWidget.RANDOMIZE_CLICKED, function(){ _randomItemOfType(pType); });
 			tPane.infobar.on(GridManagementWidget.RANDOMIZE_LOCK_CLICKED, function(e:FewfEvent){
-				character.setItemTypeLock(pType, e.data.locked);
+				_character.setItemTypeLock(pType, e.data.locked);
 				_updateTabListLockByItemType(pType);
 			});
 			if(ItemType.OTHER_PANE_ITEM_TYPES.indexOf(pType) > -1) {
@@ -288,29 +287,29 @@ package app.world
 		}
 		
 		private function _populateShopTabs() {
-			shopTabs.reset(); // Reset so we start with an empty list
+			_shopTabs.reset(); // Reset so we start with an empty list
 			
 			if(_itemFiltering_selectionModeOn && !_itemFiltering_filterEnabled) {
-				shopTabs.addTab("tab_filtering", WorldPaneManager.ITEM_FILTERING_PANE);
-				shopTabs.addTab("tab_furs", WorldPaneManager.itemTypeToFilterId(ItemType.SKIN));
-				shopTabs.addTab("tab_head", WorldPaneManager.itemTypeToFilterId(ItemType.HEAD));
-				shopTabs.addTab("tab_ears", WorldPaneManager.itemTypeToFilterId(ItemType.EARS));
-				shopTabs.addTab("tab_eyes", WorldPaneManager.itemTypeToFilterId(ItemType.EYES));
-				shopTabs.addTab("tab_mouth", WorldPaneManager.itemTypeToFilterId(ItemType.MOUTH));
-				shopTabs.addTab("tab_neck", WorldPaneManager.itemTypeToFilterId(ItemType.NECK));
-				shopTabs.addTab("tab_tail", WorldPaneManager.itemTypeToFilterId(ItemType.TAIL));
-				shopTabs.addTab("tab_hair", WorldPaneManager.itemTypeToFilterId(ItemType.HAIR));
-				shopTabs.addTab("tab_contacts", WorldPaneManager.itemTypeToFilterId(ItemType.CONTACTS));
-				shopTabs.addTab("tab_tattoo", WorldPaneManager.itemTypeToFilterId(ItemType.TATTOO));
-				shopTabs.addTab("tab_hand", WorldPaneManager.itemTypeToFilterId(ItemType.HAND));
+				_shopTabs.addTab("tab_filtering", WorldPaneManager.ITEM_FILTERING_PANE);
+				_shopTabs.addTab("tab_furs", WorldPaneManager.itemTypeToFilterId(ItemType.SKIN));
+				_shopTabs.addTab("tab_head", WorldPaneManager.itemTypeToFilterId(ItemType.HEAD));
+				_shopTabs.addTab("tab_ears", WorldPaneManager.itemTypeToFilterId(ItemType.EARS));
+				_shopTabs.addTab("tab_eyes", WorldPaneManager.itemTypeToFilterId(ItemType.EYES));
+				_shopTabs.addTab("tab_mouth", WorldPaneManager.itemTypeToFilterId(ItemType.MOUTH));
+				_shopTabs.addTab("tab_neck", WorldPaneManager.itemTypeToFilterId(ItemType.NECK));
+				_shopTabs.addTab("tab_tail", WorldPaneManager.itemTypeToFilterId(ItemType.TAIL));
+				_shopTabs.addTab("tab_hair", WorldPaneManager.itemTypeToFilterId(ItemType.HAIR));
+				_shopTabs.addTab("tab_contacts", WorldPaneManager.itemTypeToFilterId(ItemType.CONTACTS));
+				_shopTabs.addTab("tab_tattoo", WorldPaneManager.itemTypeToFilterId(ItemType.TATTOO));
+				_shopTabs.addTab("tab_hand", WorldPaneManager.itemTypeToFilterId(ItemType.HAND));
 			} else {
-				if(ConstantsApp.CONFIG_TAB_ENABLED && !_itemFiltering_filterEnabled) shopTabs.addTab("tab_config", WorldPaneManager.CONFIG_PANE);
+				if(ConstantsApp.CONFIG_TAB_ENABLED && !_itemFiltering_filterEnabled) _shopTabs.addTab("tab_config", WorldPaneManager.CONFIG_PANE);
 				
 				for each(var type:ItemType in ItemType.TYPES_WITH_SHOP_PANES) {
 					if(ItemType.OTHER_PANE_ITEM_TYPES.indexOf(type) > -1 || !_shouldShowShopTab(type)) continue;
 					// Some i18n ids don't match the type string, so manually handling it here
 					var i18nStr : String = type == ItemType.SKIN ? 'furs' : type == ItemType.HAND ? 'hand' : type == ItemType.POSE ? 'poses' : type.toString();
-					shopTabs.addTab("tab_"+i18nStr, WorldPaneManager.itemTypeToId(type));
+					_shopTabs.addTab("tab_"+i18nStr, WorldPaneManager.itemTypeToId(type));
 					// .addIcon(
 					// 	type == ItemType.SKIN ? "http://www.transformice.com/images/x_transformice/x_interface/x_souris.png?d=855" : 
 					// 	type == ItemType.EYES ? "http://www.transformice.com/images/x_transformice/x_interface/glasses.png?d=855" : 
@@ -328,26 +327,26 @@ package app.world
 					_updateTabListLockByItemType(type);
 					_updateTabListItemIndicatorByType(type);
 				}
-				shopTabs.addTab("tab_other", WorldPaneManager.OTHER_PANE);
+				_shopTabs.addTab("tab_other", WorldPaneManager.OTHER_PANE);
 			}
 		}
 		private function _updateTabListLockByItemType(pType:ItemType) {
 			if(ItemType.OTHER_PANE_ITEM_TYPES.indexOf(pType) > -1) return;
-			shopTabs.getTabButton(WorldPaneManager.itemTypeToId(pType)).setLocked(character.isItemTypeLocked(pType));
+			_shopTabs.getTabButton(WorldPaneManager.itemTypeToId(pType)).setLocked(_character.isItemTypeLocked(pType));
 		}
 		private function _updateTabListItemIndicatorByType(pType:ItemType) {
 			if(ItemType.OTHER_PANE_ITEM_TYPES.indexOf(pType) > -1) return;
 			
-			var tItemData:ItemData = character.getItemData(pType);
+			var tItemData:ItemData = _character.getItemData(pType);
 			var tHadIndicator:Boolean = !!tItemData && !tItemData.matches(GameAssets.defaultSkin) && !tItemData.matches(GameAssets.defaultPose);
-			shopTabs.getTabButton(WorldPaneManager.itemTypeToId(pType)).setItemIndicator(tHadIndicator);
+			_shopTabs.getTabButton(WorldPaneManager.itemTypeToId(pType)).setItemIndicator(tHadIndicator);
 		}
 
 		private function _onMouseWheel(pEvent:MouseEvent) : void {
-			if(this.mouseX < this.shopTabs.x) {
+			if(this.mouseX < _shopTabs.x) {
 				_toolbox.scaleSlider.updateViaMouseWheelDelta(pEvent.delta);
-				character.scale = _toolbox.scaleSlider.value;
-				character.clampCoordsToDragBounds();
+				_character.scale = _toolbox.scaleSlider.value;
+				_character.clampCoordsToDragBounds();
 			}
 		}
 
@@ -366,13 +365,13 @@ package app.world
 		}
 
 		private function _onScaleSliderChange(e:Event):void {
-			character.scale = _toolbox.scaleSlider.value;
-			character.clampCoordsToDragBounds();
+			_character.scale = _toolbox.scaleSlider.value;
+			_character.clampCoordsToDragBounds();
 		}
 
 		private function _onScaleSliderDefaultClicked(e:Event):void {
-			character.scale = _toolbox.scaleSlider.value = ConstantsApp.DEFAULT_CHARACTER_SCALE;
-			character.clampCoordsToDragBounds();
+			_character.scale = _toolbox.scaleSlider.value = ConstantsApp.DEFAULT_CHARACTER_SCALE;
+			_character.clampCoordsToDragBounds();
 		}
 
 		private function _onShareCodeEntered(code:String, pProgressCallback:Function):void {
@@ -405,17 +404,17 @@ package app.world
 			}
 		
 			// First remove old stuff to prevent conflicts
-			character.shamanMode = ShamanMode.OFF;
+			_character.outfitData.shamanMode = ShamanMode.OFF;
 			for each(var tLayerType:ItemType in ItemType.ALL) {
-				if(!character.isItemTypeLocked((tLayerType))) _removeItem(tLayerType);
+				if(!_character.isItemTypeLocked((tLayerType))) _removeItem(tLayerType);
 			}
 			
-			var parseSuccess:Boolean = character.parseParams(code);
+			var parseSuccess:Boolean = _character.outfitData.parseShareCode(code);
 			
-			character.updatePose();
+			_character.updatePose();
 			
 			for each(var tType:ItemType in ItemType.TYPES_WITH_SHOP_PANES) {
-				if(!character.isItemTypeLocked(tType)) _refreshButtonCustomizationForItemData(character.getItemData(tType));
+				if(!_character.isItemTypeLocked(tType)) _refreshButtonCustomizationForItemData(_character.getItemData(tType));
 			}
 			
 			// now update the infobars
@@ -442,7 +441,7 @@ package app.world
 		
 			try {
 				// First remove old stuff to prevent conflicts
-				character.shamanMode = ShamanMode.OFF;
+				_character.outfitData.shamanMode = ShamanMode.OFF;
 				for each(var tLayerType:ItemType in ItemType.ALL) { _removeItem(tLayerType); }
 				
 				// If selection mode is active, end it
@@ -454,9 +453,9 @@ package app.world
 				if(parseSuccess) {
 					_enableFilterMode();
 					
-					character.updatePose();
+					_character.updatePose();
 					
-					for each(var tType:ItemType in ItemType.TYPES_WITH_SHOP_PANES) { _refreshButtonCustomizationForItemData(character.getItemData(tType)); }
+					for each(var tType:ItemType in ItemType.TYPES_WITH_SHOP_PANES) { _refreshButtonCustomizationForItemData(_character.getItemData(tType)); }
 					
 					// now update the infobars
 					_updateUIBasedOnCharacter();
@@ -479,7 +478,7 @@ package app.world
 			_updateAllShopPaneFilters();
 			_showOrHideGiantFilterIcon();
 			// Select first tab available
-			shopTabs.toggleOnFirstTab();
+			_shopTabs.toggleOnFirstTab();
 		}
 		
 		private function _onExitItemFilteringMode(e:Event) : void { _exitFilterMode(); };
@@ -490,7 +489,7 @@ package app.world
 			_clearItemFiltering();
 			_showOrHideGiantFilterIcon();
 			// Select first tab available (needed since tabs repopulated)
-			shopTabs.toggleOnFirstTab();
+			_shopTabs.toggleOnFirstTab();
 		}
 		
 		private function _toggleItemFilterModeToOnlyShowCustomizableItems(e:Event) : void {
@@ -530,13 +529,15 @@ package app.world
 		
 		private function _showOrHideGiantFilterIcon() : void {
 			_giantFilterIcon.visible = _itemFiltering_selectionModeOn && !_itemFiltering_filterEnabled;
-			character.visible = !_giantFilterIcon.visible;
+			_character.setVisibility(!_giantFilterIcon.visible);
 		}
 		
 		private function _onCharacterPoseUpdated(e:Event) : void {
-			_animationControls.setTargetMovieClip(character.outfit.pose);
-			Fewf.sharedObject.setData(ConstantsApp.SHARED_OBJECT_KEY_AUTO_SAVE_LOOK, character.getParams());
+			_animationControls.setTargetMovieClip(_character.pose.poseMC);
+			Fewf.sharedObject.setData(ConstantsApp.SHARED_OBJECT_KEY_AUTO_SAVE_LOOK, _character.outfitData.stringify_fewfreSyntax());
 			_removeRestoreAutoSaveButton();
+			
+			if(_panes.wornItemsPane && _panes.wornItemsPane.flagOpen) _panes.wornItemsPane.init(_character.outfitData);
 		}
 		
 		private function _addRestoreAutoSaveButtonIfNeeded(autoSavedLook:String) : void {
@@ -561,7 +562,7 @@ package app.world
 		private function _onPlayerAnimationToggle(e:Event):void {
 			if(!_animationControls.visible) {
 				_animationControls.show();
-				_animationControls.setTargetMovieClip(character.outfit.pose);
+				_animationControls.setTargetMovieClip(_character.pose.poseMC);
 			} else {
 				_animationControls.hide();
 			}
@@ -576,15 +577,15 @@ package app.world
 		}
 
 		private function _onSaveClicked(pEvent:Event) : void {
-			_saveAsPNG(this.character.outfit, "character", this.character.outfit.scaleX);
+			_saveAsPNG(_character.pose, "character", _character.pose.scaleX);
 		}
 		
 		private function _saveAsAnimation(pFormat:String=null) : void {
 			if(!ConstantsApp.ANIMATION_DOWNLOAD_ENABLED) return _onSaveClicked(null);
 			
-			// FewfDisplayUtils.saveAsSpriteSheet(this.character.copy().outfit.pose, "spritesheet", this.character.outfit.scaleX);
+			// FewfDisplayUtils.saveAsSpriteSheet(_character.copy().outfit.pose, "spritesheet", this.character.outfit.scaleX);
 			_toolbox.downloadButtonEnable(false);
-			FewfDisplayUtils.saveAsAnimatedGif(this.character.copy().outfit.pose, "character", _getHardcodedSaveScale() || this.character.outfit.scaleX, pFormat, function(){
+			FewfDisplayUtils.saveAsAnimatedGif(new Pose().applyOutfitData(_character.outfitData).poseMC, "character", _getHardcodedSaveScale() || _character.pose.scaleX, pFormat, function(){
 				_toolbox.downloadButtonEnable(true);
 			});
 		}
@@ -612,11 +613,11 @@ package app.world
 		private function _onClipboardButtonClicked(e:Event) : void {
 			try {
 				if(ConstantsApp.ANIMATION_DOWNLOAD_ENABLED && isCharacterAnimating()) {
-					FewfDisplayUtils.copyToClipboardAnimatedGif(character.copy().outfit.pose, 1, function(){
+					FewfDisplayUtils.copyToClipboardAnimatedGif(new Pose().applyOutfitData(_character.outfitData).poseMC, 1, function(){
 						_toolbox.updateClipboardButton(false, false);
 					})
 				} else {
-					FewfDisplayUtils.copyToClipboard(character.outfit, _getHardcodedSaveScale() || this.character.outfit.scaleX);
+					FewfDisplayUtils.copyToClipboard(_character.pose, _getHardcodedSaveScale() || _character.pose.scaleX);
 					_toolbox.updateClipboardButton(false, true);
 				}
 			} catch(e) {
@@ -632,9 +633,9 @@ package app.world
 			for each(var tType:ItemType in ItemType.TYPES_WITH_SHOP_PANES) {
 				tPane = getShopPane(tType);
 				// Based on what the character is wearing at start, toggle on the appropriate buttons.
-				tPane.toggleGridButtonWithData( character.getItemData(tType), true );
+				tPane.toggleGridButtonWithData( _character.getItemData(tType), true );
 			}
-			getShopPane(ItemType.POSE).flagWaveInput.text = character.flagWavingCode || "";
+			getShopPane(ItemType.POSE).flagWaveInput.text = _character.outfitData.flagWavingCode || "";
 		}
 
 		private function _onItemToggled(e:ItemDataEvent) : void {
@@ -655,7 +656,7 @@ package app.world
 						}
 					}
 				}
-				this.character.setItemData(tItemData);
+				_character.setItemData(tItemData);
 				tInfobar.addInfo( tItemData, GameAssets.getColoredItemImage(tItemData) );
 				tInfobar.showColorWheel(showColorWheel);
 			} else {
@@ -667,15 +668,15 @@ package app.world
 		private function _otherTabItemToggled(e:FewfEvent) : void { _toggleItemSelectionOneOff(e.data.type, e.data.itemData); }
 		private function _toggleItemSelectionOneOff(pType:ItemType, pItemData:ItemData) : void {
 			if (pItemData) {
-				this.character.setItemData( pItemData );
+				_character.setItemData( pItemData );
 			} else {
-				this.character.removeItem(pType);
+				_character.removeItem(pType);
 			}
 		}
 
 		private function _removeItem(pType:ItemType) : void {
 			if(ItemType.OTHER_PANE_ITEM_TYPES_WITH_NO_SUB_PANE.indexOf(pType) > -1) {
-				this.character.removeItem(pType);
+				_character.removeItem(pType);
 			}
 			var tPane:ShopCategoryPane = getShopPane(pType);
 			if(!tPane || tPane.infobar.hasData == false) { return; }
@@ -684,8 +685,8 @@ package app.world
 			if(!!tPane.defaultItemData) {
 				tPane.getButtonWithItemData(tPane.defaultItemData).toggleOn();
 			} else {
-				var tOldData:ItemData = this.character.getItemData(pType);
-				this.character.removeItem(pType);
+				var tOldData:ItemData = _character.getItemData(pType);
+				_character.removeItem(pType);
 				tPane.infobar.removeInfo();
 				if(tOldData) tPane.getButtonWithItemData(tOldData).toggleOff();
 			}
@@ -707,7 +708,7 @@ package app.world
 
 		private function _randomItemOfType(pType:ItemType, pSetToDefault:Boolean=false) : void {
 			var pane:ShopCategoryPane = getShopPane(pType);
-			if(character.isItemTypeLocked(pType) || !pane.buttons.length) { return; }
+			if(_character.isItemTypeLocked(pType) || !pane.buttons.length) { return; }
 			
 			if(!pSetToDefault) {
 				pane.chooseRandomItem();
@@ -725,19 +726,19 @@ package app.world
 			
 			// These are special types that don't have thier own unique panes
 			if(ItemType.OTHER_PANE_ITEM_TYPES_WITH_NO_SUB_PANE.indexOf(itemType) > -1) {
-				shopTabs.toggleTabOn(WorldPaneManager.OTHER_PANE);
-				character.setItemData(pItemData);
+				_shopTabs.toggleTabOn(WorldPaneManager.OTHER_PANE);
+				_character.setItemData(pItemData);
 				_panes.otherPane.updateButtonsBasedOnCurrentData();
 				return;
 			}
 			
 			if(ItemType.OTHER_PANE_ITEM_TYPES.indexOf(itemType) > -1) {
-				shopTabs.toggleTabOn(WorldPaneManager.OTHER_PANE);
+				_shopTabs.toggleTabOn(WorldPaneManager.OTHER_PANE);
 				_panes.openShopPane(itemType);
 			} else {
-				shopTabs.toggleTabOn(WorldPaneManager.itemTypeToId(itemType));
+				_shopTabs.toggleTabOn(WorldPaneManager.itemTypeToId(itemType));
 			}
-			getShopPane(itemType).toggleGridButtonWithData( character.getItemData(itemType), true );
+			getShopPane(itemType).toggleGridButtonWithData( _character.getItemData(itemType), true );
 		}
 		
 		private function _goToItemColorPicker(pItemData:ItemData) : void {
@@ -751,22 +752,22 @@ package app.world
 				var tURL = "", tOfficialCode = "";
 				try {
 					if(Fewf.isExternallyLoaded || !Fewf.isBrowserLoaded) {
-						tURL = this.character.getParams();
+						tURL = _character.outfitData.stringify_fewfreSyntax();
 					} else {
 						tURL = ExternalInterface.call("eval", "window.location.origin+window.location.pathname");
-						tURL += "?"+this.character.getParams();
+						tURL += "?"+_character.outfitData.stringify_fewfreSyntax();
 					}
 				} catch (error:Error) {
 					tURL = "<error creating link>";
 				};
 				
 				try {
-					tOfficialCode = this.character.getParamsTfmOfficialSyntax();
+					tOfficialCode = _character.outfitData.stringify_tfmOfficialSyntax();
 				} catch (error:Error) {
 					tOfficialCode = "<error creating link>";
 				};
 
-				_shareScreen.open(tURL, tOfficialCode, character);
+				_shareScreen.open(tURL, tOfficialCode, _character.pose);
 				addChild(_shareScreen);
 			}
 			private function _onShareScreenClosed(e:Event) : void { removeChild(_shareScreen); }
@@ -781,14 +782,14 @@ package app.world
 			private function _onAboutScreenClosed(e:Event) : void { removeChild(_aboutScreen); }
 			
 			private function _onTrashConfirmScreenConfirm(e:Event) : void {
-				character.shamanMode = ShamanMode.OFF;
+				_character.outfitData.shamanMode = ShamanMode.OFF;
 				// Remove items
 				for each(var tLayerType:ItemType in ItemType.ALL) { _removeItem(tLayerType); }
 				
 				// Refresh panes
 				for each(var tType:ItemType in ItemType.TYPES_WITH_SHOP_PANES) {
 					var pane:ShopCategoryPane = getShopPane(tType);
-					pane.infobar.unlockRandomizeButton(); // this will also update `character.setItemTypeLock()`
+					pane.infobar.unlockRandomizeButton(); // this will also update `_character.setItemTypeLock()`
 					
 					// Reset customizations
 					if(tType != ItemType.POSE) {
@@ -815,14 +816,14 @@ package app.world
 				_populateShopTabs();
 				_dirtyAllItemFilteringPanes();
 				_showOrHideGiantFilterIcon();
-				shopTabs.toggleTabOn(WorldPaneManager.ITEM_FILTERING_PANE);
+				_shopTabs.toggleTabOn(WorldPaneManager.ITEM_FILTERING_PANE);
 			}
 			private function _closeItemFilteringPane() : void {
 				_itemFiltering_selectionModeOn = false;
 				_clearItemFiltering();
 				_populateShopTabs();
 				_showOrHideGiantFilterIcon();
-				shopTabs.toggleTabOn(WorldPaneManager.OTHER_PANE);
+				_shopTabs.toggleTabOn(WorldPaneManager.OTHER_PANE);
 			}
 			private function _resetItemFilteringPane() : void {
 				ShareCodeFilteringData.reset();
@@ -835,9 +836,9 @@ package app.world
 		//{REGION Color Tab
 			private function _onColorPickChanged(e:FewfEvent):void {
 				if(e.data.allUpdated) {
-					this.character.getItemData(this.currentlyColoringType).colors = e.data.allColors;
+					_character.getItemData(this.currentlyColoringType).colors = e.data.allColors;
 				} else {
-					this.character.getItemData(this.currentlyColoringType).colors[e.data.colorIndex] = uint(e.data.color);
+					_character.getItemData(this.currentlyColoringType).colors[e.data.colorIndex] = uint(e.data.color);
 				}
 				_refreshSelectedItemColor(this.currentlyColoringType);
 			}
@@ -850,10 +851,10 @@ package app.world
 			}
 			
 			private function _refreshSelectedItemColor(pType:ItemType) : void {
-				character.updatePose();
+				_character.updatePose();
 				
 				var tPane:ShopCategoryPane = getShopPane(pType);
-				var tItemData:ItemData = this.character.getItemData(pType);
+				var tItemData:ItemData = _character.getItemData(pType);
 				if(!tItemData) { return; }
 				
 				_refreshButtonCustomizationForItemData(tItemData);
@@ -868,7 +869,7 @@ package app.world
 			}
 
 			private function _colorButtonClicked(pType:ItemType) : void {
-				if(this.character.getItemData(pType) == null) { return; }
+				if(_character.getItemData(pType) == null) { return; }
 
 				var tData:ItemData = getShopPane(pType).infobar.itemData;
 				_panes.colorPickerPane.infobar.addInfo( tData, GameAssets.getItemImage(tData) );
@@ -883,7 +884,7 @@ package app.world
 			}
 
 			private function _eyeDropButtonClicked(pType:ItemType) : void {
-				if(this.character.getItemData(pType) == null) { return; }
+				if(_character.getItemData(pType) == null) { return; }
 				var tData:ItemData = getShopPane(pType).infobar.itemData;
 				_openColorFinderWithItemData(tData);
 			}
@@ -909,12 +910,12 @@ package app.world
 			}
 			
 			private function _setConfigShamanColor(val:uint) : void {
-				character.shamanColor = val;
-				character.updatePose();
+				_character.outfitData.shamanColor = val;
+				_character.updatePose();
 			}
 
 			private function _shamanColorButtonClicked() : void {
-				_panes.otherColorPickerPane.init( 'shamancolor', new <uint>[ character.shamanColor ], null );
+				_panes.otherColorPickerPane.init( 'shamancolor', new <uint>[ _character.outfitData.shamanColor ], null );
 				_panes.openPane(WorldPaneManager.OTHER_COLOR_PANE);
 			}
 		//}END Color Tab

@@ -4,7 +4,9 @@ package app.ui.panes
 	import app.ui.buttons.*;
 	import app.ui.panes.base.SidePane;
 	import app.world.data.ItemData;
+	import app.world.data.OutfitData;
 	import app.world.elements.Character;
+	import app.world.elements.Pose;
 	import com.fewfre.display.*;
 	import com.fewfre.events.FewfEvent;
 	import com.fewfre.utils.FewfDisplayUtils;
@@ -34,7 +36,8 @@ package app.ui.panes
 		private var _shamanButtons    : Vector.<PushButton>;
 		private var _disableSkillsModeButton : PushButton;
 		
-		private var _characterHead    : Character;
+		private var _mouseHeadButton  : GameButton;
+		private var _mouseHead        : Pose;
 		
 		private var _tipsText         : TextTranslated;
 		private static const TIPS     : Vector.<String> = new <String>["tip_worn_items", "tip_save_scale", "tip_arrow_keys"];
@@ -136,8 +139,8 @@ package app.ui.panes
 			
 			// Right
 			// Save Head Image
-			GameButton.square(70)
-				.setImage(_characterHead = new Character(new <ItemData>[ GameAssets.defaultSkin, GameAssets.defaultPose ]))
+			(_mouseHeadButton = GameButton.square(70))
+				.setImage(_mouseHead = new Pose().applyOutfitData(new OutfitData().setItemDataVector(new <ItemData>[ GameAssets.defaultSkin, GameAssets.defaultPose ])), 3)
 				.move(353, 315).appendTo(this)
 				.onButtonClick(_onSaveMouseHeadClicked);
 			
@@ -159,10 +162,10 @@ package app.ui.panes
 			for(var i:int = 0; i < _shamanButtons.length; i++) {
 				_shamanButtons[i].toggleOff();
 			}
-			if(_character.shamanMode != ShamanMode.OFF) {
-				_shamanButtons[_getIndexFromShamanMode(_character.shamanMode)].toggleOn(false);
+			if(_character.outfitData.shamanMode != ShamanMode.OFF) {
+				_shamanButtons[_getIndexFromShamanMode(_character.outfitData.shamanMode)].toggleOn(false);
 			}
-			_disableSkillsModeButton.toggle(_character.disableSkillsMode, false);
+			_disableSkillsModeButton.toggle(_character.outfitData.disableSkillsMode, false);
 			
 			for each(var bttn:PushButton in _backItemButtons) {
 				bttn.toggle(!!_character.getItemData(ItemType.BACK) && _character.getItemData(ItemType.BACK).matches(bttn.data.itemData), false);
@@ -180,16 +183,18 @@ package app.ui.panes
 		}
 		
 		private function _updateHead() {
-			// copy character data onto our copy
-			for each(var tItemType in ItemType.LAYERING) {
-				var data:ItemData = _character.getItemData(tItemType);
-				if(data) _characterHead.setItemData( data ); else _characterHead.removeItem( tItemType );
-			}
-			_characterHead.setItemData( _character.getItemData(ItemType.POSE) );
-			_characterHead.scale = 1;
+			_mouseHead = new Pose().applyOutfitData(_character.outfitData)
+			
+			// // copy character data onto our copy
+			// for each(var tItemType in ItemType.LAYERING) {
+			// 	var data:ItemData = _character.getItemData(tItemType);
+			// 	if(data) _mouseHead.setItemData( data ); else _mouseHead.removeItem( tItemType );
+			// }
+			// _mouseHead.setItemData( _character.getItemData(ItemType.POSE) );
+			// _mouseHead.scale = 1;
 			
 			// Cut the head off the poor mouse ;_;
-			var pose = _characterHead.outfit.pose;
+			var pose = _mouseHead.pose;
 			var partsToKeep:Array = ["Tete_", "Oeil_", "OeilVide_", "Oeil2_", "Oeil3_", "Oeil4_", "OreilleD_", "OreilleG_"];
 			var tChild:DisplayObject = null;
 			for(var i:int = pose.numChildren-1; i >= 0; i--) {
@@ -200,17 +205,19 @@ package app.ui.panes
 				}
 			}
 			
-			// var bsize = 70, size = 60;
-			// var tBounds = _characterHead.getBounds(_characterHead);
-			// var tOffset = tBounds.topLeft;
-			// FewfDisplayUtils.fitWithinBounds(_characterHead, size, size, size, size);
-			// _characterHead.x = bsize / 2 - (tBounds.width / 2 + tOffset.x) * _characterHead.scaleX;
-			// _characterHead.y = bsize / 2 - (tBounds.height / 2 + tOffset.y) * _characterHead.scaleY;
+			_mouseHeadButton.setImage(_mouseHead, 3);
 			
-			var bsize = 70, size = 60;
-			FewfDisplayUtils.fitWithinBounds(_characterHead, size, size, size, size);
-			FewfDisplayUtils.alignChildrenAroundAnchor(_characterHead, 0.5);
-			_characterHead.move(bsize/2, bsize/2);
+			// // var bsize = 70, size = 60;
+			// // var tBounds = _mouseHead.getBounds(_mouseHead);
+			// // var tOffset = tBounds.topLeft;
+			// // FewfDisplayUtils.fitWithinBounds(_mouseHead, size, size, size, size);
+			// // _mouseHead.x = bsize / 2 - (tBounds.width / 2 + tOffset.x) * _mouseHead.scaleX;
+			// // _mouseHead.y = bsize / 2 - (tBounds.height / 2 + tOffset.y) * _mouseHead.scaleY;
+			
+			// var bsize = 70, size = 60;
+			// FewfDisplayUtils.fitWithinBounds(_mouseHead, size, size, size, size);
+			// FewfDisplayUtils.alignChildrenAroundAnchor(_mouseHead, 0.5);
+			// _mouseHead.move(bsize/2, bsize/2);
 		
 		}
 		
@@ -220,22 +227,22 @@ package app.ui.panes
 		private function _onShamanButtonClicked(e:FewfEvent) {
 			var btn:PushButton = e.target as PushButton;
 			_untoggle(_shamanButtons, btn);
-			_character.shamanMode = !btn.pushed ? ShamanMode.OFF : e.data.mode as ShamanMode;
+			_character.outfitData.shamanMode = !btn.pushed ? ShamanMode.OFF : e.data.mode as ShamanMode;
 			_character.updatePose();
 			_updateHead();
 		}
 		
 		private function _onNoShamanButtonClicked(pEvent:Event) {
 			_untoggle(_shamanButtons);
-			_character.shamanMode = ShamanMode.OFF;
+			_character.outfitData.shamanMode = ShamanMode.OFF;
 			_character.updatePose();
 			_updateHead();
 		}
 		
 		private function _onShamanDisableSkillsModeButtonClicked(e:Event) {
-			_character.disableSkillsMode = (e.target as PushButton).pushed;
-			if(_character.disableSkillsMode && _character.shamanMode == ShamanMode.OFF) {
-				_character.shamanMode = _shamanButtons[0].data.mode as ShamanMode;
+			_character.outfitData.disableSkillsMode = (e.target as PushButton).pushed;
+			if(_character.outfitData.disableSkillsMode && _character.outfitData.shamanMode == ShamanMode.OFF) {
+				_character.outfitData.shamanMode = _shamanButtons[0].data.mode as ShamanMode;
 				_shamanButtons[0].toggleOn(false);
 			}
 			_character.updatePose();
@@ -265,7 +272,7 @@ package app.ui.panes
 		}
 		
 		private function _onSaveMouseHeadClicked(pEvent:Event) {
-			FewfDisplayUtils.saveAsPNG(_characterHead, 'mouse_head', _character.outfit.scaleX);
+			FewfDisplayUtils.saveAsPNG(_mouseHead, 'mouse_head', _character.pose.scaleX);
 		}
 	}
 }

@@ -4,7 +4,6 @@ package app.ui
 	import app.ui.buttons.*;
 	import app.ui.common.FancySlider;
 	import app.ui.common.FrameBase;
-	import app.world.elements.Character;
 	import com.fewfre.display.DisplayWrapper;
 	import com.fewfre.display.RoundRectangle;
 	import com.fewfre.display.TextTranslated;
@@ -52,7 +51,7 @@ package app.ui
 		
 		// Constructor
 		// onShareCodeEntered: (code, (state:String)=>void)=>void
-		public function Toolbox(pCharacter:Character, onShareCodeEntered:Function) {
+		public function Toolbox(onShareCodeEntered:Function) {
 			var bg:RoundRectangle = new RoundRectangle(365, 35).toOrigin(0.5).drawAsTray().appendTo(this);
 			
 			/********************
@@ -146,7 +145,7 @@ package app.ui
 			var tSliderWidth:Number = tTrayWidth - tButtonXInc*(tTotalButtons) - 20;
 			xx = -tSliderWidth*0.5+(tButtonXInc*((tButtonsOnLeft-tButtonOnRight)*0.5))-1;
 			_scaleSlider = new FancySlider(tSliderWidth).move(xx, yy)
-				.setSliderParams(1, 8, pCharacter.outfit.scaleX)
+				.setSliderParams(1, 8, ConstantsApp.DEFAULT_CHARACTER_SCALE)
 				.appendTo(tTray)
 				.on(FancySlider.CHANGE, dispatchEventHandler(SCALE_SLIDER_CHANGE));
 			

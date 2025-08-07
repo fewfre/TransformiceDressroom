@@ -121,7 +121,7 @@ package app.ui.screens
 		}
 		
 		private function _uploadToImgur(img:Sprite, pCallback:Function) : void {
-			var tPNG:ByteArray = PNGEncoder.encode(FewfDisplayUtils.displayObjectToBitmapData(img));
+			var tPNG:ByteArray = PNGEncoder.encode(FewfDisplayUtils.displayObjectToBitmapData(img, img.scaleX));
 			new SimpleUrlLoader(_getImgurUploadUrl()).setToPost().addFormDataHeader()
 				.addData("base64", FewfDisplayUtils.encodeByteArrayAsString(tPNG))
 				.onComplete(function(resp){ pCallback(resp); })

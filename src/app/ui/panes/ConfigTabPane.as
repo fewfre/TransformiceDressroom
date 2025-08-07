@@ -8,7 +8,8 @@ package app.ui.panes
 	import app.ui.PasteShareCodeInput;
 	import app.ui.screens.LoadingSpinner;
 	import app.world.data.ItemData;
-	import app.world.elements.Character;
+	import app.world.data.OutfitData;
+	import app.world.elements.Pose;
 	import com.fewfre.display.*;
 	import com.fewfre.events.FewfEvent;
 	import com.fewfre.utils.AssetManager;
@@ -88,8 +89,8 @@ package app.ui.panes
 		*****************************/
 		public function addLook(lookCode:String) {
 			var grid:Grid = this.userOutfitsGrid;
-			var character:Character = new Character(new <ItemData>[ GameAssets.defaultPose ], lookCode, true);
-			var btn:PushButton = new PushButton({ size:grid.cellSize, obj:character });
+			var pose:Pose = new Pose().applyOutfitData(new OutfitData(true).setItemData(GameAssets.defaultPose).parseShareCodeSelf(lookCode, true));
+			var btn:PushButton = PushButton.square(grid.cellSize).setImage(pose, 3) as PushButton;
 			btn.on(MouseEvent.CLICK, function(){
 				dispatchEvent(new FewfEvent(LOOK_CODE_SELECTED, lookCode));
 				// Hacky way to make push button a normal button
