@@ -212,11 +212,25 @@ package app.world
 			_panes.addPane(WorldPaneManager.OTHER_PANE, new OtherTabPane(_character))
 				.on(OtherTabPane.CUSTOM_SHAMAN_COLOR_CLICKED, function(e:Event):void{ _shamanColorButtonClicked(); })
 				.on(OtherTabPane.SHAMAN_COLOR_PICKED, function(e:FewfEvent):void{ _setConfigShamanColor(e.data as int); })
+				.on(OtherTabPane.SHAMAN_MODE_CHANGED, function(e:FewfEvent):void{
+					_character.outfitData.shamanMode = e.data.shamanMode;
+					_panes.otherPane.updateButtonsBasedOnCurrentData();
+				})
+				.on(OtherTabPane.DISABLE_SKILLS_MODE_CHANGED, function(e:FewfEvent):void{
+					_character.outfitData.disableSkillsMode = e.data.disableSkillsMode;
+					// If disable skill mode was just enabled but there's not currently a shaman mode set then
+					// toggle on shaman mode automatically so user doesn't think the button is busted
+					if(_character.outfitData.disableSkillsMode && _character.outfitData.shamanMode == ShamanMode.OFF) {
+						_character.outfitData.shamanMode = ShamanMode.NORMAL;
+					}
+					_panes.otherPane.updateButtonsBasedOnCurrentData();
+				})
 				.on(OtherTabPane.ITEM_TOGGLED, _otherTabItemToggled)
 				.on(OtherTabPane.EYE_DROPPER_CLICKED, function(e:FewfEvent){ _openColorFinderWithItemData(e.data.itemData); })
 				.on(OtherTabPane.FILTER_MODE_CLICKED, function(e:Event){ _getAndOpenItemFilteringPane(); })
 				.on(OtherTabPane.EMOJI_CLICKED, function(e:Event){ _panes.openShopPane(ItemType.EMOJI); })
-				.on(OtherTabPane.CHEESE_CLICKED, function(e:Event){ _panes.openShopPane(ItemType.BACK); });
+				.on(OtherTabPane.CHEESE_CLICKED, function(e:Event){ _panes.openShopPane(ItemType.BACK); })
+				.on(OtherTabPane.SAVE_MOUSE_HEAD_CLICKED, _onSaveMouseHeadClicked);
 			
 			// "Other" Tab Color Picker Pane
 			_panes.addPane(WorldPaneManager.OTHER_COLOR_PANE, new ColorPickerTabPane({ hide_default:true, hideItemPreview:true }))
@@ -576,6 +590,8 @@ package app.world
 			return _animationControls.visible;
 		}
 		
+		//#region Saving
+		
 		private function _getHardcodedSaveScale() : Number {
 			var hardcodedSaveScale:Object = Fewf.sharedObject.getData(ConstantsApp.SHARED_OBJECT_KEY_HARDCODED_SAVE_SCALE);
 			return hardcodedSaveScale ? hardcodedSaveScale as Number : 0;
@@ -629,6 +645,10 @@ package app.world
 				_toolbox.updateClipboardButton(false, false);
 			}
 			setTimeout(function(){ _toolbox.updateClipboardButton(true); }, 750);
+		}
+		
+		private function _onSaveMouseHeadClicked(pEvent:FewfEvent) {
+			FewfDisplayUtils.saveAsPNG(pEvent.data as Sprite, 'mouse_head', _character.pose.scaleX);
 		}
 
 		// Note: does not automatically de-select previous buttons / infobars; do that before calling this

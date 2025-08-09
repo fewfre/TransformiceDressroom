@@ -2,6 +2,7 @@
 - [Code] Split a large chunk of data storage out of Character and into `OutfitData`
 - [Code] `Pose` logic cleaned up a little and now uses `OutfitData`
 - [Code] `PasteShareCodeInput` moved out of `Toolbox` and directly into `World`
+- [Code] `OtherTabPane` had some logic moved to `World`, triggered via events
 
 
 ## V1.31 - 26 Jul 2025

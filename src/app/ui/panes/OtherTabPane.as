@@ -19,22 +19,24 @@ package app.ui.panes
 		// Constants
 		public static const CUSTOM_SHAMAN_COLOR_CLICKED:String = "custom_shaman_color_clicked";
 		public static const SHAMAN_COLOR_PICKED:String = "shaman_color_picked"; // FewfEvent<int>
+		public static const SHAMAN_MODE_CHANGED:String = "shaman_mode_changed"; // FewfEvent<{ shamanMode:ShamanMode }>
+		public static const DISABLE_SKILLS_MODE_CHANGED:String = "disable_skills_mode_changed"; // FewfEvent<{ disableSkillsMode:Boolean }>
 		public static const ITEM_TOGGLED:String = "item_toggled"; // FewfEvent<{ type:ItemType, itemData:ItemData|null }>
-		public static const FILTER_MODE_CLICKED:String = "filter_mode_clicked";
+		public static const EYE_DROPPER_CLICKED:String = "eye_dropper_clicked"; // FewfEvent<{ itemData:ItemData }>
 		public static const EMOJI_CLICKED:String = "emoji_clicked";
 		public static const CHEESE_CLICKED:String = "cheese_clicked";
-		public static const EYE_DROPPER_CLICKED:String = "eye_dropper_clicked"; // FewfEvent<{ itemData:ItemData }>
+		public static const FILTER_MODE_CLICKED:String = "filter_mode_clicked";
+		public static const SAVE_MOUSE_HEAD_CLICKED:String = "save_mouse_head_clicked";
 		
 		// Storage
 		private var _character       : Character;
 		
-		private var _frontHandButton  : PushButton;
-		private var _backHandButton   : PushButton;
-		private var _backItemButtons  : Vector.<PushButton>;
-		private var _eyeDropperButton : SpriteButton;
-		
 		private var _shamanButtons    : Vector.<PushButton>;
 		private var _disableSkillsModeButton : PushButton;
+		
+		private var _frontHandButton  : PushButton;
+		private var _backHandButton   : PushButton;
+		private var _eyeDropperButton : SpriteButton;
 		
 		private var _mouseHeadButton  : GameButton;
 		private var _mouseHead        : Pose;
@@ -61,9 +63,9 @@ package app.ui.panes
 			
 			_shamanButtons = new Vector.<PushButton>();
 			xx -= 5; yy -= 11;
-			_shamanButtons.push(PushButton.rect(sizex, sizey).setText("btn_normal_mode").setData({ mode:ShamanMode.NORMAL }).appendTo(this) as PushButton);
-			_shamanButtons.push(PushButton.rect(sizex, sizey).setText("btn_hard_mode").setData({ mode:ShamanMode.HARD }).appendTo(this) as PushButton);
-			_shamanButtons.push(PushButton.rect(sizex, sizey).setText("btn_divine_mode").setData({ mode:ShamanMode.DIVINE }).appendTo(this) as PushButton);
+			_shamanButtons.push(PushButton.rect(sizex, sizey).setText("btn_normal_mode").setData({ shamanMode:ShamanMode.NORMAL }).appendTo(this) as PushButton);
+			_shamanButtons.push(PushButton.rect(sizex, sizey).setText("btn_hard_mode").setData({ shamanMode:ShamanMode.HARD }).appendTo(this) as PushButton);
+			_shamanButtons.push(PushButton.rect(sizex, sizey).setText("btn_divine_mode").setData({ shamanMode:ShamanMode.DIVINE }).appendTo(this) as PushButton);
 			for each(var btn:PushButton in _shamanButtons) {
 				btn.move(xx += spacingx, yy);
 				btn.onToggle(_onShamanButtonClicked);
@@ -104,20 +106,20 @@ package app.ui.panes
 
 			grid = new Grid(itemsSectionFakeHalfWidth, 2).move(ConstantsApp.PANE_WIDTH-14-itemsSectionFakeHalfWidth, yy).appendTo(this);
 			
-			_frontHandButton = new PushButton({ size:grid.cellSize, obj:new GameAssets.extraObjectWand.itemClass(), obj_scale:1.5, data:{ itemData:GameAssets.extraObjectWand } });
+			(_frontHandButton = PushButton.square(grid.cellSize)).setImage(new GameAssets.extraObjectWand.itemClass(), 1.5).setData({ itemData:GameAssets.extraObjectWand });
 			_frontHandButton.onToggle(_onItemToggled)
 				.on(MouseEvent.MOUSE_OVER, _onItemHoverInShowEyeDropper)
 				.on(MouseEvent.MOUSE_OUT, _onItemHoverOutHideEyeDropper);
 			grid.add(_frontHandButton);
 			
-			_backHandButton = new PushButton({ size:grid.cellSize, obj:new GameAssets.extraBackHand.itemClass(), obj_scale:1.5, data:{ itemData:GameAssets.extraBackHand } });
+			(_backHandButton = PushButton.square(grid.cellSize)).setImage(new GameAssets.extraBackHand.itemClass(), 1.5).setData({ itemData:GameAssets.extraBackHand });
 			_backHandButton.onToggle(_onItemToggled)
 				.on(MouseEvent.MOUSE_OVER, _onItemHoverInShowEyeDropper)
 				.on(MouseEvent.MOUSE_OUT, _onItemHoverOutHideEyeDropper);
 			grid.add(_backHandButton);
 			
 			// Eye dropper button
-			_eyeDropperButton = SpriteButton.withObject(new $EyeDropper(), 0.35, { size:16 }).appendTo(this) as SpriteButton;
+			(_eyeDropperButton = SpriteButton.square(16)).setImage(new $EyeDropper(), 0.35).appendTo(this);
 			_eyeDropperButton.onButtonClick(function():void { dispatchEvent(new FewfEvent(EYE_DROPPER_CLICKED, { itemData:_eyeDropperButton.data.itemData })); })
 				.on(MouseEvent.MOUSE_OVER, function(e:Event){ _eyeDropperButton.enable().alpha = 1; })
 				.on(MouseEvent.MOUSE_OUT, function(e:Event){ _eyeDropperButton.disable().alpha = 0; })
@@ -142,7 +144,7 @@ package app.ui.panes
 			(_mouseHeadButton = GameButton.square(70))
 				.setImage(_mouseHead = new Pose().applyOutfitData(new OutfitData().setItemDataVector(new <ItemData>[ GameAssets.defaultSkin, GameAssets.defaultPose ])), 3)
 				.move(353, 315).appendTo(this)
-				.onButtonClick(_onSaveMouseHeadClicked);
+				.onButtonClick(function():void{ dispatchEvent(new FewfEvent(SAVE_MOUSE_HEAD_CLICKED, _mouseHead)); });
 			
 			// Lastly, update state based on initial character state
 			updateButtonsBasedOnCurrentData();
@@ -154,25 +156,26 @@ package app.ui.panes
 		public override function open() : void {
 			super.open();
 			
-			_updateHead();
+			_updateHead(_character.outfitData);
 			_tipsText.setText(TIPS[_tipsIndex = (_tipsIndex+1) % TIPS.length]);
 		}
 		
 		public function updateButtonsBasedOnCurrentData() : void {
-			for(var i:int = 0; i < _shamanButtons.length; i++) {
-				_shamanButtons[i].toggleOff();
-			}
-			if(_character.outfitData.shamanMode != ShamanMode.OFF) {
-				_shamanButtons[_getIndexFromShamanMode(_character.outfitData.shamanMode)].toggleOn(false);
-			}
-			_disableSkillsModeButton.toggle(_character.outfitData.disableSkillsMode, false);
+			var pOutfitData:OutfitData = _character.outfitData;
 			
-			for each(var bttn:PushButton in _backItemButtons) {
-				bttn.toggle(!!_character.getItemData(ItemType.BACK) && _character.getItemData(ItemType.BACK).matches(bttn.data.itemData), false);
+			// Update shaman area
+			PushButton.untoggleAll(_shamanButtons);
+			if(pOutfitData.shamanMode != ShamanMode.OFF) {
+				_shamanButtons[_getIndexFromShamanMode(pOutfitData.shamanMode)].toggleOn(false);
 			}
-			_frontHandButton.toggle(!!_character.getItemData(ItemType.OBJECT), false);
-			_backHandButton.toggle(!!_character.getItemData(ItemType.PAW_BACK), false);
-			_updateHead();
+			_disableSkillsModeButton.toggle(pOutfitData.disableSkillsMode, false);
+			
+			// Update grids
+			_frontHandButton.toggle(!!pOutfitData.getItemData(ItemType.OBJECT), false);
+			_backHandButton.toggle(!!pOutfitData.getItemData(ItemType.PAW_BACK), false);
+			
+			// Update bottom area
+			_updateHead(pOutfitData);
 		}
 		
 		/****************************
@@ -182,16 +185,8 @@ package app.ui.panes
 			return pMode.toInt()-2; // Modes in array goes from Normal (2) to Divine (4), so -1 will correctly 0 index it
 		}
 		
-		private function _updateHead() {
-			_mouseHead = new Pose().applyOutfitData(_character.outfitData)
-			
-			// // copy character data onto our copy
-			// for each(var tItemType in ItemType.LAYERING) {
-			// 	var data:ItemData = _character.getItemData(tItemType);
-			// 	if(data) _mouseHead.setItemData( data ); else _mouseHead.removeItem( tItemType );
-			// }
-			// _mouseHead.setItemData( _character.getItemData(ItemType.POSE) );
-			// _mouseHead.scale = 1;
+		private function _updateHead(pOutfitData:OutfitData) {
+			_mouseHead = new Pose().applyOutfitData(pOutfitData);
 			
 			// Cut the head off the poor mouse ;_;
 			var pose = _mouseHead.pose;
@@ -206,48 +201,25 @@ package app.ui.panes
 			}
 			
 			_mouseHeadButton.setImage(_mouseHead, 3);
-			
-			// // var bsize = 70, size = 60;
-			// // var tBounds = _mouseHead.getBounds(_mouseHead);
-			// // var tOffset = tBounds.topLeft;
-			// // FewfDisplayUtils.fitWithinBounds(_mouseHead, size, size, size, size);
-			// // _mouseHead.x = bsize / 2 - (tBounds.width / 2 + tOffset.x) * _mouseHead.scaleX;
-			// // _mouseHead.y = bsize / 2 - (tBounds.height / 2 + tOffset.y) * _mouseHead.scaleY;
-			
-			// var bsize = 70, size = 60;
-			// FewfDisplayUtils.fitWithinBounds(_mouseHead, size, size, size, size);
-			// FewfDisplayUtils.alignChildrenAroundAnchor(_mouseHead, 0.5);
-			// _mouseHead.move(bsize/2, bsize/2);
-		
 		}
 		
 		/****************************
 		* Events
 		*****************************/
 		private function _onShamanButtonClicked(e:FewfEvent) {
-			var btn:PushButton = e.target as PushButton;
-			_untoggle(_shamanButtons, btn);
-			_character.outfitData.shamanMode = !btn.pushed ? ShamanMode.OFF : e.data.mode as ShamanMode;
-			_character.updatePose();
-			_updateHead();
+			dispatchEvent(new FewfEvent(SHAMAN_MODE_CHANGED, { shamanMode: (e.target as PushButton).pushed ? e.data.shamanMode : ShamanMode.OFF }));
+			// This event should trigger `updateButtonsBasedOnCurrentData` which will properly update the UI
 		}
 		
 		private function _onNoShamanButtonClicked(pEvent:Event) {
-			_untoggle(_shamanButtons);
-			_character.outfitData.shamanMode = ShamanMode.OFF;
-			_character.updatePose();
-			_updateHead();
+			dispatchEvent(new FewfEvent(SHAMAN_MODE_CHANGED, { shamanMode: ShamanMode.OFF }));
+			dispatchEvent(new FewfEvent(DISABLE_SKILLS_MODE_CHANGED, { disableSkillsMode: false }));
+			// This event should trigger `updateButtonsBasedOnCurrentData` which will properly update the UI
 		}
 		
 		private function _onShamanDisableSkillsModeButtonClicked(e:Event) {
-			_character.outfitData.disableSkillsMode = (e.target as PushButton).pushed;
-			if(_character.outfitData.disableSkillsMode && _character.outfitData.shamanMode == ShamanMode.OFF) {
-				_character.outfitData.shamanMode = _shamanButtons[0].data.mode as ShamanMode;
-				_shamanButtons[0].toggleOn(false);
-			}
-			_character.updatePose();
-			_updateHead();
-			
+			dispatchEvent(new FewfEvent(DISABLE_SKILLS_MODE_CHANGED, { disableSkillsMode: (e.target as PushButton).pushed }));
+			// This event should trigger `updateButtonsBasedOnCurrentData` which will properly update the UI
 		}
 		
 		private function _onItemHoverInShowEyeDropper(e:Event) : void {
@@ -256,7 +228,6 @@ package app.ui.panes
 			_eyeDropperButton.move(tTargetButton.parent.x + tTargetButton.x + tTargetButton.Width - _eyeDropperButton.Width, tTargetButton.parent.y + tTargetButton.y + 1);
 			_eyeDropperButton.setData({ itemData: tTargetButton.data.itemData });
 		}
-		
 		private function _onItemHoverOutHideEyeDropper(e:Event) : void {
 			_eyeDropperButton.disable().alpha = 0;
 		}
@@ -264,15 +235,6 @@ package app.ui.panes
 		private function _onItemToggled(e:FewfEvent) : void {
 			var bttn:PushButton = e.target as PushButton, itemData:ItemData = e.data.itemData;
 			dispatchEvent(new FewfEvent(ITEM_TOGGLED, { type:itemData.type, itemData:bttn.pushed ? itemData : null }));
-		}
-
-		private function _untoggle(pList:Vector.<PushButton>, pButton:PushButton=null) : void {
-			PushButton.untoggleAll(pList, pButton);
-			_updateHead();
-		}
-		
-		private function _onSaveMouseHeadClicked(pEvent:Event) {
-			FewfDisplayUtils.saveAsPNG(_mouseHead, 'mouse_head', _character.pose.scaleX);
 		}
 	}
 }
