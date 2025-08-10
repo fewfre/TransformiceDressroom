@@ -1,35 +1,29 @@
-package app.ui.panes
+package app.ui.panes.filteringmode
 {
-	import app.data.ItemType;
 	import app.data.GameAssets;
-	import flash.display.MovieClip;
-	import app.ui.buttons.PushButton;
-	import com.fewfre.events.FewfEvent;
-	import com.fewfre.display.ButtonBase;
-	import app.ui.buttons.ScaleButton;
-	import flash.events.Event;
-	import app.world.data.ItemData;
-	import com.fewfre.display.Grid;
-	import com.fewfre.utils.FewfUtils;
+	import app.data.ItemType;
 	import app.data.ShareCodeFilteringData;
-	import flash.display.Sprite;
-	import flash.utils.setTimeout;
+	import app.ui.buttons.PushButton;
 	import app.ui.panes.base.ButtonGridSidePane;
 	import app.ui.panes.infobar.Infobar;
+	import app.world.data.ItemData;
+	import app.world.events.ItemDataEvent;
+	import com.fewfre.events.FewfEvent;
 	import flash.display.DisplayObject;
+	import flash.display.Sprite;
 
-	public class ShopCategoryPaneForFiltering extends ButtonGridSidePane
+	public class ShopCategoryPaneForFilteringSelection extends ButtonGridSidePane
 	{
 		private var _type: ItemType;
 		private var _itemDataVector: Vector.<ItemData>;
 		
 		public function get type():ItemType { return _type; }
 		
-		public static const ITEM_TOGGLED : String = 'ITEM_TOGGLED';
+		public static const ITEM_TOGGLED : String = 'ITEM_TOGGLED'; // ItemDataEvent
 		public static const DEFAULT_SKIN_COLOR_BTN_CLICKED : String = 'DEFAULT_SKIN_COLOR_BTN_CLICKED';
 		
 		// Constructor
-		public function ShopCategoryPaneForFiltering(pType:ItemType) {
+		public function ShopCategoryPaneForFilteringSelection(pType:ItemType) {
 			this._type = pType;
 			var buttonPerRow:int = 6;
 			if(_type == ItemType.SKIN || _type == ItemType.POSE) { buttonPerRow = 5; }
@@ -64,7 +58,7 @@ package app.ui.panes
 		}
 		
 		private function _addButton(itemData:ItemData, pScale:Number, i:int) : void {
-			var shopItem : MovieClip = GameAssets.getItemImage(itemData);
+			var shopItem : Sprite = GameAssets.getItemImage(itemData);
 			shopItem.scaleX = shopItem.scaleY = pScale;
 			var cell:Sprite = new Sprite();
 			
@@ -110,7 +104,7 @@ package app.ui.panes
 			ShareCodeFilteringData.toggleItemData(btn.data.itemData, btn.pushed);
 			btn.data.customizeButton.visible = btn.pushed;
 			ShareCodeFilteringData.updateShareCodeCache();
-			// dispatchEvent(new FewfEvent(ITEM_TOGGLED, e.data));
+			dispatchEvent(new ItemDataEvent(ITEM_TOGGLED, btn.data.itemData));
 		}
 	}
 }

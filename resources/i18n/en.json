@@ -27,7 +27,7 @@
 	
     "share_filter_banner":     { "text":"Item filter mode is activated" },
     "filtermode_preview_btn":  { "text":"Preview filter with selected items" },
-    "filtermode_description":  { "text":"This is Item Filter Selection Mode. You can select items using tabs to the left, preview how the filtered items look to others with the preview button, and share your filtered items using the code in the input box below (paste in share code box)." },
+    "filtermode_description":  { "text":"This is Item Filter Selection Mode. You can select items using tabs to the right, preview how the filtered items look to others with the preview button, and share your filtered items using the code in the input box below (paste in share code box)." },
     
     "user_lookup_title":       { "text":"Username Lookup" },
     "user_lookup_placeholder": { "text":"Username#0000" },
@@ -66,7 +66,6 @@
     "tab_tattoo":              { "text":"Tattoo" },
     "tab_furs":                { "text":"Furs" },
     "tab_poses":               { "text":"Pose" },
-    "tab_other":               { "text":"Other" },
-    "tab_filtering":           { "text":"Filter" }
+    "tab_other":               { "text":"Other" }
   }
 }

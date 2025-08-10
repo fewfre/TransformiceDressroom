@@ -45,7 +45,6 @@ package app.world.elements
 		public function appendTo(pParent:Sprite): Character { pParent.addChild(_root); return this; }
 		public function on(type:String, listener:Function, useCapture:Boolean = false): Character { _root.addEventListener(type, listener, useCapture); return this; }
 		public function off(type:String, listener:Function, useCapture:Boolean = false): Character { _root.removeEventListener(type, listener, useCapture); return this; }
-		public function setVisibility(pVal:Boolean): Character { _root.visible = pVal; return this; }
 
 		public function updatePose() {
 			var tScale = ConstantsApp.DEFAULT_CHARACTER_SCALE, tOldPose:Pose = _pose;

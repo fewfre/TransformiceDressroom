@@ -84,7 +84,7 @@ package app.data
 		// Share Code Methods
 		////////////////////////////
 		public static function isValidCode(code:String) : Boolean {
-			return code.indexOf(ShareCodeFilteringData.PREFIX) == 0
+			return !!code && code.indexOf(ShareCodeFilteringData.PREFIX) == 0
 		}
 		
 		public static function parseShareCode(code:String) : Boolean {

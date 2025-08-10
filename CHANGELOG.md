@@ -1,12 +1,17 @@
-## V1.31b - ???
+## V1.31b - 10 August 2025
 - [Code] Split a large chunk of data storage out of Character and into `OutfitData`
 - [Code] `Pose` logic cleaned up a little and now uses `OutfitData`
 - [Code] `PasteShareCodeInput` moved out of `Toolbox` and directly into `World`
 - [Code] `OtherTabPane` had some logic moved to `World`, triggered via events
 - [Code] Polish of button-related components
+- Filter Selection mode slight revamp
+	- "Filter" tab removed and contents moved into a new panel on the left side for ease of use
+	- Left side contents now removed during filter selection mode and replaced with change above - clicking certain buttons were causing issues during filter mode
+	- Delete button on filter selection info panel now has a confirmation prompt show up
+	- [Bug] Fixed reverse arrow not showing up on filter mode selection screens
 
 
-## V1.31 - 26 Jul 2025
+## V1.31 - 26 July 2025
 - Added new `FromageSourisSaumon` back item
 - [Bug] Changed some assets to http protocol when using the app since some W10 users were having issues with certs
 - Updated I18n system to be a bit more streamlined + it now always loads the default app language (english) before loading other languages so that other language files not having a message still shows something

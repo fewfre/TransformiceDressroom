@@ -27,7 +27,7 @@ package app.ui.screens
 		// Constructor
 		public function AboutScreen() {
 			this.x = ConstantsApp.CENTER_X;
-			this.y = ConstantsApp.CENTER_Y;
+			this.y = ConstantsApp.CENTER_Y - 25;
 			
 			GameAssets.createScreenBackdrop().appendTo(this).on(MouseEvent.CLICK, _onCloseClicked);
 			

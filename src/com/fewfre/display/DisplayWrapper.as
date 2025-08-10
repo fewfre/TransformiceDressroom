@@ -33,6 +33,7 @@ package com.fewfre.display
 		public function move(pX:Number, pY:Number) : DisplayWrapper { _root.x = pX; _root.y = pY; return this; }
 		public function toScale(pX:Number, pY:Object=null) : DisplayWrapper { _root.scaleX = pX; _root.scaleY = pY != null ? pY as Number : pX; return this; }
 		public function toAlpha(pAlpha:Number) : DisplayWrapper { _root.alpha = pAlpha; return this; }
+		public function toVisible(pVisible:Boolean) : DisplayWrapper { _root.visible = pVisible; return this; }
 		public function appendTo(pParent:Sprite): DisplayWrapper { pParent.addChild(_root); return this; }
 		public function on(type:String, listener:Function, useCapture:Boolean = false): DisplayWrapper { _root.addEventListener(type, listener, useCapture); return this; }
 		public function off(type:String, listener:Function, useCapture:Boolean = false): DisplayWrapper { _root.removeEventListener(type, listener, useCapture); return this; }

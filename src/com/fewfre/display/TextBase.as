@@ -79,6 +79,7 @@ package com.fewfre.display
 		}
 		public function move(pX:Number, pY:Number) : TextBase { x = pX; y = pY; return this; }
 		public function appendTo(pParent:Sprite): TextBase { pParent.addChild(this); return this; }
+		public function setOrigin(pX:Number, pY:Object=null) : TextBase { _originX = pX; _originY = pY != null ? pY as Number : pX; _render(); return this; } // if no originY, then set both to originX value
 
 		/****************************
 		* Render

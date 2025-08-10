@@ -8,11 +8,13 @@ package app.world
 	import app.ui.panes.base.SidePane;
 	import app.ui.panes.colorpicker.ColorPickerTabPane;
 	import app.ui.panes.colorpicker.LockHistoryMap;
+	import app.ui.panes.filteringmode.*;
 	import app.ui.panes.infobar.GridManagementWidget;
 	import app.ui.panes.infobar.Infobar;
 	import app.ui.screens.*;
 	import app.world.data.*;
 	import app.world.elements.*;
+	import app.world.events.ItemDataEvent;
 	
 	import com.fewfre.display.*;
 	import com.fewfre.events.FewfEvent;
@@ -24,14 +26,15 @@ package app.world
 	import flash.external.ExternalInterface;
 	import flash.ui.Keyboard;
 	import flash.utils.setTimeout;
-	import app.world.events.ItemDataEvent;
 	
 	public class World extends Sprite
 	{
 		// Storage
-		private var _character         : Character;
 		private var _panes             : WorldPaneManager;
+		private var _leftSideTray      : Sprite;
+		private var _filterModeTray    : Sprite;
 
+		private var _character         : Character;
 		private var _shopTabs          : ShopTabList;
 		private var _toolbox           : Toolbox;
 		private var _itemFilterBanner  : ItemFilterBanner;
@@ -47,7 +50,7 @@ package app.world
 		
 		private var _itemFiltering_filterEnabled : Boolean = false;
 		private var _itemFiltering_selectionModeOn : Boolean = false;
-		private var _giantFilterIcon : Sprite;
+		private var _filterSelectionModeInfoAside : FilterSelectionModeInfoAside;
 		
 		// Constructor
 		public function World(pStage:Stage) {
@@ -61,6 +64,9 @@ package app.world
 		
 		private function _buildWorld(pStage:Stage) {
 			ShareCodeFilteringData.init();
+			
+			_initFilterSelectionModeTray();
+			_leftSideTray = new Sprite(); addChild(_leftSideTray);
 			
 			/////////////////////////////
 			// Create Character
@@ -76,11 +82,8 @@ package app.world
 				} catch (error:Error) { };
 			}
 			
-			_giantFilterIcon = DisplayWrapper.wrap(new $FilterIcon(), this).toScale(4).move(180, 180 + 50).asSprite;
-			_giantFilterIcon.visible = false;
-			
 			_character = new Character(new OutfitData().setItemDataVector(new <ItemData>[ GameAssets.defaultSkin, GameAssets.defaultPose ]).parseShareCodeSelf(paramsString))
-				.move(180, 275).setDragBounds(0+4, 73+4, 375-4-4, ConstantsApp.APP_HEIGHT-(73+4)-4).appendTo(this)
+				.move(180, 275).setDragBounds(0+4, 73+4, 375-4-4, ConstantsApp.APP_HEIGHT-(73+4)-4).appendTo(_leftSideTray)
 				.on(Character.POSE_UPDATED, _onCharacterPoseUpdated)
 				.enableDoubleClick().on(MouseEvent.DOUBLE_CLICK, function(e:MouseEvent){ _panes.openPane(WorldPaneManager.WORN_ITEMS_PANE); _panes.wornItemsPane.init(_character.outfitData); });
 			
@@ -97,7 +100,7 @@ package app.world
 			/////////////////////////////
 			// Top Area
 			/////////////////////////////
-			_toolbox = new Toolbox().move(188, 28).appendTo(this)
+			_toolbox = new Toolbox().move(188, 28).appendTo(_leftSideTray)
 				.on(Toolbox.SAVE_CLICKED, _onSaveClicked)
 				.on(Toolbox.GIF_CLICKED, function(e:Event):void{ _saveAsAnimation(); })
 				.on(Toolbox.WEBP_CLICKED, function(e:Event):void{ _saveAsAnimation('webp'); })
@@ -112,27 +115,27 @@ package app.world
 				.on(Toolbox.TRASH_CLICKED, _onTrashButtonClicked);
 				
 			if(!ConstantsApp.CONFIG_TAB_ENABLED) {
-				new PasteShareCodeInput().appendTo(this).move(206, 62)
+				new PasteShareCodeInput().appendTo(_leftSideTray).move(206, 62)
 					.on(PasteShareCodeInput.CHANGE, function(e:FewfEvent):void{ _onShareCodeEntered(e.data.code, e.data.update); });
 			}
 				
-			_itemFilterBanner = new ItemFilterBanner().move(76, 61).appendTo(this)
+			_itemFilterBanner = new ItemFilterBanner().move(76, 63).appendTo(_leftSideTray)
 				.on(ItemFilterBanner.ONLY_INCLUDE_CUSTOMIZATIONS_TOGGLED, _toggleItemFilterModeToOnlyShowCustomizableItems)
 				.on(ItemFilterBanner.FILTER_BANNER_CLOSED, _onExitItemFilteringMode);
 			
 			// Outfit Button
-			new ScaleButton(new $Outfit(), 0.4).move(_toolbox.x+167, _toolbox.y+12.5+21).appendTo(this)
+			new ScaleButton(new $Outfit(), 0.4).move(_toolbox.x+167, _toolbox.y+12.5+21).appendTo(_leftSideTray)
 				.onButtonClick(function(e:Event){ _panes.openPane(WorldPaneManager.OUTFITS_PANE); });
 			
 			// Favorite Button
-			var favButton:ScaleButton = new ScaleButton(new $HeartFull()).appendTo(this).move(_toolbox.x+167 + 1, _toolbox.y+12.5+21 + 23)
+			var favButton:ScaleButton = new ScaleButton(new $HeartFull()).appendTo(_leftSideTray).move(_toolbox.x+167 + 1, _toolbox.y+12.5+21 + 23)
 				.onButtonClick(function(e:Event){ _panes.openPane(WorldPaneManager.FAVORITES_PANE); }) as ScaleButton;
 			favButton.visible = FavoriteItemsLocalStorageManager.getAllFavorites().length > 0;
 			Fewf.dispatcher.addEventListener(ConstantsApp.FAVORITE_ADDED_OR_REMOVED, function(e:FewfEvent):void{
 				favButton.visible = FavoriteItemsLocalStorageManager.getAllFavorites().length > 0;
 			});
 			
-			_animationControls = new AnimationControls().move(78, ConstantsApp.APP_HEIGHT - 35/2 - 5).appendTo(this)
+			_animationControls = new AnimationControls().move(78, ConstantsApp.APP_HEIGHT - 35/2 - 5).appendTo(_leftSideTray)
 				.on(Event.CLOSE, function(e):void{ _toolbox.toggleAnimationButtonOffWithEvent(); });
 			
 			_addRestoreAutoSaveButtonIfNeeded(Fewf.sharedObject.getData(ConstantsApp.SHARED_OBJECT_KEY_AUTO_SAVE_LOOK));
@@ -140,17 +143,16 @@ package app.world
 			/////////////////////////////
 			// Bottom Left Area
 			/////////////////////////////
-			var tLangButton:GameButton = LangScreen.createLangButton(30, 25)
-				.move(22, ConstantsApp.APP_HEIGHT-17).appendTo(this)
+			var tLangButton:GameButton = LangScreen.createLangButton(30, 25).move(22, ConstantsApp.APP_HEIGHT-17).appendTo(_leftSideTray)
 				.onButtonClick(_onLangButtonClicked) as GameButton;
 			
 			// About Screen Button
-			var aboutButton:GameButton = new GameButton(25).setOrigin(0.5).move(tLangButton.x+(tLangButton.Width/2)+2+(25/2), ConstantsApp.APP_HEIGHT - 17).appendTo(this)
+			var aboutButton:GameButton = new GameButton(25).setOrigin(0.5).move(tLangButton.x+(tLangButton.Width/2)+2+(25/2), ConstantsApp.APP_HEIGHT - 17).appendTo(_leftSideTray)
 				.onButtonClick(_onAboutButtonClicked) as GameButton;
 			new TextBase("?", { size:22, color:0xFFFFFF, bold:true, origin:0.5 }).move(0, -1).appendTo(aboutButton);
 			
 			if(!!(ParentApp.reopenSelectionLauncher())) {
-				new ScaleButton(new $BackArrow(), 0.5).appendTo(this)
+				new ScaleButton(new $BackArrow(), 0.5).appendTo(_leftSideTray)
 					.move(22, ConstantsApp.APP_HEIGHT-17-28)
 					.onButtonClick(function():void{ ParentApp.reopenSelectionLauncher()(); });
 			}
@@ -226,7 +228,7 @@ package app.world
 				})
 				.on(OtherTabPane.ITEM_TOGGLED, _otherTabItemToggled)
 				.on(OtherTabPane.EYE_DROPPER_CLICKED, function(e:FewfEvent){ _openColorFinderWithItemData(e.data.itemData); })
-				.on(OtherTabPane.FILTER_MODE_CLICKED, function(e:Event){ _getAndOpenItemFilteringPane(); })
+				.on(OtherTabPane.FILTER_MODE_CLICKED, function(e:Event){ _getAndOpenItemFilteringSelectionMode(); })
 				.on(OtherTabPane.EMOJI_CLICKED, function(e:Event){ _panes.openShopPane(ItemType.EMOJI); })
 				.on(OtherTabPane.CHEESE_CLICKED, function(e:Event){ _panes.openShopPane(ItemType.BACK); })
 				.on(OtherTabPane.SAVE_MOUSE_HEAD_CLICKED, _onSaveMouseHeadClicked);
@@ -245,12 +247,6 @@ package app.world
 			_panes.addPane(WorldPaneManager.WORN_ITEMS_PANE, new WornItemsPane())
 				.on(WornItemsPane.ITEM_CLICKED, function(e:ItemDataEvent){ _goToItemColorPicker(e.itemData); })
 				.on(Event.CLOSE, function(e:Event){ _panes.openPane(WorldPaneManager.OTHER_PANE); });
-			
-			// Item Filtering Pane
-			_panes.addPane(WorldPaneManager.ITEM_FILTERING_PANE, new ItemFilteringPane())
-				.on(ItemFilteringPane.EVENT_PREVIEW_ENABLED, function(e:FewfEvent){ _enableFilterMode(); })
-				.on(ItemFilteringPane.EVENT_STOP_FILTERING, function(e:FewfEvent){ _closeItemFilteringPane(); })
-				.on(ItemFilteringPane.EVENT_RESET_FILTERING, function(e:FewfEvent){ _resetItemFilteringPane(); });
 			
 			// Favorites Pane
 			_panes.addPane(WorldPaneManager.FAVORITES_PANE, new FavoritesTabPane(function(pItemData:ItemData):Boolean{ return pItemData.matches(_character.getItemData(pItemData.type)); }))
@@ -288,15 +284,6 @@ package app.world
 			return tPane;
 		}
 		private function getShopPane(pType:ItemType) : ShopCategoryPane { return _panes.getShopPane(pType); }
-
-		private function _setupItemPaneForFiltering(pType:ItemType) : ShopCategoryPaneForFiltering {
-			var tPane:ShopCategoryPaneForFiltering = new ShopCategoryPaneForFiltering(pType);
-			tPane.on(ShopCategoryPane.ITEM_TOGGLED, _onItemToggled);
-			
-			// Grid Management Events
-			tPane.infobar.on(GridManagementWidget.RANDOMIZE_CLICKED, function(){ _randomItemOfType(pType); });
-			return tPane;
-		}
 		
 		private function _shouldShowShopTab(type:ItemType) : Boolean {
 			// Skin & pose have defaults, so always show - also need to list before other check since poses don't have filtering
@@ -308,7 +295,6 @@ package app.world
 			_shopTabs.reset(); // Reset so we start with an empty list
 			
 			if(_itemFiltering_selectionModeOn && !_itemFiltering_filterEnabled) {
-				_shopTabs.addTab("tab_filtering", WorldPaneManager.ITEM_FILTERING_PANE);
 				_shopTabs.addTab("tab_furs", WorldPaneManager.itemTypeToFilterId(ItemType.SKIN));
 				_shopTabs.addTab("tab_head", WorldPaneManager.itemTypeToFilterId(ItemType.HEAD));
 				_shopTabs.addTab("tab_ears", WorldPaneManager.itemTypeToFilterId(ItemType.EARS));
@@ -464,7 +450,7 @@ package app.world
 				
 				// If selection mode is active, end it
 				_itemFiltering_selectionModeOn = false;
-				_showOrHideGiantFilterIcon();
+				_toggleFilterSelectionModeTray();
 				
 				// Parse actual code
 				var parseSuccess:Boolean = ShareCodeFilteringData.parseShareCode(code);
@@ -486,32 +472,6 @@ package app.world
 				_exitFilterMode();
 				callback(false);
 			};
-		}
-		
-		// Enables it using data already in ShareCodeFilteringData
-		private function _enableFilterMode() : void {
-			_itemFiltering_filterEnabled = true;
-			_itemFilterBanner.show();
-			_populateShopTabs();
-			_updateAllShopPaneFilters();
-			_showOrHideGiantFilterIcon();
-			// Select first tab available
-			_shopTabs.toggleOnFirstTab();
-		}
-		
-		private function _onExitItemFilteringMode(e:Event) : void { _exitFilterMode(); };
-		private function _exitFilterMode() : void {
-			_itemFiltering_filterEnabled = false;
-			_itemFilterBanner.hide();
-			_populateShopTabs();
-			_clearItemFiltering();
-			_showOrHideGiantFilterIcon();
-			// Select first tab available (needed since tabs repopulated)
-			_shopTabs.toggleOnFirstTab();
-		}
-		
-		private function _toggleItemFilterModeToOnlyShowCustomizableItems(e:Event) : void {
-			_updateAllShopPaneFilters();
 		}
 		
 		private function _updateAllShopPaneFilters() : void {
@@ -538,18 +498,6 @@ package app.world
 			}
 		}
 		
-		private function _dirtyAllItemFilteringPanes() : void {
-			for each(var tType:ItemType in ItemType.TYPES_WITH_SHARE_FILTER_PANES) {
-				var pane:ShopCategoryPaneForFiltering = _panes.getFilterShopPane(tType);
-				pane.makeDirty();
-			}
-		}
-		
-		private function _showOrHideGiantFilterIcon() : void {
-			_giantFilterIcon.visible = _itemFiltering_selectionModeOn && !_itemFiltering_filterEnabled;
-			_character.setVisibility(!_giantFilterIcon.visible);
-		}
-		
 		private function _onCharacterPoseUpdated(e:Event) : void {
 			_animationControls.setTargetMovieClip(_character.pose.poseMC);
 			Fewf.sharedObject.setData(ConstantsApp.SHARED_OBJECT_KEY_AUTO_SAVE_LOOK, _character.outfitData.stringify_fewfreSyntax());
@@ -562,10 +510,9 @@ package app.world
 			// Don't show button if it's the default look
 			if(autoSavedLook && autoSavedLook != "s=1&p=Statique") {
 				// Make it a timeout so it's added after the initial character pose update event fires
-				var tParent : World = this;
 				setTimeout(function():void{
 					// If auto saved outfit, prompt user to use or not
-					(_restoreAutoSaveBtn = new GameButton(120, 16)).setText("restore_auto_save_btn", { size:10 }).setOrigin(0.5).move(185, 90).setData({ look:autoSavedLook }).appendTo(tParent)
+					(_restoreAutoSaveBtn = new GameButton(120, 16)).setText("restore_auto_save_btn", { size:10 }).setOrigin(0.5).move(185, 90).setData({ look:autoSavedLook }).appendTo(_leftSideTray)
 						.onButtonClick(function(e:FewfEvent):void{ _useOutfitShareCode(e.data.look); });
 				}, 100);
 			}
@@ -589,8 +536,7 @@ package app.world
 			return _animationControls.visible;
 		}
 		
-		//#region Saving
-		
+	//#region Saving
 		private function _getHardcodedSaveScale() : Number {
 			var hardcodedSaveScale:Object = Fewf.sharedObject.getData(ConstantsApp.SHARED_OBJECT_KEY_HARDCODED_SAVE_SCALE);
 			return hardcodedSaveScale ? hardcodedSaveScale as Number : 0;
@@ -649,7 +595,9 @@ package app.world
 		private function _onSaveMouseHeadClicked(pEvent:FewfEvent) {
 			FewfDisplayUtils.saveAsPNG(pEvent.data as Sprite, 'mouse_head', _character.pose.scaleX);
 		}
+	//#endregion Saving
 
+	//#region Item Change Logic
 		// Note: does not automatically de-select previous buttons / infobars; do that before calling this
 		// This function is required when setting data via parseParams
 		private function _updateUIBasedOnCharacter() : void {
@@ -770,178 +718,241 @@ package app.world
 			var tPane:ShopCategoryPane = getShopPane(pItemData.type);
 			if(tPane && tPane.infobar && tPane.infobar.colorWheelEnabled) _colorButtonClicked(pItemData.type);
 		}
+	//#endregion Item Change Logic
 		
-		//{REGION Screen Logic
-			private function _onShareButtonClicked(e:Event) : void {
-				var tURL = "", tOfficialCode = "";
-				try {
-					if(Fewf.isExternallyLoaded || !Fewf.isBrowserLoaded) {
-						tURL = _character.outfitData.stringify_fewfreSyntax();
-					} else {
-						tURL = ExternalInterface.call("eval", "window.location.origin+window.location.pathname");
-						tURL += "?"+_character.outfitData.stringify_fewfreSyntax();
-					}
-				} catch (error:Error) {
-					tURL = "<error creating link>";
-				};
-				
-				try {
-					tOfficialCode = _character.outfitData.stringify_tfmOfficialSyntax();
-				} catch (error:Error) {
-					tOfficialCode = "<error creating link>";
-				};
-
-				_shareScreen.open(tURL, tOfficialCode, _character.pose);
-				addChild(_shareScreen);
-			}
-			private function _onShareScreenClosed(e:Event) : void { removeChild(_shareScreen); }
-
-			private function _onTrashButtonClicked(e:Event) : void { addChild(trashConfirmScreen); }
-			private function _onTrashConfirmScreenClosed(e:Event) : void { removeChild(trashConfirmScreen); }
-
-			private function _onLangButtonClicked(e:Event) : void { _langScreen.open(); addChild(_langScreen); }
-			private function _onLangScreenClosed(e:Event) : void { removeChild(_langScreen); }
-
-			private function _onAboutButtonClicked(e:Event) : void { _aboutScreen.open(); addChild(_aboutScreen); }
-			private function _onAboutScreenClosed(e:Event) : void { removeChild(_aboutScreen); }
+	//#region Screen Logic
+		private function _onShareButtonClicked(e:Event) : void {
+			var tURL = "", tOfficialCode = "";
+			try {
+				if(Fewf.isExternallyLoaded || !Fewf.isBrowserLoaded) {
+					tURL = _character.outfitData.stringify_fewfreSyntax();
+				} else {
+					tURL = ExternalInterface.call("eval", "window.location.origin+window.location.pathname");
+					tURL += "?"+_character.outfitData.stringify_fewfreSyntax();
+				}
+			} catch (error:Error) {
+				tURL = "<error creating link>";
+			};
 			
-			private function _onTrashConfirmScreenConfirm(e:Event) : void {
-				_character.outfitData.shamanMode = ShamanMode.OFF;
-				// Remove items
-				for each(var tLayerType:ItemType in ItemType.ALL) { _removeItem(tLayerType); }
+			try {
+				tOfficialCode = _character.outfitData.stringify_tfmOfficialSyntax();
+			} catch (error:Error) {
+				tOfficialCode = "<error creating link>";
+			};
+
+			_shareScreen.open(tURL, tOfficialCode, _character.pose);
+			addChild(_shareScreen);
+		}
+		private function _onShareScreenClosed(e:Event) : void { removeChild(_shareScreen); }
+
+		private function _onTrashButtonClicked(e:Event) : void { addChild(trashConfirmScreen); }
+		private function _onTrashConfirmScreenClosed(e:Event) : void { removeChild(trashConfirmScreen); }
+
+		private function _onLangButtonClicked(e:Event) : void { _langScreen.open(); addChild(_langScreen); }
+		private function _onLangScreenClosed(e:Event) : void { removeChild(_langScreen); }
+
+		private function _onAboutButtonClicked(e:Event) : void { _aboutScreen.open(); addChild(_aboutScreen); }
+		private function _onAboutScreenClosed(e:Event) : void { removeChild(_aboutScreen); }
+		
+		private function _onTrashConfirmScreenConfirm(e:Event) : void {
+			_character.outfitData.shamanMode = ShamanMode.OFF;
+			// Remove items
+			for each(var tLayerType:ItemType in ItemType.ALL) { _removeItem(tLayerType); }
+			
+			// Refresh panes
+			for each(var tType:ItemType in ItemType.TYPES_WITH_SHOP_PANES) {
+				var pane:ShopCategoryPane = getShopPane(tType);
+				pane.infobar.unlockRandomizeButton(); // this will also update `_character.setItemTypeLock()`
 				
-				// Refresh panes
-				for each(var tType:ItemType in ItemType.TYPES_WITH_SHOP_PANES) {
-					var pane:ShopCategoryPane = getShopPane(tType);
-					pane.infobar.unlockRandomizeButton(); // this will also update `_character.setItemTypeLock()`
+				// Reset customizations
+				if(tType != ItemType.POSE) {
+					var dataList:Vector.<ItemData> = GameAssets.getItemDataListByType(tType);
 					
-					// Reset customizations
-					if(tType != ItemType.POSE) {
-						var dataList:Vector.<ItemData> = GameAssets.getItemDataListByType(tType);
-						
-						for(var i:int = 0; i < dataList.length; i++){
-							if(dataList[i].hasModifiedColors()) {
-								dataList[i].setColorsToDefault();
-								_refreshButtonCustomizationForItemData(dataList[i]);
-							}
+					for(var i:int = 0; i < dataList.length; i++){
+						if(dataList[i].hasModifiedColors()) {
+							dataList[i].setColorsToDefault();
+							_refreshButtonCustomizationForItemData(dataList[i]);
 						}
 					}
-					
 				}
-				_panes.otherPane.updateButtonsBasedOnCurrentData();
-				LockHistoryMap.deleteAllLockHistory();
+				
 			}
-		//}END Screen Logic
+			_panes.otherPane.updateButtonsBasedOnCurrentData();
+			LockHistoryMap.deleteAllLockHistory();
+		}
+	//#endregion Screen Logic
+	
+	//#region Item Filter Mode
+		// Enables it using data already in ShareCodeFilteringData
+		private function _enableFilterMode() : void {
+			_itemFiltering_filterEnabled = true;
+			_itemFilterBanner.show();
+			_populateShopTabs();
+			_updateAllShopPaneFilters();
+			_toggleFilterSelectionModeTray();
+			// Select first tab available
+			_shopTabs.toggleOnFirstTab();
+		}
 		
-		//{REGION ItemFiltering Tab
-			private function _getAndOpenItemFilteringPane() : void {
-				_itemFiltering_selectionModeOn = true;
-				_exitFilterMode(); // If user is in filter mode but filter pane (thus going into selection mode), then exit filter mode
-				_populateShopTabs();
-				_dirtyAllItemFilteringPanes();
-				_showOrHideGiantFilterIcon();
-				_shopTabs.toggleTabOn(WorldPaneManager.ITEM_FILTERING_PANE);
-			}
-			private function _closeItemFilteringPane() : void {
-				_itemFiltering_selectionModeOn = false;
-				_clearItemFiltering();
-				_populateShopTabs();
-				_showOrHideGiantFilterIcon();
-				_shopTabs.toggleTabOn(WorldPaneManager.OTHER_PANE);
-			}
-			private function _resetItemFilteringPane() : void {
-				ShareCodeFilteringData.reset();
-				ShareCodeFilteringData.clearShareCodeCache();
-				_clearItemFiltering();
-				_getAndOpenItemFilteringPane();
-			}
-		//}END ItemFiltering Tab
-
-		//{REGION Color Tab
-			private function _onColorPickChanged(e:FewfEvent):void {
-				if(e.data.allUpdated) {
-					_character.getItemData(this.currentlyColoringType).colors = e.data.allColors;
-				} else {
-					_character.getItemData(this.currentlyColoringType).colors[e.data.colorIndex] = uint(e.data.color);
-				}
-				_refreshSelectedItemColor(this.currentlyColoringType);
-			}
-
-			private function _onColorPickHoverPreview(pEvent:FewfEvent) : void {
-				// Updated preview data
-				GameAssets.swatchHoverPreviewData = pEvent.data;
-				// refresh render for anything that uses it
-				_refreshSelectedItemColor(this.currentlyColoringType);
-			}
+		private function _onExitItemFilteringMode(e:Event) : void { _exitFilterMode(); };
+		private function _exitFilterMode() : void {
+			_itemFiltering_filterEnabled = false;
+			_itemFilterBanner.hide();
+			_populateShopTabs();
+			_clearItemFiltering();
+			_toggleFilterSelectionModeTray();
+			// Select first tab available (needed since tabs repopulated)
+			_shopTabs.toggleOnFirstTab();
+		}
+		
+		private function _toggleItemFilterModeToOnlyShowCustomizableItems(e:Event) : void {
+			_updateAllShopPaneFilters();
+		}
+	//#endregion Item Filter Mode
+	
+	//#region Item Filtering Selection Mode
+		private function _initFilterSelectionModeTray() : void {
+			_filterModeTray = DisplayWrapper.wrap(new Sprite(), this).toVisible(false).asSprite;
 			
-			private function _refreshSelectedItemColor(pType:ItemType) : void {
-				_character.updatePose();
-				
-				var tPane:ShopCategoryPane = getShopPane(pType);
-				var tItemData:ItemData = _character.getItemData(pType);
-				if(!tItemData) { return; }
-				
-				_refreshButtonCustomizationForItemData(tItemData);
-				tPane.infobar.refreshItemImageUsingCurrentItemData();
-				_panes.colorPickerPane.infobar.refreshItemImageUsingCurrentItemData();
-			}
+			_filterSelectionModeInfoAside = new FilterSelectionModeInfoAside().appendTo(_filterModeTray)
+				.on(FilterSelectionModeInfoAside.EVENT_PREVIEW_ENABLED, function(e:FewfEvent){ _enableFilterMode(); })
+				.on(FilterSelectionModeInfoAside.EVENT_STOP_FILTERING, function(e:FewfEvent){ _closeItemFilteringSelectionPane(); })
+				.on(FilterSelectionModeInfoAside.EVENT_RESET_FILTERING, function(e:FewfEvent){ _resetItemFilteringSelectionPane(); });
+		}
+		private function _toggleFilterSelectionModeTray() : void {
+			_filterModeTray.visible = _itemFiltering_selectionModeOn && !_itemFiltering_filterEnabled;
+			_leftSideTray.visible = !_filterModeTray.visible;
+		}
+
+		private function _setupItemPaneForFiltering(pType:ItemType) : ShopCategoryPaneForFilteringSelection {
+			var tPane:ShopCategoryPaneForFilteringSelection = new ShopCategoryPaneForFilteringSelection(pType);
+			tPane.on(ShopCategoryPane.ITEM_TOGGLED, function(e:ItemDataEvent):void{
+				_refreshItemFilteringSelectionMode();
+			});
 			
-			private function _refreshButtonCustomizationForItemData(pItemData:ItemData) : void {
-				if(!pItemData) { return; }
-				var tPane:ShopCategoryPane = getShopPane(pItemData.type);
-				tPane.refreshButtonImage(pItemData);
+			// Grid Management Events
+			tPane.infobar.on(GridManagementWidget.RANDOMIZE_CLICKED, function(){ _randomItemOfType(pType); });
+			return tPane;
+		}
+		private function _dirtyAllItemFilteringPanes() : void {
+			for each(var tType:ItemType in ItemType.TYPES_WITH_SHARE_FILTER_PANES) {
+				var pane:ShopCategoryPaneForFilteringSelection = _panes.getFilterSelectionShopPane(tType);
+				pane.makeDirty();
 			}
+		}
+	
+		private function _getAndOpenItemFilteringSelectionMode() : void {
+			_itemFiltering_selectionModeOn = true;
+			_exitFilterMode(); // If user is in filter mode but filter pane (thus going into selection mode), then exit filter mode
+			_populateShopTabs();
+			_dirtyAllItemFilteringPanes();
+			_toggleFilterSelectionModeTray();
+			_filterSelectionModeInfoAside.update();
+			_shopTabs.toggleOnFirstTab();
+		}
+		private function _refreshItemFilteringSelectionMode() : void {
+			_filterSelectionModeInfoAside.update();
+		}
+		private function _closeItemFilteringSelectionPane() : void {
+			_itemFiltering_selectionModeOn = false;
+			_clearItemFiltering();
+			_populateShopTabs();
+			_toggleFilterSelectionModeTray();
+			_shopTabs.toggleTabOn(WorldPaneManager.OTHER_PANE);
+		}
+		private function _resetItemFilteringSelectionPane() : void {
+			ShareCodeFilteringData.reset();
+			ShareCodeFilteringData.clearShareCodeCache();
+			_clearItemFiltering();
+			_getAndOpenItemFilteringSelectionMode();
+		}
+	//#endregion Item Filtering Selection Mode
 
-			private function _colorButtonClicked(pType:ItemType) : void {
-				if(_character.getItemData(pType) == null) { return; }
+	//#region Color Tab
+		private function _onColorPickChanged(e:FewfEvent):void {
+			if(e.data.allUpdated) {
+				_character.getItemData(this.currentlyColoringType).colors = e.data.allColors;
+			} else {
+				_character.getItemData(this.currentlyColoringType).colors[e.data.colorIndex] = uint(e.data.color);
+			}
+			_refreshSelectedItemColor(this.currentlyColoringType);
+		}
 
-				var tData:ItemData = getShopPane(pType).infobar.itemData;
-				_panes.colorPickerPane.infobar.addInfo( tData, GameAssets.getItemImage(tData) );
-				this.currentlyColoringType = pType;
-				_panes.colorPickerPane.init( tData.uniqId(), tData.colors, tData.defaultColors );
-				_panes.openPane(WorldPaneManager.COLOR_PANE);
-				_refreshSelectedItemColor(pType);
-			}
-
-			private function _onColorPickerBackClicked(pEvent:Event):void {
-				_panes.openShopPane(_panes.colorPickerPane.infobar.itemData.type);
-			}
-
-			private function _eyeDropButtonClicked(pType:ItemType) : void {
-				if(_character.getItemData(pType) == null) { return; }
-				var tData:ItemData = getShopPane(pType).infobar.itemData;
-				_openColorFinderWithItemData(tData);
-			}
-			private function _openColorFinderWithItemData(pItemData:ItemData) : void {
-				var tItem:MovieClip = GameAssets.getColoredItemImage(pItemData);
-				var tItem2:MovieClip = GameAssets.getColoredItemImage(pItemData);
-				_panes.colorFinderPane.infobar.addInfo( pItemData, tItem );
-				this.currentlyColoringType = pItemData.type;
-				_panes.colorFinderPane.setItem(tItem2);
-				_panes.openPane(WorldPaneManager.COLOR_FINDER_PANE);
-			}
-
-			private function _onColorFinderBackClicked(pEvent:Event):void {
-				if(ItemType.OTHER_PANE_ITEM_TYPES_WITH_NO_SUB_PANE.indexOf(_panes.colorFinderPane.infobar.itemData.type) > -1) {
-					_panes.openPane(WorldPaneManager.OTHER_PANE);
-					return;
-				}
-				_panes.openShopPane(_panes.colorFinderPane.infobar.itemData.type);
-			}
-
-			private function _onConfigColorPickChanged(pEvent:FewfEvent):void {
-				_setConfigShamanColor(uint(pEvent.data.color));
-			}
+		private function _onColorPickHoverPreview(pEvent:FewfEvent) : void {
+			// Updated preview data
+			GameAssets.swatchHoverPreviewData = pEvent.data;
+			// refresh render for anything that uses it
+			_refreshSelectedItemColor(this.currentlyColoringType);
+		}
+		
+		private function _refreshSelectedItemColor(pType:ItemType) : void {
+			_character.updatePose();
 			
-			private function _setConfigShamanColor(val:uint) : void {
-				_character.outfitData.shamanColor = val;
-				_character.updatePose();
-			}
+			var tPane:ShopCategoryPane = getShopPane(pType);
+			var tItemData:ItemData = _character.getItemData(pType);
+			if(!tItemData) { return; }
+			
+			_refreshButtonCustomizationForItemData(tItemData);
+			tPane.infobar.refreshItemImageUsingCurrentItemData();
+			_panes.colorPickerPane.infobar.refreshItemImageUsingCurrentItemData();
+		}
+		
+		private function _refreshButtonCustomizationForItemData(pItemData:ItemData) : void {
+			if(!pItemData) { return; }
+			var tPane:ShopCategoryPane = getShopPane(pItemData.type);
+			tPane.refreshButtonImage(pItemData);
+		}
 
-			private function _shamanColorButtonClicked() : void {
-				_panes.otherColorPickerPane.init( 'shamancolor', new <uint>[ _character.outfitData.shamanColor ], null );
-				_panes.openPane(WorldPaneManager.OTHER_COLOR_PANE);
+		private function _colorButtonClicked(pType:ItemType) : void {
+			if(_character.getItemData(pType) == null) { return; }
+
+			var tData:ItemData = getShopPane(pType).infobar.itemData;
+			_panes.colorPickerPane.infobar.addInfo( tData, GameAssets.getItemImage(tData) );
+			this.currentlyColoringType = pType;
+			_panes.colorPickerPane.init( tData.uniqId(), tData.colors, tData.defaultColors );
+			_panes.openPane(WorldPaneManager.COLOR_PANE);
+			_refreshSelectedItemColor(pType);
+		}
+
+		private function _onColorPickerBackClicked(pEvent:Event):void {
+			_panes.openShopPane(_panes.colorPickerPane.infobar.itemData.type);
+		}
+
+		private function _eyeDropButtonClicked(pType:ItemType) : void {
+			if(_character.getItemData(pType) == null) { return; }
+			var tData:ItemData = getShopPane(pType).infobar.itemData;
+			_openColorFinderWithItemData(tData);
+		}
+		private function _openColorFinderWithItemData(pItemData:ItemData) : void {
+			var tItem:MovieClip = GameAssets.getColoredItemImage(pItemData);
+			var tItem2:MovieClip = GameAssets.getColoredItemImage(pItemData);
+			_panes.colorFinderPane.infobar.addInfo( pItemData, tItem );
+			this.currentlyColoringType = pItemData.type;
+			_panes.colorFinderPane.setItem(tItem2);
+			_panes.openPane(WorldPaneManager.COLOR_FINDER_PANE);
+		}
+
+		private function _onColorFinderBackClicked(pEvent:Event):void {
+			if(ItemType.OTHER_PANE_ITEM_TYPES_WITH_NO_SUB_PANE.indexOf(_panes.colorFinderPane.infobar.itemData.type) > -1) {
+				_panes.openPane(WorldPaneManager.OTHER_PANE);
+				return;
 			}
-		//}END Color Tab
+			_panes.openShopPane(_panes.colorFinderPane.infobar.itemData.type);
+		}
+
+		private function _onConfigColorPickChanged(pEvent:FewfEvent):void {
+			_setConfigShamanColor(uint(pEvent.data.color));
+		}
+		
+		private function _setConfigShamanColor(val:uint) : void {
+			_character.outfitData.shamanColor = val;
+			_character.updatePose();
+		}
+
+		private function _shamanColorButtonClicked() : void {
+			_panes.otherColorPickerPane.init( 'shamancolor', new <uint>[ _character.outfitData.shamanColor ], null );
+			_panes.openPane(WorldPaneManager.OTHER_COLOR_PANE);
+		}
+	//#endregion Color Tab
 	}
 }

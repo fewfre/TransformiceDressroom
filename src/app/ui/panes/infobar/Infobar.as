@@ -230,7 +230,7 @@ package app.ui.panes.infobar
 		
 		public function _repositionGridManagementWidget() : void {
 			if(_gridManagementWidget) {
-				var ll:Number = 0, rr:Number = _rightSideTray.getRect(this).left;
+				var ll:Number = 0, rr:Number = _rightSideTray.x - _rightSideTray.width;//_rightSideTray.getRect(this).left; <-- this was return a huge number for filter selection screens; idk why
 				// Find left most x that's that has empty space - note that in most cases we need to assume it's there even
 				// if invisible, since that means it can be toggled on, and we don't want it shifting
 				if(_imageCont && _imageCont.visible) ll += _imageCont.width; // In this case invisible is the same as not existing
