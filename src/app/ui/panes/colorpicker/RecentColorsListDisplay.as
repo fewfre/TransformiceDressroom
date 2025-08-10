@@ -43,7 +43,7 @@ package app.ui.panes.colorpicker
 			var deleteWidth:Number = 50;
 			var bgWidth:Number = ConstantsApp.PANE_WIDTH - 20 - deleteWidth, bgHeight = 24;
 			
-			_deleteToggleButton = new DeleteButton({ x:bgWidth*0.5-25-2, width:deleteWidth, height:bgHeight, obj:new $Trash(), obj_scale:0.85 }).appendTo(this) as DeleteButton;
+			_deleteToggleButton = new DeleteButton(deleteWidth, bgHeight).setImage(new $Trash(), 0.85).move(bgWidth*0.5-25-2, 0).appendTo(this) as DeleteButton;
 			_deleteToggleButton.y += -_deleteToggleButton.Height * 0.5;
 			_deleteToggleButton.on(PushButton.TOGGLE, function():void{ render(); });
 			
@@ -101,8 +101,8 @@ package app.ui.panes.colorpicker
 			var btn:ColorButton = new ColorButton(pColor, pWidth, 17);
 			if(isDeleteModeOn) {
 				var nou:Sprite = DisplayWrapper.wrap(new $No(), btn).toScale(0.2).toAlpha(0).asSprite;
-				btn.addEventListener(ButtonBase.OVER, function(){ nou.alpha = 0.5 });
-				btn.addEventListener(ButtonBase.OUT, function(){ nou.alpha = 0 });
+				btn.on(ButtonBase.OVER, function(){ nou.alpha = 0.5 });
+				btn.on(ButtonBase.OUT, function(){ nou.alpha = 0 });
 			}
 			return btn;
 		}
@@ -150,8 +150,8 @@ package app.ui.panes.colorpicker
 import app.ui.buttons.PushButton;
 class DeleteButton extends PushButton
 {
-		public function DeleteButton(pData) {
-			super(pData);
+		public function DeleteButton(pWidth:Number, pHeight:Number) {
+			super(pWidth, pHeight);
 			_bg.radius = 5;
 		}
 		/****************************

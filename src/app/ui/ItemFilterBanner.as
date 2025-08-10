@@ -30,9 +30,9 @@ package app.ui
 			new RoundRectangle(260, hh).toOrigin(0, 0.5).toRadius(4).drawSolid(0xDDDDFF, 0x0000FF, 2).appendTo(_tray);
 			DisplayWrapper.wrap(new $FilterIcon(), _tray).toScale(0.25).move(11, 0);
 			new TextTranslated("share_filter_banner", { x:20, originX:0, originY:0.5, color:0x111111 }).appendToT(_tray);
-			(_customizationToggle = PushButton.square(20)).setImage(new $ColorWheel(), 0.4).toOrigin(0.5).move(220, 0).appendTo(_tray)
+			(_customizationToggle = new PushButton(20)).setImage(new $ColorWheel(), 0.4).setOrigin(0.5).move(220, 0).appendTo(_tray)
 				.onButtonClick(dispatchEventHandler(ONLY_INCLUDE_CUSTOMIZATIONS_TOGGLED));
-			ScaleButton.withObject(new $No(), 0.5).move(245, 0).appendTo(_tray)
+			new ScaleButton(new $No(), 0.5).move(245, 0).appendTo(_tray)
 				.onButtonClick(dispatchEventHandler(FILTER_BANNER_CLOSED));
 		}
 		public function move(pX:Number, pY:Number) : ItemFilterBanner { x = pX; y = pY; return this; }

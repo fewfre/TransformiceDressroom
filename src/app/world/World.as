@@ -121,11 +121,11 @@ package app.world
 				.on(ItemFilterBanner.FILTER_BANNER_CLOSED, _onExitItemFilteringMode);
 			
 			// Outfit Button
-			new ScaleButton({ origin:0.5, obj:new $Outfit(), obj_scale:0.4 }).appendTo(this).move(_toolbox.x+167, _toolbox.y+12.5+21)
+			new ScaleButton(new $Outfit(), 0.4).move(_toolbox.x+167, _toolbox.y+12.5+21).appendTo(this)
 				.onButtonClick(function(e:Event){ _panes.openPane(WorldPaneManager.OUTFITS_PANE); });
 			
 			// Favorite Button
-			var favButton:ScaleButton = ScaleButton.withObject(new $HeartFull(), 1).appendTo(this).move(_toolbox.x+167 + 1, _toolbox.y+12.5+21 + 23)
+			var favButton:ScaleButton = new ScaleButton(new $HeartFull()).appendTo(this).move(_toolbox.x+167 + 1, _toolbox.y+12.5+21 + 23)
 				.onButtonClick(function(e:Event){ _panes.openPane(WorldPaneManager.FAVORITES_PANE); }) as ScaleButton;
 			favButton.visible = FavoriteItemsLocalStorageManager.getAllFavorites().length > 0;
 			Fewf.dispatcher.addEventListener(ConstantsApp.FAVORITE_ADDED_OR_REMOVED, function(e:FewfEvent):void{
@@ -140,18 +140,17 @@ package app.world
 			/////////////////////////////
 			// Bottom Left Area
 			/////////////////////////////
-			var tLangButton:SpriteButton = LangScreen.createLangButton({ width:30, height:25, origin:0.5 })
+			var tLangButton:GameButton = LangScreen.createLangButton(30, 25)
 				.move(22, ConstantsApp.APP_HEIGHT-17).appendTo(this)
-				.onButtonClick(_onLangButtonClicked) as SpriteButton;
+				.onButtonClick(_onLangButtonClicked) as GameButton;
 			
 			// About Screen Button
-			var aboutButton:SpriteButton = new SpriteButton({ size:25, origin:0.5 }).appendTo(this)
-				.move(tLangButton.x+(tLangButton.Width/2)+2+(25/2), ConstantsApp.APP_HEIGHT - 17)
-				.onButtonClick(_onAboutButtonClicked) as SpriteButton;
-			new TextBase("?", { size:22, color:0xFFFFFF, bold:true, origin:0.5 }).move(0, -1).appendTo(aboutButton)
+			var aboutButton:GameButton = new GameButton(25).setOrigin(0.5).move(tLangButton.x+(tLangButton.Width/2)+2+(25/2), ConstantsApp.APP_HEIGHT - 17).appendTo(this)
+				.onButtonClick(_onAboutButtonClicked) as GameButton;
+			new TextBase("?", { size:22, color:0xFFFFFF, bold:true, origin:0.5 }).move(0, -1).appendTo(aboutButton);
 			
 			if(!!(ParentApp.reopenSelectionLauncher())) {
-				new ScaleButton({ obj:new $BackArrow(), obj_scale:0.5, origin:0.5 }).appendTo(this)
+				new ScaleButton(new $BackArrow(), 0.5).appendTo(this)
 					.move(22, ConstantsApp.APP_HEIGHT-17-28)
 					.onButtonClick(function():void{ ParentApp.reopenSelectionLauncher()(); });
 			}
@@ -566,14 +565,14 @@ package app.world
 				var tParent : World = this;
 				setTimeout(function():void{
 					// If auto saved outfit, prompt user to use or not
-					(_restoreAutoSaveBtn = GameButton.rect(120, 16)).setText("restore_auto_save_btn", { size:10 }).toOrigin(0.5).move(185, 90).setData({ look:autoSavedLook }).appendTo(tParent)
+					(_restoreAutoSaveBtn = new GameButton(120, 16)).setText("restore_auto_save_btn", { size:10 }).setOrigin(0.5).move(185, 90).setData({ look:autoSavedLook }).appendTo(tParent)
 						.onButtonClick(function(e:FewfEvent):void{ _useOutfitShareCode(e.data.look); });
 				}, 100);
 			}
 		}
 		private function _removeRestoreAutoSaveButton() : void {
-			if(_restoreAutoSaveBtn && _restoreAutoSaveBtn.parent) {
-				_restoreAutoSaveBtn.parent.removeChild(_restoreAutoSaveBtn);
+			if(_restoreAutoSaveBtn) {
+				_restoreAutoSaveBtn.removeSelf();
 				_restoreAutoSaveBtn = null;
 			}
 		}

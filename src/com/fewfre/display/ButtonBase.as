@@ -1,9 +1,11 @@
 package com.fewfre.display
 {
-	import flash.display.Sprite;
-	import flash.events.MouseEvent;
-	import flash.events.Event;
 	import com.fewfre.events.FewfEvent;
+	import flash.display.DisplayObject;
+	import flash.display.DisplayObjectContainer;
+	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
 
 	public class ButtonBase extends Sprite
 	{
@@ -21,61 +23,57 @@ package com.fewfre.display
 		public static const CLICK:String = "button_click";
 	
 		// Storage
-		protected var _state		: String;
-		protected var _flagEnabled	: Boolean;
-		protected var _returnData	: Object;
+		protected var _state       : String;
+		protected var _flagEnabled : Boolean;
+		protected var _returnData  : Object;
 		
 		// Properties
 		public function get data():Object { return _returnData; }
 		public function get enabled():Boolean { return _flagEnabled; }
 		
+		public function get scale():Number { return this.scaleX; }
+		public function set scale(pVal:Number):void { this.scaleX = this.scaleY = pVal; }
+		
 		// Constructor
-		// pArgs = { x:Number, y:Number, ?data:* }
-		public function ButtonBase(pArgs:Object)
-		{
+		public function ButtonBase() {
 			super();
 			_state = BUTTON_STATE_UP;
 			
-			this.x = pArgs.x != null ? pArgs.x : 0;
-			this.y = pArgs.y != null ? pArgs.y : 0;
-			
-			_returnData = pArgs.data;
-			
-			buttonMode = true;
-			useHandCursor = true;
-			mouseChildren = false;
+			this.buttonMode = true;
+			this.useHandCursor = true;
+			this.mouseChildren = false;
 			
 			enable();
 			
 			_addEventListeners();
 		}
-		public function move(pX:Number, pY:Number) : ButtonBase { x = pX; y = pY; return this; }
+		public function move(pX:Number, pY:Number) : ButtonBase { this.x = pX; this.y = pY; return this; }
 		public function appendTo(pParent:Sprite): ButtonBase { pParent.addChild(this); return this; }
 		public function on(type:String, listener:Function, useCapture:Boolean = false): ButtonBase { this.addEventListener(type, listener, useCapture); return this; }
 		public function onButtonClick(listener:Function, useCapture:Boolean = false): ButtonBase { this.addEventListener(ButtonBase.CLICK, listener, useCapture); return this; }
 		public function off(type:String, listener:Function, useCapture:Boolean = false): ButtonBase { this.removeEventListener(type, listener, useCapture); return this; }
 		public function setData(pData:Object): ButtonBase { _returnData = pData; return this; }
+		public function setAlpha(pAlpha:Number): ButtonBase { this.alpha = pAlpha; return this; }
+		public function setVisible(pVisible:Boolean): ButtonBase { this.visible = pVisible; return this; }
 		
 		/****************************
 		* Events
 		*****************************/
 		protected function _addEventListeners() : void {
-			addEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown);
-			addEventListener(MouseEvent.CLICK, _onMouseUp);//MOUSE_UP
-			addEventListener(MouseEvent.ROLL_OVER, _onMouseOver);
-			addEventListener(MouseEvent.ROLL_OUT, _onMouseOut);
+			this.addEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown);
+			this.addEventListener(MouseEvent.CLICK, _onMouseUp);//MOUSE_UP
+			this.addEventListener(MouseEvent.ROLL_OVER, _onMouseOver);
+			this.addEventListener(MouseEvent.ROLL_OUT, _onMouseOut);
 		}
 
-		protected function _onMouseDown(pEvent:MouseEvent) : void
-		{
+		protected function _onMouseDown(pEvent:MouseEvent) : void {
 			if(!_flagEnabled) { return; }
 			_state = BUTTON_STATE_DOWN;
 			_renderDown();
 			_dispatch(DOWN);
 		}
 
-		protected function _onMouseUp(pEvent:MouseEvent) : void
-		{
+		protected function _onMouseUp(pEvent:MouseEvent) : void {
 			if(!_flagEnabled) { return; }
 			_state = BUTTON_STATE_UP;
 			_renderUp();
@@ -83,16 +81,14 @@ package com.fewfre.display
 			_dispatch(CLICK);
 		}
 
-		protected function _onMouseOver(pEvent:MouseEvent) : void
-		{
+		protected function _onMouseOver(pEvent:MouseEvent) : void {
 			if(!_flagEnabled) { return; }
 			_state = BUTTON_STATE_OVER;
 			_renderOver();
 			_dispatch(OVER);
 		}
 
-		protected function _onMouseOut(pEvent:MouseEvent) : void
-		{
+		protected function _onMouseOut(pEvent:MouseEvent) : void {
 			if(!_flagEnabled) { return; }
 			_state = BUTTON_STATE_UP;
 			_renderOut();
@@ -103,16 +99,15 @@ package com.fewfre.display
 		* Render
 		*****************************/
 		protected function _renderUp() : void {
-			this.scaleX = this.scaleY = 1;
+			this.scale = 1;
 		}
 		
-		protected function _renderDown() : void
-		{
-			this.scaleX = this.scaleY = 0.9;
+		protected function _renderDown() : void {
+			this.scale = 0.9;
 		}
 		
 		protected function _renderOver() : void {
-			this.scaleX = this.scaleY = 1.1;
+			this.scale = 1.1;
 		}
 		
 		protected function _renderOut() : void {
@@ -120,17 +115,14 @@ package com.fewfre.display
 		}
 		
 		protected function _renderDisabled() : void {
-			this.scaleX = this.scaleY = 1;
+			this.scale = 1;
 		}
 
 		/****************************
 		* Methods
 		*****************************/
-		public function _dispatch(pEvent:String) : void {
-			if(!_returnData) { dispatchEvent(new Event(pEvent)); }
-			else {
-				dispatchEvent(new FewfEvent(pEvent, _returnData));
-			}
+		protected function _dispatch(pEvent:String) : void {
+			this.dispatchEvent(new FewfEvent(pEvent, _returnData));
 		}
 		
 		public function enable() : ButtonBase {
@@ -150,9 +142,14 @@ package com.fewfre.display
 		 * If nothing or "null" is passed in, it will flip the current state - otherwise treats it as a boolean and sets
 		 * current enabled state based on that
 		 */
-		public function enableToggle(pOn:Object=null) : ButtonBase {
+		public function toggleEnabled(pOn:Object=null) : ButtonBase {
 			var newStateOn = pOn == null ? !enabled : Boolean(pOn);
 			return newStateOn ? enable() : disable();
+		}
+		
+		public function removeSelf() : ButtonBase {
+			if(this.parent) { this.parent.removeChild(this); }
+			return this;
 		}
 	}
 }

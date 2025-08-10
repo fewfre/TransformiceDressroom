@@ -70,15 +70,14 @@ package app.ui.panes
 			
 			var customizeButton : DisplayObject = _addCustomizeButton(itemData);
 
-			var shopItemButton : PushButton = new PushButton({ size:grid.cellSize, obj:shopItem, data:{ type:_type, id:i, itemID:itemData.id, itemData:itemData, customizeButton:customizeButton } }).appendTo(cell) as PushButton;
+			var shopItemButton : PushButton = new PushButton(grid.cellSize).setImage(shopItem).setData({ type:_type, id:i, itemID:itemData.id, itemData:itemData, customizeButton:customizeButton }).appendTo(cell) as PushButton;
 			
 			cell.addChild( customizeButton );
 			
 			shopItemButton.alpha = 0.5;
 			customizeButton.visible = false;
 			if(ShareCodeFilteringData.hasId(_type, itemData.id)) {
-				shopItemButton.alpha = 1;
-				shopItemButton.toggleOn(false);
+				shopItemButton.toggleOn(false).setAlpha(1);
 				customizeButton.visible = true;
 			}
 			
@@ -89,13 +88,12 @@ package app.ui.panes
 		private function _addCustomizeButton(data:ItemData) : Sprite {
 			if(!data.colors || data.colors.length == 0) { return new Sprite(); }
 			
-			var btn : PushButton = new PushButton({ width:20, height:20, obj:new $ColorWheel(), data:{ itemData:data } });
+			var btn : PushButton = new PushButton(20).setImage(new $ColorWheel()).setData({ itemData:data }) as PushButton;
 			btn.alpha = 0.35;
 			if(ShareCodeFilteringData.isCustomizable(data)) {
-				btn.alpha = 1;
-				btn.toggleOn(false);
+				btn.toggleOn(false).setAlpha(1);
 			}
-			btn.addEventListener(PushButton.TOGGLE, function(e:FewfEvent){
+			btn.on(PushButton.TOGGLE, function(e:FewfEvent){
 				ShareCodeFilteringData.setCustomizable(data, (e.target as PushButton).pushed);
 				ShareCodeFilteringData.updateShareCodeCache();
 				btn.alpha = ShareCodeFilteringData.isCustomizable(data) ? 1 : 0.35;

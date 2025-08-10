@@ -3,22 +3,22 @@ package app.ui.panes
 	import app.data.ConstantsApp;
 	import app.data.FavoriteItemsLocalStorageManager;
 	import app.data.GameAssets;
+	import app.ui.buttons.GameButton;
+	import app.ui.buttons.PushButton;
 	import app.ui.buttons.ScaleButton;
-	import app.ui.buttons.SpriteButton;
 	import app.ui.panes.base.ButtonGridSidePane;
 	import app.ui.panes.infobar.GridManagementWidget;
 	import app.ui.panes.infobar.Infobar;
 	import app.ui.screens.TrashConfirmScreen;
 	import app.world.data.ItemData;
 	import app.world.events.ItemDataEvent;
+	import com.fewfre.display.DisplayWrapper;
 	import com.fewfre.events.FewfEvent;
+	import flash.display.DisplayObject;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import app.ui.buttons.PushButton;
-	import flash.display.DisplayObject;
-	import com.fewfre.display.DisplayWrapper;
 	
 	public class FavoritesTabPane extends ButtonGridSidePane
 	{
@@ -45,8 +45,8 @@ package app.ui.panes
 				.on(Event.CLOSE, function(e):void{ removeChild(_deleteAllConfirmScreen); })
 				.on(TrashConfirmScreen.CONFIRM, _onDeleteAll);
 			// Delete button (opens confirm screen)
-			var bttn:SpriteButton = SpriteButton.withObject(new $Trash(), 'auto', { size:40, originY:0.5 }).move(-40 - 5, 25)
-				.onButtonClick(function(e):void{ addChild(_deleteAllConfirmScreen); }) as SpriteButton;
+			var bttn:GameButton = new GameButton(40).setImage(new $Trash()).setOrigin(0, 0.5).move(-40 - 5, 25)
+				.onButtonClick(function(e):void{ addChild(_deleteAllConfirmScreen); }) as GameButton;
 			infobar.addCustomObjectToRightSideTray(bttn);
 		}
 		
@@ -82,22 +82,23 @@ package app.ui.panes
 			cell.addEventListener(MouseEvent.MOUSE_OUT, function(e){ actionTray.alpha = 0; });
 			
 			// main button
-			PushButton.withObject(itemImage, "auto", { size:grid.cellSize, data:{ itemData:itemData } })
+			new PushButton(grid.cellSize)
 				.toggle(_getIfItemDataWorn(itemData), false)
 				.onToggle(function(e:FewfEvent){ _dispatchItemData(itemData, (e.target as PushButton).pushed); })
+				.setImage(itemImage).setData({ itemData:itemData })
 				.appendTo(cell);
 			
 			// Add on top of main button
 			cell.addChild(actionTray);
 			
 			// Corresponding Delete Button
-			ScaleButton.withObject(new $Trash(), 0.4).move(grid.cellSize-5, 5).appendTo(actionTray)
+			new ScaleButton(new $Trash(), 0.4).move(grid.cellSize-5, 5).appendTo(actionTray)
 				.onButtonClick(function(e:Event){ _deleteFavorite(itemData); });
 			
 			// Corresponding GoTo Button
 			var gtcpIconHolder:Sprite = new Sprite();
 			DisplayWrapper.wrap(new $BackArrow(), gtcpIconHolder).toScale(-1, 1);
-			ScaleButton.withObject(gtcpIconHolder, 0.5).move(grid.cellSize-6, grid.cellSize-6).appendTo(actionTray)
+			new ScaleButton(gtcpIconHolder, 0.5).move(grid.cellSize-6, grid.cellSize-6).appendTo(actionTray)
 				.onButtonClick(function(e:Event){
 					_dispatchItemData(itemData); // Toggle item on before going to it
 					dispatchEvent(new ItemDataEvent(ITEMDATA_GOTO, itemData));

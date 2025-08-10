@@ -24,13 +24,13 @@ package app.ui.buttons
 		public function get Height():Number { return _bg.height; }
 		
 		// Constructor
-		// pData = { x:Number, y:Number, (width:Number, height:Number OR size:Number), ?origin:Number, ?originX:Number, ?originY:Number }
-		public function GameButton(pData:Object) {
-			_bg = new RoundRectangle(pData.size || pData.width, pData.size || pData.height, { origin:pData.origin, originX:pData.originX, originY:pData.originY })
-				.toRadius(7).appendTo(this);
-			super(pData);
+		// If pHeight isn't set it will default to the same as the width
+		public function GameButton(pWidth:Number, pHeight:Number=NaN) {
+			if(isNaN(pHeight)) pHeight = pWidth;
+			(_bg = new RoundRectangle(pWidth, pHeight)).toRadius(7).appendTo(this);
+			super();
 		}
-		public function toOrigin(pX:Number, pY:Object=null) : GameButton { _bg.toOrigin(pX, pY); _rerenderChildren(); return this; }
+		public function setOrigin(pX:Number, pY:Object=null) : GameButton { _bg.toOrigin(pX, pY); _rerenderChildren(); return this; }
 		public function resize(pWidth:Number, pHeight:Object = null) : GameButton { _bg.resize(pWidth, pHeight); _rerenderChildren(); return this; }
 
 		/////////////////////////////
@@ -73,7 +73,7 @@ package app.ui.buttons
 		
 		protected function _rerenderChildren() : void {
 			if(_text) setTextObject(_text);
-			if(_image) setImage(_image);
+			if(_image) setImage(_image, _image.scaleX);
 		}
 
 		/////////////////////////////
@@ -100,16 +100,6 @@ package app.ui.buttons
 		
 		override protected function _renderDisabled() : void {
 			_bg.draw3d(0x555555, ConstantsApp.COLOR_BUTTON_OUTSET_BOTTOM, ConstantsApp.COLOR_BUTTON_BLUE, 0x555555);
-		}
-		
-		/////////////////////////////
-		// Static
-		/////////////////////////////
-		public static function square(pSize:Number) : GameButton {
-			return new GameButton({ size:pSize });
-		}
-		public static function rect(pWidth:Number, pHeight:Number) : GameButton {
-			return new GameButton({ width:pWidth, height:pHeight });
 		}
 	}
 }

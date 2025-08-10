@@ -128,7 +128,7 @@ class TabButton extends PushButton {
 	private var _itemIndicator:DisplayWrapper;
 	
 	public function TabButton(pWidth:Number, pHeight:Number, pText:String, pId:String, pItemIndicator:Shape) {
-		super({ width:pWidth, height:pHeight });
+		super(pWidth, pHeight);
 		setData({ id:pId });
 		setAllowToggleOff(false);
 		

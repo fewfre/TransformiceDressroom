@@ -4,9 +4,9 @@ package app.ui.panes
 	import app.data.FavoriteItemsLocalStorageManager;
 	import app.data.GameAssets;
 	import app.data.ItemType;
+	import app.ui.buttons.GameButton;
 	import app.ui.buttons.PushButton;
 	import app.ui.buttons.ScaleButton;
-	import app.ui.buttons.SpriteButton;
 	import app.ui.common.FancyInput;
 	import app.ui.panes.base.ButtonGridSidePane;
 	import app.ui.panes.infobar.Infobar;
@@ -138,7 +138,7 @@ package app.ui.panes
 			shopItem.scaleX = shopItem.scaleY = pScale;
 			var cell:Sprite = new Sprite();
 
-			var shopItemButton:PushButton = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:shopItem, data:{ type:_type, itemID:itemData.id, itemData:itemData } }).appendTo(cell) as PushButton;
+			var shopItemButton:PushButton = new PushButton(grid.cellSize).setImage(shopItem).setData({ type:_type, itemID:itemData.id, itemData:itemData }).appendTo(cell) as PushButton;
 			
 			_addFlagWaveInputIfNeeded(itemData, cell, shopItemButton);
 			
@@ -214,7 +214,7 @@ package app.ui.panes
 				if(availableIds.indexOf(tId) == -1) continue;
 				tItemData = GameAssets.getItemFromTypeID(_type, tId);
 				if(tItemData) {
-					_favoritesGrid.add(SpriteButton.withObject(GameAssets.getItemImage(tItemData), "auto", { size:_favoritesGrid.cellSize, data:tItemData })
+					_favoritesGrid.add(new GameButton(_favoritesGrid.cellSize).setImage(GameAssets.getItemImage(tItemData)).setData(tItemData)
 						.onButtonClick(_favoriteClicked));
 				}
 			}
@@ -226,7 +226,7 @@ package app.ui.panes
 		}
 		
 		private function _favoriteClicked(e:FewfEvent) : void {
-			var itemData:ItemData = (e.currentTarget as SpriteButton).data as ItemData;
+			var itemData:ItemData = (e.currentTarget as GameButton).data as ItemData;
 			var btn:PushButton = getButtonWithItemData(itemData);
 			if(btn && btn.pushed) {
 				// This allows clicking the button to toggle it off if already toggled

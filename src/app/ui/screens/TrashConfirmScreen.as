@@ -5,7 +5,7 @@ package app.ui.screens
 	import app.data.GameAssets;
 	import com.fewfre.display.RoundRectangle;
 	import flash.events.MouseEvent;
-	import app.ui.buttons.SpriteButton;
+	import app.ui.buttons.GameButton;
 	import flash.events.Event;
 	
 	public class TrashConfirmScreen extends Sprite
@@ -26,10 +26,10 @@ package app.ui.screens
 			*****************************/
 			var bsize:Number = 28, tButtonSpacing:Number=bsize*0.5+2;
 			
-			SpriteButton.withObject(new $Yes(), 0.6, { x:-tButtonSpacing, size:bsize, origin:0.5 }).appendTo(this)
+			new GameButton(bsize).setImage(new $Yes(), 0.6).setOrigin(0.5).move(-tButtonSpacing, 0).appendTo(this)
 				.onButtonClick(_onConfirmClicked);
 			
-			SpriteButton.withObject(new $No(), 0.6, { x:tButtonSpacing, size:bsize, origin:0.5 }).appendTo(this)
+			new GameButton(bsize).setImage(new $No(), 0.6).setOrigin(0.5).move(tButtonSpacing, 0).appendTo(this)
 				.onButtonClick(_onCloseClicked);
 		}
 		public function move(pX:Number, pY:Number) : TrashConfirmScreen { x = pX; y = pY; return this; }

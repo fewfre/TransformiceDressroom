@@ -1,63 +1,58 @@
 package app.ui.buttons
 {
 	import com.fewfre.display.ButtonBase;
-	import app.ui.*;
 	import flash.display.DisplayObject;
-	import flash.events.MouseEvent;
 	
 	public class ScaleButton extends ButtonBase
 	{
 		// Storage
-		public var Image:DisplayObject;
-		protected var _buttonScale:Number = 1;
+		protected var _image       : DisplayObject;
+		protected var _buttonBaseScale : Number = 1;
+		
+		// Properties
+		public function get image():DisplayObject { return _image; }
+		public function get buttonBaseScale():Number { return _buttonBaseScale; }
+		public function set buttonBaseScale(pBaseScale:Number):void { _buttonBaseScale = pBaseScale; _rerenderCurrentState(); }
 		
 		// Constructor
-		// pData = { x:Number, y:Number, obj:DisplayObject, ?obj_scale:Number }
-		public function ScaleButton(pData:Object)
-		{
-			super(pData);
-			if(pData.obj_scale) { setScale(pData.obj_scale); }
-			
-			ChangeImage(pData.obj);
+		public function ScaleButton(pImage:DisplayObject=null, pBaseScale:Number=1) {
+			super();
+			_buttonBaseScale = pBaseScale;
+			if(pImage) setImage(pImage);
 		}
 
-		public function ChangeImage(pMC:DisplayObject) : void
-		{
-			if(this.Image != null) { removeChild(this.Image); }
-			this.Image = pMC;
-			addChild(this.Image);
-		}
-		
-		public function setScale(pScale:Number) : void {
-			_buttonScale = pScale;
-			_renderUp();
-		}
-
-		override protected function _renderDown() : void
-		{
-			this.scaleX = this.scaleY = _buttonScale*0.9;
-		}
-
-		override protected function _renderUp() : void
-		{
-			this.scaleX = this.scaleY = _buttonScale;
-		}
-
-		override protected function _renderOver() : void
-		{
-			this.scaleX = this.scaleY = _buttonScale*1.1;
-		}
-
-		override protected function _renderOut() : void
-		{
-			this.scaleX = this.scaleY = _buttonScale;
+		public function setImage(pImage:DisplayObject, pBaseScale:Number=NaN) : ScaleButton {
+			if(_image != null) { removeChild(_image); }
+			_image = pImage;
+			addChild(_image);
+			_rerenderCurrentState();
+			if(!isNaN(pBaseScale)) _buttonBaseScale = pBaseScale;
+			return this;
 		}
 		
 		/////////////////////////////
-		// Static
+		// Render
 		/////////////////////////////
-		public static function withObject(pObj:DisplayObject, pScale:Object=null) : ScaleButton {
-			return new ScaleButton({ obj:pObj, obj_scale:pScale });
+		override protected function _renderDown() : void {
+			this.scale = _buttonBaseScale*0.9;
+		}
+
+		override protected function _renderUp() : void {
+			this.scale = _buttonBaseScale;
+		}
+
+		override protected function _renderOver() : void {
+			this.scale = _buttonBaseScale*1.1;
+		}
+
+		override protected function _renderOut() : void {
+			this.scale = _buttonBaseScale;
+		}
+		
+		private function _rerenderCurrentState() : void {
+			if(_state == BUTTON_STATE_DOWN) _renderDown();
+			if(_state == BUTTON_STATE_UP) _renderUp();
+			if(_state == BUTTON_STATE_OVER) _renderOver();
 		}
 	}
 }

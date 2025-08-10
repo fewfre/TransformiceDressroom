@@ -36,7 +36,7 @@ package app.ui.panes
 		
 		private var _frontHandButton  : PushButton;
 		private var _backHandButton   : PushButton;
-		private var _eyeDropperButton : SpriteButton;
+		private var _eyeDropperButton : GameButton;
 		
 		private var _mouseHeadButton  : GameButton;
 		private var _mouseHead        : Pose;
@@ -63,22 +63,22 @@ package app.ui.panes
 			
 			_shamanButtons = new Vector.<PushButton>();
 			xx -= 5; yy -= 11;
-			_shamanButtons.push(PushButton.rect(sizex, sizey).setText("btn_normal_mode").setData({ shamanMode:ShamanMode.NORMAL }).appendTo(this) as PushButton);
-			_shamanButtons.push(PushButton.rect(sizex, sizey).setText("btn_hard_mode").setData({ shamanMode:ShamanMode.HARD }).appendTo(this) as PushButton);
-			_shamanButtons.push(PushButton.rect(sizex, sizey).setText("btn_divine_mode").setData({ shamanMode:ShamanMode.DIVINE }).appendTo(this) as PushButton);
+			_shamanButtons.push(new PushButton(sizex, sizey).setText("btn_normal_mode").setData({ shamanMode:ShamanMode.NORMAL }).appendTo(this) as PushButton);
+			_shamanButtons.push(new PushButton(sizex, sizey).setText("btn_hard_mode").setData({ shamanMode:ShamanMode.HARD }).appendTo(this) as PushButton);
+			_shamanButtons.push(new PushButton(sizex, sizey).setText("btn_divine_mode").setData({ shamanMode:ShamanMode.DIVINE }).appendTo(this) as PushButton);
 			for each(var btn:PushButton in _shamanButtons) {
 				btn.move(xx += spacingx, yy);
 				btn.onToggle(_onShamanButtonClicked);
 			}
 			
-			_disableSkillsModeButton = PushButton.rect(180, 20).setText("btn_no_skills_mode") as PushButton;
+			_disableSkillsModeButton = new PushButton(180, 20).setText("btn_no_skills_mode") as PushButton;
 			_disableSkillsModeButton.move(10 + sizex*1.5 + spacingx - 180/2, yy + sizey + 7).appendTo(this);
 			_disableSkillsModeButton.onToggle(_onShamanDisableSkillsModeButtonClicked);
 			
 			// Color buttons
 			yy = shamanAreaHeight/2 - 24;
 			sizex = 80; sizey = 50;
-			ScaleButton.withObject(new $ColorWheel()).move(xx += spacingx + 30, yy + sizey*0.5 - 10).appendTo(this).onButtonClick(function(e):void{ dispatchEvent(new Event(CUSTOM_SHAMAN_COLOR_CLICKED)); });
+			new ScaleButton(new $ColorWheel()).move(xx += spacingx + 30, yy + sizey*0.5 - 10).appendTo(this).onButtonClick(function(e):void{ dispatchEvent(new Event(CUSTOM_SHAMAN_COLOR_CLICKED)); });
 			
 			sizex = 26; sizey = 18;
 			// Default Blue/Pink Shaman color buttons
@@ -97,33 +97,33 @@ package app.ui.panes
 			yy += 11; xx = 20;
 			var grid:Grid = new Grid(itemsSectionFakeHalfWidth, 2).move(xx,yy).appendTo(this);
 			
-			grid.add(GameButton.square(grid.cellSize).setImage(GameAssets.getItemImage(GameAssets.extraBack[0])).appendTo(this)
+			grid.add(new GameButton(grid.cellSize).setImage(GameAssets.getItemImage(GameAssets.extraBack[0]))
 				.onButtonClick(function(e:Event):void{ dispatchEvent(new Event(CHEESE_CLICKED)); }));
 				
-			grid.add(GameButton.square(grid.cellSize).setImage(GameAssets.getItemImage(GameAssets.emoji[0])).appendTo(this)
+			grid.add(new GameButton(grid.cellSize).setImage(GameAssets.getItemImage(GameAssets.emoji[0]))
 				.onButtonClick(function(e:Event):void{ dispatchEvent(new Event(EMOJI_CLICKED)); }));
 			
 
 			grid = new Grid(itemsSectionFakeHalfWidth, 2).move(ConstantsApp.PANE_WIDTH-14-itemsSectionFakeHalfWidth, yy).appendTo(this);
 			
-			(_frontHandButton = PushButton.square(grid.cellSize)).setImage(new GameAssets.extraObjectWand.itemClass(), 1.5).setData({ itemData:GameAssets.extraObjectWand });
+			(_frontHandButton = new PushButton(grid.cellSize)).setImage(new GameAssets.extraObjectWand.itemClass(), 1.5).setData({ itemData:GameAssets.extraObjectWand });
 			_frontHandButton.onToggle(_onItemToggled)
 				.on(MouseEvent.MOUSE_OVER, _onItemHoverInShowEyeDropper)
 				.on(MouseEvent.MOUSE_OUT, _onItemHoverOutHideEyeDropper);
 			grid.add(_frontHandButton);
 			
-			(_backHandButton = PushButton.square(grid.cellSize)).setImage(new GameAssets.extraBackHand.itemClass(), 1.5).setData({ itemData:GameAssets.extraBackHand });
+			(_backHandButton = new PushButton(grid.cellSize)).setImage(new GameAssets.extraBackHand.itemClass(), 1.5).setData({ itemData:GameAssets.extraBackHand });
 			_backHandButton.onToggle(_onItemToggled)
 				.on(MouseEvent.MOUSE_OVER, _onItemHoverInShowEyeDropper)
 				.on(MouseEvent.MOUSE_OUT, _onItemHoverOutHideEyeDropper);
 			grid.add(_backHandButton);
 			
 			// Eye dropper button
-			(_eyeDropperButton = SpriteButton.square(16)).setImage(new $EyeDropper(), 0.35).appendTo(this);
+			(_eyeDropperButton = new GameButton(16)).setImage(new $EyeDropper(), 0.35).appendTo(this);
 			_eyeDropperButton.onButtonClick(function():void { dispatchEvent(new FewfEvent(EYE_DROPPER_CLICKED, { itemData:_eyeDropperButton.data.itemData })); })
-				.on(MouseEvent.MOUSE_OVER, function(e:Event){ _eyeDropperButton.enable().alpha = 1; })
-				.on(MouseEvent.MOUSE_OUT, function(e:Event){ _eyeDropperButton.disable().alpha = 0; })
-			_eyeDropperButton.disable().alpha = 0;
+				.on(MouseEvent.MOUSE_OVER, function(e:Event){ _eyeDropperButton.enable().setAlpha(1); })
+				.on(MouseEvent.MOUSE_OUT, function(e:Event){ _eyeDropperButton.disable().setAlpha(0); })
+			_eyeDropperButton.disable().setAlpha(0);
 			
 			/////////////////////////////
 			// Tips
@@ -136,12 +136,12 @@ package app.ui.panes
 			// Bottom Buttons
 			/////////////////////////////
 			// Left
-			GameButton.square(70).setImage(new $FilterIcon(), 0.85).move(xx, 315).appendTo(this)
+			new GameButton(70).setImage(new $FilterIcon(), 0.85).move(xx, 315).appendTo(this)
 				.onButtonClick(function(e:Event):void{ dispatchEvent(new Event(FILTER_MODE_CLICKED)); });
 			
 			// Right
 			// Save Head Image
-			(_mouseHeadButton = GameButton.square(70))
+			(_mouseHeadButton = new GameButton(70))
 				.setImage(_mouseHead = new Pose().applyOutfitData(new OutfitData().setItemDataVector(new <ItemData>[ GameAssets.defaultSkin, GameAssets.defaultPose ])), 3)
 				.move(353, 315).appendTo(this)
 				.onButtonClick(function():void{ dispatchEvent(new FewfEvent(SAVE_MOUSE_HEAD_CLICKED, _mouseHead)); });
@@ -224,12 +224,12 @@ package app.ui.panes
 		
 		private function _onItemHoverInShowEyeDropper(e:Event) : void {
 			var tTargetButton:PushButton = e.target as PushButton;
-			_eyeDropperButton.enable().alpha = 1;
+			_eyeDropperButton.enable().setAlpha(1);
 			_eyeDropperButton.move(tTargetButton.parent.x + tTargetButton.x + tTargetButton.Width - _eyeDropperButton.Width, tTargetButton.parent.y + tTargetButton.y + 1);
 			_eyeDropperButton.setData({ itemData: tTargetButton.data.itemData });
 		}
 		private function _onItemHoverOutHideEyeDropper(e:Event) : void {
-			_eyeDropperButton.disable().alpha = 0;
+			_eyeDropperButton.disable().setAlpha(0);
 		}
 		
 		private function _onItemToggled(e:FewfEvent) : void {

@@ -1,7 +1,7 @@
 package app.ui.panes.colorpicker
 {
 	import app.data.ConstantsApp;
-	import app.ui.buttons.SpriteButton;
+	import app.ui.buttons.GameButton;
 	import app.ui.panes.base.GridSidePane;
 	import app.ui.panes.infobar.Infobar;
 	import com.fewfre.events.FewfEvent;
@@ -32,7 +32,7 @@ package app.ui.panes.colorpicker
 		private var _dontTrackNextRecentChange : Boolean;
 		
 		private var _recentColorsDisplay       : RecentColorsListDisplay;
-		private var _randomizeButton           : SpriteButton;
+		private var _randomizeButton           : GameButton;
 		private var _allLockToggleIcon         : DisplayWrapper;
 		
 		private var _colorHistory              : ColorHistoryOverlay;
@@ -65,7 +65,7 @@ package app.ui.panes.colorpicker
 			if(!pData.hide_default) {
 				// Lock Button
 				_allLockToggleIcon = new DisplayWrapper(new $Lock());
-				this.addItem( SpriteButton.rect(15, 22).toOrigin(0, 0.5).setImage(_allLockToggleIcon.asSprite, 0.5).move(0, hueCenterY)
+				this.addItem( new GameButton(15, 22).setOrigin(0, 0.5).setImage(_allLockToggleIcon.asSprite, 0.5).move(0, hueCenterY)
 					.onButtonClick(function(){
 						if(_getLockToggleButtonState() == "clear") _clearAllLocks();
 						else _lockAllLocks();
@@ -74,13 +74,13 @@ package app.ui.panes.colorpicker
 				_updateLockToggleButtonState();
 				
 				// Defaults Button
-				this.addItem( SpriteButton.rect(88, 22).toOrigin(0, 0.5).setText("btn_color_defaults").move(15+5, hueCenterY)
+				this.addItem( new GameButton(88, 22).setOrigin(0, 0.5).setText("btn_color_defaults").move(15+5, hueCenterY)
 					.onButtonClick(function(){ _defaultAllColors(); }) );
 			}
 			
-			_randomizeButton = SpriteButton.square(24).toOrigin(0.5).setImage(new $Dice(), 0.8)
+			_randomizeButton = new GameButton(24).setOrigin(0.5).setImage(new $Dice(), 0.8)
 				.move(ConstantsApp.PANE_WIDTH - 10 - 25/2, hueCenterY)
-				.onButtonClick(function(){ _randomizeAllColors(); }) as SpriteButton;
+				.onButtonClick(function(){ _randomizeAllColors(); }) as GameButton;
 				this.addItem(_randomizeButton);
 			
 			_recentColorsDisplay = new RecentColorsListDisplay().move(ConstantsApp.PANE_WIDTH/2, 316+60+18).appendTo(this)

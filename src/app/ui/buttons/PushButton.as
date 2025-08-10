@@ -22,17 +22,12 @@ package app.ui.buttons
 		public function get allowToggleOff() : Boolean { return _allowToggleOff; }
 		
 		// Constructor
-		// pArgs = { x:Number, y:Number, (width:Number, height:Number OR size:Number), ?obj:DisplayObject, ?obj_scale:Number, ?text:String, ?allowToggleOff:Boolean=true }
-		public function PushButton(pArgs:Object) {
-			super(pArgs);
+		// If pHeight isn't set it will default to the same as the width
+		public function PushButton(pWidth:Number, pHeight:Number=NaN) {
+			super(pWidth, pHeight);
 			
-			if(pArgs.text) { setText(pArgs.text); }
-			if(pArgs.obj) {
-				setImage(pArgs.obj, pArgs.obj_scale || NaN);
-			}
-			
-			_allowToggleOff = pArgs.allowToggleOff == null ? true : pArgs.allowToggleOff;
 			_pushed = false;
+			_allowToggleOff = true;
 			_renderUnpressed();
 		}
 		public function setAllowToggleOff(pVal:Boolean) : PushButton { _allowToggleOff = pVal; return this; }
@@ -101,12 +96,6 @@ package app.ui.buttons
 		/////////////////////////////
 		// Static
 		/////////////////////////////
-		public static function withObject(pObj:DisplayObject, pScale:Object=null, pData:Object=null) : PushButton {
-			pData = pData || {};
-			pData.obj = pObj;
-			pData.obj_scale = pScale;
-			return new PushButton(pData);
-		}
 		// Convience method to deal with PushButtons that can only have 1 of each selected (todo: create a manager or something for this?)
 		// Doesn't fire event, as this is just to update the visual states
 		public static function untoggleAll(pList:Vector.<PushButton>, pActiveButtonToSkip:PushButton=null) : void {
@@ -115,13 +104,6 @@ package app.ui.buttons
 					pList[i].toggleOff(false);
 				}
 			}
-		}
-		
-		public static function square(pSize:Number) : PushButton {
-			return new PushButton({ size:pSize });
-		}
-		public static function rect(pWidth:Number, pHeight:Number) : PushButton {
-			return new PushButton({ width:pWidth, height:pHeight });
 		}
 	}
 }

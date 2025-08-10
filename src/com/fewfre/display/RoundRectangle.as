@@ -67,21 +67,10 @@ package com.fewfre.display
 		public function set scale(pVal:Number) : void { _root.scaleX = _root.scaleY = pVal; }
 		
 		// Constructor
-		// pData = { x:Number, y:Number, ?origin:Number, ?originX:Number=0, ?originY:Number=0, ?radius:Number }
-		public function RoundRectangle(pWidth:Number, pHeight:Number, pProps:Object=null) {
+		public function RoundRectangle(pWidth:Number, pHeight:Number) {
 			_root = new Sprite();
 			_width = pWidth;
 			_height = pHeight;
-			
-			pProps = pProps || {};
-			if(pProps.x !== null) this.x = pProps.x;
-			if(pProps.y !== null) this.y = pProps.y;
-			
-			if(pProps.origin != null) { _originX = _originY = pProps.origin; }
-			if(pProps.originX != null) { _originX = pProps.originX; }
-			if(pProps.originY != null) { _originY = pProps.originY; }
-			
-			if(pProps.radius != null) { _radius = pProps.radius; }
 		}
 		
 		/////////////////////////////
@@ -236,8 +225,8 @@ package com.fewfre.display
 		/////////////////////////////
 		// Static
 		/////////////////////////////
-		public static function square(pSize:Number, pData:Object=null) : RoundRectangle {
-			return new RoundRectangle(pSize, pSize, pData);
+		public static function square(pSize:Number) : RoundRectangle {
+			return new RoundRectangle(pSize, pSize);
 		}
 	}
 }

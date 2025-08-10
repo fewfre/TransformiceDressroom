@@ -81,12 +81,11 @@ package app.ui.panes.colorpicker
 			_textBorder = addChild(new Sprite()) as Sprite; _textBorder.x = _swatchBorder.x + SWATCH_SIZE+2 + 6;
 			
 			var bttnIcon:Sprite = _createInvisibleHitboxWithIcon(SWATCH_SIZE*1.65, new $UndoArrow());
-			_historyBtn = ScaleButton.withObject(bttnIcon, 0.5).move(100, SWATCH_SIZE*0.5+1.5).appendTo(this)
+			_historyBtn = new ScaleButton(bttnIcon, 0.5).move(100, SWATCH_SIZE*0.5+1.5).appendTo(this).setVisible(false)
 				.on(MouseEvent.CLICK, _onHistoryClicked) as ScaleButton
-			_historyBtn.visible = false;
 			
 			bttnIcon = _createInvisibleHitboxWithIcon(SWATCH_SIZE*2, new $Lock());
-			_lockIcon = ScaleButton.withObject(bttnIcon).appendTo(this).on(MouseEvent.CLICK, _onLockClicked) as ScaleButton
+			_lockIcon = new ScaleButton(bttnIcon).appendTo(this).on(MouseEvent.CLICK, _onLockClicked) as ScaleButton
 			unlock();
 			
 			_updateBorders();
@@ -159,7 +158,7 @@ package app.ui.panes.colorpicker
 		
 		public function lock() : void {
 			_lockIcon.alpha = 0.7;
-			_lockIcon.setScale(0.65);
+			_lockIcon.buttonBaseScale = 0.65;
 			_lockIcon.x = _swatch.x + SWATCH_SIZE*0.5 + 0.5 + 1;
 			_lockIcon.y = _swatch.y + SWATCH_SIZE*0.5 + 0.5;
 			_locked = true;
@@ -167,7 +166,7 @@ package app.ui.panes.colorpicker
 		
 		public function unlock() : void {
 			_lockIcon.alpha = 0.5;
-			_lockIcon.setScale(0.5);
+			_lockIcon.buttonBaseScale = 0.5;
 			_lockIcon.x = -1;
 			_lockIcon.y = SWATCH_SIZE*0.5;
 			_locked = false;

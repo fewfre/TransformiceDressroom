@@ -62,7 +62,7 @@ package app.ui.panes
 			fileRef.addEventListener(Event.SELECT, function(){ fileRef.load(); });
 			fileRef.addEventListener(Event.COMPLETE, _onFileSelect);
 			
-			var folderBttn:ScaleButton = ScaleButton.withObject(new $Folder(), 1.5).move(-25, 25)
+			var folderBttn:ScaleButton = new ScaleButton(new $Folder(), 1.5).move(-25, 25)
 				.onButtonClick(function(e){ fileRef.browse([new FileFilter("Images", "*.jpg;*.jpeg;*.gif;*.png")]); }) as ScaleButton;
 			infobar.addCustomObjectToRightSideTray(folderBttn);
 			

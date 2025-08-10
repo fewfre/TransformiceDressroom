@@ -1,26 +1,26 @@
 package app.ui.panes
 {
-	import com.fewfre.display.*;
-	import com.fewfre.utils.Fewf;
-	import com.fewfre.utils.FewfDisplayUtils;
-	import com.fewfre.events.FewfEvent;
 	import app.data.*;
-	import app.ui.*;
 	import app.ui.buttons.*;
-	import app.world.elements.*;
-	import flash.display.*;
-	import flash.events.*;
-	import flash.display.MovieClip;
-	import flash.utils.ByteArray;
-	import flash.net.FileReference;
-	import flash.net.FileFilter;
-	import flash.utils.setTimeout;
-	import app.world.data.ItemData;
 	import app.ui.panes.base.ButtonGridSidePane;
-	import com.fewfre.utils.FewfUtils;
 	import app.ui.panes.infobar.GridManagementWidget;
 	import app.ui.panes.infobar.Infobar;
+	import app.world.data.ItemData;
 	import app.world.data.OutfitData;
+	import app.world.elements.Pose;
+	import com.fewfre.display.TextTranslated;
+	import com.fewfre.events.FewfEvent;
+	import com.fewfre.utils.Fewf;
+	import com.fewfre.utils.FewfDisplayUtils;
+	import com.fewfre.utils.FewfUtils;
+	import flash.display.MovieClip;
+	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.net.FileFilter;
+	import flash.net.FileReference;
+	import flash.utils.ByteArray;
+	import flash.utils.setTimeout;
 	
 	public class OutfitManagerTabPane extends ButtonGridSidePane
 	{
@@ -29,8 +29,8 @@ package app.ui.panes
 		
 		// Storage
 		private var _getLookCodeForCurrentOutfit : Function;
-		private var _exportButton      : SpriteButton;
-		private var _importButton      : SpriteButton;
+		private var _exportButton      : GameButton;
+		private var _importButton      : GameButton;
 		
 		private var _newOutfitButtonHolder : Sprite;
 		private var _deletedLooks      : Vector.<String>;
@@ -51,26 +51,25 @@ package app.ui.panes
 			// Custom infobar buttons
 			var size = 40, xx = -size - 5, yy = 25;
 			
-			_importButton = SpriteButton.withObject(new $Folder(), 1, { size:size, originY:0.5 }).move(xx, yy)
-				.onButtonClick(_onImportClicked) as SpriteButton;
+			_importButton = new GameButton(size).setImage(new $Folder()).setOrigin(0, 0.5).move(xx, yy)
+				.onButtonClick(_onImportClicked) as GameButton;
 			infobar.addCustomObjectToRightSideTray(_importButton);
 			
 			xx -= size + 5;
 			
-			_exportButton = SpriteButton.withObject(new $SimpleDownload(), 0.7, { size:size, originY:0.5 }).move(xx, yy)
-				.onButtonClick(_onExportClicked).appendTo(infobar) as SpriteButton;
+			_exportButton = new GameButton(size).setImage(new $SimpleDownload(), 0.7).setOrigin(0, 0.5).move(xx, yy)
+				.onButtonClick(_onExportClicked).appendTo(infobar) as GameButton;
 			infobar.addCustomObjectToRightSideTray(_exportButton);
 			
 			_helpText = new TextTranslated("outfit_manager_help").moveT(ConstantsApp.PANE_WIDTH/2+5, 190); // Don't append, let _updateHelpTextVisibility do that
 			_helpText.enableWordWrapUsingWidth(ConstantsApp.PANE_WIDTH-80);
 			
 			_deletedLooks = new Vector.<String>();
-			(_undoButton = GameButton.square(24)).setImage(new $UndoArrow(), 0.5).move(ConstantsApp.SHOP_WIDTH/2-35, -1).appendTo(this.infobar)
+			(_undoButton = new GameButton(24)).setImage(new $UndoArrow(), 0.5).move(ConstantsApp.SHOP_WIDTH/2-35, -1).appendTo(this.infobar).setVisible(false)
 				.onButtonClick(function(e:Event):void{
 					addNewLook(_deletedLooks.pop());
 					if(!_deletedLooks.length) _undoButton.visible = false;
 				});
-			_undoButton.visible = false;
 		}
 		
 		/****************************
@@ -143,7 +142,7 @@ package app.ui.panes
 			cell.addEventListener(MouseEvent.MOUSE_OVER, function(e){ actionTray.alpha = 1; });
 			cell.addEventListener(MouseEvent.MOUSE_OUT, function(e){ actionTray.alpha = 0; });
 			
-			var btn:PushButton = PushButton.square(grid.cellSize).setImage(lookMC, 3).setData({ entryId:lookEntry.id }).appendTo(cell) as PushButton;
+			var btn:PushButton = new PushButton(grid.cellSize).setImage(lookMC, 3).setData({ entryId:lookEntry.id }).appendTo(cell) as PushButton;
 			btn.on(PushButton.TOGGLE, function(){
 				dispatchEvent(new FewfEvent(LOOK_CODE_SELECTED, lookEntry.lookCode));
 			});
@@ -152,7 +151,7 @@ package app.ui.panes
 			cell.addChild(actionTray);
 			
 			// Corresponding Delete Button
-			var deleteBtn:ScaleButton = new ScaleButton({ x:grid.cellSize-5, y:5, obj:new $Trash(), obj_scale:0.4 }).appendTo(actionTray) as ScaleButton;
+			var deleteBtn:ScaleButton = new ScaleButton(new $Trash(), 0.4).move(grid.cellSize-5, 5).appendTo(actionTray) as ScaleButton;
 			// We have to delete by the index (instead of a code) since if someone added the same look twice but in different spots, this could delete the one in the wrong spot
 			deleteBtn.on(MouseEvent.CLICK, function(e){ deleteLookById(lookEntry.id); });
 			
@@ -166,11 +165,11 @@ package app.ui.panes
 			_newOutfitButtonHolder = new Sprite();
 			
 			// We do this so grid traversal works
-			var fakePushBtn:PushButton = new PushButton({ width:0, height:0, data:{ entryId:null } }).appendTo(_newOutfitButtonHolder) as PushButton;
+			var fakePushBtn:PushButton = new PushButton(0).setData({ entryId:null }).appendTo(_newOutfitButtonHolder) as PushButton;
 			fakePushBtn.visible=false;
 			
-			new ScaleButton({ x:grid.cellSize*0.5, y:grid.cellSize*0.5, width:grid.cellSize, height:grid.cellSize, obj:new $OutfitAdd() })
-			.appendTo(_newOutfitButtonHolder).on(MouseEvent.CLICK, function(e){ addNewLook(_getLookCodeForCurrentOutfit()) });
+			new ScaleButton(new $OutfitAdd()).move(grid.cellSize*0.5, grid.cellSize*0.5).appendTo(_newOutfitButtonHolder)
+				.on(MouseEvent.CLICK, function(e){ addNewLook(_getLookCodeForCurrentOutfit()) });
 			
 			// Finally add to grid (do it at end so auto event handlers can be hooked up properly)
 			addToGrid(_newOutfitButtonHolder, tAddToTopOfList);
@@ -178,9 +177,9 @@ package app.ui.panes
 		
 		private function toggleExportButton(pShow:Boolean) : void {
 			if(pShow) {
-				_exportButton.enable().alpha = 1;
+				_exportButton.enable().setAlpha(1);
 			} else {
-				_exportButton.disable().alpha = 0;
+				_exportButton.disable().setAlpha(0);
 			}
 		}
 		
@@ -279,9 +278,9 @@ package app.ui.panes
 				_renderOutfits();
 			} catch(e) {
 				trace('Import Error: ', e);
-				_importButton.ChangeImage(new $No());
+				_importButton.setImage(new $No());
 				setTimeout(function(){
-					_importButton.ChangeImage(new $Folder());
+					_importButton.setImage(new $Folder());
 				}, 2000);
 			}
 		}

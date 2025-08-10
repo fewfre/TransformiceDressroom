@@ -5,7 +5,7 @@ package app.ui.panes.infobar
 	import app.data.GameAssets;
 	import app.data.ItemType;
 	import app.ui.buttons.ScaleButton;
-	import app.ui.buttons.SpriteButton;
+	import app.ui.buttons.GameButton;
 	import app.ui.panes.infobar.GridManagementWidget;
 	import app.world.data.ItemData;
 	import app.world.events.ItemDataEvent;
@@ -45,11 +45,11 @@ package app.ui.panes.infobar
 		private var _colorWheel          : ScaleButton;
 		private var _leftButtonsTray     : Sprite;
 		private var _idText              : TextTranslated;
-		private var _eyeDropperButton    : SpriteButton;
-		private var _favoriteButton      : SpriteButton;
+		private var _eyeDropperButton    : GameButton;
+		private var _favoriteButton      : GameButton;
 		
 		private var _rightSideTray       : Sprite;
-		private var _downloadButton      : SpriteButton;
+		private var _downloadButton      : GameButton;
 		
 		private var _gridManagementWidget : GridManagementWidget;
 		
@@ -107,13 +107,13 @@ package app.ui.panes.infobar
 			_leftButtonsTray = addChild(new Sprite()) as Sprite;
 			
 			if(!pData.showBackButton) {
-				_colorWheel = ScaleButton.withObject(new $ColorWheel()).appendTo(this) as ScaleButton;
-				_colorWheel.move(_imageCont.x + _imageCont.width + _colorWheel.Image.width*0.5 + 10, 25)
+				_colorWheel = new ScaleButton(new $ColorWheel()).appendTo(this) as ScaleButton;
+				_colorWheel.move(_imageCont.x + _imageCont.width + _colorWheel.image.width*0.5 + 10, 25)
 					.onButtonClick(dispatchEventHandler(COLOR_WHEEL_CLICKED));
 				showColorWheel(false);
 			} else {
-				_backButton = ScaleButton.withObject(new $BackArrow()).appendTo(this) as ScaleButton;
-				_backButton.move(_imageCont.x + _imageCont.width + _backButton.Image.width*0.5 + 10, 25)
+				_backButton = new ScaleButton(new $BackArrow()).appendTo(this) as ScaleButton;
+				_backButton.move(_imageCont.x + _imageCont.width + _backButton.image.width*0.5 + 10, 25)
 					.on(MouseEvent.MOUSE_UP, dispatchEventHandler(BACK_CLICKED));
 				_rearrangeLeftButtonsTray();
 			}
@@ -130,19 +130,18 @@ package app.ui.panes.infobar
 			* Image Buttons
 			*********************/
 			if(pData.showEyeDropper) {
-				_eyeDropperButton = SpriteButton.withObject(new $EyeDropper(), 0.45, { size:BTN_SIZE })
-					.move(0, BTN_Y).appendTo(_leftButtonsTray) as SpriteButton;
+				_eyeDropperButton = new GameButton(BTN_SIZE).setImage(new $EyeDropper(), 0.45).move(0, BTN_Y).appendTo(_leftButtonsTray) as GameButton;
 				_eyeDropperButton.onButtonClick(dispatchEventHandler(EYE_DROPPER_CLICKED));
-				_eyeDropperButton.disable().alpha = 0;
+				_eyeDropperButton.disable().setAlpha(0);
 			}
 			if(pData.showFavorites) {
-				_favoriteButton = SpriteButton.withObject(new $HeartEmpty(), 1, { size:BTN_SIZE, data:{ pushed:false } });
+				(_favoriteButton = new GameButton(BTN_SIZE)).setImage(new $HeartEmpty(), 1).setData({ pushed:false });
 				_favoriteButton.move(pData.showEyeDropper ? BTN_SIZE+3 : 0, BTN_Y).appendTo(_leftButtonsTray)
 					.onButtonClick(function(e):void{
 						_updateFavoriteButton(!_favoriteButton.data.pushed);
 						dispatchEvent(new FewfEvent(FAVORITE_CLICKED, { pushed:_favoriteButton.data.pushed }));
 					});
-				_favoriteButton.disable().alpha = 0;
+				_favoriteButton.disable().setAlpha(0);
 				// This event handler is needed to update the button encase it's unfavorited from FavoritesPane while it's selected
 				Fewf.dispatcher.addEventListener(ConstantsApp.FAVORITE_ADDED_OR_REMOVED, function(e:FewfEvent):void{
 					if(!!_itemData && e.data.itemType == _itemData.type) {
@@ -170,9 +169,9 @@ package app.ui.panes.infobar
 			*********************/
 			_rightSideTray = DisplayWrapper.wrap(new Sprite(), this).move(this.Width, 0).asSprite;
 			if(pData.showDownload) {
-				_downloadButton = SpriteButton.withObject(new $SimpleDownload(), 0.45, { size:BTN_SIZE }).move(-BTN_SIZE, BTN_Y).appendTo(_rightSideTray) as SpriteButton;
+				(_downloadButton = new GameButton(BTN_SIZE)).setImage(new $SimpleDownload(), 0.45).move(-BTN_SIZE, BTN_Y).appendTo(_rightSideTray);
 				_downloadButton.onButtonClick(_onDownloadClicked);
-				_downloadButton.disable().alpha = 0;
+				_downloadButton.disable().setAlpha(0);
 			}
 			
 			// Line seperating infobar and contents below it.
@@ -209,8 +208,7 @@ package app.ui.panes.infobar
 		
 		public function showColorWheel(pShow:Boolean=true) : void {
 			if(_colorWheel) {
-				_colorWheel.enableToggle(pShow).alpha = pShow ? 1 : 0;
-				_colorWheel.visible = pShow;
+				_colorWheel.toggleEnabled(pShow).setAlpha(pShow ? 1 : 0).setVisible(pShow);
 			}
 			_rearrangeLeftButtonsTray();
 			_repositionGridManagementWidget();
@@ -224,7 +222,7 @@ package app.ui.panes.infobar
 		public function _rearrangeLeftButtonsTray() : void {
 			var btn:ScaleButton = _colorWheel || _backButton;
 			if(btn.visible && btn.alpha > 0) {
-				_leftButtonsTray.x = btn.x + btn.Image.width*0.5 + 12;
+				_leftButtonsTray.x = btn.x + btn.image.width*0.5 + 12;
 			} else {
 				_leftButtonsTray.x = _imageCont.x + _imageCont.width + 10;
 			}
@@ -236,8 +234,8 @@ package app.ui.panes.infobar
 				// Find left most x that's that has empty space - note that in most cases we need to assume it's there even
 				// if invisible, since that means it can be toggled on, and we don't want it shifting
 				if(_imageCont && _imageCont.visible) ll += _imageCont.width; // In this case invisible is the same as not existing
-				if(_colorWheel) ll += _colorWheel.Image.width + 10;
-				if(_backButton) ll += _backButton.Image.width + 10;
+				if(_colorWheel) ll += _colorWheel.image.width + 10;
+				if(_backButton) ll += _backButton.image.width + 10;
 				if(_eyeDropperButton) ll += _eyeDropperButton.width + 10;
 				if(_favoriteButton) ll += _favoriteButton.width + 3;
 				// Apply
@@ -250,8 +248,8 @@ package app.ui.panes.infobar
 		public function hideImageCont() : void {
 			_imageCont.visible = false;
 			_removeItemOverlay.visible = false;
-			if(_colorWheel) _colorWheel.x = _colorWheel.Image.width*0.5 + 10;
-			if(_backButton) _backButton.x = _backButton.Image.width*0.5 + 10;
+			if(_colorWheel) _colorWheel.x = _colorWheel.image.width*0.5 + 10;
+			if(_backButton) _backButton.x = _backButton.image.width*0.5 + 10;
 			_repositionGridManagementWidget();
 		}
 		
@@ -276,10 +274,10 @@ package app.ui.panes.infobar
 			_updateID();
 			
 			_idText.alpha = 1;
-			if(_downloadButton) _downloadButton.enable().alpha = 1;
-			if(_eyeDropperButton) _eyeDropperButton.enable().alpha = 1;
+			if(_downloadButton) _downloadButton.enable().setAlpha(1);
+			if(_eyeDropperButton) _eyeDropperButton.enable().setAlpha(1);
 			if(_favoriteButton) {
-				_favoriteButton.enable().alpha = 1;
+				_favoriteButton.enable().setAlpha(1);
 				var on:Boolean = FavoriteItemsLocalStorageManager.has(pData);
 				_updateFavoriteButton(on);
 			}
@@ -291,9 +289,9 @@ package app.ui.panes.infobar
 			
 			_idText.alpha = 0;
 			showColorWheel(false);
-			if(_downloadButton) _downloadButton.disable().alpha = 0;
-			if(_eyeDropperButton) _eyeDropperButton.disable().alpha = 0;
-			if(_favoriteButton) _favoriteButton.disable().alpha = 0;
+			if(_downloadButton) _downloadButton.disable().setAlpha(0);
+			if(_eyeDropperButton) _eyeDropperButton.disable().setAlpha(0);
+			if(_favoriteButton) _favoriteButton.disable().setAlpha(0);
 		}
 		
 		public function unlockRandomizeButton() : void {
@@ -307,7 +305,7 @@ package app.ui.panes.infobar
 		
 		private function _updateFavoriteButton(pOn:Boolean) : void {
 			_favoriteButton.data.pushed = pOn;
-			_favoriteButton.ChangeImage(pOn ? new $HeartFull() : new $HeartEmpty());
+			_favoriteButton.setImage(pOn ? new $HeartFull() : new $HeartEmpty());
 		}
 		
 		private function dispatchEventHandler(pEventName:String) : Function {

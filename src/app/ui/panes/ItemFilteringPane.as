@@ -2,7 +2,7 @@ package app.ui.panes
 {
 	import app.data.ConstantsApp;
 	import app.data.ShareCodeFilteringData;
-	import app.ui.buttons.SpriteButton;
+	import app.ui.buttons.GameButton;
 	import app.ui.common.FancyCopyField;
 	import app.ui.panes.base.SidePane;
 	import com.fewfre.display.TextTranslated;
@@ -27,8 +27,8 @@ package app.ui.panes
 			
 			// Preview Button
 			xx = 5+ConstantsApp.PANE_WIDTH/2; yy += 50; sizex = ConstantsApp.PANE_WIDTH * 0.9; sizey = 35;
-			new SpriteButton({ width:sizex, height:sizey, origin:0.5, text:"filtermode_preview_btn" })
-				.move(xx,yy).appendTo(this).onButtonClick(_onPreviewButtonClicked);
+			new GameButton(sizex, sizey).setText("filtermode_preview_btn").setOrigin(0.5).move(xx,yy).appendTo(this)
+				.onButtonClick(_onPreviewButtonClicked);
 			
 			// Description
 			yy = 125; xx = 5+2 + 5;
@@ -43,13 +43,13 @@ package app.ui.panes
 			sizey = 40;
 			yy = ConstantsApp.SHOP_HEIGHT - sizey/2 - 15;
 			xx = 10+sizex/2;
-			new SpriteButton({ x:xx, y:yy, origin:0.5, width:sizex, height:sizey, obj:new $WhiteX() }).appendTo(this)
+			new GameButton(sizex, sizey).setImage(new $WhiteX()).setOrigin(0.5).move(xx, yy).appendTo(this)
 				.on(MouseEvent.CLICK, function(e):void{ dispatchEvent(new FewfEvent(EVENT_STOP_FILTERING)); });
 			
 			// Trash Changes Button
 			yy = ConstantsApp.SHOP_HEIGHT - sizey/2 - 15;
 			xx += sizex/2+10+sizex/2;
-			new DeleteButton({ x:xx, y:yy, origin:0.5, width:sizex, height:sizey, obj:new $Trash(), obj_scale:0.6 }).appendTo(this)
+			new DeleteButton(sizex, sizey).setImage(new $Trash(), 0.6).setOrigin(0.5).move(xx, yy).appendTo(this)
 				.on(MouseEvent.CLICK, function(e):void{ dispatchEvent(new FewfEvent(EVENT_RESET_FILTERING)); });
 		}
 		
@@ -72,11 +72,11 @@ package app.ui.panes
 	}
 }
 
-import app.ui.buttons.SpriteButton;
-class DeleteButton extends SpriteButton
+import app.ui.buttons.GameButton;
+class DeleteButton extends GameButton
 {
-		public function DeleteButton(pData) {
-			super(pData);
+		public function DeleteButton(pWidth:Number, pHeight:Number) {
+			super(pWidth, pHeight);
 			_bg.radius = 5;
 		}
 		/****************************

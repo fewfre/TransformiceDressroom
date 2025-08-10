@@ -1,7 +1,7 @@
 package app.ui.panes.infobar
 {
 	import flash.display.Sprite;
-	import app.ui.buttons.SpriteButton;
+	import app.ui.buttons.GameButton;
 	import app.ui.buttons.PushButton;
 	import flash.events.Event;
 	import flash.geom.Rectangle;
@@ -17,11 +17,11 @@ package app.ui.panes.infobar
 		public static const RIGHT_ARROW_CLICKED : String = "right_arrow_clicked";
 		
 		// Storage
-		private var _randomizeButton     : SpriteButton;
+		private var _randomizeButton     : GameButton;
 		private var _randomizeLockButton : PushButton;
-		private var _reverseButton       : SpriteButton;
-		private var _leftItemButton      : SpriteButton;
-		private var _rightItemButton     : SpriteButton;
+		private var _reverseButton       : GameButton;
+		private var _leftItemButton      : GameButton;
+		private var _rightItemButton     : GameButton;
 		
 		public function get isRefreshLocked() : Boolean { return !!_randomizeLockButton && _randomizeLockButton.pushed; }
 		
@@ -33,13 +33,13 @@ package app.ui.panes.infobar
 			
 			if(!pData.hideRandomize) {
 				// Randomization buttons
-				_randomizeButton = new SpriteButton({ x:xx, y:yy, size:bsize, obj_scale:0.8, obj:new $Dice() }).appendTo(this) as SpriteButton;
+				_randomizeButton = new GameButton(bsize).setImage(new $Dice(), 0.8).move(xx, yy).appendTo(this) as GameButton;
 				_randomizeButton.onButtonClick(dispatchEventHandler(RANDOMIZE_CLICKED));
 				xx += bsize + spacing;
 				
 				if(!pData.hideRandomizeLock) {
-					_randomizeLockButton = new PushButton({ x:xx, y:yy, size:bsize, obj_scale:0.8, obj:new $Lock() }).appendTo(this) as PushButton;
-					_randomizeLockButton.addEventListener(PushButton.TOGGLE, function():void{
+					_randomizeLockButton = new PushButton(bsize).setImage(new $Lock(), 0.8).move(xx, yy).appendTo(this) as PushButton;
+					_randomizeLockButton.on(PushButton.TOGGLE, function():void{
 						isRefreshLocked ? _randomizeButton.disable() : _randomizeButton.enable();
 						dispatchEvent(new FewfEvent(RANDOMIZE_LOCK_CLICKED, { locked:isRefreshLocked }));
 					});
@@ -51,7 +51,7 @@ package app.ui.panes.infobar
 				xx += 8; // Add larger gap
 				
 				// List reversal button
-				_reverseButton = new SpriteButton({ x:xx, y:yy, size:bsize, obj_scale:0.7, obj:new $FlipIcon() }).appendTo(this) as SpriteButton;
+				_reverseButton = new GameButton(bsize).setImage(new $FlipIcon(), 0.7).move(xx, yy).appendTo(this) as GameButton;
 				_reverseButton.onButtonClick(dispatchEventHandler(REVERSE_CLICKED));
 				xx += bsize + spacing;
 			}
@@ -60,10 +60,10 @@ package app.ui.panes.infobar
 				xx += 8; // Add larger gap
 				
 				// Arrow buttons
-				_leftItemButton = new SpriteButton({ x:xx, y:yy, size:bsize, obj_scale:0.45, obj:new $BackArrow() }).appendTo(this) as SpriteButton;
+				_leftItemButton = new GameButton(bsize).setImage(new $BackArrow(), 0.45).move(xx, yy).appendTo(this) as GameButton;
 				_leftItemButton.onButtonClick(dispatchEventHandler(LEFT_ARROW_CLICKED));
 				xx += bsize + spacing;
-				_rightItemButton = new SpriteButton({ x:xx, y:yy, size:bsize, obj_scale:0.45, obj:new $BackArrow() }).appendTo(this) as SpriteButton;
+				_rightItemButton = new GameButton(bsize).setImage(new $BackArrow(), 0.45).move(xx, yy).appendTo(this) as GameButton;
 				_rightItemButton.onButtonClick(dispatchEventHandler(RIGHT_ARROW_CLICKED));
 				_rightItemButton.Image.rotation = 180;
 				xx += bsize + spacing;

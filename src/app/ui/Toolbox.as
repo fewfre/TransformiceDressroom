@@ -1,21 +1,16 @@
 package app.ui
 {
 	import app.data.ConstantsApp;
-	import app.ui.buttons.*;
+	import app.ui.buttons.GameButton;
+	import app.ui.buttons.PushButton;
 	import app.ui.common.FancySlider;
 	import app.ui.common.FrameBase;
 	import com.fewfre.display.DisplayWrapper;
 	import com.fewfre.display.RoundRectangle;
-	import com.fewfre.display.TextTranslated;
-	import com.fewfre.events.FewfEvent;
 	import com.fewfre.utils.Fewf;
-	import com.fewfre.utils.FewfDisplayUtils;
-	import ext.ParentApp;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import flash.net.*;
-	import flash.utils.setTimeout;
 	
 	public class Toolbox extends Sprite
 	{
@@ -35,16 +30,16 @@ package app.ui
 		public static const TRASH_CLICKED         = "trash_clicked";
 		
 		// Storage
-		private var _downloadButton     : SpriteButton;
+		private var _downloadButton     : GameButton;
 		private var _downloadHoverTray  : Sprite;
-		private var _gifButton          : SpriteButton;
-		private var _webpButton         : SpriteButton;
+		private var _gifButton          : GameButton;
+		private var _webpButton         : GameButton;
 		
 		private var _animateButton      : PushButton;
-		private var _clipboardButton    : SpriteButton;
+		private var _clipboardButton    : GameButton;
 		
 		private var _scaleSlider        : FancySlider;
-		private var _defaultScaleButton : SpriteButton;
+		private var _defaultScaleButton : GameButton;
 		
 		// Properties
 		public function get scaleSlider() : FancySlider { return _scaleSlider; }
@@ -60,19 +55,19 @@ package app.ui
 			_downloadHoverTray = DisplayWrapper.wrap(new Sprite(), tDownloadTray.root).asSprite;
 			_downloadHoverTray.visible = false;
 			
-			_downloadButton = new SpriteButton({ size:46, obj:new $LargeDownload(), origin:0.5 })
+			_downloadButton = new GameButton(46).setImage(new $LargeDownload()).setOrigin(0.5)
 				.onButtonClick(dispatchEventHandler(SAVE_CLICKED))
-				.appendTo(tDownloadTray.root) as SpriteButton;
+				.appendTo(tDownloadTray.root) as GameButton;
 			
 			// Dropdown buttons
 			
-			_gifButton = SpriteButton.rect(46, 16).setTextUntranslated('.gif').toOrigin(0.5).move(0, 42)
+			_gifButton = new GameButton(46, 16).setTextUntranslated('.gif', { size:11 }).setOrigin(0.5).move(0, 42)
 				.onButtonClick(dispatchEventHandler(GIF_CLICKED))
-				.appendTo(_downloadHoverTray) as SpriteButton;
+				.appendTo(_downloadHoverTray) as GameButton;
 			
-			_webpButton = SpriteButton.rect(46, 16).setTextUntranslated('.webp').toOrigin(0.5).move(0, 42+_gifButton.Height+2)
+			_webpButton = new GameButton(46, 16).setTextUntranslated('.webp', { size:11 }).setOrigin(0.5).move(0, 42+_gifButton.Height+2)
 				.onButtonClick(dispatchEventHandler(WEBP_CLICKED))
-				.appendTo(_downloadHoverTray) as SpriteButton;
+				.appendTo(_downloadHoverTray) as GameButton;
 			
 			// Draw rectangle to act as hitbox for mouse over
 			_downloadHoverTray.graphics.beginFill(0, 0);
@@ -100,41 +95,39 @@ package app.ui
 			// ### Left Side Buttons ###
 			xx = -tTrayWidth*0.5 + tButtonSize*0.5 + tButtonSizeSpace;
 			
-			new SpriteButton({ size:tButtonSize, obj_scale:0.45, obj:new $Link(), origin:0.5 }).appendTo(tTray)
+			new GameButton(tButtonSize).setImage(new $Link(), 0.45).setOrigin(0.5).appendTo(tTray)
 				.move(xx+tButtonXInc*tButtonsOnLeft, yy)
 				.onButtonClick(dispatchEventHandler(SHARE_CLICKED));
 			tButtonsOnLeft++;
 			
 			if(Fewf.isExternallyLoaded) {
-				_clipboardButton = new SpriteButton({ size:tButtonSize, obj_scale:0.415, obj:new $CopyIcon(), origin:0.5 })
+				_clipboardButton = new GameButton(tButtonSize).setImage(new $CopyIcon(), 0.415).setOrigin(0.5).appendTo(tTray)
 					.move(xx+tButtonXInc*tButtonsOnLeft, yy)
-					.onButtonClick(dispatchEventHandler(CLIPBOARD_CLICKED))
-					.appendTo(tTray) as SpriteButton;
+					.onButtonClick(dispatchEventHandler(CLIPBOARD_CLICKED)) as GameButton;
 				tButtonsOnLeft++;
 			}
 			
 			// ### Right Side Buttons ###
 			xx = tTrayWidth*0.5-(tButtonSize*0.5 + tButtonSizeSpace);
 
-			new SpriteButton({ size:tButtonSize, obj_scale:0.42, obj:new $Trash(), origin:0.5 }).appendTo(tTray)
+			new GameButton(tButtonSize).setImage(new $Trash(), 0.42).setOrigin(0.5).appendTo(tTray)
 				.move(xx-tButtonXInc*tButtonOnRight, yy)
 				.onButtonClick(dispatchEventHandler(TRASH_CLICKED));
 			tButtonOnRight++;
 
 			// Dice icon based on https://www.iconexperience.com/i_collection/icons/?icon=dice
-			new SpriteButton({ size:tButtonSize, obj_scale:1, obj:new $Dice(), origin:0.5 }).appendTo(tTray)
+			new GameButton(tButtonSize).setImage(new $Dice()).setOrigin(0.5).appendTo(tTray)
 				.move(xx-tButtonXInc*tButtonOnRight, yy)
 				.onButtonClick(dispatchEventHandler(RANDOM_CLICKED));
 			tButtonOnRight++;
 			
-			_animateButton = new PushButton({ size:tButtonSize, obj_scale:0.65, obj:new $PlayButton(), origin:0.5 })
+			(_animateButton = new PushButton(tButtonSize)).setImage(new $PlayButton(), 0.65).setOrigin(0.5).appendTo(tTray)
 				.move(xx-tButtonXInc*tButtonOnRight, yy)
 				.on(PushButton.TOGGLE, dispatchEventHandler(ANIMATION_TOGGLED))
 				.on(PushButton.TOGGLE, function(e):void{
 					var icon:Sprite = !_animateButton.pushed ? new $PlayButton() : newStopIcon();
 					_animateButton.setImage(icon, 0.65);
-				})
-				.appendTo(tTray) as PushButton;
+				});
 			tButtonOnRight++;
 			
 			/********************
@@ -148,10 +141,8 @@ package app.ui
 				.appendTo(tTray)
 				.on(FancySlider.CHANGE, dispatchEventHandler(SCALE_SLIDER_CHANGE));
 			
-			_defaultScaleButton = SpriteButton.rect(100, 14);
-			_defaultScaleButton.setText('btn_color_defaults').toOrigin(0.5).move(xx+tSliderWidth/2, yy-16.5).appendTo(tTray)
+			(_defaultScaleButton = new GameButton(100, 14)).setText('btn_color_defaults').setOrigin(0.5).move(xx+tSliderWidth/2, yy-16.5).appendTo(tTray).setAlpha(0)
 				.onButtonClick(dispatchEventHandler(DEFAULT_SCALE_CLICKED));
-			_defaultScaleButton.alpha = 0;
 				
 			scaleSlider.on(MouseEvent.MOUSE_OVER, function():void{ _defaultScaleButton.alpha = 0.8; });
 			_defaultScaleButton.on(MouseEvent.MOUSE_OVER, function():void{ _defaultScaleButton.alpha = 0.8; });
@@ -178,7 +169,7 @@ package app.ui
 		
 		public function updateClipboardButton(normal:Boolean, elseYes:Boolean=true) : void {
 			if(!_clipboardButton) return;
-			_clipboardButton.ChangeImage(normal ? new $CopyIcon() : elseYes ? new $Yes() : new $No());
+			_clipboardButton.setImage(normal ? new $CopyIcon() : elseYes ? new $Yes() : new $No());
 		}
 		
 		///////////////////////

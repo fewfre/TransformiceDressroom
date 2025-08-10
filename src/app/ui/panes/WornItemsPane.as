@@ -54,7 +54,7 @@ package app.ui.panes
 			var shopItem : MovieClip = GameAssets.getColoredItemImage(itemData);
 			shopItem.scaleX = shopItem.scaleY = 2;
 
-			var shopItemButton : PushButton = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:shopItem, data:itemData });
+			var shopItemButton : PushButton = new PushButton(grid.cellSize).setImage(shopItem).setData(itemData) as PushButton;
 			shopItemButton.on(PushButton.TOGGLE, function(e:FewfEvent){ dispatchEvent(new ItemDataEvent(ITEM_CLICKED, e.data as ItemData)) });
 			
 			// Finally add to grid (do it at end so auto event handlers can be hooked up properly)

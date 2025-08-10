@@ -60,7 +60,7 @@ package app.ui.common
 			// });
 			
 			// Copy button
-			_button = new CopyButton({ size:bsize, origin:0.5 }).appendTo(_tray.root)
+			_button = new CopyButton(bsize).setOrigin(0.5).appendTo(_tray.root)
 				.move(width - padX - bsize/2 + 2, height/2)
 				.onButtonClick(_onCopyButtonClicked) as CopyButton;
 			_button.changeIcon(true);
@@ -94,8 +94,8 @@ class CopyButton extends GameButton
 	private var _icon:Sprite;
 	private var _iconDefaultAlpha:Number = 1;
 	
-	public function CopyButton(pData) {
-		super(pData);
+	public function CopyButton(pSize:Number) {
+		super(pSize);
 		_bg.toRadius(8).drawSolid(0x1f2937, 0x1f2937);
 		addChild(_icon = new Sprite());
 	}

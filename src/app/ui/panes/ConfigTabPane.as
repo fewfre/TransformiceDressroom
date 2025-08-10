@@ -1,8 +1,8 @@
 package app.ui.panes
 {
 	import app.data.*;
+	import app.ui.buttons.GameButton;
 	import app.ui.buttons.PushButton;
-	import app.ui.buttons.SpriteButton;
 	import app.ui.common.FancyInput;
 	import app.ui.panes.base.SidePane;
 	import app.ui.PasteShareCodeInput;
@@ -72,7 +72,7 @@ package app.ui.panes
 				});
 				
 				// Fetch looks request submit button
-				SpriteButton.withObject(new $PlayButton(), 0.5, { width:sizex, height:sizey, origin:0.5 }).appendTo(this)
+				new GameButton(sizex, sizey).setOrigin(0.5).setImage(new $PlayButton(), 0.5).appendTo(this)
 					.move(xx+fieldWidth + spacingx + sizex*0.5, yy).on(MouseEvent.CLICK, _onFetchUserLooks);
 				
 				yy += sizey*0.5 + 10;
@@ -90,7 +90,7 @@ package app.ui.panes
 		public function addLook(lookCode:String) {
 			var grid:Grid = this.userOutfitsGrid;
 			var pose:Pose = new Pose().applyOutfitData(new OutfitData(true).setItemData(GameAssets.defaultPose).parseShareCodeSelf(lookCode, true));
-			var btn:PushButton = PushButton.square(grid.cellSize).setImage(pose, 3) as PushButton;
+			var btn:PushButton = new PushButton(grid.cellSize).setImage(pose, 3) as PushButton;
 			btn.on(MouseEvent.CLICK, function(){
 				dispatchEvent(new FewfEvent(LOOK_CODE_SELECTED, lookCode));
 				// Hacky way to make push button a normal button

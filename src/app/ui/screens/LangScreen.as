@@ -3,7 +3,7 @@ package app.ui.screens
 	import app.data.ConstantsApp;
 	import app.data.GameAssets;
 	import app.ui.buttons.ScaleButton;
-	import app.ui.buttons.SpriteButton;
+	import app.ui.buttons.GameButton;
 	import com.fewfre.data.I18n;
 	import com.fewfre.data.I18nLangData;
 	import com.fewfre.display.RoundRectangle;
@@ -33,7 +33,7 @@ package app.ui.screens
 			var tLanguages:Vector.<I18nLangData> = Fewf.i18n.getLanguagesList();
 			
 			var tFlagTray:Sprite = addChild(new Sprite()) as Sprite, tFlagRowTray:Sprite, xx:Number;
-			var tBtn:SpriteButton, tLangData:I18nLangData, tColumns:int = 8, tRows:Number = 1+Math.floor((tLanguages.length-1) / tColumns), tColumnsInRow:int = tColumns;
+			var tLangData:I18nLangData, tColumns:int = 8, tRows:Number = 1+Math.floor((tLanguages.length-1) / tColumns), tColumnsInRow:int = tColumns;
 			for(var i:int = 0; i < tLanguages.length; i++) { tLangData = tLanguages[i];
 				if(i%tColumns == 0) {
 					tColumnsInRow = i+tColumns > tLanguages.length ? tLanguages.length - i : tColumns;
@@ -42,13 +42,13 @@ package app.ui.screens
 					tFlagRowTray.y += Math.floor(i/tColumns)*55;
 					xx = -55;
 				}
-				SpriteButton.withObject(tLangData.newFlagSprite(), 0.3, { size:50, data:tLangData, origin:0.5 })
+				new GameButton(50).setImage(tLangData.newFlagSprite(), 0.3).setOrigin(0.5).setData(tLangData)
 					.move(xx+=55, 0).appendTo(tFlagRowTray).onButtonClick(_onLanguageClicked);
 			}
 			tFlagTray.y -= 55*(tRows-1)*0.5;
 			
 			// Close Button
-			ScaleButton.withObject(new $WhiteX()).move(tWidth/2 - 5, -tHeight/2 + 5).appendTo(this).onButtonClick(_onCloseClicked);
+			new ScaleButton(new $WhiteX()).move(tWidth/2 - 5, -tHeight/2 + 5).appendTo(this).onButtonClick(_onCloseClicked);
 		}
 		public function on(type:String, listener:Function): LangScreen { this.addEventListener(type, listener); return this; }
 		public function off(type:String, listener:Function): LangScreen { this.removeEventListener(type, listener); return this; }
@@ -84,13 +84,13 @@ package app.ui.screens
 		///////////////////////
 		// Static
 		///////////////////////
-		public static function createLangButton(pProps:Object) : SpriteButton {
-			var bttn:SpriteButton = SpriteButton.withObject(new Sprite(), 0.18, pProps);
+		public static function createLangButton(pWidth:Number, pHeight:Number) : GameButton {
+			var bttn:GameButton = new GameButton(pWidth, pHeight).setOrigin(0.5);
 			
 			function _changeImageToCurrentLanguage() : void {
-				bttn.ChangeImage( Fewf.i18n.getConfigLangData().newFlagSprite() );
-				bttn.Image.x += 0.25;
-				bttn.Image.y += 0.25;
+				bttn.setImage( Fewf.i18n.getConfigLangData().newFlagSprite(), 0.18 );
+				bttn.Image.x += 0.5;
+				bttn.Image.y += 0.5;
 			}
 			
 			_changeImageToCurrentLanguage();

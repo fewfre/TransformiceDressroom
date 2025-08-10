@@ -1,14 +1,16 @@
 package app.ui
 {
+	import app.ui.buttons.GameButton;
 	import app.ui.buttons.PushButton;
 	import app.ui.buttons.ScaleButton;
-	import app.ui.buttons.SpriteButton;
 	import app.ui.common.FancySlider;
+	import com.fewfre.display.DisplayWrapper;
 	import com.fewfre.display.RoundRectangle;
 	import com.fewfre.display.TextBase;
 	import com.fewfre.events.FewfEvent;
 	import com.fewfre.utils.Fewf;
 	import fl.controls.Button;
+	import flash.display.Graphics;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -16,8 +18,6 @@ package app.ui
 	import flash.text.TextTranslated;
 	import flash.ui.Mouse;
 	import flash.ui.MouseCursor;
-	import com.fewfre.display.DisplayWrapper;
-	import flash.display.Graphics;
 	
 	public class AnimationControls extends Sprite
 	{
@@ -25,10 +25,10 @@ package app.ui
 		private var _bg : RoundRectangle;
 		private var _dragHandle : Sprite;
 		
-		public var _animateButton : SpriteButton;
-		public var _loopButton : SpriteButton;
+		public var _animateButton : GameButton;
+		public var _loopButton : GameButton;
 		public var _speedButtons : Vector.<PushButton>;
-		public var _nextFrameButton : SpriteButton;
+		public var _nextFrameButton : GameButton;
 		public var _framesText : TextBase;
 		
 		public var _timelineSlider : FancySlider;
@@ -45,7 +45,7 @@ package app.ui
 		public function AnimationControls() {
 			super();
 			if(ORIGINAL_FRAMERATE == -1) ORIGINAL_FRAMERATE = Fewf.stage.frameRate;
-			_bg = new RoundRectangle(220, 35, { originY:0.5 }).toRadius(5).drawSolid(0x444444, 0x222222, 2).appendTo(this);
+			_bg = new RoundRectangle(220, 35).toOrigin(0, 0.5).toRadius(5).drawSolid(0x444444, 0x222222, 2).appendTo(this);
 			
 			_animating = false;
 			_looping = true;
@@ -80,22 +80,22 @@ package app.ui
 			var bsize = 28, bspace=5, tButtonXInc=bsize+bspace;
 			var xx = _dragHandle.width + bsize/2 + 3, yy = 0.5, tButtonsOnLeft = 0, tButtonOnRight = 0;
 			
-			_animateButton = new SpriteButton({ size:bsize, obj_scale:0.5, obj:new Sprite(), origin:0.5 }).move(xx,yy).appendTo(this) as SpriteButton;
+			_animateButton = new GameButton(bsize).setOrigin(0.5).move(xx,yy).appendTo(this) as GameButton;
 			_animateButton.onButtonClick(_onAnimationButtonToggled);
 			tButtonsOnLeft++;
 			
 			xx += tButtonXInc;
-			_loopButton = new SpriteButton({ size:bsize, obj_scale:0.5, obj:new Sprite(), origin:0.5 }).move(xx,yy).appendTo(this) as SpriteButton;
+			_loopButton = new GameButton(bsize).setOrigin(0.5).move(xx,yy).appendTo(this) as GameButton;
 			_loopButton.onButtonClick(_onLoopButtonToggled);
 			tButtonsOnLeft++;
 			
 			xx += tButtonXInc;
 			var msize = bsize/2-1;
 			_speedButtons = new <PushButton>[
-				PushButton.square(msize).setAllowToggleOff(false).toOrigin(0.5).setTextUntranslated('¼', { size:10 }).setData({ speed:0.25 }).move(xx - msize/2-1, yy - msize/2-1).on(PushButton.TOGGLE, _onSpeedButtonClicked).appendTo(this) as PushButton,
-				PushButton.square(msize).setAllowToggleOff(false).toOrigin(0.5).setTextUntranslated('½', { size:10 }).setData({ speed:0.50 }).move(xx + msize/2+1, yy - msize/2-1).on(PushButton.TOGGLE, _onSpeedButtonClicked).appendTo(this) as PushButton,
-				PushButton.square(msize).setAllowToggleOff(false).toOrigin(0.5).setTextUntranslated('1', { size:10 }).setData({ speed:1.00 }).move(xx - msize/2-1, yy + msize/2+1).on(PushButton.TOGGLE, _onSpeedButtonClicked).appendTo(this) as PushButton,
-				PushButton.square(msize).setAllowToggleOff(false).toOrigin(0.5).setTextUntranslated('2', { size:10 }).setData({ speed:2.00 }).move(xx + msize/2+1, yy + msize/2+1).on(PushButton.TOGGLE, _onSpeedButtonClicked).appendTo(this) as PushButton,
+				new PushButton(msize).setAllowToggleOff(false).setOrigin(0.5).setTextUntranslated('¼', { size:10 }).setData({ speed:0.25 }).move(xx - msize/2-1, yy - msize/2-1).on(PushButton.TOGGLE, _onSpeedButtonClicked).appendTo(this) as PushButton,
+				new PushButton(msize).setAllowToggleOff(false).setOrigin(0.5).setTextUntranslated('½', { size:10 }).setData({ speed:0.50 }).move(xx + msize/2+1, yy - msize/2-1).on(PushButton.TOGGLE, _onSpeedButtonClicked).appendTo(this) as PushButton,
+				new PushButton(msize).setAllowToggleOff(false).setOrigin(0.5).setTextUntranslated('1', { size:10 }).setData({ speed:1.00 }).move(xx - msize/2-1, yy + msize/2+1).on(PushButton.TOGGLE, _onSpeedButtonClicked).appendTo(this) as PushButton,
+				new PushButton(msize).setAllowToggleOff(false).setOrigin(0.5).setTextUntranslated('2', { size:10 }).setData({ speed:2.00 }).move(xx + msize/2+1, yy + msize/2+1).on(PushButton.TOGGLE, _onSpeedButtonClicked).appendTo(this) as PushButton,
 			];
 			_speedButtons[2].toggleOn(false);
 			// for each(var sb:PushButton in _speedButtons) { sb.Text.x += sb.data.speed < 1 ? -0.5 : 0; }
@@ -109,7 +109,7 @@ package app.ui
 			/////////////////////
 			xx = _bg.width - bsize/2 - 4, yy = 0, tButtonsOnLeft = 0, tButtonOnRight = 0;
 			
-			_nextFrameButton = new SpriteButton({ x:xx-tButtonXInc*tButtonsOnLeft, y:yy, width:bsize, height:bsize, obj_scale:0.5, obj:new Sprite(), origin:0.5 }).appendTo(this) as SpriteButton;
+			_nextFrameButton = new GameButton(bsize).setImage(new Sprite(), 0.5).setOrigin(0.5).move(xx-tButtonXInc*tButtonsOnLeft, yy).appendTo(this) as GameButton;
 			_nextFrameButton.onButtonClick(_onNextFrameClicked);
 			tButtonOnRight++;
 			_framesText = new TextBase('', { size:8 }).move(_nextFrameButton.x, _nextFrameButton.y).appendTo(this);
@@ -131,7 +131,7 @@ package app.ui
 			/////////////////////
 			// Misc
 			/////////////////////
-			ScaleButton.withObject(new $WhiteX(), 0.25).move(_bg.width, -_bg.height/2).appendTo(this)
+			new ScaleButton(new $WhiteX(), 0.25).move(_bg.width, -_bg.height/2).appendTo(this)
 				.onButtonClick(function(e){ dispatchEvent(new Event(Event.CLOSE)); });
 			
 			_updateUIBasedOnState();
@@ -181,8 +181,8 @@ package app.ui
 		}
 		
 		private function _updateUIBasedOnState() : void {
-			_animateButton.ChangeImage(!_animating ? new $PlayButton() : new $PauseButton());
-			_loopButton.ChangeImage(_looping ? new $Refresh() : newNoLoopIcon());
+			_animateButton.setImage(!_animating ? new $PlayButton() : new $PauseButton(), 0.5);
+			_loopButton.setImage(_looping ? new $Refresh() : newNoLoopIcon(), 0.5);
 			
 			_nextFrameButton.visible = !_animating;
 			if(_animationTarget) {
