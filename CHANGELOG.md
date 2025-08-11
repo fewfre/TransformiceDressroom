@@ -4,6 +4,7 @@
 - [Code] `PasteShareCodeInput` moved out of `Toolbox` and directly into `World`
 - [Code] `OtherTabPane` had some logic moved to `World`, triggered via events
 - [Code] Polish of button-related components
+	- [Bug] (11 Aug) Fixed bug added into `ColorButton` causing it to always return a null color
 - Filter Selection mode slight revamp
 	- "Filter" tab removed and contents moved into a new panel on the left side for ease of use
 	- Left side contents now removed during filter selection mode and replaced with change above - clicking certain buttons were causing issues during filter mode

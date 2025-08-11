@@ -133,7 +133,7 @@ package app.ui.panes.colorpicker
 		/****************************
 		* Events
 		*****************************/
-		private function _onRecentColorBtnClicked(pEvent) : void {
+		private function _onRecentColorBtnClicked(pEvent:FewfEvent) : void {
 			var color:uint = uint(pEvent.data);
 			
 			if(isDeleteModeOn) {
