@@ -81,7 +81,7 @@ package app.world.data
 		}
 
 		public function removeItem(pType:ItemType) : void {
-			_itemDataMap[pType] = null;
+			delete _itemDataMap[pType];
 			_dispatchUpdate();
 		}
 
@@ -157,7 +157,7 @@ package app.world.data
 							if(tColors.length > 0) { tData.colors = _hexArrayToIntList(tColors, tData.defaultColors); }
 							else if(tData.isCustomizable) { tData.setColorsToDefault(); }
 						}
-						var tAllowNull:Boolean = itemType == ItemType.SKIN || itemType == ItemType.POSE;
+						var tAllowNull:Boolean = !(itemType == ItemType.SKIN || itemType == ItemType.POSE);
 						_itemDataMap[itemType] = tAllowNull ? tData : ( tData == null ? _itemDataMap[itemType] : tData );
 					// } catch (error:Error) { };
 				}

@@ -24,6 +24,7 @@ package app.ui.panes
 	import flash.events.KeyboardEvent;
 	import flash.events.TextEvent;
 	import flash.text.TextFormat;
+	import app.data.ShareCodeFilteringData;
 
 	public class ShopCategoryPane extends ButtonGridSidePane
 	{
@@ -39,7 +40,8 @@ package app.ui.panes
 		public function get defaultItemData():ItemData { return _defaultItemData; }
 		public function get isItemTypeLocked():Boolean { return _infobar.isRefreshLocked; }
 		
-		public static const ITEM_TOGGLED : String = 'ITEM_TOGGLED'; // ItemDataEvent
+		public static const ITEM_SELECTED : String = 'ITEM_SELECTED'; // ItemDataEvent
+		public static const ITEM_REMOVED : String = 'ITEM_REMOVED'; // ItemDataEvent
 		public static const FLAG_WAVE_CODE_CHANGED : String = 'FLAG_WAVE_CODE_CHANGED';
 		
 		// Constructor
@@ -73,25 +75,30 @@ package app.ui.panes
 			super.open();
 		}
 		
-		public function getCellWithItemData(itemData:ItemData) : DisplayObject {
-			return !itemData ? null : FewfUtils.vectorFind(grid.cells, function(c:DisplayObject){ return itemData.matches(_findPushButtonInCell(c).data.itemData) });
-		}
-		
-		public function getButtonWithItemData(itemData:ItemData) : PushButton {
-			return _findPushButtonInCell(getCellWithItemData(itemData));
-		}
-		
-		public function toggleGridButtonWithData(pData:ItemData, pScrollIntoView:Boolean=false) : PushButton {
-			var cell:DisplayObject = getCellWithItemData(pData);
+		public function setToggleStateGridButtonWithData(pData:ItemData, pOn:Boolean, pScrollIntoView:Boolean=false, pFireEvent:Boolean=true) : PushButton {
+			var cell:DisplayObject = _getCellWithItemData(pData);
 			if(cell) {
 				var btn:PushButton = _findPushButtonInCell(cell);
-				btn.toggleOn();
+				btn.toggle(pOn, pFireEvent);
 				try {
-					if(pScrollIntoView) scrollItemIntoView(cell);
+					if(pOn && pScrollIntoView) scrollItemIntoView(cell);
 				} catch(e){}
 				return btn;
 			}
 			return null;
+		}
+		
+		public function toggleGridButtonWithData(pData:ItemData, pScrollIntoView:Boolean=false) : PushButton {
+			return setToggleStateGridButtonWithData(pData, true, pScrollIntoView)
+		}
+		
+		// public function updateAllButtonsToItemData(pData:ItemData, pScrollIntoView:Boolean=false) : void {
+		// 	if(!pData) _untoggleAllCells();
+		// 	setToggleStateGridButtonWithData(pData, true, pScrollIntoView, false);
+		// }
+		
+		public function scrollItemDataIntoView(itemData:ItemData) : void {
+			if(flagOpen) scrollItemIntoView(_getCellWithItemData(itemData));
 		}
 		
 		public function chooseRandomItem() : void {
@@ -113,13 +120,42 @@ package app.ui.panes
 		public function refreshButtonImage(pItemData:ItemData) : void {
 			if(!pItemData || !pItemData.isCustomizable) { return; }
 			
-			var btn:PushButton = this.getButtonWithItemData(pItemData);
+			var btn:PushButton = _getButtonWithItemData(pItemData);
+			if(!btn) return;
 			btn.setImage(GameAssets.getColoredItemImage(pItemData));
+		}
+		
+		public function updateInfobarWithItemData(itemData:ItemData, filterEnabled:Boolean=false) : void {
+			if(!itemData) {
+				this.infobar.removeInfo();
+				return;
+			}
+			
+			var showColorWheel : Boolean = itemData.isCustomizable;
+			if(showColorWheel) {
+				if(filterEnabled) {
+					showColorWheel = ShareCodeFilteringData.isCustomizable(itemData);
+					// If the item can normally be customized but they're turned off by filtering, force reset the color to default
+					if(!showColorWheel) {
+						itemData.setColorsToDefault();
+					}
+				}
+			}
+			this.infobar.addInfo( itemData, GameAssets.getColoredItemImage(itemData) );
+			this.infobar.showColorWheel(showColorWheel);
 		}
 		
 		/****************************
 		* Private
 		*****************************/
+		protected function _getCellWithItemData(itemData:ItemData) : DisplayObject {
+			return !itemData ? null : FewfUtils.vectorFind(grid.cells, function(c:DisplayObject){ return itemData.matches(_findPushButtonInCell(c).data.itemData) });
+		}
+		
+		protected function _getButtonWithItemData(itemData:ItemData) : PushButton {
+			return _findPushButtonInCell(_getCellWithItemData(itemData));
+		}
+		
 		private function _setupGrid(pItemList:Vector.<ItemData>) : void {
 			_itemDataVector = pItemList;
 			_setDefaultItemDataFromList(pItemList);
@@ -134,7 +170,7 @@ package app.ui.panes
 		}
 		
 		private function _addButton(itemData:ItemData, pScale:Number, i:int) : void {
-			var shopItem : MovieClip = GameAssets.getItemImage(itemData);
+			var shopItem : MovieClip = GameAssets.getColoredItemImage(itemData);
 			shopItem.scaleX = shopItem.scaleY = pScale;
 			var cell:Sprite = new Sprite();
 
@@ -145,7 +181,7 @@ package app.ui.panes
 			// Finally add to grid (do it at end so auto event handlers can be hooked up properly)
 			addToGrid(cell);
 		}
-			
+		
 		private function _setDefaultItemDataFromList(list:Vector.<ItemData>) : void {
 			_defaultItemData = null;
 			if(_type == ItemType.SKIN) {
@@ -227,13 +263,14 @@ package app.ui.panes
 		
 		private function _favoriteClicked(e:FewfEvent) : void {
 			var itemData:ItemData = (e.currentTarget as GameButton).data as ItemData;
-			var btn:PushButton = getButtonWithItemData(itemData);
+			var btn:PushButton = _getButtonWithItemData(itemData);
 			if(btn && btn.pushed) {
 				// This allows clicking the button to toggle it off if already toggled
 				btn.toggleOff(true);
 			} else {
 				toggleGridButtonWithData(itemData, true);
 			}
+			// _dispatchItemDataEvent(itemData, btn && !btn.pushed);
 		}
 		
 		private function _addRemoveFavoriteToggled(e:FewfEvent) : void {
@@ -250,7 +287,11 @@ package app.ui.panes
 		*****************************/
 		protected override function _onCellPushButtonToggled(e:FewfEvent) : void {
 			super._onCellPushButtonToggled(e);
-			dispatchEvent(new ItemDataEvent(ITEM_TOGGLED, e.data.itemData));
+			_dispatchItemDataEvent(e.data.itemData, (e.currentTarget as PushButton).pushed);
+		}
+		
+		private function _dispatchItemDataEvent(itemData:ItemData, selected:Boolean=true) : void {
+			dispatchEvent(new ItemDataEvent(selected ? ITEM_SELECTED : ITEM_REMOVED, itemData));
 		}
 	}
 }

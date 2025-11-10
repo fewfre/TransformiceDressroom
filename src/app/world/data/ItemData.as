@@ -35,7 +35,7 @@ package app.world.data
 			setColorsToDefault();
 		}
 		public function setColorsToDefault() : void {
-			colors = defaultColors.concat();
+			if(defaultColors) colors = defaultColors.concat();
 		}
 		public function hasModifiedColors() : Boolean {
 			return (colors ? colors.join() : "") != (defaultColors ? defaultColors.join() : "");

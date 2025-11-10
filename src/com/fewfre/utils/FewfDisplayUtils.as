@@ -242,16 +242,19 @@ package com.fewfre.utils
 			saveImageDataToDevice(tBitmapData, pName, 'png');
 		}
 		
-		public static function displayObjectToBitmapDataFixedCanvasSize(pObj:DisplayObject, pSize:Number, pOffsetX:Number=0, pOffsetY:Number=0) : BitmapData {
-			var rect:Rectangle = pObj.getBounds(pObj);
+		public static function displayObjectToBitmapDataFixedCanvasSize(pObj:DisplayObject, pSize:Number, pScale:Number, pOffsetX:Number=0, pOffsetY:Number=0) : BitmapData {
 			var tBitmapData:BitmapData = new BitmapData(pSize, pSize, true, 0xFFFFFF);
-			return bitmapDataDrawBestQuality(tBitmapData, pObj, new Matrix(1, 0, 0, 1, pSize/2+pOffsetX, pSize/2+pOffsetY));
+			var tMatrix:Matrix = new Matrix(1, 0, 0, 1, 0, 0);
+			tMatrix.scale(pScale, pScale);
+			tMatrix.translate(pSize/2+pOffsetX, pSize/2+(pOffsetY*pScale));
+			bitmapDataDrawBestQuality(tBitmapData, pObj, tMatrix);
+			return tBitmapData;
 		}
 		
 		// Converts the image to a PNG bitmap and prompts the user to save.
-		public static function saveAsPNGWithFixedCanvasSize(pObj:DisplayObject, pName:String, pSize:Number, pOffsetX:Number=0, pOffsetY:Number=0) : void {
+		public static function saveAsPNGWithFixedCanvasSize(pObj:DisplayObject, pName:String, pSize:Number, pScale:Number, pOffsetX:Number=0, pOffsetY:Number=0) : void {
 			if(!pObj){ return; }
-			var tBitmapData:BitmapData = displayObjectToBitmapDataFixedCanvasSize(pObj, pSize, pOffsetX, pOffsetY);
+			var tBitmapData:BitmapData = displayObjectToBitmapDataFixedCanvasSize(pObj, pSize, pScale, pOffsetX, pOffsetY);
 			saveImageDataToDevice(tBitmapData, pName, "png");
 		}
 		

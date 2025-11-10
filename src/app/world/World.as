@@ -26,6 +26,7 @@ package app.world
 	import flash.external.ExternalInterface;
 	import flash.ui.Keyboard;
 	import flash.utils.setTimeout;
+	import com.fewfre.data.I18n;
 	
 	public class World extends Sprite
 	{
@@ -40,6 +41,7 @@ package app.world
 		private var _itemFilterBanner  : ItemFilterBanner;
 		private var _animationControls : AnimationControls;
 		private var _restoreAutoSaveBtn: GameButton;
+		private var _favoriteTabButton : ScaleButton;
 		
 		private var _shareScreen       : ShareScreen;
 		private var trashConfirmScreen : TrashConfirmScreen;
@@ -119,7 +121,7 @@ package app.world
 					.on(PasteShareCodeInput.CHANGE, function(e:FewfEvent):void{ _onShareCodeEntered(e.data.code, e.data.update); });
 			}
 				
-			_itemFilterBanner = new ItemFilterBanner().move(76, 63).appendTo(_leftSideTray)
+			_itemFilterBanner = new ItemFilterBanner().move(76, ConstantsApp.APP_HEIGHT - 17).appendTo(_leftSideTray)
 				.on(ItemFilterBanner.ONLY_INCLUDE_CUSTOMIZATIONS_TOGGLED, _toggleItemFilterModeToOnlyShowCustomizableItems)
 				.on(ItemFilterBanner.FILTER_BANNER_CLOSED, _onExitItemFilteringMode);
 			
@@ -128,11 +130,11 @@ package app.world
 				.onButtonClick(function(e:Event){ _panes.openPane(WorldPaneManager.OUTFITS_PANE); });
 			
 			// Favorite Button
-			var favButton:ScaleButton = new ScaleButton(new $HeartFull()).appendTo(_leftSideTray).move(_toolbox.x+167 + 1, _toolbox.y+12.5+21 + 23)
+			_favoriteTabButton = new ScaleButton(new $HeartFull()).appendTo(_leftSideTray).move(_toolbox.x+167 + 1, _toolbox.y+12.5+21 + 23)
 				.onButtonClick(function(e:Event){ _panes.openPane(WorldPaneManager.FAVORITES_PANE); }) as ScaleButton;
-			favButton.visible = FavoriteItemsLocalStorageManager.getAllFavorites().length > 0;
+			_favoriteTabButton.visible = FavoriteItemsLocalStorageManager.getAllFavorites().length > 0;
 			Fewf.dispatcher.addEventListener(ConstantsApp.FAVORITE_ADDED_OR_REMOVED, function(e:FewfEvent):void{
-				favButton.visible = FavoriteItemsLocalStorageManager.getAllFavorites().length > 0;
+				_favoriteTabButton.visible = !_itemFiltering_filterEnabled && FavoriteItemsLocalStorageManager.getAllFavorites().length > 0;
 			});
 			
 			_animationControls = new AnimationControls().move(78, ConstantsApp.APP_HEIGHT - 35/2 - 5).appendTo(_leftSideTray)
@@ -229,6 +231,11 @@ package app.world
 				.on(OtherTabPane.ITEM_TOGGLED, _otherTabItemToggled)
 				.on(OtherTabPane.EYE_DROPPER_CLICKED, function(e:FewfEvent){ _openColorFinderWithItemData(e.data.itemData); })
 				.on(OtherTabPane.FILTER_MODE_CLICKED, function(e:Event){ _getAndOpenItemFilteringSelectionMode(); })
+				.on(OtherTabPane.FILTER_QUICKLOAD_CLICKED, function(e:Event){
+					var code:String = ShareCodeFilteringData.getShareCodeCache();
+					ShareCodeFilteringData.parseShareCode(code);
+					_enableFilterMode();
+				})
 				.on(OtherTabPane.EMOJI_CLICKED, function(e:Event){ _panes.openShopPane(ItemType.EMOJI); })
 				.on(OtherTabPane.CHEESE_CLICKED, function(e:Event){ _panes.openShopPane(ItemType.BACK); })
 				.on(OtherTabPane.SAVE_MOUSE_HEAD_CLICKED, _onSaveMouseHeadClicked);
@@ -253,6 +260,7 @@ package app.world
 				.on(Event.CLOSE, function(e){ _panes.openPane(_shopTabs.getSelectedTabId()); })
 				.on(FavoritesTabPane.ITEMDATA_SELECTED, function(e:ItemDataEvent){
 					var itemData:ItemData = e.itemData;
+					if(_itemFiltering_filterEnabled && !ShareCodeFilteringData.has(itemData)) return;
 					_character.setItemData(itemData);
 					_updateUIBasedOnCharacter();
 					
@@ -267,7 +275,8 @@ package app.world
 
 		private function _setupItemPane(pType:ItemType) : ShopCategoryPane {
 			var tPane:ShopCategoryPane = new ShopCategoryPane(pType);
-			tPane.on(ShopCategoryPane.ITEM_TOGGLED, _onItemToggled);
+			tPane.on(ShopCategoryPane.ITEM_SELECTED, _onItemSelected);
+			tPane.on(ShopCategoryPane.ITEM_REMOVED, _onItemRemoved);
 			tPane.on(ShopCategoryPane.FLAG_WAVE_CODE_CHANGED, function(e:FewfEvent){ _character.outfitData.flagWavingCode = e.data.code; });
 			
 			tPane.infobar.on(Infobar.COLOR_WHEEL_CLICKED, function(){ _colorButtonClicked(pType); });
@@ -288,7 +297,7 @@ package app.world
 		private function _shouldShowShopTab(type:ItemType) : Boolean {
 			// Skin & pose have defaults, so always show - also need to list before other check since poses don't have filtering
 			return type == ItemType.POSE || type == ItemType.SKIN
-				|| !_itemFiltering_filterEnabled || ShareCodeFilteringData.getSelectedIds(type).length > 0;
+				|| !_itemFiltering_filterEnabled || (_itemFilterBanner.onlyShowCustomizableItemsToggleOn ? ShareCodeFilteringData.getOnlyCustomizableSelectedIds(type) : ShareCodeFilteringData.getSelectedIds(type).length > 0);
 		}
 		
 		private function _populateShopTabs() {
@@ -343,7 +352,7 @@ package app.world
 			
 			var tItemData:ItemData = _character.getItemData(pType);
 			var tHadIndicator:Boolean = !!tItemData && !tItemData.matches(GameAssets.defaultSkin) && !tItemData.matches(GameAssets.defaultPose);
-			_shopTabs.getTabButton(WorldPaneManager.itemTypeToId(pType)).setItemIndicator(tHadIndicator);
+			if(_shopTabs.getTabButton(WorldPaneManager.itemTypeToId(pType))) _shopTabs.getTabButton(WorldPaneManager.itemTypeToId(pType)).setItemIndicator(tHadIndicator);
 		}
 
 		private function _onMouseWheel(pEvent:MouseEvent) : void {
@@ -422,6 +431,7 @@ package app.world
 			}
 			
 			// now update the infobars
+			if(_itemFiltering_filterEnabled) _applyShareCodeFilterToOutfitData(_character.outfitData);
 			_updateUIBasedOnCharacter();
 			_panes.otherPane.updateButtonsBasedOnCurrentData();
 			
@@ -444,10 +454,6 @@ package app.world
 			}
 		
 			try {
-				// First remove old stuff to prevent conflicts
-				_character.outfitData.shamanMode = ShamanMode.OFF;
-				for each(var tLayerType:ItemType in ItemType.ALL) { _removeItem(tLayerType); }
-				
 				// If selection mode is active, end it
 				_itemFiltering_selectionModeOn = false;
 				_toggleFilterSelectionModeTray();
@@ -458,8 +464,6 @@ package app.world
 					_enableFilterMode();
 					
 					_character.updatePose();
-					
-					for each(var tType:ItemType in ItemType.TYPES_WITH_SHOP_PANES) { _refreshButtonCustomizationForItemData(_character.getItemData(tType)); }
 					
 					// now update the infobars
 					_updateUIBasedOnCharacter();
@@ -472,30 +476,6 @@ package app.world
 				_exitFilterMode();
 				callback(false);
 			};
-		}
-		
-		private function _updateAllShopPaneFilters() : void {
-			for each(var tType:ItemType in ItemType.TYPES_WITH_SHARE_FILTER_PANES) {
-				// Remove encase existing item is a filtered one
-				_removeItem(tType);
-				
-				var ids : Vector.<String> = ShareCodeFilteringData.getSelectedIds(tType).concat();
-				if(_itemFilterBanner.onlyShowCustomizableItemsToggleOn && tType != ItemType.SKIN) { // Skins don't have customizations
-					ids = ids.filter(function(id:String,i,a):Boolean{ return ShareCodeFilteringData.isCustomizableId(tType, id); });
-				}
-				if(tType == ItemType.SKIN && ids.length == 0) {
-					ids.push(GameAssets.defaultSkin.id);
-				}
-				getShopPane(tType).filterItemIds(ids);
-				// Remove everything again to make sure "defaults" are correctly selected (ex: if fur 0 isn't a selected one)
-				_removeItem(tType);
-			}
-		}
-		
-		private function _clearItemFiltering() : void {
-			for each(var tType:ItemType in ItemType.TYPES_WITH_SHOP_PANES) {
-				getShopPane(tType).filterItemIds(null);
-			}
 		}
 		
 		private function _onCharacterPoseUpdated(e:Event) : void {
@@ -514,6 +494,11 @@ package app.world
 					// If auto saved outfit, prompt user to use or not
 					(_restoreAutoSaveBtn = new GameButton(120, 16)).setText("restore_auto_save_btn", { size:10 }).setOrigin(0.5).move(185, 90).setData({ look:autoSavedLook }).appendTo(_leftSideTray)
 						.onButtonClick(function(e:FewfEvent):void{ _useOutfitShareCode(e.data.look); });
+					// Update button width to match text
+					_restoreAutoSaveBtn.resize(_restoreAutoSaveBtn.Text.width + 10, 16);
+					Fewf.dispatcher.addEventListener(I18n.FILE_UPDATED, function(e):void{
+						if(_restoreAutoSaveBtn) _restoreAutoSaveBtn.resize(_restoreAutoSaveBtn.Text.width + 10, 16);
+					});
 				}, 100);
 			}
 		}
@@ -566,13 +551,14 @@ package app.world
 		}
 		
 		private function _saveAsPNG(pObj:DisplayObject, pName:String, pScale:Number) : void {
+			pScale = _getHardcodedSaveScale() || pScale;
 			var hardcodedCanvasSaveSize:Object = Fewf.sharedObject.getData(ConstantsApp.SHARED_OBJECT_KEY_HARDCODED_CANVAS_SAVE_SIZE);
 			if(!hardcodedCanvasSaveSize) {
-				FewfDisplayUtils.saveAsPNG(pObj, pName, _getHardcodedSaveScale() || pScale);
+				FewfDisplayUtils.saveAsPNG(pObj, pName, pScale);
 			} else {
 				var tOffsetY:Number = 0;
-				if(pName === 'character' && pObj is Pose) tOffsetY = Math.floor(8*(pObj as Pose).scaleX); // Since the feet aren't in the center; rough calc but gets it closer to center
-				FewfDisplayUtils.saveAsPNGWithFixedCanvasSize(pObj, pName, hardcodedCanvasSaveSize as Number, 0, tOffsetY);
+				if(pName === 'character' && pObj is Pose) tOffsetY = 8; // Since the feet aren't in the center; rough calc but gets it closer to center - scaled by utils function if needed
+				FewfDisplayUtils.saveAsPNGWithFixedCanvasSize(pObj, pName, hardcodedCanvasSaveSize as Number, pScale, 0, tOffsetY);
 			}
 		}
 
@@ -609,31 +595,34 @@ package app.world
 			}
 			getShopPane(ItemType.POSE).flagWaveInput.text = _character.outfitData.flagWavingCode || "";
 		}
+		private function _updateUIBasedOnCharacterExtended() : void {
+			_updateUIBasedOnCharacter();
+			// This also updates all infobars, current selected button image, and indicators
+			// not needed in standard cases, but covers all cases when stuff can be forced out of sync, like with item filtering
+			for each(var tType:ItemType in ItemType.ALL) {
+				var tItemData:ItemData = _character.getItemData(tType), tPane:ShopCategoryPane = getShopPane(tType);
+				if(tPane && tPane.infobar) {
+					tPane.updateInfobarWithItemData(tItemData, _itemFiltering_filterEnabled);
+				}
+				if(tItemData) {
+					_refreshButtonCustomizationForItemData(tItemData);
+				}
+				_updateTabListItemIndicatorByType(tType);
+			}
+			_panes.otherPane.updateButtonsBasedOnCurrentData();
+		}
 
-		private function _onItemToggled(e:ItemDataEvent) : void {
+		private function _onItemSelected(e:ItemDataEvent) : void {
 			var tItemData:ItemData = e.itemData;
 
-			// De-select all buttons that aren't the clicked one.
-			var tPane:ShopCategoryPane = getShopPane(tItemData.type), tInfobar:Infobar = tPane.infobar;
-			var tButton:PushButton = tPane.getButtonWithItemData(tItemData);
-			// If clicked button is toggled on, equip it. Otherwise remove it.
-			if(tButton.pushed) {
-				var showColorWheel : Boolean = tItemData.isCustomizable;
-				if(showColorWheel) {
-					if(_itemFiltering_filterEnabled) {
-						showColorWheel = ShareCodeFilteringData.isCustomizable(tItemData);
-						// If the item can normally be customized but they're turned off by filtering, force reset the color to default
-						if(!showColorWheel) {
-							tItemData.setColorsToDefault();
-						}
-					}
-				}
-				_character.setItemData(tItemData);
-				tInfobar.addInfo( tItemData, GameAssets.getColoredItemImage(tItemData) );
-				tInfobar.showColorWheel(showColorWheel);
-			} else {
-				_removeItem(tItemData.type);
-			}
+			var tPane:ShopCategoryPane = getShopPane(tItemData.type);
+			tPane.updateInfobarWithItemData(tItemData, _itemFiltering_filterEnabled);
+			_character.setItemData(tItemData);
+			_updateTabListItemIndicatorByType(tItemData.type);
+		}
+		private function _onItemRemoved(e:ItemDataEvent) : void {
+			var tItemData:ItemData = e.itemData;
+			_removeItem(tItemData.type);
 			_updateTabListItemIndicatorByType(tItemData.type);
 		}
 
@@ -655,12 +644,12 @@ package app.world
 
 			// If item has a default value, toggle it on. otherwise remove item.
 			if(!!tPane.defaultItemData) {
-				tPane.getButtonWithItemData(tPane.defaultItemData).toggleOn();
+				tPane.setToggleStateGridButtonWithData(tPane.defaultItemData, true);
 			} else {
 				var tOldData:ItemData = _character.getItemData(pType);
 				_character.removeItem(pType);
 				tPane.infobar.removeInfo();
-				if(tOldData) tPane.getButtonWithItemData(tOldData).toggleOff();
+				if(tOldData) tPane.setToggleStateGridButtonWithData(tOldData, false);
 			}
 			_updateTabListItemIndicatorByType(pType);
 		}
@@ -688,7 +677,7 @@ package app.world
 				_removeItem(pType);
 				// Set to default values for required types
 				if(!!pane.defaultItemData) {
-					if(pane.flagOpen) pane.scrollItemIntoView(pane.getCellWithItemData(pane.defaultItemData));
+					if(pane.flagOpen) pane.scrollItemDataIntoView(pane.defaultItemData);
 				}
 			}
 		}
@@ -696,7 +685,7 @@ package app.world
 		private function _goToItem(pItemData:ItemData) : void {
 			var itemType:ItemType = pItemData.type;
 			
-			// These are special types that don't have thier own unique panes
+			// These are special types that don't have their own unique panes
 			if(ItemType.OTHER_PANE_ITEM_TYPES_WITH_NO_SUB_PANE.indexOf(itemType) > -1) {
 				_shopTabs.toggleTabOn(WorldPaneManager.OTHER_PANE);
 				_character.setItemData(pItemData);
@@ -787,26 +776,96 @@ package app.world
 		private function _enableFilterMode() : void {
 			_itemFiltering_filterEnabled = true;
 			_itemFilterBanner.show();
-			_populateShopTabs();
-			_updateAllShopPaneFilters();
 			_toggleFilterSelectionModeTray();
-			// Select first tab available
-			_shopTabs.toggleOnFirstTab();
+			_favoriteTabButton.visible = !_itemFiltering_filterEnabled;
+			
+			var prevSelectedTab:String = _shopTabs.getSelectedTabId();
+			_populateShopTabs();
+			_afterFilterModeChangeToggleShopTab(prevSelectedTab);
+			
+			_updateAllShopPanesUsingShareCodeFiltering();
 		}
 		
 		private function _onExitItemFilteringMode(e:Event) : void { _exitFilterMode(); };
 		private function _exitFilterMode() : void {
 			_itemFiltering_filterEnabled = false;
 			_itemFilterBanner.hide();
-			_populateShopTabs();
-			_clearItemFiltering();
 			_toggleFilterSelectionModeTray();
+			_favoriteTabButton.visible = !_itemFiltering_filterEnabled;
+			
+			var prevSelectedTab:String = _shopTabs.getSelectedTabId();
+			_populateShopTabs();
+			_afterFilterModeChangeToggleShopTab(prevSelectedTab);
+			
+			_clearItemFiltering();
+		}
+		
+		private function _afterFilterModeChangeToggleShopTab(prevSelectedTab:String) : void {
+			// Tabs repopulated, so a tab needs to be re-toggled
 			// Select first tab available (needed since tabs repopulated)
-			_shopTabs.toggleOnFirstTab();
+			if(prevSelectedTab && _shopTabs.getTabButton(prevSelectedTab)) {
+				// if the same tab that existed before still exists, select it (but don't fire event since in this case the open pane should always be fine)
+				_shopTabs.toggleTabOn(prevSelectedTab, false);
+			} else {
+				// otherwise force first tab on and fire event to open it
+				_shopTabs.toggleOnFirstTab();
+			}
 		}
 		
 		private function _toggleItemFilterModeToOnlyShowCustomizableItems(e:Event) : void {
-			_updateAllShopPaneFilters();
+			var prevSelectedTab:String = _shopTabs.getSelectedTabId();
+			_populateShopTabs();
+			_afterFilterModeChangeToggleShopTab(prevSelectedTab);
+			
+			_updateAllShopPanesUsingShareCodeFiltering();
+		}
+		
+		private function _updateAllShopPanesUsingShareCodeFiltering() : void {
+			// Update shop panes with filtered items
+			for each(var tType:ItemType in ItemType.TYPES_WITH_SHARE_FILTER_PANES) {
+				var ids : Vector.<String> = _itemFilterBanner.onlyShowCustomizableItemsToggleOn ? ShareCodeFilteringData.getOnlyCustomizableSelectedIds(tType) : ShareCodeFilteringData.getSelectedIds(tType).concat();
+				if(tType == ItemType.SKIN && ids.length == 0) {
+					ids.push(GameAssets.defaultSkin.id);
+				}
+				
+				// Remove existing customization data applied to all items allowed by filter but not with customizations
+				var list:Vector.<ItemData> = GameAssets.getItemDataListByType(tType).filter(function(data:ItemData, i, a){ return ids.indexOf(data.id) >= 0 });
+				for each(var itemData:ItemData in list) {
+					if(!ShareCodeFilteringData.isCustomizable(itemData)) itemData.setColorsToDefault();
+				}
+				
+				getShopPane(tType).filterItemIds(ids);
+			}
+			// Updated outfit data based on filtered items (remove anything if needed / clear customizations if needed)
+			_applyShareCodeFilterToOutfitData(_character.outfitData);
+			_character.updatePose();
+			
+			_updateUIBasedOnCharacterExtended();
+		}
+		
+		// NOTE: `(ShopCategoryPane).defaultItemData` must be set for skin to properly change -- TODO: pane should not be where this is stored
+		private function _applyShareCodeFilterToOutfitData(outfitData:OutfitData) : OutfitData {
+			for each(var itemData:ItemData in outfitData.getItemDataVector()) {
+				if(!ShareCodeFilteringData.itemTypeExistsInFilterMap(itemData.type)) continue;
+				
+				if(!ShareCodeFilteringData.has(itemData) || (_itemFilterBanner.onlyShowCustomizableItemsToggleOn && !ShareCodeFilteringData.isCustomizable(itemData))) {
+					outfitData.removeItem(itemData.type);
+					if(getShopPane(itemData.type) && getShopPane(itemData.type).defaultItemData) {
+						outfitData.setItemData(getShopPane(itemData.type).defaultItemData)
+					}
+				}
+				else if(!ShareCodeFilteringData.isCustomizable(itemData)) {
+					itemData.setColorsToDefault();
+				}
+			}
+			return outfitData;
+		}
+		
+		private function _clearItemFiltering() : void {
+			for each(var tType:ItemType in ItemType.TYPES_WITH_SHOP_PANES) {
+				getShopPane(tType).filterItemIds(null);
+			}
+			_updateUIBasedOnCharacterExtended();
 		}
 	//#endregion Item Filter Mode
 	
@@ -826,7 +885,7 @@ package app.world
 
 		private function _setupItemPaneForFiltering(pType:ItemType) : ShopCategoryPaneForFilteringSelection {
 			var tPane:ShopCategoryPaneForFilteringSelection = new ShopCategoryPaneForFilteringSelection(pType);
-			tPane.on(ShopCategoryPane.ITEM_TOGGLED, function(e:ItemDataEvent):void{
+			tPane.on(ShopCategoryPaneForFilteringSelection.ITEM_TOGGLED, function(e:ItemDataEvent):void{
 				_refreshItemFilteringSelectionMode();
 			});
 			
@@ -900,6 +959,7 @@ package app.world
 		private function _refreshButtonCustomizationForItemData(pItemData:ItemData) : void {
 			if(!pItemData) { return; }
 			var tPane:ShopCategoryPane = getShopPane(pItemData.type);
+			if(!tPane) { return; }
 			tPane.refreshButtonImage(pItemData);
 		}
 

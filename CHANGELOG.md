@@ -1,3 +1,12 @@
+## V1.32 - 8 November 2025
+- [Bug] "Fixed PNG Canvas Size" now uses the defined scale
+- outfits/share codes can now be used / properly interact with filter mode - any items in the outfit/share code will be ignored if not supported by the filter, and customizations reset if not allowed by filter
+  - applying a filter will no longer reset everything currently worked on to the default, and will instead behave as above
+  - since share codes now properly work with filtering, the filter banner no longer covers the share code box, and has been moved to the bottom of the screen
+- added a new mini heart button to the "open filter selection mode" button that will let you enter preview mode right away - this is to avoid having to open selection mode just to immediately apply the cached filter for cases where someone doesn't need to make any changes to it first
+- pl translation updated (thanks Kitayoshi#8874) + fixed "restore auto save" button to change width to fit text
+
+
 ## V1.31b - 10 August 2025
 - [Code] Split a large chunk of data storage out of Character and into `OutfitData`
 - [Code] `Pose` logic cleaned up a little and now uses `OutfitData`

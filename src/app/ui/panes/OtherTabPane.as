@@ -26,6 +26,7 @@ package app.ui.panes
 		public static const EMOJI_CLICKED:String = "emoji_clicked";
 		public static const CHEESE_CLICKED:String = "cheese_clicked";
 		public static const FILTER_MODE_CLICKED:String = "filter_mode_clicked";
+		public static const FILTER_QUICKLOAD_CLICKED:String = "filter_quickload_clicked";
 		public static const SAVE_MOUSE_HEAD_CLICKED:String = "save_mouse_head_clicked";
 		
 		// Storage
@@ -38,6 +39,7 @@ package app.ui.panes
 		private var _backHandButton   : PushButton;
 		private var _eyeDropperButton : GameButton;
 		
+		private var _quickLoadFilterButton : GameButton;
 		private var _mouseHeadButton  : GameButton;
 		private var _mouseHead        : Pose;
 		
@@ -136,8 +138,11 @@ package app.ui.panes
 			// Bottom Buttons
 			/////////////////////////////
 			// Left
-			new GameButton(70).setImage(new $FilterIcon(), 0.85).move(xx, 315).appendTo(this)
+			sizex = sizey = 70;
+			new GameButton(sizex).setImage(new $FilterIcon(), 0.85).move(xx, 315).appendTo(this)
 				.onButtonClick(function(e:Event):void{ dispatchEvent(new Event(FILTER_MODE_CLICKED)); });
+			(_quickLoadFilterButton = new GameButton(22)).setImage(new $HeartEmpty(), 0.40).move(xx+(sizex-22), 315+(sizex-22)).appendTo(this).setVisible(false)
+				.onButtonClick(function(e:Event):void{ dispatchEvent(new Event(FILTER_QUICKLOAD_CLICKED)); });
 			
 			// Right
 			// Save Head Image
@@ -158,6 +163,7 @@ package app.ui.panes
 			
 			_updateHead(_character.outfitData);
 			_tipsText.setText(TIPS[_tipsIndex = (_tipsIndex+1) % TIPS.length]);
+			_quickLoadFilterButton.visible = !!ShareCodeFilteringData.getShareCodeCache();
 		}
 		
 		public function updateButtonsBasedOnCurrentData() : void {

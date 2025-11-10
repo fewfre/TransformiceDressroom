@@ -30,10 +30,22 @@ package app.data
 		////////////////////////////
 		// ID Methods
 		////////////////////////////
+		// Not all types support filtering, so this allows for checking it, since running some of these functions with unsupported types breaks things
+		public static function itemTypeExistsInFilterMap(itemType:ItemType) : Boolean { return !!getSelectedIds(itemType); }
+		
 		public static function getSelectedIds(itemType:ItemType) : Vector.<String> {
 			return _itemFilterMap[itemType];
 		}
+		// NOTE: Returns copy of array, not actual stored array (unlike `getSelectedIds`)
+		public static function getOnlyCustomizableSelectedIds(itemType:ItemType) : Vector.<String> {
+			var ids : Vector.<String> = getSelectedIds(itemType).concat();
+			if(itemType != ItemType.SKIN) { // Skins don't have customizations
+				ids = ids.filter(function(id:String,i,a):Boolean{ return isCustomizableId(itemType, id); });
+			}
+			return ids;
+		}
 		
+		public static function has(itemData:ItemData) : Boolean { return hasId(itemData.type, itemData.id); }
 		public static function hasId(itemType:ItemType, id:String) : Boolean {
 			return getSelectedIds(itemType).indexOf(id) > -1;
 		}

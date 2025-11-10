@@ -26,6 +26,7 @@ package app.world.data
 		public override function copy() : ItemData { return new BitmapItemData(type, url); }
 		
 		protected override function _initDefaultColors() : void {} // Bitmaps don't use customizable colors
+		public override function setColorsToDefault() : void {}
 
 		public override function getPart(pID:String, pOptions:Object=null) : Class {
 			return null;

@@ -24,7 +24,18 @@
     "user_lookup_title":       { "text":"Wyszukiwanie nazwy użytkownika" },
     "user_lookup_placeholder": { "text":"Nazwa#0000" },
     "user_lookup_details":     { "text":"Wszelkie zmiany w grze pojawią się za jakiś czas.\nWyniki mogą być sprzed kilku godzin." },
-	"setting_hardcoded_save_size": { "text":"Hardcoded PNG save size (leave blank to auto fit)" },
+    
+    "outfit_manager_help":     { "text":"Tutaj możesz zapisać swój aktualny strój do późniejszego wykorzystania! Jeśli chcesz wykonać kopię zapasową, udostępnić lub przenieść listę strojów, możesz również wyeksportować/zaimportować stroje za pomocą przycisków w prawym górnym rogu." },
+    "restore_auto_save_btn":   { "text":"Przywróć automatyczne zapisywanie" },
+    
+    "setting_hardcoded_save_scale_label":       { "text":"Sztywno zakodowana skala zapisu" },
+    "setting_hardcoded_save_scale_placeholder": { "text":"Dressroom używa 1-8 (domyślnie: 3)", "scale":0.85 },
+    "setting_hardcoded_save_size_label":        { "text":"Stały rozmiar pliku PNG" },
+    "setting_hardcoded_save_size_placeholder":  { "text":"Pozostaw puste, aby\ndopasować automatycznie", "scale":0.8 },
+
+    "tip_worn_items":          { "text":"Tip: Dwukrotne kliknięcie stroju po lewej stronie spowoduje otwarcie zakładki zawierającej wszystkie aktualnie noszone elementy." },
+    "tip_save_scale":          { "text":"Tip: Kiedy zapisujesz zdjęcie swojego stroju, jego rozmiar odpowiada skali, w jakiej jest ono obecnie wyświetlane w tej aplikacji." },
+    "tip_arrow_keys":          { "text":"Tip: Można poruszać się po siatce elementów za pomocą klawiszy strzałek na klawiaturze. Klawisze strzałek działają również w selektorze kolorów, umożliwiając zmianę wybranego koloru." },
     
     "btn_normal_mode":         { "text":"Normalny" },
     "btn_hard_mode":           { "text":"Trudny" },

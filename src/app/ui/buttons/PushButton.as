@@ -12,6 +12,8 @@ package app.ui.buttons
 	{
 		// Constants
 		public static const TOGGLE:String="state_changed_after";
+		public static const PUSHED:String="pushed";
+		public static const UNPUSHED:String="unpushed";
 		
 		// Storage
 		protected var _pushed:Boolean;
@@ -48,7 +50,10 @@ package app.ui.buttons
 			if(_pushed) _renderPressed();
 			else _renderUnpressed();
 			
-			if(pFireEvent) _dispatch(TOGGLE);
+			if(pFireEvent) {
+				_dispatch(TOGGLE);
+				_dispatch(_pushed ? PUSHED : UNPUSHED);
+			}
 			return this;
 		}
 		
