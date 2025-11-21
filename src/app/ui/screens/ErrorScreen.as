@@ -44,6 +44,8 @@ package app.ui.screens
 			*****************************/
 			new ScaleButton(new $WhiteX()).move(tWidth/2 - 5, -tHeight/2 + 5).appendTo(this).onButtonClick(_onCloseClicked);
 		}
+		public function appendTo(pParent:Sprite): ErrorScreen { pParent.addChild(this); return this; }
+		public function removeSelf(): ErrorScreen { if(this.parent){ this.parent.removeChild(this); } return this; }
 		public function on(type:String, listener:Function): ErrorScreen { this.addEventListener(type, listener); return this; }
 		public function off(type:String, listener:Function): ErrorScreen { this.removeEventListener(type, listener); return this; }
 		

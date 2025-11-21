@@ -72,6 +72,8 @@ package app.ui.screens
 			///////////////////////
 			new ScaleButton(new $WhiteX()).move(tWidth/2 - 5, -tHeight/2 + 5).appendTo(this).onButtonClick(_onCloseClicked);
 		}
+		public function appendTo(pParent:Sprite): AboutScreen { pParent.addChild(this); return this; }
+		public function removeSelf(): AboutScreen { if(this.parent){ this.parent.removeChild(this); } return this; }
 		public function on(type:String, listener:Function): AboutScreen { this.addEventListener(type, listener); return this; }
 		public function off(type:String, listener:Function): AboutScreen { this.removeEventListener(type, listener); return this; }
 		
@@ -79,25 +81,27 @@ package app.ui.screens
 			var tTray:Sprite = new Sprite(), yy:Number = 4;
 			var tBg:RoundRectangle = new RoundRectangle(150+250, 66).toOrigin(0.5, 0).drawAsTray().appendTo(tTray);
 			
+			// Hardcoded Save Scale Input
 			yy += 28/2;
 			new TextTranslated("setting_hardcoded_save_scale_label", { size:10, originX:0 }).moveT(-tBg.width/2+10, yy).appendToT(tTray);
 			var hardcodedCanvasSaveScale:Object = Fewf.sharedObject.getData(ConstantsApp.SHARED_OBJECT_KEY_HARDCODED_SAVE_SCALE);
-			var saveScaleInput:FancyInput = new FancyInput({ width:210, text:hardcodedCanvasSaveScale, placeholder:"setting_hardcoded_save_scale_placeholder" }).move(75, yy).appendTo(tTray);
-			saveScaleInput.field.restrict = "0-9\.";
-			saveScaleInput.field.addEventListener(Event.CHANGE, function(e:Event){
-				var size:Number = parseFloat(e.target.text);
-				Fewf.sharedObject.setData(ConstantsApp.SHARED_OBJECT_KEY_HARDCODED_SAVE_SCALE, !size || isNaN(size) ? null : size);
-			});
+			new FancyInput({ width:210 }).setText(hardcodedCanvasSaveScale as String || "").setPlaceholderText("setting_hardcoded_save_scale_placeholder").move(75, yy).appendTo(tTray)
+				.setRestrict("0-9\.")
+				.on_field(Event.CHANGE, function(e:Event){
+					var size:Number = parseFloat(e.target.text);
+					Fewf.sharedObject.setData(ConstantsApp.SHARED_OBJECT_KEY_HARDCODED_SAVE_SCALE, !size || isNaN(size) ? null : size);
+				});
 			
+			// Hardcoded Canvas Size Input
 			yy += 28 + 2;
 			new TextTranslated("setting_hardcoded_save_size_label", { size:10, originX:0 }).moveT(-tBg.width/2+10, yy).appendToT(tTray);
 			var hardcodedCanvasSaveSize:Object = Fewf.sharedObject.getData(ConstantsApp.SHARED_OBJECT_KEY_HARDCODED_CANVAS_SAVE_SIZE);
-			var canvasSizeInput:FancyInput = new FancyInput({ width:210, text:hardcodedCanvasSaveSize, placeholder:"setting_hardcoded_save_size_placeholder" }).move(75, yy).appendTo(tTray);
-			canvasSizeInput.field.restrict = "0-9";
-			canvasSizeInput.field.addEventListener(Event.CHANGE, function(e:Event){
-				var size:Number = parseInt(e.target.text);
-				Fewf.sharedObject.setData(ConstantsApp.SHARED_OBJECT_KEY_HARDCODED_CANVAS_SAVE_SIZE, !size || isNaN(size) ? null : size);
-			});
+			new FancyInput({ width:210 }).setText(hardcodedCanvasSaveSize as String || "").setPlaceholderText("setting_hardcoded_save_size_placeholder").move(75, yy).appendTo(tTray)
+				.setRestrict("0-9")
+				.on_field(Event.CHANGE, function(e:Event){
+					var size:Number = parseInt(e.target.text);
+					Fewf.sharedObject.setData(ConstantsApp.SHARED_OBJECT_KEY_HARDCODED_CANVAS_SAVE_SIZE, !size || isNaN(size) ? null : size);
+				});
 			
 			return tTray;
 		}

@@ -1,12 +1,11 @@
-package app.world
+package app.ui.panes
 {
 	import app.data.ItemType;
 	import app.ui.panes.*;
 	import app.ui.panes.base.*;
 	import app.ui.panes.colorpicker.ColorPickerTabPane;
-	import app.ui.panes.filteringmode.ShopCategoryPaneForFilteringSelection;
 
-	public class WorldPaneManager extends PaneManager
+	public class PaneManager_World extends PaneManager
 	{
 		// Pane IDs
 		public static const COLOR_PANE:String = "colorPane";
@@ -21,15 +20,13 @@ package app.world
 		public static const WORN_ITEMS_PANE:String = "wornItemsPane";
 		
 		// Constructor
-		public function WorldPaneManager() {
+		public function PaneManager_World() {
 			super();
 		}
 		
 		// ShopCategoryPane methods
 		public function openShopPane(pType:ItemType) : ShopCategoryPane { return openPane(itemTypeToId(pType)) as ShopCategoryPane; }
 		public function getShopPane(pType:ItemType) : ShopCategoryPane { return getPane(itemTypeToId(pType)) as ShopCategoryPane; }
-		
-		public function getFilterSelectionShopPane(pType:ItemType) : ShopCategoryPaneForFilteringSelection { return getPane(itemTypeToFilterId(pType)) as ShopCategoryPaneForFilteringSelection; }
 		
 		// Shortcuts to get panes with correct typing
 		public function get colorPickerPane() : ColorPickerTabPane { return getPane(COLOR_PANE) as ColorPickerTabPane; }
@@ -47,6 +44,5 @@ package app.world
 		// Static
 		/////////////////////////////
 		public static function itemTypeToId(pType:ItemType) : String { return pType.toString(); }
-		public static function itemTypeToFilterId(pType:ItemType) : String { return "filter_"+pType.toString(); }
 	}
 }

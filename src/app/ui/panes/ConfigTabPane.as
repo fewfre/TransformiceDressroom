@@ -64,8 +64,8 @@ package app.ui.panes
 				xx = 15; yy += sizey*0.5;
 				
 				var fieldWidth = ConstantsApp.PANE_WIDTH*0.65 - spacingx*3 - sizex;
-				usernameInput = new FancyInput({ placeholder:"user_lookup_placeholder", x:xx + fieldWidth*0.5, y:yy, width:fieldWidth, height:sizey-10 }).appendTo(this);
-				usernameInput.field.addEventListener(KeyboardEvent.KEY_DOWN, function(pEvent){
+				usernameInput = new FancyInput({ width:fieldWidth, height:sizey-10 }).setPlaceholderText("user_lookup_placeholder").move(xx + fieldWidth*0.5, yy).appendTo(this)
+				usernameInput.on_field(KeyboardEvent.KEY_DOWN, function(pEvent){
 					if(usernameInput.text != "" && pEvent.charCode == 13) {
 						_onFetchUserLooks(null);
 					}

@@ -99,6 +99,18 @@ package app.ui
 		public function toggleOnFirstTab() : void {
 			_tabs[0].toggleOn();
 		}
+		
+		public function activeTabIfItExistsAfterTabsRepopulatedOtherwiseToggleOnFirst(prevSelectedTab:String, pFireEvent:Boolean=false) : void {
+			// Tabs repopulated, so a tab needs to be re-toggled
+			// Select first tab available (needed since tabs repopulated)
+			if(prevSelectedTab && getTabButton(prevSelectedTab)) {
+				// if the same tab that existed before still exists, select it (but don't fire event since in this case the open pane should always be fine)
+				toggleTabOn(prevSelectedTab, pFireEvent);
+			} else {
+				// otherwise force first tab on and fire event to open it
+				toggleOnFirstTab();
+			}
+		}
 
 		///////////////////////
 		// Private

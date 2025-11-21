@@ -24,13 +24,13 @@ package app.ui
 		
 		// Constructor
 		public function PasteShareCodeInput(pWidth:Number=0) {
-			_input = new FancyInput({ width:pWidth || 250, placeholder:"share_paste" }).appendTo(this);
+			_input = new FancyInput({ width:pWidth || 250 }).setPlaceholderText("share_paste").appendTo(this);
 			
 			// Why TEXT_INPUT - https://stackoverflow.com/a/10049605/1411473
-			_input.field.addEventListener(TextEvent.TEXT_INPUT, function(e){
+			_input.on_field(TextEvent.TEXT_INPUT, function(e){
 				var code = e.text;//_text.text;
 				_input.text = ""; // Remove it now that we already grabbed it
-				_forceShareFieldUnfocus();
+				_input.forceShareFieldUnfocus();
 				dispatchEvent(new FewfEvent(CHANGE, { code:code, update:_setShareCodeProgress }));
 				e.preventDefault();
 			});
@@ -50,13 +50,9 @@ package app.ui
 		private function focusOut(event:Event):void {
 			if(_placeholderState == "focusIn") {
 				_input.text = "";
-				_forceShareFieldUnfocus();
+				_input.forceShareFieldUnfocus();
 				_setShareCodeProgress("placeholder");
 			}
-		}
-		
-		private function _forceShareFieldUnfocus():void {
-			_input.stage.focus = null;
 		}
 		
 		private function _setShareCodeProgress(state):void {
@@ -69,17 +65,17 @@ package app.ui
 					break;
 				}
 				case "placeholder": {
-					_input.placeholderTextBase.setText("share_paste");
+					_input.setPlaceholderText("share_paste");
 					_input.placeholderTextBase.color = 0x666666;
 					break;
 				}
 				case "loading": {
-					_input.placeholderTextBase.setUntranslatedText('...');
+					_input.setPlaceholderUntranslatedText('...');
 					_input.placeholderTextBase.color = 0x666666;
 					break;
 				}
 				case "success": {
-					_input.placeholderTextBase.setText("share_paste_success");
+					_input.setPlaceholderText("share_paste_success");
 					_input.placeholderTextBase.color = 0x01910d;
 					_placeholderTimeout = setTimeout(function(){
 						_setShareCodeProgress("placeholder");
@@ -87,7 +83,7 @@ package app.ui
 					break;
 				}
 				case "invalid": {
-					_input.placeholderTextBase.setText("share_paste_invalid");
+					_input.setPlaceholderText("share_paste_invalid");
 					_input.placeholderTextBase.color = 0xc93302;
 					_placeholderTimeout = setTimeout(function(){
 						_setShareCodeProgress("placeholder");

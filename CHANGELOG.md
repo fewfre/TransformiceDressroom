@@ -1,3 +1,8 @@
+## V1.32b - 20 November 2025
+- [Code] Split "filter selection mode" logic into it's own World file, and moved that world and related files into it's own separate folder away from normal world code - also added a new world manager class to swap between the two worlds
+- [Code] minor rewrites/tweaks to `FancyInput` and some screens
+
+
 ## V1.32 - 8 November 2025
 - [Bug] "Fixed PNG Canvas Size" now uses the defined scale
 - outfits/share codes can now be used / properly interact with filter mode - any items in the outfit/share code will be ignored if not supported by the filter, and customizations reset if not allowed by filter

@@ -34,7 +34,7 @@ package app.ui.screens
 		}
 		public function move(pX:Number, pY:Number) : TrashConfirmScreen { x = pX; y = pY; return this; }
 		public function appendTo(pParent:Sprite): TrashConfirmScreen { pParent.addChild(this); return this; }
-		public function removeSelf(): TrashConfirmScreen { if(parent) { parent.removeChild(this); } return this; }
+		public function removeSelf(): TrashConfirmScreen { if(this.parent) { this.parent.removeChild(this); } return this; }
 		public function on(type:String, listener:Function): TrashConfirmScreen { this.addEventListener(type, listener); return this; }
 		public function off(type:String, listener:Function): TrashConfirmScreen { this.removeEventListener(type, listener); return this; }
 		

@@ -138,6 +138,21 @@ package app.data
 			return false;
 		}
 		
+		// pOnCodeLoaded = (code:string, err:string) => void;
+		public static function loadCodeFromPastebinId(pasteBinId:String, pOnCodeLoaded:Function) : * {
+			var pastebinKey = checkIfPastebin(pasteBinId);
+			if(pastebinKey) {
+				var fetchpastebin_url:String = Fewf.assets.getData("config").fetchpastebin_url;
+				if(!fetchpastebin_url) { pOnCodeLoaded(null, "Pastebin URL not enabled in config"); return; }
+				
+				var url:String = fetchpastebin_url+"?key="+pastebinKey;
+				Fewf.assets.loadWithCallback([ [url, { type:"txt", name:pastebinKey }] ], function():void{
+					pOnCodeLoaded(Fewf.assets.getData(pastebinKey), null);
+				});
+				return;
+			}
+		}
+		
 		private static function _sortIds(a:String, b:String) : Number {
 			return !isNaN(Number(a)) && !isNaN(Number(b))
 				? parseInt(a) < parseInt(b) ? -1 : 1

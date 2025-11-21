@@ -1,4 +1,4 @@
-package app.ui.panes.filteringmode
+package app.zFilterSelectionMode
 {
 	import app.data.ConstantsApp;
 	import app.data.ShareCodeFilteringData;

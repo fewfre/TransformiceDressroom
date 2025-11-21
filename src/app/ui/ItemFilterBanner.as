@@ -1,4 +1,4 @@
-package app.ui.panes.filteringmode
+package app.ui
 {
 	import app.ui.buttons.PushButton;
 	import app.ui.buttons.ScaleButton;

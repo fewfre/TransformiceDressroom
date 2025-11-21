@@ -50,6 +50,8 @@ package app.ui.screens
 			// Close Button
 			new ScaleButton(new $WhiteX()).move(tWidth/2 - 5, -tHeight/2 + 5).appendTo(this).onButtonClick(_onCloseClicked);
 		}
+		public function appendTo(pParent:Sprite): LangScreen { pParent.addChild(this); return this; }
+		public function removeSelf(): LangScreen { if(this.parent){ this.parent.removeChild(this); } return this; }
 		public function on(type:String, listener:Function): LangScreen { this.addEventListener(type, listener); return this; }
 		public function off(type:String, listener:Function): LangScreen { this.removeEventListener(type, listener); return this; }
 		

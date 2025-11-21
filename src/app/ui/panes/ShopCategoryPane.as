@@ -199,13 +199,10 @@ package app.ui.panes
 			if(!GameAssets.poses[18].matches(itemData)) { return; }
 			// Flag waving code text field
 			// cannot attach to button due to main button eating mouse events
-			_flagWaveInput = new FancyInput({ width:grid.cellSize-8, height:16, padding:2 });
-			_flagWaveInput.x = grid.cellSize/2 + 0.5;
-			_flagWaveInput.y = 12;
-			cell.addChild(_flagWaveInput);
+			_flagWaveInput = new FancyInput({ width:grid.cellSize-8, height:16, padding:2 }).move(grid.cellSize/2 + 0.5, 12).appendTo(cell);
 			
 			// Placeholder
-			_flagWaveInput.placeholderTextBase.setUntranslatedText('/f __');
+			_flagWaveInput.setPlaceholderUntranslatedText('/f __');
 			_flagWaveInput.placeholderTextBase.x += 14;
 			
 			// Center Text
@@ -213,16 +210,16 @@ package app.ui.panes
 			tFormat.align = 'center';
 			_flagWaveInput.field.defaultTextFormat = tFormat;
 			
-			_flagWaveInput.field.addEventListener(KeyboardEvent.KEY_UP, function(e):void{
+			_flagWaveInput.on_field(KeyboardEvent.KEY_UP, function(e):void{
 				dispatchEvent(new FewfEvent(FLAG_WAVE_CODE_CHANGED, { code:_flagWaveInput.text }));
 			});
 			// paste support
-			_flagWaveInput.field.addEventListener(TextEvent.TEXT_INPUT, function(e):void{
+			_flagWaveInput.on_field(TextEvent.TEXT_INPUT, function(e):void{
 				if(e.text.length <= 1) return;
 				dispatchEvent(new FewfEvent(FLAG_WAVE_CODE_CHANGED, { code:e.text }));
 			});
 			// select pose if textbox clicked
-			_flagWaveInput.field.addEventListener(FocusEvent.FOCUS_IN, function():void{
+			_flagWaveInput.on_field(FocusEvent.FOCUS_IN, function():void{
 				parentButton.toggleOn();
 			});
 		}

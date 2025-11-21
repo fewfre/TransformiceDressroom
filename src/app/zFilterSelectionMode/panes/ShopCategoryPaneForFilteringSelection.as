@@ -1,4 +1,4 @@
-package app.ui.panes.filteringmode
+package app.zFilterSelectionMode.panes
 {
 	import app.data.GameAssets;
 	import app.data.ItemType;
