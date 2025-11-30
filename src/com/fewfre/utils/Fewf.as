@@ -6,6 +6,7 @@ package com.fewfre.utils
 	import flash.display.Stage;
 	import flash.events.EventDispatcher;
 	import flash.external.ExternalInterface;
+	import flash.system.Capabilities;
 	
 	// Global access class
 	public class Fewf
@@ -19,6 +20,7 @@ package com.fewfre.utils
 		private static var _stage : Stage;
 		private static var _isExternallyLoaded : Boolean;
 		private static var _isBrowserLoaded : Boolean;
+		private static var _isAirRuntime : Boolean;
 		private static var _swfUrlBase : String;
 		private static var _networkProtocol : String; // http / https
 		
@@ -31,6 +33,7 @@ package com.fewfre.utils
 		public static function get stage() : Stage { return _stage; }
 		public static function get isExternallyLoaded() : Boolean { return _isExternallyLoaded; }
 		public static function get isBrowserLoaded() : Boolean { return _isBrowserLoaded; }
+		public static function get isAirRuntime() : Boolean { return _isAirRuntime; }
 		public static function get swfUrlBase() : String { return _swfUrlBase; }
 		public static function get networkProtocol() : String { return _networkProtocol; }
 		
@@ -43,6 +46,7 @@ package com.fewfre.utils
 			_stage = pStage;
 			_isExternallyLoaded = !!pSwfUrlBase;
 			_isBrowserLoaded = ExternalInterface.available ? ExternalInterface.call("eval", "window.location.href") : false;
+			_isAirRuntime = Capabilities.playerType === "Desktop";
 			_swfUrlBase = pSwfUrlBase || "";
 			_networkProtocol = _isBrowserLoaded ? "https" : "http"; // We don't want to use https on AIR since it was causing some people issue on W7
 		}

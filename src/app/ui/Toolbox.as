@@ -100,7 +100,7 @@ package app.ui
 				.onButtonClick(dispatchEventHandler(SHARE_CLICKED));
 			tButtonsOnLeft++;
 			
-			if(Fewf.isExternallyLoaded) {
+			if(Fewf.isAirRuntime) {
 				_clipboardButton = new GameButton(tButtonSize).setImage(new $CopyIcon(), 0.415).setOrigin(0.5).appendTo(tTray)
 					.move(xx+tButtonXInc*tButtonsOnLeft, yy)
 					.onButtonClick(dispatchEventHandler(CLIPBOARD_CLICKED)) as GameButton;

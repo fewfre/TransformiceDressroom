@@ -16,7 +16,6 @@ package app.ui.panes.infobar
 	import com.fewfre.utils.Fewf;
 	import com.fewfre.utils.FewfDisplayUtils;
 	import flash.display.DisplayObject;
-	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -37,7 +36,7 @@ package app.ui.panes.infobar
 		public var _itemData             : ItemData;
 		
 		
-		public var Image                 : MovieClip;
+		private var _image               : DisplayObject;
 		private var _imageCont           : RoundRectangle;
 		private var _removeItemOverlay   : Sprite;
 		
@@ -188,22 +187,22 @@ package app.ui.panes.infobar
 		public function on(type:String, listener:Function): Infobar { this.addEventListener(type, listener); return this; }
 		public function off(type:String, listener:Function): Infobar { this.removeEventListener(type, listener); return this; }
 
-		public function changeImage(pMC:MovieClip) : void {
-			if(this.Image != null) { _imageCont.removeChild(this.Image); }
+		public function changeImage(pImage:DisplayObject) : void {
+			if(_image != null) { _imageCont.removeChild(_image); }
 			
-			var tBounds:Rectangle = pMC.getBounds(pMC);
+			var tBounds:Rectangle = pImage.getBounds(pImage);
 			var tOffset:Point = tBounds.topLeft;
 			
 			// Make sure it's always big enough before being fit to have to be scaled down (to avoid extra whitespace)
-			pMC.scaleX *= 2; pMC.scaleY *= 2;
-			this.Image = pMC;
-			FewfDisplayUtils.fitWithinBounds(this.Image, _imageCont.width, _imageCont.height, _imageCont.width * 0.5, _imageCont.height * 0.5);
-			this.Image.mouseEnabled = false;
-			this.Image.scaleX *= 0.8;
-			this.Image.scaleY *= 0.8;
-			this.Image.x = _imageCont.width / 2 - (tBounds.width / 2 + tOffset.x) * this.Image.scaleX;
-			this.Image.y = _imageCont.height / 2 - (tBounds.height / 2 + tOffset.y) * this.Image.scaleY;
-			_imageCont.addChild(this.Image);
+			pImage.scaleX *= 2; pImage.scaleY *= 2;
+			_image = pImage;
+			FewfDisplayUtils.fitWithinBounds(_image, _imageCont.width, _imageCont.height, _imageCont.width * 0.5, _imageCont.height * 0.5);
+			if(_image is Sprite) { (_image as Sprite).mouseEnabled = false; }
+			_image.scaleX *= 0.8;
+			_image.scaleY *= 0.8;
+			_image.x = _imageCont.width / 2 - (tBounds.width / 2 + tOffset.x) * _image.scaleX;
+			_image.y = _imageCont.height / 2 - (tBounds.height / 2 + tOffset.y) * _image.scaleY;
+			_imageCont.addChild(_image);
 		}
 		
 		public function showColorWheel(pShow:Boolean=true) : void {
@@ -267,10 +266,10 @@ package app.ui.panes.infobar
 			changeImage(GameAssets.getColoredItemImage(_itemData));
 		}
 		
-		public function addInfo(pData:ItemData, pMC:MovieClip) : void {
+		public function addInfo(pData:ItemData, pImage:DisplayObject) : void {
 			if(pData == null) { return; }
 			_itemData = pData;
-			changeImage(pMC);
+			changeImage(pImage);
 			_updateID();
 			
 			_idText.alpha = 1;
@@ -300,7 +299,7 @@ package app.ui.panes.infobar
 		
 		private function _setNoItemImage() :void {
 			changeImage(new $NoItem());
-			this.Image.scaleX = this.Image.scaleY = 0.75;
+			_image.scaleX = _image.scaleY = 0.75;
 		}
 		
 		private function _updateFavoriteButton(pOn:Boolean) : void {

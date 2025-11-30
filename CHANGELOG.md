@@ -1,6 +1,7 @@
 ## V1.32b - 20 November 2025
 - [Code] Split "filter selection mode" logic into it's own World file, and moved that world and related files into it's own separate folder away from normal world code - also added a new world manager class to swap between the two worlds
 - [Code] minor rewrites/tweaks to `FancyInput` and some screens
+- (30 Nov) Clipboard no longer shows when running tool chooser swf outside of AIR app (which is required for it to work).
 
 
 ## V1.32 - 8 November 2025
