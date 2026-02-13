@@ -1,21 +1,14 @@
 package com.fewfre.loaders
 {
-	import com.fewfre.events.FewfEvent;
-	import flash.events.Event;
-	import flash.events.IOErrorEvent;
-	import flash.events.ProgressEvent;
-	import flash.events.ErrorEvent;
-	import flash.events.EventDispatcher;
-	import flash.net.*;
-	import flash.display.Loader;
-	import flash.display.MovieClip;
-	import flash.display.Bitmap;
-	import flash.display.LoaderInfo;
-	import flash.display.BitmapData;
-	import flash.utils.Dictionary;
-	import flash.utils.setTimeout;
-	import flash.external.ExternalInterface;
 	import com.fewfre.utils.Fewf;
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
+	import flash.display.Loader;
+	import flash.display.LoaderInfo;
+	import flash.events.Event;
+	import flash.events.EventDispatcher;
+	import flash.net.URLRequest;
+	import flash.utils.Dictionary;
 	
 	public class BitmapLoaderManager extends EventDispatcher
 	{

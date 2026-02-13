@@ -1,8 +1,9 @@
 package app.ui.panes
 {
 	import app.data.ConstantsApp;
-	import app.ui.buttons.*;
-	import app.ui.common.*;
+	import app.ui.buttons.ScaleButton;
+	import app.ui.common.FancyScrollbox;
+	import app.ui.common.FancySlider;
 	import app.ui.panes.base.SidePaneWithInfobar;
 	import app.ui.panes.colorpicker.RecentColorsListDisplay;
 	import app.ui.panes.infobar.Infobar;

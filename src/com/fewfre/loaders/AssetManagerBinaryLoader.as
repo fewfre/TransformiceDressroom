@@ -1,19 +1,16 @@
 package com.fewfre.loaders
 {
-	import com.fewfre.events.FewfEvent;
+	import flash.display.Loader;
+	import flash.events.ErrorEvent;
 	import flash.events.Event;
+	import flash.events.EventDispatcher;
 	import flash.events.IOErrorEvent;
 	import flash.events.ProgressEvent;
 	import flash.events.SecurityErrorEvent;
-	import flash.events.ErrorEvent;
-	import flash.events.EventDispatcher;
-	import flash.display.Loader;
 	import flash.net.*;
 	import flash.system.ApplicationDomain;
 	import flash.system.LoaderContext;
-	import flash.utils.Dictionary;
 	import flash.utils.ByteArray;
-	import com.fewfre.utils.Fewf;
 
 	[Event(name="complete", type="flash.events.Event")]
 	[Event(name="progress", type="flash.events.ProgressEvent")]

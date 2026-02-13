@@ -39,7 +39,7 @@ package app.ui.panes.infobar
 				
 				if(!pData.hideRandomizeLock) {
 					_randomizeLockButton = new PushButton(bsize).setImage(new $Lock(), 0.8).move(xx, yy).appendTo(this) as PushButton;
-					_randomizeLockButton.on(PushButton.TOGGLE, function():void{
+					_randomizeLockButton.onToggle(function():void{
 						isRefreshLocked ? _randomizeButton.disable() : _randomizeButton.enable();
 						dispatchEvent(new FewfEvent(RANDOMIZE_LOCK_CLICKED, { locked:isRefreshLocked }));
 					});

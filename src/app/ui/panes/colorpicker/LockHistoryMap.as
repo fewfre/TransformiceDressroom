@@ -1,9 +1,6 @@
 package app.ui.panes.colorpicker
 {
 	import flash.utils.Dictionary;
-	import app.ui.buttons.ColorButton;
-	import com.fewfre.display.ButtonBase;
-	import com.fewfre.events.FewfEvent;
 	
 	public class LockHistoryMap
 	{

@@ -45,7 +45,7 @@ package app.ui.panes.colorpicker
 			
 			_deleteToggleButton = new DeleteButton(deleteWidth, bgHeight).setImage(new $Trash(), 0.85).move(bgWidth*0.5-25-2, 0).appendTo(this) as DeleteButton;
 			_deleteToggleButton.y += -_deleteToggleButton.Height * 0.5;
-			_deleteToggleButton.on(PushButton.TOGGLE, function():void{ render(); });
+			_deleteToggleButton.onToggle(function():void{ render(); });
 			
 			// Add BG
 			_bg = new RoundRectangle(bgWidth, bgHeight).move(-deleteWidth*0.5+2, 0).toOrigin(0.5).toRadius(5).appendTo(this);

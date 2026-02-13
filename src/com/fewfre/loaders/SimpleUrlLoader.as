@@ -1,19 +1,10 @@
 package com.fewfre.loaders
 {
-	import com.fewfre.events.FewfEvent;
 	import flash.events.Event;
-	import flash.events.IOErrorEvent;
-	import flash.events.ProgressEvent;
-	import flash.events.SecurityErrorEvent;
-	import flash.events.ErrorEvent;
-	import flash.events.EventDispatcher;
-	import flash.display.Loader;
-	import flash.net.*;
-	import flash.system.ApplicationDomain;
-	import flash.system.LoaderContext;
-	import flash.utils.Dictionary;
-	import flash.utils.ByteArray;
 	import flash.events.HTTPStatusEvent;
+	import flash.events.IOErrorEvent;
+	import flash.events.SecurityErrorEvent;
+	import flash.net.*;
 
 	public class SimpleUrlLoader
 	{

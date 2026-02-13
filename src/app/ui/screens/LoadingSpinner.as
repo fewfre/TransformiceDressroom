@@ -20,6 +20,7 @@ package app.ui.screens
 		}
 		public function move(pX:Number, pY:Number) : LoadingSpinner { x = pX; y = pY; return this; }
 		public function appendTo(pParent:Sprite): LoadingSpinner { pParent.addChild(this); return this; }
+		public function removeSelf(): LoadingSpinner { if(this.parent){ this.parent.removeChild(this); } return this; }
 		
 		public function destroy():void {
 			removeEventListener(Event.ENTER_FRAME, update);

@@ -2,7 +2,6 @@ package com.fewfre.utils
 {
 	import com.fewfre.data.I18n;
 	import com.fewfre.data.SharedObjectManager;
-	import flash.display.MovieClip;
 	import flash.display.Stage;
 	import flash.events.EventDispatcher;
 	import flash.external.ExternalInterface;
@@ -26,6 +25,7 @@ package com.fewfre.utils
 		
 		// Properties
 		public static function get assets() : AssetManager { return _assets; }
+		public static function get config() : * { return (assets.getData("config") || {}); }
 		public static function get i18n() : I18n { return _i18n; }
 		public static function get dispatcher() : EventDispatcher { return _dispatcher; }
 		public static function get sharedObject() : SharedObjectManager { return _sharedObject; }

@@ -1,14 +1,11 @@
 package com.fewfre.utils
 {
-	import com.fewfre.display.TextBase;
-	import com.adobe.images.*;
 	import com.adobe.images.PNGEncoder;
 	import flash.display.*;
 	import flash.events.*;
 	import flash.geom.*;
 	import flash.net.*;
 	import flash.net.FileReference;
-	import flash.utils.getDefinitionByName;
 	import flash.utils.ByteArray;
 	import ext.ParentAppSystem;
 	import flash.desktop.Clipboard;
@@ -341,7 +338,7 @@ package com.fewfre.utils
 			var sheetData:SpritesheetData = convertMovieClipToSpriteSheet(mc, scale, -1);//pFormat && pFormat != "gif" ? -1 : 0x6A7495); // give it a bg color since gifs don't support partial opacity
 			var tPNG:ByteArray = PNGEncoder.encode(sheetData.bitmapData);
 			
-			var url = Fewf.assets.getData("config").spritesheet2gif_url;
+			var url = Fewf.config.spritesheet2gif_url;
 			if(!url) {
 				handleErrorMessage(new Error("GIF generation api not found.", 1));
 				return;

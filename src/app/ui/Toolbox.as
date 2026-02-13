@@ -169,7 +169,8 @@ package app.ui
 		
 		public function updateClipboardButton(normal:Boolean, elseYes:Boolean=true) : void {
 			if(!_clipboardButton) return;
-			_clipboardButton.setImage(normal ? new $CopyIcon() : elseYes ? new $Yes() : new $No());
+			if(normal) _clipboardButton.setImage(new $CopyIcon(), 0.415);
+			else _clipboardButton.setImage(elseYes ? new $Yes() : new $No(), 0.63);
 		}
 		
 		///////////////////////

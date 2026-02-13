@@ -47,7 +47,7 @@ package app.ui.panes
 				.on(PasteShareCodeInput.CHANGE, function(e):void{ pOnShareCodeEntered(e.data.code, e.data.update); });
 			yy += 14;
 			
-			if(Fewf.assets.getData("config").username_lookup_url) {
+			if(Fewf.config.username_lookup_url) {
 				// Line
 				yy += 16;
 				GameAssets.createHorizontalRule(10, yy, ConstantsApp.PANE_WIDTH - 15 - 15).appendTo(this);
@@ -116,7 +116,7 @@ package app.ui.panes
 			}
 			var username:String = usernameInput.text.replace("#", "%23");
 			
-			var url = Fewf.assets.getData("config").username_lookup_url.replace("$1", username);
+			var url = Fewf.config.username_lookup_url.replace("$1", username);
 			_loadingUser = true;
 			Fewf.assets.load([
 				[ url+"&cb="+String( new Date().getTime() ), { type:"json" } ],

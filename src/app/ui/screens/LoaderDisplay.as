@@ -29,10 +29,13 @@ package app.ui.screens
 			_leftToLoadText = new TextTranslated("loading", { values:"", size:18, x:0, y:10 }).appendToT(this);
 			_loadProgressText = new TextTranslated("loading_progress", { values:"", size:18, x:0, y:35 }).appendToT(this);
 		}
+		public function move(pX:Number, pY:Number) : LoaderDisplay { x = pX; y = pY; return this; }
+		public function appendTo(pParent:Sprite): LoaderDisplay { pParent.addChild(this); return this; }
+		public function removeSelf(): LoaderDisplay { if(this.parent){ this.parent.removeChild(this); } return this; }
 		
 		public function destroy():void {
 			Fewf.assets.removeEventListener(ProgressEvent.PROGRESS, _onLoadProgress);
-			_loadingSpinner.destroy();
+			_loadingSpinner.removeSelf().destroy();
 		}
 		
 		private function _onPackLoaded(e:FewfEvent) : void {

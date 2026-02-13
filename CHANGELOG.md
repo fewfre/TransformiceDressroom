@@ -2,6 +2,7 @@
 - [Code] Split "filter selection mode" logic into it's own World file, and moved that world and related files into it's own separate folder away from normal world code - also added a new world manager class to swap between the two worlds
 - [Code] minor rewrites/tweaks to `FancyInput` and some screens
 - (30 Nov) Clipboard no longer shows when running tool chooser swf outside of AIR app (which is required for it to work).
+- (12 Feb 2026) [Code] `Fewf.assets.getData("config")` shortened to `Fewf.config` for ease of use and consistency, as well as import cleanup
 
 
 ## V1.32 - 8 November 2025

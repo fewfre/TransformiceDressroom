@@ -103,7 +103,7 @@ package app.ui.screens
 		///////////////////////
 		// Imgur
 		///////////////////////
-		private function _getImgurUploadUrl() : String { return Fewf.assets.getData("config").upload2imgur_url; }
+		private function _getImgurUploadUrl() : String { return Fewf.config.upload2imgur_url; }
 		
 		private function _onImgurButtonClicked(e:Event) : void {
 			_imgurTray.visible = true;
@@ -134,7 +134,7 @@ package app.ui.screens
 		///////////////////////
 		// Pastebin
 		///////////////////////
-		private function _getCreatePastebinUrl() : String { return Fewf.assets.getData("config").createpastebin_url; }
+		private function _getCreatePastebinUrl() : String { return Fewf.config.createpastebin_url; }
 		
 		private function _createPastebin(pPaste:String, pCallback:Function) : void {
 			new SimpleUrlLoader(_getCreatePastebinUrl()).setToPost().addFormDataHeader()

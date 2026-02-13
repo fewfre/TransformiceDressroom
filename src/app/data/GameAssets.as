@@ -129,7 +129,7 @@ function(){
 	// if(Fewf.assets.getData("config").badges) {
 	if(true) {
 		var url:String, urlSmall:String;
-		for each(var badgeFile:String in Fewf.assets.getData("config").emojis) {
+		for each(var badgeFile:String in Fewf.config.emojis) {
 			emoji.push(new BitmapItemData(ItemType.EMOJI, badgeFile));
 		}
 		// We want to start the lazy load now, and we want to load them in reverse order since they show up in that order by default on badges tab

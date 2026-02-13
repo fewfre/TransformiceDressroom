@@ -32,23 +32,22 @@ package app.ui.panes.infobar
 		public static const FAVORITE_CLICKED        : String = "favorite_clicked"; // FewfEvent<{ pushed:bool }>
 		
 		// Storage
-		public var Width                 : Number;
-		public var _itemData             : ItemData;
+		public var _width              : Number;
+		public var _itemData           : ItemData;
 		
+		private var _image             : DisplayObject;
+		private var _imageCont         : RoundRectangle;
+		private var _removeItemOverlay : Sprite;
 		
-		private var _image               : DisplayObject;
-		private var _imageCont           : RoundRectangle;
-		private var _removeItemOverlay   : Sprite;
+		private var _backButton        : ScaleButton;
+		private var _colorWheel        : ScaleButton;
+		private var _leftButtonsTray   : Sprite;
+		private var _idText            : TextTranslated;
+		private var _eyeDropperButton  : GameButton;
+		private var _favoriteButton    : GameButton;
 		
-		private var _backButton          : ScaleButton;
-		private var _colorWheel          : ScaleButton;
-		private var _leftButtonsTray     : Sprite;
-		private var _idText              : TextTranslated;
-		private var _eyeDropperButton    : GameButton;
-		private var _favoriteButton      : GameButton;
-		
-		private var _rightSideTray       : Sprite;
-		private var _downloadButton      : GameButton;
+		private var _rightSideTray     : Sprite;
+		private var _downloadButton    : GameButton;
 		
 		private var _gridManagementWidget : GridManagementWidget;
 		
@@ -67,7 +66,7 @@ package app.ui.panes.infobar
 		public function Infobar(pData:Object=null) {
 			super();
 			pData = pData || {};
-			this.Width = ConstantsApp.PANE_WIDTH;
+			_width = ConstantsApp.PANE_WIDTH;
 			
 			/********************
 			* Active Item
@@ -154,7 +153,7 @@ package app.ui.panes.infobar
 			*********************/
 			if(pData.gridManagement) {
 				var widgetProps:Object = pData.gridManagement is Boolean ? {} : pData.gridManagement; // If a boolean ("true") use defaults
-				_gridManagementWidget = new GridManagementWidget(widgetProps).move(this.Width*0.5-20+(144/2), BTN_Y).appendTo(this);
+				_gridManagementWidget = new GridManagementWidget(widgetProps).move(_width*0.5-20+(144/2), BTN_Y).appendTo(this);
 				_gridManagementWidget.on(GridManagementWidget.RANDOMIZE_CLICKED, function(e):void{ dispatchEvent(e); })
 				_gridManagementWidget.on(GridManagementWidget.RANDOMIZE_LOCK_CLICKED, function(e):void{ dispatchEvent(e); })
 				_gridManagementWidget.on(GridManagementWidget.REVERSE_CLICKED, function(e):void{ dispatchEvent(e); })
@@ -166,15 +165,15 @@ package app.ui.panes.infobar
 			/********************
 			* Right Side Buttons
 			*********************/
-			_rightSideTray = DisplayWrapper.wrap(new Sprite(), this).move(this.Width, 0).asSprite;
+			_rightSideTray = DisplayWrapper.wrap(new Sprite(), this).move(_width, 0).asSprite;
 			if(pData.showDownload) {
 				(_downloadButton = new GameButton(BTN_SIZE)).setImage(new $SimpleDownload(), 0.45).move(-BTN_SIZE, BTN_Y).appendTo(_rightSideTray);
 				_downloadButton.onButtonClick(_onDownloadClicked);
 				_downloadButton.disable().setAlpha(0);
 			}
 			
-			// Line seperating infobar and contents below it.
-			GameAssets.createHorizontalRule(5, 53, this.Width-10).appendTo(this);
+			// Line separating infobar and contents below it
+			GameAssets.createHorizontalRule(5, 53, _width-10).appendTo(this);
 			
 			if(pData.hideItemPreview) {
 				hideImageCont();

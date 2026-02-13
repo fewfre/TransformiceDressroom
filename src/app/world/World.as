@@ -16,6 +16,7 @@ package app.world
 	import app.world.events.ItemDataEvent;
 	
 	import com.fewfre.display.*;
+	import com.fewfre.data.I18n;
 	import com.fewfre.events.FewfEvent;
 	import com.fewfre.utils.*;
 	import ext.ParentApp;
@@ -25,7 +26,6 @@ package app.world
 	import flash.external.ExternalInterface;
 	import flash.ui.Keyboard;
 	import flash.utils.setTimeout;
-	import com.fewfre.data.I18n;
 	
 	public class World extends Sprite
 	{
@@ -57,8 +57,8 @@ package app.world
 		// Constructor
 		public function World(pStage:Stage) {
 			super();
-			ConstantsApp.CONFIG_TAB_ENABLED = !!Fewf.assets.getData("config").username_lookup_url;
-			ConstantsApp.ANIMATION_DOWNLOAD_ENABLED = !!Fewf.assets.getData("config").spritesheet2gif_url && (Fewf.isExternallyLoaded || (ExternalInterface.available && ExternalInterface.call("eval", "window.location.href") == null));
+			ConstantsApp.CONFIG_TAB_ENABLED = !!Fewf.config.username_lookup_url;
+			ConstantsApp.ANIMATION_DOWNLOAD_ENABLED = !!Fewf.config.spritesheet2gif_url && (Fewf.isExternallyLoaded || (ExternalInterface.available && ExternalInterface.call("eval", "window.location.href") == null));
 			_buildWorld(pStage);
 			pStage.addEventListener(MouseEvent.MOUSE_WHEEL, _onMouseWheel);
 			pStage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyDownListener);
@@ -333,8 +333,8 @@ package app.world
 			if(ItemType.OTHER_PANE_ITEM_TYPES.indexOf(pType) > -1) return;
 			
 			var tItemData:ItemData = _character.getItemData(pType);
-			var tHadIndicator:Boolean = !!tItemData && !tItemData.matches(GameAssets.defaultSkin) && !tItemData.matches(GameAssets.defaultPose);
-			if(_shopTabs.getTabButton(PaneManager_World.itemTypeToId(pType))) _shopTabs.getTabButton(PaneManager_World.itemTypeToId(pType)).setItemIndicator(tHadIndicator);
+			var tHasIndicator:Boolean = !!tItemData && !tItemData.matches(GameAssets.defaultSkin) && !tItemData.matches(GameAssets.defaultPose);
+			if(_shopTabs.getTabButton(PaneManager_World.itemTypeToId(pType))) _shopTabs.getTabButton(PaneManager_World.itemTypeToId(pType)).setItemIndicator(tHasIndicator);
 		}
 
 		private function _onMouseWheel(pEvent:MouseEvent) : void {
