@@ -56,6 +56,7 @@ package app
 		}
 		
 		private function _onPreloadComplete() : void {
+			Fewf.i18n.initConfigData(Fewf.config.languages, Fewf.config.cachebreaker);
 			_config = Fewf.config;
 			_systemDetectedDefaultLang = Fewf.i18n.getSystemDetectedDefaultLangCodeOrFallback();
 			
@@ -75,7 +76,7 @@ package app
 		}
 		
 		private function _startInitialLoad() : void {
-			var tLangCodes : Array = [ Fewf.i18n.getConfigDefaultLangCode() ];
+			var tLangCodes : Array = [ Fewf.i18n.configDefaultLangCode ];
 			if(tLangCodes.indexOf(_systemDetectedDefaultLang) == -1) tLangCodes.push(_systemDetectedDefaultLang);
 			Fewf.i18n.loadLanguagesIfNeededAndUseLastLang(tLangCodes, _onInitialLoadComplete);
 		}

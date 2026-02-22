@@ -34,7 +34,7 @@ package app.ui.screens
 			/****************************
 			* Languages
 			*****************************/
-			var tLanguages:Vector.<I18nLangData> = Fewf.i18n.getLanguagesList();
+			var tLanguages:Vector.<I18nLangData> = Fewf.i18n.supportedLanguages;
 			
 			var tFlagTray:Sprite = _root.addChild(new Sprite()) as Sprite, tFlagRowTray:Sprite, xx:Number;
 			var tLangData:I18nLangData, tColumns:int = 8, tRows:Number = 1+Math.floor((tLanguages.length-1) / tColumns), tColumnsInRow:int = tColumns;

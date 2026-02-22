@@ -3,7 +3,7 @@
 - [Code] minor rewrites/tweaks to `FancyInput` and some screens
 - (30 Nov) Clipboard no longer shows when running tool chooser swf outside of AIR app (which is required for it to work)
 - (12 Feb 2026) [Code] `Fewf.assets.getData("config")` shortened to `Fewf.config` for ease of use and consistency, as well as import cleanup
-- (21 Feb 2026) [Code] Screen code minor rework & some imgur code split off into `Main` and accessed via events
+- (21 Feb 2026) [Code] Screen code minor rework, some imgur code split off into `Main` and accessed via events, and minor `I18n` rework
 
 
 ## V1.32 - 8 November 2025

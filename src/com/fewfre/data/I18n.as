@@ -12,12 +12,19 @@ package com.fewfre.data
 		public static const GLOBAL_SHARED_OBJECT_KEY_LANG: String = 'lang';
 		
 		// Storage
+		private var _supportedLanguages    : Vector.<I18nLangData>;
+		private var _configDefaultLangCode : String;
+		private var _langLoadCacheBreak    : String;
+		
 		private var _messagesMap  : Dictionary;
 		private var _defaultFont  : String = "Veranda";
 		private var _defaultScale : Number = 1;
 		private var _lang         : String;
 		
 		// Properties
+		public function get supportedLanguages() : Vector.<I18nLangData> { return _supportedLanguages; }
+		public function get configDefaultLangCode() : String { return _configDefaultLangCode; }
+		
 		public function get defaultFont() : String { return _defaultFont; }
 		public function get defaultScale() : Number { return _defaultScale; }
 		public function get lang() : String { return _lang; }
@@ -37,9 +44,21 @@ package com.fewfre.data
 			_messagesMap["loading_progress"] = { text:"{0}" };
 		}
 		
+		public function initConfigData(pLanguagesConfigObject:Object, pUrlCacheBreak:String) : void {
+			_langLoadCacheBreak = pUrlCacheBreak;
+			_configDefaultLangCode = pLanguagesConfigObject["default"];
+			_supportedLanguages = new Vector.<I18nLangData>();
+			for each(var tLangJson:Object in (pLanguagesConfigObject.list || [])) {
+				_supportedLanguages.push(new I18nLangData(tLangJson));
+			}
+		}
+		
+		///////////////////////
+		// Use active language
+		///////////////////////
 		public function setLangToLoadedLang(pLangCode:String) : void {
 			_lang = pLangCode;
-			_parseFile(Fewf.assets.getData(getConfigDefaultLangCode()));
+			_parseFile(Fewf.assets.getData(_configDefaultLangCode));
 			_parseFile(Fewf.assets.getData(pLangCode));
 		}
 		
@@ -75,7 +94,7 @@ package com.fewfre.data
 		// Loading Helpers
 		///////////////////////
 		private function _loadLanguages(pLangCodes:Array, pCallback:Function) : void {
-			var tConfigDefaultLangCode:String = getConfigDefaultLangCode();
+			var tConfigDefaultLangCode:String = _configDefaultLangCode;
 			if(!tConfigDefaultLangCode) throw new Error("Can't load languages until config file has loaded!");
 			
 			var tUrls:Array = pLangCodes
@@ -83,7 +102,7 @@ package com.fewfre.data
 				.map(function(pLangCode:String,i,a):String{ return Fewf.swfUrlBase+"resources/i18n/"+pLangCode+".json" });
 			
 			if(tUrls.length == 0) { pCallback(); return; }
-			Fewf.assets.loadWithCallback(tUrls, pCallback, { cacheBreaker:Fewf.config.cachebreaker });
+			Fewf.assets.loadWithCallback(tUrls, pCallback, { cacheBreaker:_langLoadCacheBreak });
 		}
 		
 		public function loadLanguagesIfNeededAndUseLastLang(pLangCodes:Array, pCallback:Function) : void {
@@ -96,21 +115,9 @@ package com.fewfre.data
 		///////////////////////
 		// Languages List
 		///////////////////////
-		private var _languagesCached : Vector.<I18nLangData>;
-		public function getLanguagesList() : Vector.<I18nLangData> {
-			if(_languagesCached) return _languagesCached;
-			_languagesCached = new Vector.<I18nLangData>();
-			var tLanguagesFromConfig:Array = Fewf.config.languages.list;
-			for each(var tLangJson:Object in tLanguagesFromConfig) {
-				_languagesCached.push(new I18nLangData(tLangJson));
-			}
-			return _languagesCached;
-		}
-		
 		public function getConfigLangData(pLangCode:String=null) : I18nLangData {
 			if(!pLangCode) { pLangCode = _lang; }
-			var tLanguages:Vector.<I18nLangData> = getLanguagesList();
-			for each(var langData:I18nLangData in tLanguages) {
+			for each(var langData:I18nLangData in _supportedLanguages) {
 				if(langData.code == pLangCode) { return langData; }
 			}
 			return null;
@@ -119,30 +126,24 @@ package com.fewfre.data
 		/**
 		 * Should only be called after `config` file loaded for best results
 		 */
-		public function getConfigDefaultLangCode() : String {
-			return Fewf.config.languages["default"];
-		}
 		public function getSystemDetectedDefaultLangCodeOrFallback() : String {
-			var tConfigLang:String = getConfigDefaultLangCode();
-			
 			// If user manually picked a language previously, override system check
 			var detectedLang = Fewf.sharedObjectGlobal.getData(I18n.GLOBAL_SHARED_OBJECT_KEY_LANG) || Capabilities.language;
 			
 			var tFlagDefaultLangExists:Boolean = false;
 			// http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/system/Capabilities.html#language
 			if(detectedLang) {
-				var tLanguages:Vector.<I18nLangData> = getLanguagesList();
-				for each(var langData:I18nLangData in tLanguages) {
+				for each(var langData:I18nLangData in _supportedLanguages) {
 					if(detectedLang == langData.code || detectedLang == langData.code.split("-")[0]) {
 						return langData.code;
 					}
-					if(langData.code == tConfigLang) {
+					if(langData.code == _configDefaultLangCode) {
 						tFlagDefaultLangExists = true;
 					}
 				}
 			}
 			// If no language found matching saved language or system language, default to either the app's default (english by default)
-			return tFlagDefaultLangExists ? tConfigLang : "en";
+			return tFlagDefaultLangExists ? _configDefaultLangCode : "en";
 		}
 	}
 }
