@@ -41,12 +41,11 @@ package app.ui.panes
 			infobar.on(GridManagementWidget.RANDOMIZE_CLICKED, _onRandomizeClicked);
 			
 			// Delete all favorites logic
-			_deleteAllConfirmScreen = new TrashConfirmScreen().move(ConstantsApp.PANE_WIDTH - 36, 31)
-				.on(Event.CLOSE, function(e):void{ removeChild(_deleteAllConfirmScreen); })
+			_deleteAllConfirmScreen = new TrashConfirmScreen().move(ConstantsApp.PANE_WIDTH - 36, 31).onCloseRemoveSelf()
 				.on(TrashConfirmScreen.CONFIRM, _onDeleteAll);
 			// Delete button (opens confirm screen)
 			var bttn:GameButton = new GameButton(40).setImage(new $Trash()).setOrigin(0, 0.5).move(-40 - 5, 25)
-				.onButtonClick(function(e):void{ addChild(_deleteAllConfirmScreen); }) as GameButton;
+				.onButtonClick(function(e):void{ addChild(_deleteAllConfirmScreen.root); }) as GameButton;
 			infobar.addCustomObjectToRightSideTray(bttn);
 		}
 		
@@ -124,7 +123,7 @@ package app.ui.panes
 		// Events
 		/////////////////////////////
 		private function _onDeleteAll(e) : void {
-			removeChild(_deleteAllConfirmScreen);
+			_deleteAllConfirmScreen.removeSelf();
 			FavoriteItemsLocalStorageManager.deleteAll();
 			dispatchEvent(new Event(Event.CLOSE));
 		}

@@ -1,12 +1,8 @@
 package app.world.data
 {
-	import app.data.*;
-	import flash.display.*;
-	import flash.geom.*;
+	import app.data.ItemType;
 	import com.fewfre.utils.Fewf;
-	import flash.events.Event;
-	import com.fewfre.utils.FewfDisplayUtils;
-	import app.ui.screens.LoadingSpinner;
+	import flash.display.Bitmap;
 
 	public class BitmapItemData extends ItemData
 	{

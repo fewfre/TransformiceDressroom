@@ -1,5 +1,6 @@
 package app.ui.screens
 {
+	import app.ui.common.LoadingSpinner;
 	import com.fewfre.display.RoundRectangle;
 	import com.fewfre.display.TextTranslated;
 	import com.fewfre.events.FewfEvent;
@@ -8,30 +9,30 @@ package app.ui.screens
 	import flash.display.Sprite;
 	import flash.events.ProgressEvent;
 
-	public class LoaderDisplay extends Sprite
+	public class LoaderDisplay
 	{
+		// Storage
+		private var _root : Sprite;
 		private var _loadingSpinner	: LoadingSpinner;
 		private var _leftToLoadText	: TextTranslated;
 		private var _loadProgressText: TextTranslated;
 		
 		// Constructor
-		// pData = { x:Number, y:Number }
-		public function LoaderDisplay(pX:Number=0, pY:Number=0) {
-			super(); this.x = pX; this.y = pY;
-			
-			new RoundRectangle(500, 200).toOrigin(0.5).drawAsTray().appendTo(this);
+		public function LoaderDisplay() {
+			_root = new Sprite();
+			new RoundRectangle(500, 200).toOrigin(0.5).drawAsTray().appendTo(_root);
 			
 			Fewf.assets.addEventListener(ProgressEvent.PROGRESS, _onLoadProgress);
 			Fewf.assets.addEventListener(AssetManager.PACK_LOADED, _onPackLoaded);
 			
-			_loadingSpinner = new LoadingSpinner({ y:-45, scale:2 }).appendTo(this);
+			_loadingSpinner = new LoadingSpinner(2).move(0, -45).appendTo(_root);
 			
-			_leftToLoadText = new TextTranslated("loading", { values:"", size:18, x:0, y:10 }).appendToT(this);
-			_loadProgressText = new TextTranslated("loading_progress", { values:"", size:18, x:0, y:35 }).appendToT(this);
+			_leftToLoadText = new TextTranslated("loading", { values:"", size:18, x:0, y:10 }).appendToT(_root);
+			_loadProgressText = new TextTranslated("loading_progress", { values:"", size:18, x:0, y:35 }).appendToT(_root);
 		}
-		public function move(pX:Number, pY:Number) : LoaderDisplay { x = pX; y = pY; return this; }
-		public function appendTo(pParent:Sprite): LoaderDisplay { pParent.addChild(this); return this; }
-		public function removeSelf(): LoaderDisplay { if(this.parent){ this.parent.removeChild(this); } return this; }
+		public function move(pX:Number, pY:Number) : LoaderDisplay { _root.x = pX; _root.y = pY; return this; }
+		public function appendTo(pParent:Sprite): LoaderDisplay { pParent.addChild(_root); return this; }
+		public function removeSelf(): LoaderDisplay { if(_root.parent){ _root.parent.removeChild(_root); } return this; }
 		
 		public function destroy():void {
 			Fewf.assets.removeEventListener(ProgressEvent.PROGRESS, _onLoadProgress);

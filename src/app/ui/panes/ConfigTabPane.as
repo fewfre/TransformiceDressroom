@@ -4,9 +4,9 @@ package app.ui.panes
 	import app.ui.buttons.GameButton;
 	import app.ui.buttons.PushButton;
 	import app.ui.common.FancyInput;
+	import app.ui.common.LoadingSpinner;
 	import app.ui.panes.base.SidePane;
 	import app.ui.PasteShareCodeInput;
-	import app.ui.screens.LoadingSpinner;
 	import app.world.data.ItemData;
 	import app.world.data.OutfitData;
 	import app.world.elements.Pose;
@@ -109,7 +109,7 @@ package app.ui.panes
 				removeChild(usernameErrorText);
 				usernameErrorText = null;
 			}
-			var tLoaderDisplay:LoadingSpinner = new LoadingSpinner({ x:5+ConstantsApp.PANE_WIDTH*0.5, y:userOutfitsGrid.y+50 }).appendTo(this);
+			var tLoaderDisplay:LoadingSpinner = new LoadingSpinner().move(5+ConstantsApp.PANE_WIDTH*0.5, userOutfitsGrid.y+50).appendTo(this);
 			
 			if(usernameInput.text.indexOf("#") == -1) {
 				usernameInput.text += "#0000";

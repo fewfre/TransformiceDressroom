@@ -14,25 +14,29 @@ package app.ui.screens
 	import flash.events.EventPhase;
 	import flash.events.MouseEvent;
 
-	public class LangScreen extends Sprite
+	public class LangScreen
 	{
+		// Storage
+		private var _root : Sprite;
+		
 		// Constructor
 		public function LangScreen() {
-			this.x = ConstantsApp.CENTER_X;
-			this.y = ConstantsApp.CENTER_Y;
+			_root = new Sprite();
+			_root.x = ConstantsApp.CENTER_X;
+			_root.y = ConstantsApp.CENTER_Y;
 			
-			GameAssets.createScreenBackdrop().appendTo(this).on(MouseEvent.CLICK, _onCloseClicked);
+			GameAssets.createScreenBackdrop().appendTo(_root).on(MouseEvent.CLICK, _onCloseClicked);
 			
 			var tWidth:Number = 500, tHeight:Number = 200;
 			// Background
-			new RoundRectangle(tWidth, tHeight).toOrigin(0.5).drawAsTray().appendTo(this);
+			new RoundRectangle(tWidth, tHeight).toOrigin(0.5).drawAsTray().appendTo(_root);
 
 			/****************************
 			* Languages
 			*****************************/
 			var tLanguages:Vector.<I18nLangData> = Fewf.i18n.getLanguagesList();
 			
-			var tFlagTray:Sprite = addChild(new Sprite()) as Sprite, tFlagRowTray:Sprite, xx:Number;
+			var tFlagTray:Sprite = _root.addChild(new Sprite()) as Sprite, tFlagRowTray:Sprite, xx:Number;
 			var tLangData:I18nLangData, tColumns:int = 8, tRows:Number = 1+Math.floor((tLanguages.length-1) / tColumns), tColumnsInRow:int = tColumns;
 			for(var i:int = 0; i < tLanguages.length; i++) { tLangData = tLanguages[i];
 				if(i%tColumns == 0) {
@@ -48,12 +52,13 @@ package app.ui.screens
 			tFlagTray.y -= 55*(tRows-1)*0.5;
 			
 			// Close Button
-			new ScaleButton(new $WhiteX()).move(tWidth/2 - 5, -tHeight/2 + 5).appendTo(this).onButtonClick(_onCloseClicked);
+			new ScaleButton(new $WhiteX()).move(tWidth/2 - 5, -tHeight/2 + 5).appendTo(_root).onButtonClick(_onCloseClicked);
 		}
-		public function appendTo(pParent:Sprite): LangScreen { pParent.addChild(this); return this; }
-		public function removeSelf(): LangScreen { if(this.parent){ this.parent.removeChild(this); } return this; }
-		public function on(type:String, listener:Function): LangScreen { this.addEventListener(type, listener); return this; }
-		public function off(type:String, listener:Function): LangScreen { this.removeEventListener(type, listener); return this; }
+		public function appendTo(pParent:Sprite): LangScreen { pParent.addChild(_root); return this; }
+		public function removeSelf(): LangScreen { if(_root.parent){ _root.parent.removeChild(_root); } return this; }
+		public function on(type:String, listener:Function): LangScreen { _root.addEventListener(type, listener); return this; }
+		public function off(type:String, listener:Function): LangScreen { _root.removeEventListener(type, listener); return this; }
+		public function onCloseRemoveSelf(): LangScreen { this.on(Event.CLOSE, function(e:Event):void { removeSelf(); }); return this; }
 		
 		///////////////////////
 		// Public
@@ -67,7 +72,7 @@ package app.ui.screens
 		///////////////////////
 		private function _onCloseClicked(pEvent:Event) : void { _close(); }
 		private function _close() : void {
-			dispatchEvent(new Event(Event.CLOSE));
+			_root.dispatchEvent(new Event(Event.CLOSE));
 		}
 		
 		private function _onLanguageClicked(pEvent:FewfEvent) : void {
@@ -75,7 +80,7 @@ package app.ui.screens
 			Fewf.sharedObjectGlobal.setData(ConstantsApp.SHARED_OBJECT_KEY_GLOBAL_LANG, tLangData.code);
 			_close();
 			
-			var tLoaderDisplay:LoaderDisplay = new LoaderDisplay().appendTo(this);
+			var tLoaderDisplay:LoaderDisplay = new LoaderDisplay().appendTo(_root);
 			Fewf.i18n.loadLanguagesIfNeededAndUseLastLang([ tLangData.code ], function():void{
 				tLoaderDisplay.removeSelf().destroy();
 				tLoaderDisplay = null;

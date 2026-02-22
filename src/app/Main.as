@@ -41,10 +41,10 @@ package app
 
 			BrowserMouseWheelPrevention.init(stage);
 
-			_loaderDisplay = new LoaderDisplay(ConstantsApp.CENTER_X, ConstantsApp.CENTER_Y).appendTo(this);
+			_loaderDisplay = new LoaderDisplay().move(ConstantsApp.CENTER_X, ConstantsApp.CENTER_Y).appendTo(this);
 			
-			_errorScreen = new ErrorScreen().on(Event.CLOSE, function(e){ _errorScreen.removeSelf(); });
-			Fewf.dispatcher.addEventListener(ErrorEvent.ERROR, function(e:ErrorEvent){ addChild(_errorScreen); _errorScreen.open(e.text || 'Unknown Error'); });
+			_errorScreen = new ErrorScreen().onCloseRemoveSelf();
+			Fewf.dispatcher.addEventListener(ErrorEvent.ERROR, function(e:ErrorEvent){ addChild(_errorScreen.root); _errorScreen.open(e.text || 'Unknown Error'); });
 			
 			_startPreload();
 		}

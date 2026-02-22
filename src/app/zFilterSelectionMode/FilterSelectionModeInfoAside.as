@@ -59,11 +59,10 @@ package app.zFilterSelectionMode
 			yy = trayHeight - sizey/2 - 12;
 			xx = -trayWidth/2 + (spacingx+sizex/2);
 			new DeleteButton(sizex, sizey).setImage(new $Trash(), 0.6).setOrigin(0.5).move(xx, yy).appendTo(this)
-				.on(MouseEvent.CLICK, function(e):void{ addChild(_trashConfirmScreen) });
+				.on(MouseEvent.CLICK, function(e):void{ addChild(_trashConfirmScreen.root) });
 				
-			_trashConfirmScreen = new TrashConfirmScreen().move(xx, yy)
-				.on(TrashConfirmScreen.CONFIRM, function(e):void{ dispatchEvent(new FewfEvent(EVENT_RESET_FILTERING)); })
-				.on(Event.CLOSE, function(e):void{ _trashConfirmScreen.removeSelf(); });
+			_trashConfirmScreen = new TrashConfirmScreen().move(xx, yy).onCloseRemoveSelf()
+				.on(TrashConfirmScreen.CONFIRM, function(e):void{ dispatchEvent(new FewfEvent(EVENT_RESET_FILTERING)); });
 			
 			// Stop Filtering Button
 			yy = trayHeight - sizey/2 - 12;

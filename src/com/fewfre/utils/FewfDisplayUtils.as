@@ -410,6 +410,10 @@ package com.fewfre.utils
 			}
 			return out.join('');
 		}
+		
+		public static function encodeBitmapDataAsBase64Png(pBitmapData:BitmapData) : String {
+			return FewfDisplayUtils.encodeByteArrayAsString(PNGEncoder.encode(pBitmapData));
+		}
 	}
 }
 
