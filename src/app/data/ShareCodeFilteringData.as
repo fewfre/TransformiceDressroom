@@ -142,10 +142,9 @@ package app.data
 		public static function loadCodeFromPastebinId(pasteBinId:String, pOnCodeLoaded:Function) : * {
 			var pastebinKey = checkIfPastebin(pasteBinId);
 			if(pastebinKey) {
-				var fetchpastebin_url:String = Fewf.config.fetchpastebin_url;
-				if(!fetchpastebin_url) { pOnCodeLoaded(null, "Pastebin URL not enabled in config"); return; }
+				if(!Config.fetchPastebinUrl) { pOnCodeLoaded(null, "Pastebin URL not enabled in config"); return; }
 				
-				var url:String = fetchpastebin_url+"?key="+pastebinKey;
+				var url:String = Config.fetchPastebinUrl+"?key="+pastebinKey;
 				Fewf.assets.loadWithCallback([ [url, { type:"txt", name:pastebinKey }] ], function():void{
 					pOnCodeLoaded(Fewf.assets.getData(pastebinKey), null);
 				});

@@ -1,13 +1,15 @@
 package app
 {
+	import app.data.Config;
+	import app.data.ConstantsApp;
 	import app.data.GameAssets;
 	import app.ui.screens.ErrorScreen;
 	import app.ui.screens.LoaderDisplay;
 	import app.world.World;
+	import com.fewfre.loaders.SpriteSheetToGifLoader;
 	import com.fewfre.utils.*;
 	import flash.display.*;
 	import flash.events.*;
-	import app.data.ConstantsApp;
 
 	[SWF(backgroundColor="0x6A7495" , width="900" , height="425")]
 	public class Main extends MovieClip
@@ -18,7 +20,6 @@ package app
 		private var _worldManager  : WorldManager;
 		private var _world         : World;
 		
-		private var _config        : Object;
 		private var _systemDetectedDefaultLang : String;
 		
 		// Constructor
@@ -56,15 +57,9 @@ package app
 		}
 		
 		private function _onPreloadComplete() : void {
-			Fewf.i18n.initConfigData(Fewf.config.languages, Fewf.config.cachebreaker);
-			_config = Fewf.config;
+			Fewf.i18n.initConfigData(Config.languagesObject, Config.cacheBreaker);
+			SpriteSheetToGifLoader.init(Config.spriteSheetToGifUrl);
 			_systemDetectedDefaultLang = Fewf.i18n.getSystemDetectedDefaultLangCodeOrFallback();
-			
-			if(_config.username_lookup_url) _config.username_lookup_url.replace("https://", Fewf.networkProtocol+"://");
-			if(_config.spritesheet2gif_url) _config.spritesheet2gif_url.replace("https://", Fewf.networkProtocol+"://");
-			if(_config.fetchpastebin_url) _config.fetchpastebin_url.replace("https://", Fewf.networkProtocol+"://");
-			if(_config.createpastebin_url) _config.createpastebin_url.replace("https://", Fewf.networkProtocol+"://");
-			if(_config.upload2imgur_url) _config.upload2imgur_url.replace("https://", Fewf.networkProtocol+"://");
 			
 			// Some slight analytics
 			Fewf.assets.lazyLoadImageUrlAsBitmap(Fewf.networkProtocol+"://fewfre.com/images/avatar.jpg?tag=tfmdress-swf&pref="+encodeURIComponent(JSON.stringify({
@@ -93,16 +88,16 @@ package app
 			];
 			
 			var tPack:Array, prefix:String;
-			if(Fewf.isExternallyLoaded && _config.packs_external) {
-				tPack = _config.packs_external;
+			if(Fewf.isExternallyLoaded && Config.packsExternal) {
+				tPack = Config.packsExternal;
 				prefix = "";
 			} else {
-				tPack = _config.packs.items.concat(_config.packs.parts);
+				tPack = Config.packs.items.concat(Config.packs.parts);
 				prefix = Fewf.swfUrlBase+"resources/";
 			}
 			for(var i:int = 0; i < tPack.length; i++) { tPacks.push(prefix+tPack[i]); }
 			
-			_load(tPacks, Fewf.config.cachebreaker, _onLoadComplete);
+			_load(tPacks, Config.cacheBreaker, _onLoadComplete);
 		}
 		
 		private function _onLoadComplete() : void {

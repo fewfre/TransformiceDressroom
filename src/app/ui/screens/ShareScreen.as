@@ -13,6 +13,7 @@ package app.ui.screens
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import app.data.Config;
 
 	public class ShareScreen
 	{
@@ -55,7 +56,7 @@ package app.ui.screens
 			new TextTranslated("share_fewfre_syntax", { size:15 }).move(0, yy).appendTo(_root);
 			_fewfCopyField = new FancyCopyField(tWidth-50).appendTo(_root).centerOrigin().move(0, yy+40);
 			
-			// if(!!_getCreatePastebinUrl()) {
+			// if(!!Config.createPasteBinUrl) {
 			// 	new GameButton(24).setTextUntranslated("🌐").toOrigin(0.5).move(tWidth/2 + 20, yy+40).appendTo(_root)
 			// 	.onButtonClick(function(e){
 			// 		_createPastebin(_fewfCopyField.text, function(pResp, err:String=null):void{
@@ -127,10 +128,8 @@ package app.ui.screens
 		///////////////////////
 		// Pastebin
 		///////////////////////
-		private function _getCreatePastebinUrl() : String { return Fewf.config.createpastebin_url; }
-		
 		private function _createPastebin(pPaste:String, pCallback:Function) : void {
-			new SimpleUrlLoader(_getCreatePastebinUrl()).setToPost().addFormDataHeader()
+			new SimpleUrlLoader(Config.createPasteBinUrl).setToPost().addFormDataHeader()
 				.addData("paste", pPaste)
 				.onComplete(function(resp){ pCallback(resp); })
 				.onError(function(err:Error){ pCallback(null, "["+err.name+":"+err.errorID+"] "+err.message); })
