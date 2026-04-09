@@ -1,3 +1,7 @@
+## V1.33 - 8 April 2026
+- Item list filter mode now has a custom tooltipbar on shop tabs that lets you choose between 3 sort types: default, selected, and customizable
+
+
 ## V1.32c - 26 February 2026
 - [Code] Screen code minor rework, some imgur code split off into `Main` and accessed via events, and minor `I18n` rework
 - [Code] `Fewf.assets.getData("config")` logic moved to `data.Config` for ease of use and consistency. Moved gif upload logic to it's own class `SpriteSheetToGifLoader`. Also did some import cleanup

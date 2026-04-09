@@ -22,7 +22,7 @@ package app.data
 			return OFF;
 		}
 		
-		// This is required for proper auto string convertion on `trace`/`Dictionary` and such - enums should always have
+		// This is required for proper auto string conversion on `trace`/`Dictionary` and such - enums should always have
 		public function toString() : String { return _value.toString(); }
 	}
 }

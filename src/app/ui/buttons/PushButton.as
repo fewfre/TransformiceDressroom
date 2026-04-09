@@ -1,12 +1,7 @@
 package app.ui.buttons
 {	
 	import app.data.ConstantsApp;
-	import com.fewfre.display.TextTranslated;
-	import com.fewfre.utils.FewfDisplayUtils;
-	import flash.display.DisplayObject;
 	import flash.events.MouseEvent;
-	import flash.geom.Point;
-	import flash.geom.Rectangle;
 
 	public class PushButton extends GameButton
 	{

@@ -1,10 +1,6 @@
 package app.ui.buttons
 {
 	import com.fewfre.display.ButtonBase;
-	import com.fewfre.events.FewfEvent;
-	import app.data.ConstantsApp;
-	import app.ui.*;
-	import flash.display.*;
 	
 	public class ColorButton extends ButtonBase
 	{

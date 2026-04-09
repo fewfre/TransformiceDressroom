@@ -1,14 +1,13 @@
 package app.ui.buttons
 {
-	import com.fewfre.display.ButtonBase;
 	import app.data.ConstantsApp;
+	import com.fewfre.display.ButtonBase;
+	import com.fewfre.display.DisplayWrapper;
 	import com.fewfre.display.RoundRectangle;
 	import com.fewfre.display.TextBase;
-	import flash.display.DisplayObject;
-	import com.fewfre.display.DisplayWrapper;
-	import com.fewfre.utils.FewfDisplayUtils;
-	import flash.geom.Rectangle;
 	import com.fewfre.display.TextTranslated;
+	import flash.display.DisplayObject;
+	import flash.geom.Rectangle;
 	
 	public class GameButton extends ButtonBase
 	{

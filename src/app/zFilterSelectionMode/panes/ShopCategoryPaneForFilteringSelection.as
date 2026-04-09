@@ -11,11 +11,17 @@ package app.zFilterSelectionMode.panes
 	import com.fewfre.events.FewfEvent;
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
+	import app.ui.panes.infobar.GridManagementWidget;
+	import flash.events.Event;
+	import app.zFilterSelectionMode.data.SortType_FilterSelectionMode;
+	import com.fewfre.utils.FewfUtils;
 
 	public class ShopCategoryPaneForFilteringSelection extends ButtonGridSidePane
 	{
 		private var _type: ItemType;
 		private var _itemDataVector: Vector.<ItemData>;
+		private var _sortType: SortType_FilterSelectionMode = SortType_FilterSelectionMode.ID;
+		private var _sortReversed:Boolean = true; // Start reversed so newest items are at end of list (and thus start of grid)
 		
 		public function get type():ItemType { return _type; }
 		
@@ -29,11 +35,13 @@ package app.zFilterSelectionMode.panes
 			if(_type == ItemType.SKIN || _type == ItemType.POSE) { buttonPerRow = 5; }
 			super(buttonPerRow);
 			
-			this.addInfobar( new Infobar({ showEyeDropper:false, hideItemPreview:true, gridManagement:{ hideRandomize:true, hideArrows:true } }) );
-			this.infobar.showColorWheel(false);
+			this.addInfobar( new Infobar_FilterSelectionMode() );
+			infobar.on(Infobar_FilterSelectionMode.REVERSE_CLICKED, function(e:Event):void { _sortReversed = !_sortReversed; _setupGrid(_itemDataVector); });
+			infobar.on(Infobar_FilterSelectionMode.SORT_TYPE_CHANGED, function(e:FewfEvent):void { _sortType = e.data.sortType; _setupGrid(_itemDataVector); });
 			
 			// We want them to start reversed
-			grid.reverse();
+			// NOTE: commented out as we are using custom sorting via _sortReversed, so we use that instead
+			// grid.reverse();
 		}
 		
 		/****************************
@@ -48,11 +56,21 @@ package app.zFilterSelectionMode.panes
 		*****************************/
 		private function _setupGrid(pItemList:Vector.<ItemData>) : void {
 			_itemDataVector = pItemList;
+			// Clone so we don't mess with original order of the item data
+			var sortedItems:Vector.<ItemData> = _itemDataVector.concat();
+			if(_sortReversed) { sortedItems = sortedItems.reverse(); }
+			trace("_sortReversed", _sortReversed, _sortType);
+			// If sort type is ID or unrecognized, keep original order (which is ID order)
+			if(_sortType == SortType_FilterSelectionMode.OWNED) { 
+				FewfUtils.vectorStableMergeSort(sortedItems, function(a:ItemData, b:ItemData):int { return _compareBooleans(ShareCodeFilteringData.has(a), ShareCodeFilteringData.has(b)); });
+			} else if(_sortType == SortType_FilterSelectionMode.CUSTOMIZABLE) {
+				FewfUtils.vectorStableMergeSort(sortedItems, function(a:ItemData, b:ItemData):int { return _compareBooleans(ShareCodeFilteringData.isCustomizable(a), ShareCodeFilteringData.isCustomizable(b)) || _compareBooleans(ShareCodeFilteringData.has(a), ShareCodeFilteringData.has(b)); });
+			}
 
 			resetGrid();
 
-			for(var i:int = 0; i < pItemList.length; i++) {
-				_addButton(pItemList[i], 1, i);
+			for(var i:int = 0; i < sortedItems.length; i++) {
+				_addButton(sortedItems[i], 1, i);
 			}
 			refreshScrollbox();
 		}
@@ -93,6 +111,10 @@ package app.zFilterSelectionMode.panes
 				btn.alpha = ShareCodeFilteringData.isCustomizable(data) ? 1 : 0.35;
 			});
 			return btn;
+		}
+		
+		private function _compareBooleans(a:Boolean, b:Boolean) : int {
+			return a && !b ? -1 : (!a && b ? 1 : 0);
 		}
 		
 		/****************************

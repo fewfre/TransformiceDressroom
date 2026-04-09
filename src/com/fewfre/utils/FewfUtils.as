@@ -64,6 +64,28 @@ package com.fewfre.utils
 		}
 		
 		////////////////////////////////
+		// Stable Sort (vector)
+		////////////////////////////////
+		/**
+		 * Sorts the given vector in-place using the provided compare function, which should return a negative number if a < b, positive if a > b, and 0 if they are equal.
+		 * This is a stable sort, meaning that if compare(a, b) == 0, the original order of a and b will be preserved.
+		 */
+		public static function vectorStableMergeSort(arr:Object, compare:Function):Object {
+				for (var i:int = 1; i < arr.length; i++) {
+				var cur:* = arr[i];
+				var j:int = i - 1;
+				// shift elements greater than cur to the right
+				while (j >= 0 && compare(arr[j], cur) > 0) {
+					arr[j + 1] = arr[j];
+					j--;
+				}
+				// placing cur at j+1 preserves order when compare(...) == 0
+				arr[j + 1] = cur;
+			}
+			return arr;
+		}
+		
+		////////////////////////////////
 		// String Helpers
 		////////////////////////////////
 		public static function stringSubstitute(pVal:String, ...pValues) : String {
