@@ -88,22 +88,52 @@ package app.ui.screens
 			yy += 28/2;
 			new TextTranslated("setting_hardcoded_save_scale_label", { size:10, originX:0 }).moveT(-tBg.width/2+10, yy).appendToT(tTray);
 			var hardcodedCanvasSaveScale:Object = Fewf.sharedObject.getData(ConstantsApp.SHARED_OBJECT_KEY_HARDCODED_SAVE_SCALE);
-			new FancyInput({ width:210 }).setText((hardcodedCanvasSaveScale || "").toString()).setPlaceholderText("setting_hardcoded_save_scale_placeholder").move(75, yy).appendTo(tTray)
+			var hScaleInput:FancyInput = new FancyInput({ width:210 }).setText((hardcodedCanvasSaveScale || "").toString()).setPlaceholderText("setting_hardcoded_save_scale_placeholder").move(75, yy).appendTo(tTray)
 				.setRestrict("0-9\.")
 				.on_field(Event.CHANGE, function(e:Event){
-					var size:Number = parseFloat(e.target.text);
-					Fewf.sharedObject.setData(ConstantsApp.SHARED_OBJECT_KEY_HARDCODED_SAVE_SCALE, !size || isNaN(size) ? null : size);
+					var input:FancyInput = hScaleInput, saveSO:Function = function(val:*):void { Fewf.sharedObject.setData(ConstantsApp.SHARED_OBJECT_KEY_HARDCODED_SAVE_SCALE, val); };
+					if(input.text == "") { saveSO(null); return; }
+					
+					var scalePreAltered:Number = parseFloat(input.text);
+					if(isNaN(scalePreAltered)) { return; } // Don't update if invalid, but don't reset it yet since they might still be typing (ex: ".")
+					var scale:Number = _clamp(scalePreAltered || 0, 0, 100);
+					saveSO(scale || null);
+					// Only update user's text if we have to (such as value being forced to stay in range) since we don't want to accidentally interrupt the user while they're typing
+					if(scalePreAltered != scale) {
+						input.setText((scale || "").toString());
+					}
 				});
 			
 			// Hardcoded Canvas Size Input
 			yy += 28 + 2;
 			new TextTranslated("setting_hardcoded_save_size_label", { size:10, originX:0 }).moveT(-tBg.width/2+10, yy).appendToT(tTray);
 			var hardcodedCanvasSaveSize:Object = Fewf.sharedObject.getData(ConstantsApp.SHARED_OBJECT_KEY_HARDCODED_CANVAS_SAVE_SIZE);
-			new FancyInput({ width:210 }).setText((hardcodedCanvasSaveSize || "").toString()).setPlaceholderText("setting_hardcoded_save_size_placeholder").move(75, yy).appendTo(tTray)
+			var hCanvasSizeInput:FancyInput = new FancyInput({ width:210 }).setText((hardcodedCanvasSaveSize || "").toString()).setPlaceholderText("setting_hardcoded_save_size_placeholder").move(75, yy).appendTo(tTray)
 				.setRestrict("0-9")
 				.on_field(Event.CHANGE, function(e:Event){
-					var size:Number = parseInt(e.target.text);
-					Fewf.sharedObject.setData(ConstantsApp.SHARED_OBJECT_KEY_HARDCODED_CANVAS_SAVE_SIZE, !size || isNaN(size) ? null : size);
+					var input:FancyInput = hCanvasSizeInput, saveSO:Function = function(val:*):void { Fewf.sharedObject.setData(ConstantsApp.SHARED_OBJECT_KEY_HARDCODED_CANVAS_SAVE_SIZE, val); };
+					if(input.text == "") { saveSO(null); return; }
+					
+					var sizePreAltered:Number = parseInt(input.text);
+					if(isNaN(sizePreAltered)) { return; } // Don't update if invalid, but don't reset it yet since they might still be typing
+					var size:Number = _clamp(sizePreAltered || 0, 0, 10000);
+					saveSO(size || null);
+					// Only update user's text if we have to (such as value being forced to stay in range) since we don't want to accidentally interrupt the user while they're typing
+					if(sizePreAltered != size) {
+						input.setText((size || "").toString());
+					}
+					
+					// var output:String;
+					// if(target.text.indexOf("x") > -1) {
+					// 	var sizeX:Number, sizeY:Number;
+					// } else {
+					// 	var size:Number = parseInt(target.text); if(isNaN(size)) { size = 0; }
+					// 	output = size ? size.toString() : null;
+					// }
+					// var size:Number = parseInt(target.text); if(isNaN(size)) { size = 0; }
+					// size = _clamp(size, 0, 10000);
+					// Fewf.sharedObject.setData(ConstantsApp.SHARED_OBJECT_KEY_HARDCODED_CANVAS_SAVE_SIZE, size || null);
+					// target.setText((size || "").toString());
 				});
 			
 			return tTray;
@@ -121,6 +151,10 @@ package app.ui.screens
 		///////////////////////
 		private function _updateTranslatedByText() : void {
 			_translatedByText.visible = Fewf.i18n.lang != "en" && Fewf.i18n.getText("translated_by");
+		}
+		
+		private function _clamp(num:Number, min:Number, max:Number) : Number {
+			return Math.min(Math.max(num, min), max);
 		}
 		
 		///////////////////////

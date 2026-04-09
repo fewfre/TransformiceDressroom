@@ -1,5 +1,6 @@
 ## V1.33 - 8 April 2026
 - Item list filter mode now has a custom tooltipbar on shop tabs that lets you choose between 3 sort types: default, selected, and customizable
+- Hardcoded save scale / canvas size no caps input to avoid app-breaking sizes (scale now clamps to 0-100, and canvas size 0-10000)
 
 
 ## V1.32c - 26 February 2026

@@ -11,7 +11,7 @@ package app.ui.common
 	public class FancyInput
 	{
 		// Storage
-		private var _root			: Sprite;
+		private var _root            : Sprite;
 		private var _textField       : TextField;
 		private var _placeholderText : TextTranslated;
 		private var _background      : RoundRectangle;
