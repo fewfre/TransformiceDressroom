@@ -1,5 +1,6 @@
 ## V1.33 - 8 April 2026
-- Item list filter mode now has a custom tooltipbar on shop tabs that lets you choose between 3 sort types: default, selected, and customizable
+- Skins now have a little inventory bag icon on them indicating if they're a costume (if it's both purchase and a costume I don't show an icon), items have a little cheese icon if they're only purchasable with cheese, and a little firework icon for event rewards (currently not showing this one anywhere however)
+- Item list filter mode now has a custom toolbar on shop tabs that lets you choose between 3 sort types: default, selected, and customizable
 - Hardcoded save scale / canvas size no caps input to avoid app-breaking sizes (scale now clamps to 0-100, and canvas size 0-10000)
 
 

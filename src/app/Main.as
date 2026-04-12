@@ -10,6 +10,7 @@ package app
 	import com.fewfre.utils.*;
 	import flash.display.*;
 	import flash.events.*;
+	import app.data.ItemInfo;
 
 	[SWF(backgroundColor="0x6A7495" , width="900" , height="425")]
 	public class Main extends MovieClip
@@ -84,7 +85,8 @@ package app
 		private function _startLoad() : void {
 			var tPacks = [
 				[Fewf.swfUrlBase+"resources/interface.swf", { useCurrentDomain:true }],
-				Fewf.swfUrlBase+"resources/flags.swf"
+				Fewf.swfUrlBase+"resources/flags.swf",
+				Fewf.swfUrlBase+"resources/item-info.json",
 			];
 			
 			var tPack:Array, prefix:String;
@@ -101,6 +103,7 @@ package app
 		}
 		
 		private function _onLoadComplete() : void {
+			ItemInfo.init();
 			GameAssets.init(_onGameAssetsInitComplete);
 		}
 		

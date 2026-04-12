@@ -3,15 +3,17 @@ package app.ui.panes
 	import app.data.ConstantsApp;
 	import app.data.FavoriteItemsLocalStorageManager;
 	import app.data.GameAssets;
+	import app.data.ItemInfo;
 	import app.data.ItemType;
+	import app.data.ShareCodeFilteringData;
 	import app.ui.buttons.GameButton;
 	import app.ui.buttons.PushButton;
-	import app.ui.buttons.ScaleButton;
 	import app.ui.common.FancyInput;
 	import app.ui.panes.base.ButtonGridSidePane;
 	import app.ui.panes.infobar.Infobar;
 	import app.world.data.ItemData;
 	import app.world.events.ItemDataEvent;
+	import com.fewfre.display.DisplayWrapper;
 	import com.fewfre.display.Grid;
 	import com.fewfre.events.FewfEvent;
 	import com.fewfre.utils.Fewf;
@@ -19,12 +21,10 @@ package app.ui.panes
 	import flash.display.DisplayObject;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
-	import flash.events.Event;
 	import flash.events.FocusEvent;
 	import flash.events.KeyboardEvent;
 	import flash.events.TextEvent;
 	import flash.text.TextFormat;
-	import app.data.ShareCodeFilteringData;
 
 	public class ShopCategoryPane extends ButtonGridSidePane
 	{
@@ -177,6 +177,7 @@ package app.ui.panes
 			var shopItemButton:PushButton = new PushButton(grid.cellSize).setImage(shopItem).setData({ type:_type, itemID:itemData.id, itemData:itemData }).appendTo(cell) as PushButton;
 			
 			_addFlagWaveInputIfNeeded(itemData, cell, shopItemButton);
+			_addItemInfoIconIfNeeded(itemData, cell);
 			
 			// Finally add to grid (do it at end so auto event handlers can be hooked up properly)
 			addToGrid(cell);
@@ -222,6 +223,20 @@ package app.ui.panes
 			_flagWaveInput.on_field(FocusEvent.FOCUS_IN, function():void{
 				parentButton.toggleOn();
 			});
+		}
+		
+		private function _addItemInfoIconIfNeeded(itemData:ItemData, cell:Sprite) : void {
+			if(!ItemInfo.get(itemData)) { return; }
+			
+			if(_type == ItemType.SKIN && ItemInfo.getSkin(itemData.id).isCostumeOnly) {
+				DisplayWrapper.wrap(new $InventoryBag(), cell).toScale(0.75).move(grid.cellSize - 10, grid.cellSize - 10).asSprite.mouseEnabled = false;
+			}
+			else if(ItemInfo.get(itemData).isCheeseOnly) {
+				DisplayWrapper.wrap(new $Fromage(), cell).toScale(0.35).move(grid.cellSize - 10, grid.cellSize - 10).asSprite.mouseEnabled = false;
+			}
+			else if(ItemInfo.get(itemData).isEventReward) {
+				DisplayWrapper.wrap(new $FireworkRockets(), cell).toScale(0.75).move(grid.cellSize - 10, grid.cellSize - 10).asSprite.mouseEnabled = false;
+			}
 		}
 		
 		/****************************

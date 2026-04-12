@@ -218,14 +218,17 @@ package com.fewfre.utils
 		
 		public static function displayObjectToBitmapData(pObj:DisplayObject, pScale:Number=1) : BitmapData {
 			var tOrigScale = pObj.scaleX;
-			pObj.scaleX = pObj.scaleY = pScale;
-			
-			var rect:Rectangle = pObj.getBounds(pObj);
-			var tBitmapData:BitmapData = new BitmapData(rect.width*pScale, rect.height*pScale, true, 0xFFFFFF);
+			// If image is massively to big for some reason this can fail; so it's wrapped in a try/catch so the scale can properly be set back to normal even if it does fail
+			try {
+				pObj.scaleX = pObj.scaleY = pScale;
+				
+				var rect:Rectangle = pObj.getBounds(pObj);
+				var tBitmapData:BitmapData = new BitmapData(rect.width*pScale, rect.height*pScale, true, 0xFFFFFF);
 
-			var tMatrix:Matrix = new Matrix(1, 0, 0, 1, -rect.left, -rect.top);
-			tMatrix.scale(pScale, pScale);
-			bitmapDataDrawBestQuality(tBitmapData, pObj, tMatrix);
+				var tMatrix:Matrix = new Matrix(1, 0, 0, 1, -rect.left, -rect.top);
+				tMatrix.scale(pScale, pScale);
+				bitmapDataDrawBestQuality(tBitmapData, pObj, tMatrix);
+			} catch(e) {}
 			
 			pObj.scaleX = pObj.scaleY = tOrigScale;
 			return tBitmapData;
