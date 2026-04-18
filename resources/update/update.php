@@ -38,6 +38,11 @@ $json = getConfigJson();
 $json["emojis"] = $emojis;
 saveConfigJson($json);
 
+// Update `item-info.json` (we do this after saving the above has finished/saved since this isn't strictly necessary for the update and is more likely to encounter issues with fetching/parsing wiki data)
+
+$itemInfoUpdate_skipStartAndEndProgressUpdates = true;
+include(__DIR__ . '/iteminfo-update.php');
+
 // Finished
 
 setProgress('completed');

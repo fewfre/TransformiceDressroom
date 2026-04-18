@@ -22,14 +22,11 @@ package app.data
 					_infoMap[_getKey(ItemType.SKIN, skinID)] = new SkinInfoProps(jsonFile.skin[skinID]);
 				}
 			}
-			if(jsonFile.head) {
-				for(var headID in jsonFile.head) {
-					_infoMap[_getKey(ItemType.HEAD, headID)] = new ItemInfoProps(jsonFile.head[headID]);
-				}
-			}
-			if(jsonFile.ears) {
-				for(var earsID in jsonFile.ears) {
-					_infoMap[_getKey(ItemType.EARS, earsID)] = new ItemInfoProps(jsonFile.ears[earsID]);
+			for each(var itemType:ItemType in ItemType.ALL) {
+				var infoMapForType = jsonFile[itemType.toString()];
+				if(itemType == ItemType.SKIN || !infoMapForType) { continue; } // skin already handled above since skins have extra info
+				for(var itemID in infoMapForType) {
+					_infoMap[_getKey(itemType, itemID)] = new ItemInfoProps(infoMapForType[itemID]);
 				}
 			}
 		}
@@ -45,9 +42,13 @@ class ItemInfoProps {
 	private var _isEventReward:Boolean;
 	public function get isEventReward():Boolean { return _isEventReward; }
 	
+	private var _isCollector:Boolean;
+	public function get isCollector():Boolean { return _isCollector; }
+
 	public function ItemInfoProps(data:*) {
 		this._isCheeseOnly = !!data.isCheeseOnly;
 		this._isEventReward = !!data.isEventReward;
+		this._isCollector = !!data.isCollector;
 	}
 }
 class SkinInfoProps extends ItemInfoProps {

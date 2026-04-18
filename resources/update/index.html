@@ -159,11 +159,14 @@
 		}
 		
 		.start-cont {
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
 			padding: 16px 0 24px;
 		}
 
 		/* Button 89 - https://getcssscan.com/css-buttons-examples */
-		#start-button {
+		.fancy-button {
 			--b: 3px;   /* border thickness */
 			--s: .45em; /* size of the corner */
 			--color: #0c2e0c; /*#373B44;*/
@@ -185,12 +188,12 @@
 			-webkit-user-select: none;
 			touch-action: manipulation;
 		}
-		#start-button:hover, #start-button:focus-visible{
+		.fancy-button:hover, .fancy-button:focus-visible{
 			--_p: 0px;
 			outline-color: var(--color);
 			outline-offset: .05em;
 		}
-		#start-button:active {
+		.fancy-button:active {
 			background: var(--color);
 			color: #fff;
 		}
@@ -218,7 +221,8 @@
 		<div id="progress-cont"><div>Loading Progress...</div></div>
 		
 		<div class="start-cont">
-			<button id="start-button">Start</button>
+			<button class="fancy-button" id="start-button">Start</button>
+			<button class="fancy-button" id="item-info-button">Update <code>item-info</code> only</button>
 		</div>
 		
 		<div id="goback-cont">
@@ -231,6 +235,13 @@
 			let justStarted = false;
 			document.getElementById('start-button').addEventListener('click', function(){
 				fetch('update.php', { method:'POST' });
+				
+				justStarted = true;
+				onProgressLoaded({ state:'starting', timestamp:Date.now() });
+				setTimeout(fetchProgress, 750); // give it a bit more change to fire sooner since we just hit start
+			});
+			document.getElementById('item-info-button').addEventListener('click', function(){
+				fetch('iteminfo-update.php', { method:'POST' });
 				
 				justStarted = true;
 				onProgressLoaded({ state:'starting', timestamp:Date.now() });

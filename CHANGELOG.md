@@ -1,3 +1,9 @@
+## V1.33b - 18 April 2026
+- Update script added that parses the tfm wiki for info to update the new `item-info.json` file; can be run by itself, and also runs as part of the main update call
+	- This means event items are now actually properly marked
+- Collector items are also now marked in addition to the previous changes; the in-game icon was to big so I made a custom one
+
+
 ## V1.33 - 8 April 2026
 - Skins now have a little inventory bag icon on them indicating if they're a costume (if it's both purchase and a costume I don't show an icon), items have a little cheese icon if they're only purchasable with cheese, and a little firework icon for event rewards (currently not showing this one anywhere however)
 - Item list filter mode now has a custom toolbar on shop tabs that lets you choose between 3 sort types: default, selected, and customizable
