@@ -10,9 +10,10 @@ package app.world.data
 	{
 		// Storage
 		private var _assetID : String;
-		public var isSkinColor : Boolean;
+		private var _isSkinColor : Boolean;
 		
 		// Properties
+		public function get isSkinColor() : Boolean { return _isSkinColor; }
 		// Only the default fur can be customized (but not the colored variations, as they're hardcoded customizations)
 		public override function get isCustomizable() : Boolean { return id == 1 || id == "1"; }
 		
@@ -22,7 +23,7 @@ package app.world.data
 			super(ItemType.SKIN, pId, {});
 			pData = pData || {};
 			_assetID = pData.assetID != null ? pData.assetID : id;
-			isSkinColor = !!pData.isSkinColor;
+			_isSkinColor = !!pData.isSkinColor;
 			if(pData.color) {
 				defaultColors = new <uint>[ pData.color ];
 				setColorsToDefault();
@@ -30,7 +31,7 @@ package app.world.data
 			classMap = {};
 		}
 		public override function copy() : ItemData {
-			return new SkinData(id, { assetID:_assetID, isSkinColor:isSkinColor, color:defaultColors ? defaultColors[0] : null, itemClass:itemClass, classMap:classMap });
+			return new SkinData(id, { assetID:_assetID, isSkinColor:_isSkinColor, color:defaultColors ? defaultColors[0] : null, itemClass:itemClass, classMap:classMap });
 		}
 
 		// Only fur 1 has default colors, and it's manually passed in, not found in the asset

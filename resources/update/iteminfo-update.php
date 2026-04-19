@@ -1,10 +1,6 @@
 <?php
 require_once 'utils.php';
 
-ini_set('display_errors', '1');
-ini_set('display_startup_errors', '1');
-error_reporting(E_ALL);
-
 define('PRICE_IN_CHEESE_KEY', 'Price in cheese');
 define('PRICE_IN_FRAISES_KEY', 'Price in fraises');
 
@@ -166,6 +162,7 @@ function doFurs($dom, &$itemInfoFileJson) {
 		unset($data['isCostume']);
 		unset($data['isCheeseOnly']);
 		unset($data['isCollector']);
+		unset($data['isNotCollector']);
 	}
 	
 	// Loop through normal furs first
@@ -175,8 +172,8 @@ function doFurs($dom, &$itemInfoFileJson) {
 			if(isCheeseOnly($row[PRICE_IN_CHEESE_KEY], $row[PRICE_IN_FRAISES_KEY])) {
 				$data['isCheeseOnly'] = true;
 			}
-			if(isCollector($row[PRICE_IN_CHEESE_KEY])) {
-				$data['isCollector'] = true;
+			if(!isCollector($row[PRICE_IN_CHEESE_KEY])) {
+				$data['isNotCollector'] = true;
 			}
 
 		}
@@ -226,6 +223,7 @@ function doStandardItemType($dom, $pageName, $itemCategoryName, &$itemInfoFileJs
 		unset($data['isCostume']);
 		unset($data['isEventReward']);
 		unset($data['isCollector']);
+		unset($data['isNotCollector']);
 	}
 	
 	// Loop through wiki data
@@ -238,8 +236,8 @@ function doStandardItemType($dom, $pageName, $itemCategoryName, &$itemInfoFileJs
 			if(isEventReward($row[PRICE_IN_CHEESE_KEY])) {
 				$data['isEventReward'] = true;
 			}
-			if(isCollector($row[PRICE_IN_CHEESE_KEY])) {
-				$data['isCollector'] = true;
+			if(!isCollector($row[PRICE_IN_CHEESE_KEY])) {
+				$data['isNotCollector'] = true;
 			}
 		}
 	}

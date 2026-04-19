@@ -237,8 +237,8 @@ package app.ui.panes
 			else if(ItemInfo.get(itemData).isEventReward) {
 				DisplayWrapper.wrap(new $FireworkRockets(), cell).toScale(0.75).move(grid.cellSize - 10, grid.cellSize - 10).asSprite.mouseEnabled = false;
 			}
-			else if(ItemInfo.get(itemData).isCollector) {
-				DisplayWrapper.wrap(new $CollectorItemIcon(), cell).toScale(1).move(grid.cellSize - 10, grid.cellSize - 10).asSprite.mouseEnabled = false;
+			else if(ItemInfo.get(itemData).isNotCollector) {
+				DisplayWrapper.wrap(new $NotCollectorIcon(), cell).toScale(0.7).move(grid.cellSize - 10, grid.cellSize - 10).asSprite.mouseEnabled = false;
 			}
 		}
 		

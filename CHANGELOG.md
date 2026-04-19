@@ -1,3 +1,7 @@
+## V1.33c - 18 April 2026
+- Based on feedback instead of an icon for which items are collectors (which is most of them), instead an icon is shown when it's an item permanently available in the shop
+
+
 ## V1.33b - 18 April 2026
 - Update script added that parses the tfm wiki for info to update the new `item-info.json` file; can be run by itself, and also runs as part of the main update call
 	- This means event items are now actually properly marked

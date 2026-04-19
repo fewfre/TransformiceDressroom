@@ -21,6 +21,10 @@ package app.data
 				for(var skinID in jsonFile.skin) {
 					_infoMap[_getKey(ItemType.SKIN, skinID)] = new SkinInfoProps(jsonFile.skin[skinID]);
 				}
+				// All fur colors are are buyable in shop
+				for(var i = 0; i <= 6; i++) {
+					_infoMap[_getKey(ItemType.SKIN, "color"+i)] = new SkinInfoProps({ isNotCollector:true }); // ensure all skins have an entry, even if empty, to avoid errors when looking up skins that aren't in the file at all, like
+				}
 			}
 			for each(var itemType:ItemType in ItemType.ALL) {
 				var infoMapForType = jsonFile[itemType.toString()];
@@ -42,13 +46,13 @@ class ItemInfoProps {
 	private var _isEventReward:Boolean;
 	public function get isEventReward():Boolean { return _isEventReward; }
 	
-	private var _isCollector:Boolean;
-	public function get isCollector():Boolean { return _isCollector; }
+	private var _isNotCollector:Boolean;
+	public function get isNotCollector():Boolean { return _isNotCollector; }
 
 	public function ItemInfoProps(data:*) {
 		this._isCheeseOnly = !!data.isCheeseOnly;
 		this._isEventReward = !!data.isEventReward;
-		this._isCollector = !!data.isCollector;
+		this._isNotCollector = !!data.isNotCollector;
 	}
 }
 class SkinInfoProps extends ItemInfoProps {
