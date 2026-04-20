@@ -108,16 +108,39 @@ function &addNewArrayToAssocIfNeeded(array &$parent, $key) {
 }
 
 function containsText($haystack, $needle) { return strpos($haystack, $needle) !== false; }
+function cellToSimpleNumber($cell) { return str_replace(',', '', $cell); }
 
 function isCheeseOnly($cheesePriceCell, $fraisePriceCell) {
 	$cheesePrice = trim($cheesePriceCell);
 	$strawberryPrice = trim($fraisePriceCell);
-	$cheesePriceNormalized = str_replace(',', '', $cheesePrice);
+	$cheesePriceNormalized = cellToSimpleNumber($cheesePrice);
 	return is_numeric($cheesePriceNormalized) && $strawberryPrice === "∅";
 }
+function isAlwaysInShop($cheesePriceCell, $fraisePriceCell) {
+	$cheesePrice = cellToSimpleNumber(trim($cheesePriceCell));
+	$fraisePrice = cellToSimpleNumber(trim($fraisePriceCell));
+	return is_numeric($cheesePrice) || is_numeric($fraisePrice);
+}
+function coinShopType($priceText) {
+	$priceText = strtolower($priceText);
+	if(containsText($priceText, "from oracle")) return "starcoin-shaman";
+	if(containsText($priceText, "from buffy")) return "starcoin-racing";
+	if(containsText($priceText, "from von drekkemaus")) return "starcoin-survivor";
+	if(containsText($priceText, "from cassidy")) return "starcoin-bootcamp";
+	if(containsText($priceText, "from delphilante")) return "starcoin-defilante";
+	return null;
+}
+function isEventReward($priceText) { $priceText = strtolower($priceText); return containsText($priceText, "event") || containsText($priceText, "japan") || containsText($priceText, "attend"); }
+function isCollector($priceText) { $priceText = strtolower($priceText); return containsText($priceText, "collector"); }
 
-function isEventReward($cheesePriceCell) { return containsText($cheesePriceCell, "Event") || containsText($cheesePriceCell, "Japan"); }
-function isCollector($cheesePriceCell) { return containsText($cheesePriceCell, "Collector") && !containsText($cheesePriceCell, "Former"); }
+function applyPriceFlags(&$data, $cheesePriceCell, $fraisePriceCell) {
+	$ptype = isCheeseOnly($cheesePriceCell, $fraisePriceCell) ? "cheeseOnly" :
+	        (isAlwaysInShop($cheesePriceCell, $fraisePriceCell) ? "alwaysInShop" :
+	        (isCollector($cheesePriceCell) ? "collector" :
+	        (isEventReward($cheesePriceCell) ? "eventReward" : null)));
+	if(coinShopType($cheesePriceCell)) $ptype = coinShopType($cheesePriceCell);
+	if($ptype) $data['ptype'] = $ptype;
+}
 
 ///////////////////////////////////
 // #region Pages
@@ -160,23 +183,22 @@ function doFurs($dom, &$itemInfoFileJson) {
 	// Loop through and remove existing flags since we want them to be up-to-date and should be reset below
 	foreach ($infoDb as &$data) {
 		unset($data['isCostume']);
-		unset($data['isCheeseOnly']);
-		unset($data['isCollector']);
-		unset($data['isNotCollector']);
+		unset($data['ptype']);
 	}
 	
 	// Loop through normal furs first
 	foreach ($fursTable as $row) {
 		if ($id = $row['ID'] ?? null) {
-			$data =& addNewArrayToAssocIfNeeded($infoDb, $id); // Ensure the costume entry exists and keep reference
-			if(isCheeseOnly($row[PRICE_IN_CHEESE_KEY], $row[PRICE_IN_FRAISES_KEY])) {
-				$data['isCheeseOnly'] = true;
-			}
-			if(!isCollector($row[PRICE_IN_CHEESE_KEY])) {
-				$data['isNotCollector'] = true;
-			}
-
+			$data =& addNewArrayToAssocIfNeeded($infoDb, $id); // Ensure the fur entry exists and keep reference
+			applyPriceFlags($data, $row[PRICE_IN_CHEESE_KEY], $row[PRICE_IN_FRAISES_KEY]);
 		}
+	}
+	
+	// Shop fur colors a bit of special case
+	for($i = 0; $i <= 6; $i++) {
+		$id = "color$i";
+		$data =& addNewArrayToAssocIfNeeded($infoDb, $id); // Ensure the costume entry exists and keep reference
+		$data['ptype'] = "alwaysInShop"; // All fur colors are are buyable in shop
 	}
 	
 	foreach ($costumesTable as $row) {
@@ -220,25 +242,14 @@ function doStandardItemType($dom, $pageName, $itemCategoryName, &$itemInfoFileJs
 	
 	// Loop through and remove existing flags since we want them to be up-to-date and should be reset below
 	foreach ($infoDb as &$data) {
-		unset($data['isCostume']);
-		unset($data['isEventReward']);
-		unset($data['isCollector']);
-		unset($data['isNotCollector']);
+		unset($data['ptype']);
 	}
 	
 	// Loop through wiki data
 	foreach ($itemsTable as $row) {
 		if ($id = $row['ID'] ?? null) {
 			$data =& addNewArrayToAssocIfNeeded($infoDb, $id); // Ensure the costume entry exists and keep reference
-			if(isCheeseOnly($row[PRICE_IN_CHEESE_KEY], $row[PRICE_IN_FRAISES_KEY])) {
-				$data['isCheeseOnly'] = true;
-			}
-			if(isEventReward($row[PRICE_IN_CHEESE_KEY])) {
-				$data['isEventReward'] = true;
-			}
-			if(!isCollector($row[PRICE_IN_CHEESE_KEY])) {
-				$data['isNotCollector'] = true;
-			}
+			applyPriceFlags($data, $row[PRICE_IN_CHEESE_KEY], $row[PRICE_IN_FRAISES_KEY]);
 		}
 	}
 }
@@ -270,6 +281,12 @@ doStandardItemType($dom, 'Shop/Contact_lenses', 'Contact Lenses', $itemInfo, 'co
 doStandardItemType($dom, 'Shop/Tattoo', 'Tattoo', $itemInfo, 'tattoo');
 doStandardItemType($dom, 'Shop/Hands', 'Hands', $itemInfo, 'hands');
 doStandardItemType($dom, 'Emoji', 'Emoji', $itemInfo, 'emoji', "//table[contains(@id, 'emoji-shop-table')]");
+
+// Special cases
+addNewArrayToAssocIfNeeded($itemInfo['head'], '198')['ptype'] = "collector";
+addNewArrayToAssocIfNeeded($itemInfo['head'], '95')['ptype'] = "freeish";
+addNewArrayToAssocIfNeeded($itemInfo['ears'], '9')['ptype'] = "freeish";
+addNewArrayToAssocIfNeeded($itemInfo['mouth'], '19')['ptype'] = "freeish";
 
 foreach ($itemInfo as $type => &$itemTypeMap) {
 	$itemTypeMap = array_filter($itemTypeMap, function($value) { return !empty($value); });

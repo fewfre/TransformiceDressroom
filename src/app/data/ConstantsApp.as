@@ -17,7 +17,7 @@ package app.data
 		/////////////////////////////
 		// General
 		/////////////////////////////
-		public static const VERSION           : String = "1.33c";
+		public static const VERSION           : String = "1.33d";
 		public static const SOURCE_URL        : String = "https://github.com/fewfre/TransformiceDressroom/blob/master/CHANGELOG.md";
 		public static const DISCORD_URL       : String = "https://discord.gg/DREPH9GqWw";
 		
@@ -37,6 +37,7 @@ package app.data
 		/////////////////////////////
 		public static const DOWNLOAD_ITEM_DATA_IMAGE : String = "download_item_data_image"; // ItemDataEvent
 		public static const FAVORITE_ADDED_OR_REMOVED : String = "favorite_added_or_removed"; // FewfEvent<{ itemType:ItemType }}>
+		public static const SHOW_PURCHASE_TYPE_TOGGLED : String = "show_purchase_type_toggled"; // FewfEvent<{ on:bool }}>
 		
 		/////////////////////////////
 		// Shared Object

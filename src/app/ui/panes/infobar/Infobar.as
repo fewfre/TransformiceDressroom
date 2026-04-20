@@ -105,13 +105,13 @@ package app.ui.panes.infobar
 			_leftButtonsTray = addChild(new Sprite()) as Sprite;
 			
 			if(!pData.showBackButton) {
-				_colorWheel = new ScaleButton(new $ColorWheel()).appendTo(this) as ScaleButton;
-				_colorWheel.move(_imageCont.x + _imageCont.width + _colorWheel.image.width*0.5 + 10, 25)
+				(_colorWheel = new ScaleButton(new $ColorWheel())).appendTo(this)
+					.move(_imageCont.x + _imageCont.width + _colorWheel.image.width*0.5 + 10, 25)
 					.onButtonClick(dispatchEventHandler(COLOR_WHEEL_CLICKED));
 				showColorWheel(false);
 			} else {
-				_backButton = new ScaleButton(new $BackArrow()).appendTo(this) as ScaleButton;
-				_backButton.move(_imageCont.x + _imageCont.width + _backButton.image.width*0.5 + 10, 25)
+				(_backButton = new ScaleButton(new $BackArrow())).appendTo(this)
+					.move(_imageCont.x + _imageCont.width + _backButton.image.width*0.5 + 10, 25)
 					.on(MouseEvent.MOUSE_UP, dispatchEventHandler(BACK_CLICKED));
 				_rearrangeLeftButtonsTray();
 			}
@@ -128,18 +128,18 @@ package app.ui.panes.infobar
 			* Image Buttons
 			*********************/
 			if(pData.showEyeDropper) {
-				_eyeDropperButton = new GameButton(BTN_SIZE).setImage(new $EyeDropper(), 0.45).move(0, BTN_Y).appendTo(_leftButtonsTray) as GameButton;
-				_eyeDropperButton.onButtonClick(dispatchEventHandler(EYE_DROPPER_CLICKED));
-				_eyeDropperButton.disable().setAlpha(0);
+				(_eyeDropperButton = new GameButton(BTN_SIZE)).setImage(new $EyeDropper(), 0.45).move(0, BTN_Y).appendTo(_leftButtonsTray)
+					.onButtonClick(dispatchEventHandler(EYE_DROPPER_CLICKED))
+					.disable().setAlpha(0);
 			}
 			if(pData.showFavorites) {
-				(_favoriteButton = new GameButton(BTN_SIZE)).setImage(new $HeartEmpty(), 1).setData({ pushed:false });
-				_favoriteButton.move(pData.showEyeDropper ? BTN_SIZE+3 : 0, BTN_Y).appendTo(_leftButtonsTray)
+				(_favoriteButton = new GameButton(BTN_SIZE)).setImage(new $HeartEmpty(), 1).setData({ pushed:false })
+					.move(pData.showEyeDropper ? BTN_SIZE+3 : 0, BTN_Y).appendTo(_leftButtonsTray)
+					.disable().setAlpha(0)
 					.onButtonClick(function(e):void{
 						_updateFavoriteButton(!_favoriteButton.data.pushed);
 						dispatchEvent(new FewfEvent(FAVORITE_CLICKED, { pushed:_favoriteButton.data.pushed }));
 					});
-				_favoriteButton.disable().setAlpha(0);
 				// This event handler is needed to update the button encase it's unfavorited from FavoritesPane while it's selected
 				Fewf.dispatcher.addEventListener(ConstantsApp.FAVORITE_ADDED_OR_REMOVED, function(e:FewfEvent):void{
 					if(!!_itemData && e.data.itemType == _itemData.type) {
@@ -153,12 +153,12 @@ package app.ui.panes.infobar
 			*********************/
 			if(pData.gridManagement) {
 				var widgetProps:Object = pData.gridManagement is Boolean ? {} : pData.gridManagement; // If a boolean ("true") use defaults
-				_gridManagementWidget = new GridManagementWidget(widgetProps).move(_width*0.5-20+(144/2), BTN_Y).appendTo(this);
-				_gridManagementWidget.on(GridManagementWidget.RANDOMIZE_CLICKED, function(e):void{ dispatchEvent(e); })
-				_gridManagementWidget.on(GridManagementWidget.RANDOMIZE_LOCK_CLICKED, function(e):void{ dispatchEvent(e); })
-				_gridManagementWidget.on(GridManagementWidget.REVERSE_CLICKED, function(e):void{ dispatchEvent(e); })
-				_gridManagementWidget.on(GridManagementWidget.LEFT_ARROW_CLICKED, function(e):void{ dispatchEvent(e); })
-				_gridManagementWidget.on(GridManagementWidget.RIGHT_ARROW_CLICKED, function(e):void{ dispatchEvent(e); });
+				_gridManagementWidget = new GridManagementWidget(widgetProps).move(_width*0.5-20+(144/2), BTN_Y).appendTo(this)
+					.on(GridManagementWidget.RANDOMIZE_CLICKED, function(e):void{ dispatchEvent(e); })
+					.on(GridManagementWidget.RANDOMIZE_LOCK_CLICKED, function(e):void{ dispatchEvent(e); })
+					.on(GridManagementWidget.REVERSE_CLICKED, function(e):void{ dispatchEvent(e); })
+					.on(GridManagementWidget.LEFT_ARROW_CLICKED, function(e):void{ dispatchEvent(e); })
+					.on(GridManagementWidget.RIGHT_ARROW_CLICKED, function(e):void{ dispatchEvent(e); });
 				FewfDisplayUtils.alignChildrenAroundAnchor(_gridManagementWidget, 0.5, null);
 			}
 			
@@ -167,9 +167,9 @@ package app.ui.panes.infobar
 			*********************/
 			_rightSideTray = DisplayWrapper.wrap(new Sprite(), this).move(_width, 0).asSprite;
 			if(pData.showDownload) {
-				(_downloadButton = new GameButton(BTN_SIZE)).setImage(new $SimpleDownload(), 0.45).move(-BTN_SIZE, BTN_Y).appendTo(_rightSideTray);
-				_downloadButton.onButtonClick(_onDownloadClicked);
-				_downloadButton.disable().setAlpha(0);
+				(_downloadButton = new GameButton(BTN_SIZE)).setImage(new $SimpleDownload(), 0.45).move(-BTN_SIZE, BTN_Y).appendTo(_rightSideTray)
+					.disable().setAlpha(0)
+					.onButtonClick(_onDownloadClicked);
 			}
 			
 			// Line separating infobar and contents below it

@@ -13,14 +13,17 @@ package app.ui.panes
 	import app.ui.panes.infobar.Infobar;
 	import app.world.data.ItemData;
 	import app.world.events.ItemDataEvent;
+
 	import com.fewfre.display.DisplayWrapper;
 	import com.fewfre.display.Grid;
 	import com.fewfre.events.FewfEvent;
 	import com.fewfre.utils.Fewf;
 	import com.fewfre.utils.FewfUtils;
+
 	import flash.display.DisplayObject;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
+	import flash.events.Event;
 	import flash.events.FocusEvent;
 	import flash.events.KeyboardEvent;
 	import flash.events.TextEvent;
@@ -59,6 +62,7 @@ package app.ui.panes
 			var tOtherPaneType:Boolean = ItemType.OTHER_PANE_ITEM_TYPES.indexOf(_type) > -1;
 			this.addInfobar( new Infobar({ showEyeDropper:_type!=ItemType.POSE, showDownload:true, gridManagement:{ hideRandomizeLock:tOtherPaneType }, showFavorites:true, showBackButton:tOtherPaneType }) );
 			_infobar.on(Infobar.FAVORITE_CLICKED, _addRemoveFavoriteToggled);
+			if(ItemInfo.supportedItemTypes.indexOf(_type) > -1) _infobar.addCustomObjectToRightSideTray( _createTopRightControlsTray() );
 			_setupGrid(GameAssets.getItemDataListByType(_type));
 			
 			_favoritesGrid = new Grid(ConstantsApp.PANE_WIDTH, 10, 3).move(7, 60+5).appendTo(this);
@@ -228,17 +232,35 @@ package app.ui.panes
 		private function _addItemInfoIconIfNeeded(itemData:ItemData, cell:Sprite) : void {
 			if(!ItemInfo.get(itemData)) { return; }
 			
+			var icon:DisplayWrapper, offset:Number = 10;
 			if(_type == ItemType.SKIN && ItemInfo.getSkin(itemData.id).isCostumeOnly) {
-				DisplayWrapper.wrap(new $InventoryBag(), cell).toScale(0.75).move(grid.cellSize - 10, grid.cellSize - 10).asSprite.mouseEnabled = false;
+				icon = new DisplayWrapper(new $InventoryBag()).toScale(0.75);
 			}
 			else if(ItemInfo.get(itemData).isCheeseOnly) {
-				DisplayWrapper.wrap(new $Fromage(), cell).toScale(0.35).move(grid.cellSize - 10, grid.cellSize - 10).asSprite.mouseEnabled = false;
+				icon = new DisplayWrapper(new $Fromage()).toScale(0.35);
 			}
+			else if(ItemInfo.get(itemData).isAlwaysInShop) {
+				icon = new DisplayWrapper(new $AlwaysInShop()).toScale(0.7);
+			}
+			// else if(ItemInfo.get(itemData).isCollector) {
+			// 	icon = new DisplayWrapper(new $CollectorItemIcon()).toScale(0.7);
+			// }
 			else if(ItemInfo.get(itemData).isEventReward) {
-				DisplayWrapper.wrap(new $FireworkRockets(), cell).toScale(0.75).move(grid.cellSize - 10, grid.cellSize - 10).asSprite.mouseEnabled = false;
+				icon = new DisplayWrapper(new $FireworkRockets()).toScale(0.75);
 			}
-			else if(ItemInfo.get(itemData).isNotCollector) {
-				DisplayWrapper.wrap(new $NotCollectorIcon(), cell).toScale(0.7).move(grid.cellSize - 10, grid.cellSize - 10).asSprite.mouseEnabled = false;
+			else if(ItemInfo.get(itemData).isStarCoin) {
+				icon = new DisplayWrapper(new $StarCoin()).toScale(0.8);
+			}
+			else if(ItemInfo.get(itemData).isFreeish) {
+				offset = 9;
+				icon = new DisplayWrapper(new $GreenCircleItemType()).toScale(0.75);
+			}
+			
+			if(icon) {
+				icon.appendTo(cell).toAlpha(ItemInfo.showPurchaseTypeInUi ? 1 : 0).move(grid.cellSize - offset, grid.cellSize - offset).asSprite.mouseEnabled = false;
+				Fewf.dispatcher.addEventListener(ConstantsApp.SHOW_PURCHASE_TYPE_TOGGLED, function(e:FewfEvent):void{
+					icon.toAlpha(e.data.on ? 1 : 0);
+				});
 			}
 		}
 		
@@ -295,6 +317,36 @@ package app.ui.panes
 			} else {
 				FavoriteItemsLocalStorageManager.removeFavorite(tItemData);
 			}
+		}
+		
+		/****************************
+		* Top Right Controls
+		*****************************/
+		private function _createTopRightControlsTray() : Sprite {
+			const tray:Sprite = new Sprite();
+			_createPurchaseTypeToggleButton().appendTo(tray);
+			return tray;
+		}
+		
+		// NOTE: the show purchase toggle is global, so it needs to listen to the global state so it knows to change if a different toggle was pressed
+		private var _showPurchaseTypeToggle:PushButton;
+		private function _createPurchaseTypeToggleButton() : PushButton {
+			(_showPurchaseTypeToggle = new PushButton(24)).setImage(new $AlwaysInShop(), 0.75).move((-24*1), 0)
+			_showPurchaseTypeToggle
+				.toggle(ItemInfo.showPurchaseTypeInUi, false)
+				.onToggle(function(e:Event):void{
+					ItemInfo.showPurchaseTypeInUi = !ItemInfo.showPurchaseTypeInUi;
+					Fewf.dispatcher.dispatchEvent(new FewfEvent(ConstantsApp.SHOW_PURCHASE_TYPE_TOGGLED, { on:ItemInfo.showPurchaseTypeInUi }));
+				});
+				Fewf.dispatcher.addEventListener(ConstantsApp.SHOW_PURCHASE_TYPE_TOGGLED, function(e:FewfEvent):void{
+					_showPurchaseTypeToggle.toggle(e.data.on, false);
+					_showPurchaseTypeToggle.Image.alpha = e.data.on ? 1 : 0.5
+				});
+			_showPurchaseTypeToggle.Image.x += 0.5;
+			_showPurchaseTypeToggle.Image.y += 0.5;
+			_showPurchaseTypeToggle.Image.alpha = ItemInfo.showPurchaseTypeInUi ? 1 : 0.5;
+			
+			return _showPurchaseTypeToggle;
 		}
 		
 		/****************************

@@ -29,6 +29,8 @@ package app.ui.buttons
 		}
 		public function setAllowToggleOff(pVal:Boolean) : PushButton { _allowToggleOff = pVal; return this; }
 		public function onToggle(listener:Function, useCapture:Boolean = false): PushButton { return this.on(PushButton.TOGGLE, listener, useCapture) as PushButton; }
+		public function onPushed(listener:Function, useCapture:Boolean = false): PushButton { return this.on(PushButton.PUSHED, listener, useCapture) as PushButton; }
+		public function onUnpushed(listener:Function, useCapture:Boolean = false): PushButton { return this.on(PushButton.UNPUSHED, listener, useCapture) as PushButton; }
 		
 		protected function _renderUnpressed() : void {
 			super._renderUp();

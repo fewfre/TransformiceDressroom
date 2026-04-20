@@ -1,3 +1,11 @@
+## V1.33d - 19 April 2026
+- purchase type icons now hidden by default, with a newly added toggle on top right to turn it on/off
+- Shop icon now only shows up when item is not a collector and still has a shop price that isn't only cheese
+- Fixed some items now showing proper type
+- Added new "free-ish" item type (represented by a green circle) for items that can be obtained at anytime for free / with minimal effort
+- [Code] Instead of separate flags a new `ptype` field is used (except for costumes, since a few costumes can also be purchaseable)
+
+
 ## V1.33c - 18 April 2026
 - Based on feedback instead of an icon for which items are collectors (which is most of them), instead an icon is shown when it's an item permanently available in the shop
 
