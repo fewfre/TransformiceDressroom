@@ -1,3 +1,8 @@
+## V1.33e - 20 April 2026
+- Added an undo button to share code box that appears whenever an outfit is applied (either by share code, outfit manager, or otherwise) - undo button removed after any item changes made
+- [Fix] Fixed bug from last update that caused shaman wings to lose it's color customization
+
+
 ## V1.33d - 19 April 2026
 - purchase type icons now hidden by default, with a newly added toggle on top right to turn it on/off
 - Shop icon now only shows up when item is not a collector and still has a shop price that isn't only cheese

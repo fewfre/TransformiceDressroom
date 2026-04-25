@@ -40,6 +40,7 @@ package app.world
 		private var _character         : Character;
 		private var _shopTabs          : ShopTabList;
 		private var _toolbox           : Toolbox;
+		private var _pasteShareCodeInput : PasteShareCodeInput;
 		private var _itemFilterBanner  : ItemFilterBanner;
 		private var _animationControls : AnimationControls;
 		private var _restoreAutoSaveBtn: GameButton;
@@ -51,6 +52,8 @@ package app.world
 		private var _trashConfirmScreen : TrashConfirmScreen;
 
 		private var currentlyColoringType:ItemType=null;
+		private var _prevOutfitBeforeShareCode:String;
+		private var _disablePrevOutfitBeforeShareCodeLogic:Boolean = false;
 		
 		private var _itemFiltering_filterEnabled : Boolean = false;
 		private var _itemFiltering_selectionModePreview : Boolean = false;
@@ -119,8 +122,9 @@ package app.world
 				.on(Toolbox.TRASH_CLICKED, _onTrashButtonClicked);
 				
 			if(!ConstantsApp.CONFIG_TAB_ENABLED) {
-				new PasteShareCodeInput().appendTo(_leftSideTray).move(206, 62)
-					.on(PasteShareCodeInput.CHANGE, function(e:FewfEvent):void{ _onShareCodeEntered(e.data.code, e.data.update); });
+				_pasteShareCodeInput = new PasteShareCodeInput().appendTo(_leftSideTray).move(206, 62)
+					.on(PasteShareCodeInput.CHANGE, function(e:FewfEvent):void{ _onShareCodeEntered(e.data.code, e.data.update); })
+					.on(PasteShareCodeInput.UNDO_ICON_CLICKED, function(e:Event):void{ _useOutfitShareCode(_prevOutfitBeforeShareCode); _clearOutfitCachedBeforeLastOutfitChange(); });
 			}
 				
 			_itemFilterBanner = new ItemFilterBanner().move(76, ConstantsApp.APP_HEIGHT - 17).appendTo(_leftSideTray)
@@ -389,6 +393,10 @@ package app.world
 			if(code.indexOf("?") > -1) {
 				code = code.substr(code.indexOf("?") + 1, code.length);
 			}
+			
+			// Store outfit being replaced in list
+			_cacheOutfitBeforeApplyingShareCode( _character.outfitData.stringify_fewfreSyntax() );
+			_disablePrevOutfitBeforeShareCodeLogic = true;
 		
 			// First remove old stuff to prevent conflicts
 			_character.outfitData.shamanMode = ShamanMode.OFF;
@@ -409,6 +417,7 @@ package app.world
 			_updateUIBasedOnCharacter();
 			_panes.otherPane.updateButtonsBasedOnCurrentData();
 			
+			_disablePrevOutfitBeforeShareCodeLogic = false;
 			return parseSuccess;
 		}
 		
@@ -449,6 +458,7 @@ package app.world
 			_animationControls.setTargetMovieClip(_character.pose.poseMC);
 			Fewf.sharedObject.setData(ConstantsApp.SHARED_OBJECT_KEY_AUTO_SAVE_LOOK, _character.outfitData.stringify_fewfreSyntax());
 			_removeRestoreAutoSaveButton();
+			_clearOutfitCachedBeforeLastOutfitChange();
 			
 			if(_panes.wornItemsPane && _panes.wornItemsPane.flagOpen) _panes.wornItemsPane.init(_character.outfitData);
 		}
@@ -460,7 +470,11 @@ package app.world
 				setTimeout(function():void{
 					// If auto saved outfit, prompt user to use or not
 					(_restoreAutoSaveBtn = new GameButton(120, 16)).setText("restore_auto_save_btn", { size:10 }).setOrigin(0.5).move(185, 90).setData({ look:autoSavedLook }).appendTo(_leftSideTray)
-						.onButtonClick(function(e:FewfEvent):void{ _useOutfitShareCode(e.data.look); });
+						.onButtonClick(function(e:FewfEvent):void{
+							_disablePrevOutfitBeforeShareCodeLogic = true;
+							_useOutfitShareCode(e.data.look);
+							_disablePrevOutfitBeforeShareCodeLogic = false;
+						});
 					// Update button width to match text
 					_restoreAutoSaveBtn.resize(_restoreAutoSaveBtn.Text.width + 10, 16);
 					Fewf.dispatcher.addEventListener(I18n.FILE_UPDATED, function(e):void{
@@ -474,6 +488,17 @@ package app.world
 				_restoreAutoSaveBtn.removeSelf();
 				_restoreAutoSaveBtn = null;
 			}
+		}
+		
+		private function _cacheOutfitBeforeApplyingShareCode(pCode:String) : void {
+			if(_disablePrevOutfitBeforeShareCodeLogic) return;
+			_prevOutfitBeforeShareCode = pCode;
+			_pasteShareCodeInput.toggleUndoIcon(true);
+		}
+		private function _clearOutfitCachedBeforeLastOutfitChange() : void {
+			if(_disablePrevOutfitBeforeShareCodeLogic) return;
+			_prevOutfitBeforeShareCode = null;
+			_pasteShareCodeInput.toggleUndoIcon(false);
 		}
 
 		private function _onPlayerAnimationToggle(e:Event):void {
