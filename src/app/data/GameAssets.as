@@ -37,6 +37,7 @@ package app.data
 
 		private static var _defaultSkinIndex:int;
 		private static var _defaultPoseIndex:int;
+		private static var _flagWavingPoseIndex:int;
 
 		public static var extraObjectWand:ItemData;
 		public static var extraBackHand:ItemData;
@@ -49,6 +50,7 @@ package app.data
 
 		public static function get defaultSkin() : ItemData { return skins[_defaultSkinIndex]; }
 		public static function get defaultPose() : ItemData { return poses[_defaultPoseIndex]; }
+		public static function get flagWavingPose() : ItemData { return poses[_flagWavingPoseIndex]; }
 
 		public static function init(pOnInitComplete:Function) : void {
 			_doInitSteps(new <Function>[
@@ -113,7 +115,7 @@ function(){
 function(){
 	poses = new Vector.<ItemData>();
 	var tPoseClasses = [
-		"Statique", "Course", "Duck", "Sleep", "Sit", "Mad", "Laugh", "Kiss", "Facepalm", "Danse", "Cry", "Confetti", "Clap",
+		"Statique", "Course", "Duck", "Sleep", "Sit", "Mad", "Laugh", "Laugh_2", "Kiss", "Facepalm", "Danse", "Cry", "Confetti", "Clap",
 		"Rondoudou", "Selfie", "Zelda", "Plumes", "Langue", "Drapeau",
 		"Neige", "Attaque", "StatiqueBalai", "CourseBalai", "PreInvoc", "Invoc", "Peche", "Marshmallow", "Cadeau",
 		"Hi5_1", "Hi5_2", "Calin_1", "Calin_2", "Bisou_1", "Bisou_2",
@@ -121,6 +123,7 @@ function(){
 	// Unused: AnimPFC_1/AnimPFC_2
 	for(var i:int = 0; i < tPoseClasses.length; i++) {
 		poses.push(new ItemData(ItemType.POSE, tPoseClasses[i], { itemClass:Fewf.assets.getLoadedClass( "Anim"+tPoseClasses[i] ) }));
+		if(tPoseClasses[i] === "Drapeau") _flagWavingPoseIndex = i;
 	}
 	_defaultPoseIndex = 0;//FewfUtils.getIndexFromVectorWithKeyVal(poses, "id", ConstantsApp.DEFAULT_POSE_ID);
 },

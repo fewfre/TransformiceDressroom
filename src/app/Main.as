@@ -18,6 +18,7 @@ package app
 		// Storage
 		private var _loaderDisplay : LoaderDisplay;
 		private var _errorScreen   : ErrorScreen;
+		private var _worldLayer    : Sprite; // Need layer defined to ensure error/loading screen remains on top
 		private var _worldManager  : WorldManager;
 		private var _world         : World;
 		
@@ -43,6 +44,7 @@ package app
 
 			BrowserMouseWheelPrevention.init(stage);
 
+			addChild(_worldLayer = new Sprite());
 			_loaderDisplay = new LoaderDisplay().move(ConstantsApp.CENTER_X, ConstantsApp.CENTER_Y).appendTo(this);
 			
 			_errorScreen = new ErrorScreen().onCloseRemoveSelf();
@@ -111,7 +113,7 @@ package app
 			_loaderDisplay.removeSelf().destroy();
 			_loaderDisplay = null;
 			
-			_worldManager = new WorldManager(this, stage);
+			_worldManager = new WorldManager(_worldLayer, stage);
 			// Don't remove this `_world` reference as at least 1 webhook needs it
 			_world = _worldManager.mainWorld;
 		}

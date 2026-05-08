@@ -1,6 +1,7 @@
 ## V1.33e - 20 April 2026
 - Added an undo button to share code box that appears whenever an outfit is applied (either by share code, outfit manager, or otherwise) - undo button removed after any item changes made
 - [Fix] Fixed bug from last update that caused shaman wings to lose it's color customization
+- (7 May) Added new Laugh_2 pose
 
 
 ## V1.33d - 19 April 2026

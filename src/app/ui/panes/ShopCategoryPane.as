@@ -201,7 +201,7 @@ package app.ui.panes
 		}
 		
 		private function _addFlagWaveInputIfNeeded(itemData:ItemData, cell:Sprite, parentButton:PushButton) : void {
-			if(!GameAssets.poses[18].matches(itemData)) { return; }
+			if(itemData.type != ItemType.POSE || !GameAssets.flagWavingPose.matches(itemData)) { return; }
 			// Flag waving code text field
 			// cannot attach to button due to main button eating mouse events
 			_flagWaveInput = new FancyInput({ width:grid.cellSize-8, height:16, padding:2 }).move(grid.cellSize/2 + 0.5, 12).appendTo(cell);
