@@ -9,6 +9,7 @@ package app.data
 	import flash.geom.*;
 	import flash.utils.setTimeout;
 	import com.fewfre.display.DisplayWrapper;
+	import flash.utils.Dictionary;
 
 	public class GameAssets
 	{
@@ -193,9 +194,9 @@ pOnInitComplete
 			return ret;
 		}
 
-		/****************************
-		* Access Data
-		*****************************/
+		//////////////////////////////
+		// region Access Data
+		//////////////////////////////
 		public static function getItemDataListByType(pType:ItemType) : Vector.<ItemData> {
 			switch(pType) {
 				case ItemType.HAIR:		return hair;
@@ -229,9 +230,9 @@ pOnInitComplete
 			return GameAssets.defaultSkin.matches(pItemData) || GameAssets.defaultPose.matches(pItemData);
 		}
 
-		/****************************
-		* Color - GET
-		*****************************/
+		//////////////////////////////
+		//#region Color - GET
+		//////////////////////////////
 		public static function findDefaultColors(pMC:MovieClip) : Vector.<uint> {
 			return Vector.<uint>( _findDefaultColorsRecursive(pMC, []) );
 		}
@@ -283,9 +284,9 @@ pOnInitComplete
 			return (255-tR)<<16 | (255-tG)<<8 | (255-tB);
 		}
 
-		/****************************
-		* Color - APPLY
-		*****************************/
+		//////////////////////////////
+		//#region Color - APPLY
+		//////////////////////////////
 		public static function copyColor(copyFromMC:MovieClip, copyToMC:MovieClip) : MovieClip {
 			if (copyFromMC == null || copyToMC == null) { return null; }
 			var tChildSource:DisplayObject=null, tChildTarget:DisplayObject=null;
@@ -341,9 +342,9 @@ pOnInitComplete
 			return pMC;
 		}
 
-		/****************************
-		* Asset Creation
-		*****************************/
+		//////////////////////////////
+		//#region Asset Creation
+		//////////////////////////////
 		public static function getItemImage(pData:ItemData) : MovieClip {
 			var tItem:MovieClip;
 			switch(pData.type) {
@@ -410,9 +411,39 @@ pOnInitComplete
 			return tPose;
 		}
 		
-		/****************************
-		* Misc
-		*****************************/
+		private static const _emoteIconMap:Dictionary = new Dictionary();
+		_emoteIconMap["Sleep"] = $EmoteIcon_Sleep;
+		_emoteIconMap["Sit"] = $EmoteIcon_Sit;
+		_emoteIconMap["Mad"] = $EmoteIcon_Mad;
+		_emoteIconMap["Laugh"] = $EmoteIcon_Laugh;
+		_emoteIconMap["Laugh_2"] = $EmoteIcon_Laugh_2;
+		_emoteIconMap["Kiss"] = $EmoteIcon_Kiss;
+		_emoteIconMap["Facepalm"] = $EmoteIcon_Facepalm;
+		_emoteIconMap["Danse"] = $EmoteIcon_Danse;
+		_emoteIconMap["Cry"] = $EmoteIcon_Cry;
+		_emoteIconMap["Confetti"] = $EmoteIcon_Confetti;
+		_emoteIconMap["Clap"] = $EmoteIcon_Clap;
+		// Multi-part ones
+		_emoteIconMap["Hi5"] = $EmoteIcon_Hi5;
+		_emoteIconMap["Calin"] = $EmoteIcon_Calin;
+		_emoteIconMap["Bisou"] = $EmoteIcon_Bisou;
+		_emoteIconMap["PFC"] = $EmoteIcon_PFC;
+		
+		public static function getEmoteIconFromPoseId(poseId:String) : Sprite {
+			// Can't just replace them all with way as "Laugh_2" is a separate unique emote, not a multi part one
+			if(["Hi5_1", "Hi5_2", "Calin_1", "Calin_2", "Bisou_1", "Bisou_2", "PFC_1", "PFC_2"].indexOf(poseId) != -1) {
+				poseId = poseId.replace("_1", "").replace("_2", "");
+			}
+			try {
+				var iconClass:Class = _emoteIconMap[poseId] as Class;
+				return iconClass ? new iconClass() : null;
+			} catch(e){}
+			return null;
+		}
+		
+		//////////////////////////////
+		//#region Misc
+		//////////////////////////////
 		public static function createHorizontalRule(pX:Number, pY:Number, pWidth:Number) : DisplayWrapper {
 			return new DisplayWrapper(new Shape()).move(pX, pY).draw(function(graphics:Graphics):void{
 				graphics.lineStyle(1, 0x11181c, 1, true);

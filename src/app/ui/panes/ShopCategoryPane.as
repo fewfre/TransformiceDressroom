@@ -230,6 +230,11 @@ package app.ui.panes
 		}
 		
 		private function _addItemInfoIconIfNeeded(itemData:ItemData, cell:Sprite) : void {
+			if(itemData.type === ItemType.POSE) {
+				var emoteIcon:Sprite = GameAssets.getEmoteIconFromPoseId(itemData.id);
+				if(emoteIcon) new DisplayWrapper(emoteIcon).appendTo(cell).toScale(0.8).move(grid.cellSize - 18, grid.cellSize - 18).asSprite.mouseEnabled = false;
+				return;
+			}
 			if(!ItemInfo.get(itemData)) { return; }
 			
 			var icon:DisplayWrapper, offset:Number = 10;
