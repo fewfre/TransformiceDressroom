@@ -34,7 +34,7 @@ package app.ui.panes
 		private var _type: ItemType;
 		private var _itemDataVector: Vector.<ItemData>;
 		private var _defaultItemData: ItemData;
-		public var _favoritesGrid : Grid;
+		public var _favoritesBar : FavoritesBar;
 		
 		private var _flagWaveInput: FancyInput;
 		public function get flagWaveInput() : FancyInput { return _flagWaveInput; }
@@ -65,16 +65,15 @@ package app.ui.panes
 			if(ItemInfo.supportedItemTypes.indexOf(_type) > -1) _infobar.addCustomObjectToRightSideTray( _createTopRightControlsTray() );
 			_setupGrid(GameAssets.getItemDataListByType(_type));
 			
-			_favoritesGrid = new Grid(ConstantsApp.PANE_WIDTH, 10, 3).move(7, 60+5).appendTo(this);
-			_renderFavorites();
-			Fewf.dispatcher.addEventListener(ConstantsApp.FAVORITE_ADDED_OR_REMOVED, function(e:FewfEvent):void{
-				if(e.data.itemType == _type) _renderFavorites();
-			});
+			_favoritesBar = new FavoritesBar(_type).move(7, 60+5).appendTo(this)
+				.on(FavoritesBar.CONTENT_CHANGED, function(e:Event):void{ _repositionUIElementsAfterFavoritesChange(); })
+				.on(FavoritesBar.FAVORITE_CLICKED, _onFavoriteClicked);
+			_repositionUIElementsAfterFavoritesChange(); // Call once at start encase there's already favorites to position for
 		}
 		
-		/****************************
-		* Public
-		*****************************/
+		//////////////////////////////
+		//#region Public
+		//////////////////////////////
 		public override function open() : void {
 			super.open();
 		}
@@ -117,7 +116,7 @@ package app.ui.panes
 			var list:Vector.<ItemData> = GameAssets.getItemDataListByType(_type);
 			if(pIds) { list = list.filter(function(data:ItemData, i, a){ return pIds.indexOf(data.id) >= 0 }) }
 			_setupGrid(list);
-			_renderFavorites();
+			_favoritesBar.filterToOnlyShowItems(list);
 		}
 		
 		// Update image when colors have been changed
@@ -149,9 +148,9 @@ package app.ui.panes
 			this.infobar.showColorWheel(showColorWheel);
 		}
 		
-		/****************************
-		* Private
-		*****************************/
+		//////////////////////////////
+		//#region Private
+		//////////////////////////////
 		protected function _getCellWithItemData(itemData:ItemData) : DisplayObject {
 			return !itemData ? null : FewfUtils.vectorFind(grid.cells, function(c:DisplayObject){ return itemData.matches(_findPushButtonInCell(c).data.itemData) });
 		}
@@ -269,42 +268,18 @@ package app.ui.panes
 			}
 		}
 		
-		/****************************
-		* Favorites
-		*****************************/
-		private function _getIdsOfFilteredItems() : Vector.<String> {
-			var availableIds:Vector.<String> = new Vector.<String>();
-			for each(var tItemData:ItemData in _itemDataVector) {
-				availableIds.push(tItemData.id);
-			}
-			return availableIds;
+		//////////////////////////////
+		//#region Favorites
+		//////////////////////////////
+		private function _repositionUIElementsAfterFavoritesChange() : void {
+			// Reposition elements to make room for favorites bar based on how much space it is taking up (if any)
+			_scrollbox.y = 65 + _favoritesBar.calculatedHeight+5; // shift it down an extra 5 so that main grid list isn't touching it (padding)
+			_grid.y = _favoritesBar.hasContent ? 0 : 3; // If fav grid exists, then shift grid up to avoid an extra gap between fav list and grid
+			_scrollbox.resize(_scrollbox.scrollPane.width, defaultScrollboxHeight - (_favoritesBar.calculatedHeight+3))
 		}
 		
-		private function _renderFavorites() : void {
-			var favIds:Array = FavoriteItemsLocalStorageManager.getFavoritesIdList(_type).concat().reverse(); // Reverse so newest show first
-			
-			_favoritesGrid.reset();
-			_favoritesGrid.columns = Math.min(16, Math.max(10, favIds.length));
-			
-			var availableIds:Vector.<String> = _getIdsOfFilteredItems();
-			var tItemData:ItemData;
-			for each(var tId:String in favIds) {
-				if(availableIds.indexOf(tId) == -1) continue;
-				tItemData = GameAssets.getItemFromTypeID(_type, tId);
-				if(tItemData) {
-					_favoritesGrid.add(new GameButton(_favoritesGrid.cellSize).setImage(GameAssets.getItemImage(tItemData)).setData(tItemData)
-						.onButtonClick(_favoriteClicked));
-				}
-			}
-			
-			// Update rest of UI to make room for it
-			_scrollbox.y = 65 + _favoritesGrid.calculatedHeight+5; // shift it down an extra 5 so that main grid list isn't touching it (padding)
-			_grid.y = favIds.length > 0 ? 0 : 3; // If fav grid exists, then shift grid up to avoid an extra gap between fav list and grid
-			_scrollbox.resize(_scrollbox.scrollPane.width, defaultScrollboxHeight - (_favoritesGrid.calculatedHeight+3))
-		}
-		
-		private function _favoriteClicked(e:FewfEvent) : void {
-			var itemData:ItemData = (e.currentTarget as GameButton).data as ItemData;
+		private function _onFavoriteClicked(e:ItemDataEvent) : void {
+			var itemData:ItemData = e.itemData;
 			var btn:PushButton = _getButtonWithItemData(itemData);
 			if(btn && btn.pushed) {
 				// This allows clicking the button to toggle it off if already toggled
@@ -324,9 +299,9 @@ package app.ui.panes
 			}
 		}
 		
-		/****************************
-		* Top Right Controls
-		*****************************/
+		//////////////////////////////
+		//#region Top Right Controls
+		//////////////////////////////
 		private function _createTopRightControlsTray() : Sprite {
 			const tray:Sprite = new Sprite();
 			_createPurchaseTypeToggleButton().appendTo(tray);
@@ -354,9 +329,9 @@ package app.ui.panes
 			return _showPurchaseTypeToggle;
 		}
 		
-		/****************************
-		* Events
-		*****************************/
+		//////////////////////////////
+		//#region Events
+		//////////////////////////////
 		protected override function _onCellPushButtonToggled(e:FewfEvent) : void {
 			super._onCellPushButtonToggled(e);
 			_dispatchItemDataEvent(e.data.itemData, (e.currentTarget as PushButton).pushed);
@@ -365,5 +340,86 @@ package app.ui.panes
 		private function _dispatchItemDataEvent(itemData:ItemData, selected:Boolean=true) : void {
 			dispatchEvent(new ItemDataEvent(selected ? ITEM_SELECTED : ITEM_REMOVED, itemData));
 		}
+	}
+}
+
+//#region FavoritesBar
+import app.data.ConstantsApp;
+import app.data.FavoriteItemsLocalStorageManager;
+import app.data.GameAssets;
+import app.data.ItemType;
+import app.ui.buttons.GameButton;
+import app.ui.buttons.PushButton;
+import app.world.data.ItemData;
+import app.world.events.ItemDataEvent;
+
+import com.fewfre.display.Grid;
+import com.fewfre.events.FewfEvent;
+import com.fewfre.utils.Fewf;
+
+import flash.display.Sprite;
+import flash.events.Event;
+
+class FavoritesBar
+{
+	// Constants
+	public static const CONTENT_CHANGED : String = "CONTENT_CHANGED"; // Event
+	public static const FAVORITE_CLICKED : String = "FAVORITE_CLICKED"; // ItemDataEvent
+	
+	// Storage
+	private var _root : Sprite;
+	private var _type : ItemType;
+	private var _favoritesGrid : Grid;
+	private var _availableIds : Vector.<String> = new Vector.<String>();
+	
+	// Properties
+	public function get calculatedHeight() : Number { return _favoritesGrid.calculatedHeight; }
+	public function get hasContent() : Boolean { return FavoriteItemsLocalStorageManager.getFavoritesIdList(_type).length > 0; }
+	
+	// Constructor
+	public function FavoritesBar(pItemType:ItemType) {
+		_root = new Sprite();
+		_type = pItemType;
+		_favoritesGrid = new Grid(ConstantsApp.PANE_WIDTH, 10, 3).appendTo(_root);
+		Fewf.dispatcher.addEventListener(ConstantsApp.FAVORITE_ADDED_OR_REMOVED, function(e:FewfEvent):void{
+			if(e.data.itemType == _type) _render();
+		});
+		_render();
+	}
+	public function move(pX:Number, pY:Number) : FavoritesBar { _root.x = pX; _root.y = pY; return this; }
+	public function appendTo(pParent:Sprite): FavoritesBar { pParent.addChild(_root); return this; }
+	public function on(type:String, listener:Function): FavoritesBar { _root.addEventListener(type, listener); return this; }
+	public function off(type:String, listener:Function): FavoritesBar { _root.removeEventListener(type, listener); return this; }
+	
+	public function filterToOnlyShowItems(pItems:Vector.<ItemData>) : void {
+		_availableIds = new Vector.<String>();
+		for each(var tItemData:ItemData in pItems) {
+			_availableIds.push(tItemData.id);
+		}
+		_render();
+	}
+	
+	private function _render() : void {
+		var favIds:Array = FavoriteItemsLocalStorageManager.getFavoritesIdList(_type).concat().reverse(); // Reverse so newest show first
+		
+		_favoritesGrid.reset();
+		_favoritesGrid.columns = Math.min(16, Math.max(10, favIds.length));
+		
+		var tItemData:ItemData;
+		for each(var tId:String in favIds) {
+			if(_availableIds.length > 0 && _availableIds.indexOf(tId) == -1) continue;
+			tItemData = GameAssets.getItemFromTypeID(_type, tId);
+			if(tItemData) {
+				_favoritesGrid.add(new GameButton(_favoritesGrid.cellSize).setImage(GameAssets.getItemImage(tItemData)).setData(tItemData)
+					.onButtonClick(_favoriteClicked));
+			}
+		}
+		
+		_root.dispatchEvent(new Event(CONTENT_CHANGED));
+	}
+	
+	private function _favoriteClicked(e:FewfEvent) : void {
+		var itemData:ItemData = (e.currentTarget as GameButton).data as ItemData;
+		_root.dispatchEvent(new ItemDataEvent(FAVORITE_CLICKED, itemData));
 	}
 }
