@@ -65,7 +65,7 @@ package app.ui.panes
 			if(ItemInfo.supportedItemTypes.indexOf(_type) > -1) _infobar.addCustomObjectToRightSideTray( _createTopRightControlsTray() );
 			_setupGrid(GameAssets.getItemDataListByType(_type));
 			
-			_favoritesBar = new FavoritesBar(_type).move(7, 60+5).appendTo(this)
+			_favoritesBar = new FavoritesBar(_type, function(){ var i = _findIndexOfActiveGridCell(); return i >= 0 ? _findPushButtonInCell(grid.cells[i]).data.itemData : (_defaultItemData || null); }).move(7, 60+5).appendTo(this)
 				.on(FavoritesBar.CONTENT_CHANGED, function(e:Event):void{ _repositionUIElementsAfterFavoritesChange(); })
 				.on(FavoritesBar.FAVORITE_CLICKED, _onFavoriteClicked);
 			_repositionUIElementsAfterFavoritesChange(); // Call once at start encase there's already favorites to position for
@@ -350,6 +350,7 @@ import app.data.GameAssets;
 import app.data.ItemType;
 import app.ui.buttons.GameButton;
 import app.ui.buttons.PushButton;
+import app.ui.buttons.ScaleButton;
 import app.world.data.ItemData;
 import app.world.events.ItemDataEvent;
 
@@ -370,20 +371,28 @@ class FavoritesBar
 	private var _root : Sprite;
 	private var _type : ItemType;
 	private var _favoritesGrid : Grid;
+	private var _arrowButtonTray : Sprite;
 	private var _availableIds : Vector.<String> = new Vector.<String>();
+	private var _favoritesItems : Vector.<ItemData> = new Vector.<ItemData>();
+	private var _getActiveItemData : Function;
 	
 	// Properties
 	public function get calculatedHeight() : Number { return _favoritesGrid.calculatedHeight; }
-	public function get hasContent() : Boolean { return FavoriteItemsLocalStorageManager.getFavoritesIdList(_type).length > 0; }
+	public function get hasContent() : Boolean { return _favoritesGrid.cells.length > 0; }
 	
 	// Constructor
-	public function FavoritesBar(pItemType:ItemType) {
+	public function FavoritesBar(pItemType:ItemType, pGetActiveItemData:Function) {
 		_root = new Sprite();
 		_type = pItemType;
+		_getActiveItemData = pGetActiveItemData;
 		_favoritesGrid = new Grid(ConstantsApp.PANE_WIDTH, 10, 3).appendTo(_root);
 		Fewf.dispatcher.addEventListener(ConstantsApp.FAVORITE_ADDED_OR_REMOVED, function(e:FewfEvent):void{
-			if(e.data.itemType == _type) _render();
+			if(e.data.itemType == _type) {
+				_refreshFavoriteItems();
+				_render();
+			}
 		});
+		_refreshFavoriteItems();
 		_render();
 	}
 	public function move(pX:Number, pY:Number) : FavoritesBar { _root.x = pX; _root.y = pY; return this; }
@@ -396,30 +405,88 @@ class FavoritesBar
 		for each(var tItemData:ItemData in pItems) {
 			_availableIds.push(tItemData.id);
 		}
+		_refreshFavoriteItems();
 		_render();
 	}
 	
+	private function _dispatchEvent(pEvent:Event) : void { _root.dispatchEvent(pEvent); }
+	
 	private function _render() : void {
-		var favIds:Array = FavoriteItemsLocalStorageManager.getFavoritesIdList(_type).concat().reverse(); // Reverse so newest show first
-		
 		_favoritesGrid.reset();
-		_favoritesGrid.columns = Math.min(16, Math.max(10, favIds.length));
+		var showNextButton:Boolean = _favoritesItems.length >= 3;
+		var totalCells:uint = _favoritesItems.length + (showNextButton ? 1 : 0);
+		var columns:uint = Math.min(16, Math.max(10, totalCells));
+		if(showNextButton && columns == 16 && totalCells % 16 == 1) {
+			columns = 15;
+		}
+		_favoritesGrid.columns = columns;
 		
-		var tItemData:ItemData;
-		for each(var tId:String in favIds) {
-			if(_availableIds.length > 0 && _availableIds.indexOf(tId) == -1) continue;
-			tItemData = GameAssets.getItemFromTypeID(_type, tId);
-			if(tItemData) {
-				_favoritesGrid.add(new GameButton(_favoritesGrid.cellSize).setImage(GameAssets.getItemImage(tItemData)).setData(tItemData)
-					.onButtonClick(_favoriteClicked));
-			}
+		for each(var tVisibleItemData:ItemData in _favoritesItems) {
+			_favoritesGrid.add(new GameButton(_favoritesGrid.cellSize).setImage(GameAssets.getItemImage(tVisibleItemData)).setData(tVisibleItemData)
+				.onButtonClick(_favoriteClicked));
 		}
 		
-		_root.dispatchEvent(new Event(CONTENT_CHANGED));
+		if(showNextButton) {
+			_favoritesGrid.add(_setupArrowButtonTray());
+		}
+		
+		_dispatchEvent(new Event(CONTENT_CHANGED));
+	}
+	
+	private function _refreshFavoriteItems() : void {
+		var favIds:Array = FavoriteItemsLocalStorageManager.getFavoritesIdList(_type).concat().reverse();
+		_favoritesItems = new Vector.<ItemData>();
+		for each(var tId:String in favIds) {
+			if(_availableIds.length > 0 && _availableIds.indexOf(tId) == -1) continue;
+			var tItemData:ItemData = GameAssets.getItemFromTypeID(_type, tId);
+			if(tItemData) _favoritesItems.push(tItemData);
+		}
 	}
 	
 	private function _favoriteClicked(e:FewfEvent) : void {
 		var itemData:ItemData = (e.currentTarget as GameButton).data as ItemData;
-		_root.dispatchEvent(new ItemDataEvent(FAVORITE_CLICKED, itemData));
+		_dispatchEvent(new ItemDataEvent(FAVORITE_CLICKED, itemData));
+	}
+	
+	//#region Arrow buttons
+	private function _setupArrowButtonTray() : Sprite {
+		if(_arrowButtonTray) return _arrowButtonTray;
+		_arrowButtonTray = new Sprite();
+		var center:Number = _favoritesGrid.cellSize/2;
+		_createArrowButton(_favoritesGrid.cellSize, false).move(center, center - 6).appendTo(_arrowButtonTray).onButtonClick(_prevButtonClicked);
+		_createArrowButton(_favoritesGrid.cellSize, true).move(center, center + 6).appendTo(_arrowButtonTray).onButtonClick(_nextButtonClicked);
+		return _arrowButtonTray;
+	}
+	
+	private function _createArrowButton(cellSize:uint, flip:Boolean) : ScaleButton {
+		var bttn:ScaleButton = new ScaleButton(new $BackArrow(), 0.4);
+		bttn.move(cellSize/2, cellSize/2);
+		if(flip) bttn.image.rotation = 180;
+		return bttn;
+	}
+	
+	private function _findIndexOfActiveFavoriteItem() : int {
+		var activeItemData:ItemData = _getActiveItemData != null ? _getActiveItemData() as ItemData : null;
+		if(!activeItemData) return -1;
+		for(var i:int = 0; i < _favoritesItems.length; i++) {
+			if(activeItemData.matches(_favoritesItems[i])) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	private function _prevButtonClicked(e:Event) : void {
+		if(_favoritesItems.length == 0) return;
+		var index:int = _findIndexOfActiveFavoriteItem();
+		var target:ItemData = index >= 0 ? _favoritesItems[(index - 1 + _favoritesItems.length) % _favoritesItems.length] : _favoritesItems[_favoritesItems.length - 1];
+		_dispatchEvent(new ItemDataEvent(FAVORITE_CLICKED, target));
+	}
+	
+	private function _nextButtonClicked(e:Event) : void {
+		if(_favoritesItems.length == 0) return;
+		var index:int = _findIndexOfActiveFavoriteItem();
+		var target:ItemData = index >= 0 ? _favoritesItems[(index + 1) % _favoritesItems.length] : _favoritesItems[0];
+		_dispatchEvent(new ItemDataEvent(FAVORITE_CLICKED, target));
 	}
 }

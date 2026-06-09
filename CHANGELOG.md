@@ -1,3 +1,8 @@
+## V1.33g - 8 June 2026
+- [Code] favorite bar logic on `ShopCategoryPane` moved into it's own private class to avoid code getting messy with new change below
+- Favorites bar now has buttons for stepping through the favorite items one at a time
+
+
 ## V1.33f - 7 May 2026
 - Added new Laugh_2 pose
 - Added emote button icons onto pose buttons where relevant
