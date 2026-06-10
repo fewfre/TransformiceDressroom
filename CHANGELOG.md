@@ -1,6 +1,7 @@
 ## V1.33g - 8 June 2026
-- [Code] favorite bar logic on `ShopCategoryPane` moved into it's own private class to avoid code getting messy with new change below
+- [Code] Favorite bar logic on `ShopCategoryPane` moved into it's own private class to avoid code getting messy with new change below
 - Favorites bar now has buttons for stepping through the favorite items one at a time
+- Favorites bar now shows if an item is currently selected
 
 
 ## V1.33f - 7 May 2026

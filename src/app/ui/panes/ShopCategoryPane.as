@@ -83,6 +83,7 @@ package app.ui.panes
 			if(cell) {
 				var btn:PushButton = _findPushButtonInCell(cell);
 				btn.toggle(pOn, pFireEvent);
+				_favoritesBar.selectedItemInPaneChanged();
 				try {
 					if(pOn && pScrollIntoView) scrollItemIntoView(cell);
 				} catch(e){}
@@ -335,6 +336,7 @@ package app.ui.panes
 		protected override function _onCellPushButtonToggled(e:FewfEvent) : void {
 			super._onCellPushButtonToggled(e);
 			_dispatchItemDataEvent(e.data.itemData, (e.currentTarget as PushButton).pushed);
+			_favoritesBar.selectedItemInPaneChanged();
 		}
 		
 		private function _dispatchItemDataEvent(itemData:ItemData, selected:Boolean=true) : void {
@@ -409,6 +411,11 @@ class FavoritesBar
 		_render();
 	}
 	
+	public function selectedItemInPaneChanged() : void {
+		// This is called when the selected item in the main pane changes, so that the favorites bar can update which item is active if needed
+		_render();
+	}
+	
 	private function _dispatchEvent(pEvent:Event) : void { _root.dispatchEvent(pEvent); }
 	
 	private function _render() : void {
@@ -421,8 +428,9 @@ class FavoritesBar
 		}
 		_favoritesGrid.columns = columns;
 		
+		var selectedItemInPane:ItemData = _getActiveItemData();
 		for each(var tVisibleItemData:ItemData in _favoritesItems) {
-			_favoritesGrid.add(new GameButton(_favoritesGrid.cellSize).setImage(GameAssets.getItemImage(tVisibleItemData)).setData(tVisibleItemData)
+			_favoritesGrid.add(new PushButton(_favoritesGrid.cellSize).toggle(!!selectedItemInPane && selectedItemInPane.matches(tVisibleItemData), false).setImage(GameAssets.getItemImage(tVisibleItemData)).setData(tVisibleItemData)
 				.onButtonClick(_favoriteClicked));
 		}
 		
@@ -453,8 +461,8 @@ class FavoritesBar
 		if(_arrowButtonTray) return _arrowButtonTray;
 		_arrowButtonTray = new Sprite();
 		var center:Number = _favoritesGrid.cellSize/2;
-		_createArrowButton(_favoritesGrid.cellSize, false).move(center, center - 6).appendTo(_arrowButtonTray).onButtonClick(_prevButtonClicked);
-		_createArrowButton(_favoritesGrid.cellSize, true).move(center, center + 6).appendTo(_arrowButtonTray).onButtonClick(_nextButtonClicked);
+		_createArrowButton(_favoritesGrid.cellSize, true).move(center, center - 6).appendTo(_arrowButtonTray).onButtonClick(_nextButtonClicked);
+		_createArrowButton(_favoritesGrid.cellSize, false).move(center, center + 6).appendTo(_arrowButtonTray).onButtonClick(_prevButtonClicked);
 		return _arrowButtonTray;
 	}
 	
