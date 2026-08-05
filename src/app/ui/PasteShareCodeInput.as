@@ -1,14 +1,15 @@
 package app.ui
 {
-	import app.ui.buttons.ScaleButton;
+	import app.ui.buttons.GameButton;
 	import app.ui.common.FancyInput;
+
 	import com.fewfre.events.FewfEvent;
+
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.TextEvent;
 	import flash.utils.clearTimeout;
 	import flash.utils.setTimeout;
-	import app.ui.buttons.GameButton;
 	
 	public class PasteShareCodeInput extends Sprite
 	{
@@ -29,6 +30,10 @@ package app.ui
 			// Why TEXT_INPUT - https://stackoverflow.com/a/10049605/1411473
 			_input.on_field(TextEvent.TEXT_INPUT, function(e){
 				var code = e.text;//_text.text;
+				
+				// Only treat paste-like input as a share code submission. Single-char input should keep the keyboard open and behave like a normal field.
+				if(!code || code == "" || code.length == 1) { e.preventDefault(); return; }
+				
 				_input.text = ""; // Remove it now that we already grabbed it
 				_input.forceShareFieldUnfocus();
 				dispatchEvent(new FewfEvent(CHANGE, { code:code, update:_setShareCodeProgress }));
