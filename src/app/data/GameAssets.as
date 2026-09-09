@@ -1,15 +1,16 @@
 package app.data
 {
-	import com.fewfre.utils.*;
-	import com.piterwilson.utils.ColorMathUtil;
 	import app.data.*;
 	import app.world.data.*;
 	import app.world.elements.*;
+
+	import com.fewfre.display.DisplayWrapper;
+	import com.fewfre.utils.*;
+
 	import flash.display.*;
 	import flash.geom.*;
-	import flash.utils.setTimeout;
-	import com.fewfre.display.DisplayWrapper;
 	import flash.utils.Dictionary;
+	import flash.utils.setTimeout;
 
 	public class GameAssets
 	{
@@ -78,6 +79,8 @@ function(){
 		new ItemData(ItemType.BACK, 'gold', { itemClass:FromageSourisOr, classMap:{ ClipGrosse:FromageSourisOr } }),
 		new ItemData(ItemType.BACK, 'herbe', { itemClass:FromageHerbe, classMap:{ ClipGrosse:FromageHerbe } }),
 		new ItemData(ItemType.BACK, 'saumon', { itemClass:FromageSourisSaumon, classMap:{ ClipGrosse:FromageSourisSaumon } }),
+		new ItemData(ItemType.BACK, 'gomme', { itemClass:FromageSourisGomme, classMap:{ ClipGrosse:FromageSourisGomme } }),
+		new ItemData(ItemType.BACK, 'cahier', { itemClass:FromageSourisCahier, classMap:{ ClipGrosse:FromageSourisCahier } }),
 	];
 },
 function(){

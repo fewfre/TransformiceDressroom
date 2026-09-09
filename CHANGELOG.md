@@ -2,6 +2,7 @@
 - [Code] Favorite bar logic on `ShopCategoryPane` moved into it's own private class to avoid code getting messy with new change below
 - Favorites bar now has buttons for stepping through the favorite items one at a time
 - Favorites bar now shows if an item is currently selected
+- (9 Sep) Added 2 new cheeses, gomme & cahier
 
 
 ## V1.33f - 7 May 2026
