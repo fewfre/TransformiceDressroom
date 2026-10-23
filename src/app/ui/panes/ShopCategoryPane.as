@@ -160,7 +160,7 @@ package app.ui.panes
 			return _findPushButtonInCell(_getCellWithItemData(itemData));
 		}
 		
-		private function _setupGrid(pItemList:Vector.<ItemData>) : void {
+		protected function _setupGrid(pItemList:Vector.<ItemData>) : void {
 			_itemDataVector = pItemList;
 			_setDefaultItemDataFromList(pItemList);
 
@@ -173,7 +173,7 @@ package app.ui.panes
 			refreshScrollbox();
 		}
 		
-		private function _addButton(itemData:ItemData, pScale:Number, i:int) : void {
+		protected function _addButton(itemData:ItemData, pScale:Number, i:int) : void {
 			var shopItem : MovieClip = GameAssets.getColoredItemImage(itemData);
 			shopItem.scaleX = shopItem.scaleY = pScale;
 			var cell:Sprite = new Sprite();

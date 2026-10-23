@@ -41,6 +41,8 @@
     "btn_divine_mode":         { "text":"Divine" },
     "btn_no_skills_mode":      { "text":"Disable skills" },
 	
+    "duo_poses":               { "text":"Duo Poses" },
+	
 	"setting_hardcoded_save_scale_label":       { "text":"Hardcoded save scale" },
 	"setting_hardcoded_save_scale_placeholder": { "text":"Dressroom uses 1-8 (default: 3)" },
 	"setting_hardcoded_save_size_label":        { "text":"Hardcoded PNG save size" },

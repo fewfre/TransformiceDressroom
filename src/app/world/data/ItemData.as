@@ -1,8 +1,6 @@
 package app.world.data
 {
 	import app.data.*;
-	import flash.display.*;
-	import flash.geom.*;
 
 	public class ItemData
 	{
@@ -52,5 +50,11 @@ package app.world.data
 		public function getPart(pID:String, pOptions:Object=null) : Class {
 			return !classMap ? null : (classMap[pID] ? classMap[pID] : null);
 		}
+		
+		// Pose specific stuff
+		public var partnerPoseItemData:ItemData = null;
+		public var partnerPoseOffsetX:Number = 0;
+		public function get hasPartnerPose() : Boolean { return type == ItemType.POSE && !!partnerPoseItemData; }
+		public function setPartnerPose(pPartnerItemData:ItemData, pVal:Number) : ItemData { partnerPoseItemData = pPartnerItemData; partnerPoseOffsetX = pVal; return this; }
 	}
 }

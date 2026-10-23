@@ -14,14 +14,15 @@ package app.world
 	import app.world.data.*;
 	import app.world.elements.*;
 	import app.world.events.ItemDataEvent;
-	
-	import com.fewfre.display.*;
+
 	import com.fewfre.data.I18n;
+	import com.fewfre.display.*;
 	import com.fewfre.events.FewfEvent;
 	import com.fewfre.loaders.SimpleUrlLoader;
 	import com.fewfre.utils.*;
+
 	import ext.ParentApp;
-	
+
 	import flash.display.*;
 	import flash.events.*;
 	import flash.external.ExternalInterface;
@@ -262,10 +263,18 @@ package app.world
 		}
 
 		private function _setupItemPane(pType:ItemType) : ShopCategoryPane {
-			var tPane:ShopCategoryPane = new ShopCategoryPane(pType);
+			var tPane:ShopCategoryPane = pType == ItemType.POSE ? new PoseShopCategoryPane(_character.outfitData.partnerOutfitData) : new ShopCategoryPane(pType);
 			tPane.on(ShopCategoryPane.ITEM_SELECTED, _onItemSelected);
 			tPane.on(ShopCategoryPane.ITEM_REMOVED, _onItemRemoved);
 			tPane.on(ShopCategoryPane.FLAG_WAVE_CODE_CHANGED, function(e:FewfEvent){ _character.outfitData.flagWavingCode = e.data.code; });
+			if(tPane is PoseShopCategoryPane) {
+				tPane.on(PoseShopCategoryPane.PARTNER_OUTFIT_CHANGED, function(e:FewfEvent):void {
+					_character.outfitData.partnerOutfitData = e.data.outfitData as OutfitData;
+				});
+				if(!_character.outfitData.partnerOutfitData) {
+					_character.outfitData.partnerOutfitData = (tPane as PoseShopCategoryPane).partnerOutfitData;
+				}
+			}
 			
 			tPane.infobar.on(Infobar.COLOR_WHEEL_CLICKED, function(){ _colorButtonClicked(pType); });
 			tPane.infobar.on(Infobar.ITEM_PREVIEW_CLICKED, function(){ _removeItem(pType); });
@@ -405,6 +414,8 @@ package app.world
 			}
 			
 			var parseSuccess:Boolean = _character.outfitData.parseShareCode(code);
+			var posePane:PoseShopCategoryPane = getShopPane(ItemType.POSE) as PoseShopCategoryPane;
+			if(posePane) posePane.syncPartnerOutfitData(_character.outfitData.partnerOutfitData);
 			
 			_character.updatePose();
 			

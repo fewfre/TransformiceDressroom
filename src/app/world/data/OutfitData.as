@@ -5,7 +5,9 @@ package app.world.data
 	import app.data.ShamanMode;
 	import app.world.data.ItemData;
 	import app.world.data.SkinData;
+
 	import com.fewfre.utils.FewfUtils;
+
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.net.URLVariables;
@@ -32,6 +34,10 @@ package app.world.data
 		private var _flagWavingCode:String = "";
 		public function get flagWavingCode():String { return _flagWavingCode; }
 		public function set flagWavingCode(val:String) { _flagWavingCode = val; _dispatchUpdate(); }
+
+		private var _partnerOutfitData:OutfitData;
+		public function get partnerOutfitData():OutfitData { return _partnerOutfitData; }
+		public function set partnerOutfitData(val:OutfitData) { _partnerOutfitData = val; _dispatchUpdate(); }
 
 		private var _itemDataMap:Dictionary; // Record<ItemType, ItemData>
 		private var _itemLockMap:Dictionary; // Record<ItemType, Boolean>
@@ -122,13 +128,13 @@ package app.world.data
 		/////////////////////////////
 		//#region Share Code - Parse
 		/////////////////////////////
-		public function parseShareCode(pCode:String, pSkipTrace:Boolean=false) : Boolean {
+		public function parseShareCode(pCode:String, pSkipTrace:Boolean=false, pParsePartner:Boolean=true) : Boolean {
 			if(!pCode) return true; // true since technically no errors, just an empty share code?
 			if(!pSkipTrace) trace("(parseParams) ", pCode);
 			
 			// Url param code
 			if(pCode.indexOf("=") > -1) {
-				return _parseParamsFewfreSyntax(pCode);
+				return _parseParamsFewfreSyntax(pCode, pParsePartner);
 			}
 			else { // Official TFM /dressing params
 				return _parseParamsTfmOfficialSyntax(pCode);
@@ -140,7 +146,7 @@ package app.world.data
 			return this;
 		}
 		
-		private function _parseParamsFewfreSyntax(pCode:String) : Boolean {
+		private function _parseParamsFewfreSyntax(pCode:String, pParsePartner:Boolean) : Boolean {
 			try {
 				var pParams = new URLVariables();
 				pParams.decode(pCode);
@@ -160,6 +166,13 @@ package app.world.data
 						var tAllowNull:Boolean = !(itemType == ItemType.SKIN || itemType == ItemType.POSE);
 						_itemDataMap[itemType] = tAllowNull ? tData : ( tData == null ? _itemDataMap[itemType] : tData );
 					// } catch (error:Error) { };
+				}
+				_partnerOutfitData = null;
+				var poseData:ItemData = getItemData(ItemType.POSE);
+				if(pParsePartner && poseData && poseData.hasPartnerPose && pParams.p2) {
+					_partnerOutfitData = new OutfitData(true)
+						.setItemDataVector(new <ItemData>[GameAssets.defaultSkin, GameAssets.defaultPose]);
+					if(!_partnerOutfitData.parseShareCode(pParams.p2, true, false)) return false;
 				}
 				
 				if(pParams.paw == "y") { _itemDataMap[ItemType.OBJECT] = GameAssets.extraObjectWand; }
@@ -203,6 +216,7 @@ package app.world.data
 					if(tTypes[i] === null) { continue; }
 					_setParamToTypeTfmOfficialSyntax(tTypes[i], arr[i]);
 				}
+				_partnerOutfitData = null;
 				_dispatchUpdate();
 			} catch(error:Error) { return false; };
 			return true;
@@ -241,7 +255,7 @@ package app.world.data
 		/////////////////////////////
 		//#region Share Code - Stringify
 		/////////////////////////////
-		public function stringify_fewfreSyntax() : String {
+		public function stringify_fewfreSyntax(pSkipPartner:Boolean=false) : String {
 			var tParms = new URLVariables();
 			
 			for each(var itemType:ItemType in FEWFRE_SYNTAX_LOOPING_ITEM_TYPES) {
@@ -271,6 +285,10 @@ package app.world.data
 			}
 			if(_flagWavingCode && getItemData(ItemType.POSE).id == "Drapeau") {
 				tParms.fw = _flagWavingCode;
+			}
+			var poseData:ItemData = getItemData(ItemType.POSE);
+			if(!pSkipPartner && poseData && poseData.hasPartnerPose && _partnerOutfitData) {
+				tParms.p2 = _partnerOutfitData.stringify_fewfreSyntax(true);
 			}
 
 			return tParms.toString().replace(/%3B/g, ";");

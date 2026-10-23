@@ -3,13 +3,13 @@ package app.world.elements
 	import app.data.ConstantsApp;
 	import app.data.ItemType;
 	import app.world.data.*;
+
 	import com.fewfre.utils.Fewf;
-	import com.fewfre.utils.FewfUtils;
+
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
-	import flash.utils.Dictionary;
 
 	public class Character
 	{
@@ -20,6 +20,7 @@ package app.world.elements
 		private var _root       : Sprite;
 		private var _outfitData : OutfitData;
 		private var _pose       : Pose;
+		private var _partner    : CharacterPartner;
 		
 		private var _dragging   : Boolean = false;
 		private var _dragBounds : Rectangle;
@@ -27,9 +28,12 @@ package app.world.elements
 		// Properties
 		public function get outfitData() : OutfitData { return _outfitData; }
 		public function get pose() : Pose { return _pose; }
+		public function get partnerPose() : Pose { return _partner ? _partner.pose : null; }
 		
 		public function get scale() : Number { return _pose.scaleX; }
-		public function set scale(pVal:Number) : void { _pose.scaleX = _pose.scaleY = pVal; }
+		public function set scale(pVal:Number) : void {
+			_pose.scaleX = _pose.scaleY = pVal;
+		}
 
 		// Constructor
 		public function Character(pOutfitData:OutfitData=null) {
@@ -59,6 +63,7 @@ package app.world.elements
 			// if(animatePose) outfit.play(); else outfit.stopAtLastFrame();
 			_pose.stopAtLastFrame();
 			_pose.goToPreviousFrameIfPoseHasntChanged(tOldPose);
+			_updatePartnerPose();
 			_root.dispatchEvent(new Event(POSE_UPDATED));
 		}
 		
@@ -66,7 +71,7 @@ package app.world.elements
 			_root.doubleClickEnabled = true;
 			return this;
 		}
-
+		
 		/////////////////////////////
 		// Dragging
 		/////////////////////////////
@@ -87,6 +92,21 @@ package app.world.elements
 		public function clampCoordsToDragBounds() : void {
 			_root.x = Math.max(_dragBounds.x, Math.min(_dragBounds.right, _root.x));
 			_root.y = Math.max(_dragBounds.y, Math.min(_dragBounds.bottom, _root.y));
+		}
+
+		/////////////////////////////
+		// Partner Pose
+		/////////////////////////////
+		public function setPartnerOutfitData(pOutfitData:OutfitData) : void { _outfitData.partnerOutfitData = pOutfitData; }
+		public function clearPartnerPose() : void { _outfitData.partnerOutfitData = null; };
+		private function _updatePartnerPose() : void {
+			if(_partner) {
+				_partner.removeSelf().destroy();
+				_partner = null;
+			}
+			var tPartnerPoseData:ItemData = _outfitData.getItemData(ItemType.POSE).partnerPoseItemData;
+			if(!_outfitData.partnerOutfitData || !tPartnerPoseData) return;
+			_partner = new CharacterPartner(_outfitData.partnerOutfitData, tPartnerPoseData, _outfitData.getItemData(ItemType.POSE).partnerPoseOffsetX, _pose).appendToAt(_pose, 0);
 		}
 		
 		/////////////////////////////

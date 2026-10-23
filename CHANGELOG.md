@@ -1,3 +1,7 @@
+## V1.34 - 23 October 2026
+- Added proper support for duo poses - selecting one now show the other mouse in the pose, and allows you to input an outfit code for it to use
+
+
 ## V1.33g - 8 June 2026
 - [Code] Favorite bar logic on `ShopCategoryPane` moved into it's own private class to avoid code getting messy with new change below
 - Favorites bar now has buttons for stepping through the favorite items one at a time
