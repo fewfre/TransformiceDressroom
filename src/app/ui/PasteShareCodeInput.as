@@ -19,13 +19,15 @@ package app.ui
 		
 		// Storage
 		private var _input              : FancyInput;
+		private var _defaultPlaceholder : String;
 		private var _placeholderState   : String;
 		private var _placeholderTimeout : Number;
 		private var _undoIcon           : GameButton;
 		
 		// Constructor
-		public function PasteShareCodeInput(pWidth:Number=250) {
-			_input = new FancyInput({ width:pWidth }).setPlaceholderText("share_paste").appendTo(this);
+		public function PasteShareCodeInput(pWidth:Number=250, pDefaultPlaceholder:String="share_paste") {
+			_defaultPlaceholder = pDefaultPlaceholder;
+			_input = new FancyInput({ width:pWidth }).setPlaceholderText(_defaultPlaceholder).appendTo(this);
 			
 			// Why TEXT_INPUT - https://stackoverflow.com/a/10049605/1411473
 			_input.on_field(TextEvent.TEXT_INPUT, function(e){
@@ -78,7 +80,7 @@ package app.ui
 					break;
 				}
 				case "placeholder": {
-					_input.setPlaceholderText("share_paste");
+					_input.setPlaceholderText(_defaultPlaceholder);
 					_input.placeholderTextBase.color = 0x666666;
 					break;
 				}

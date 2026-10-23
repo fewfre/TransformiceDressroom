@@ -39,7 +39,7 @@ package app.ui.panes
 			_pairedGrid = new Grid(385, 5).move(15, 30).appendTo(_pairedSection);
 			new TextTranslated("duo_poses", { size:12, bold:true }).setOrigin(0, 0.5).move(15, 12).appendTo(_pairedSection);
 			var xx:Number = 245;
-			new PasteShareCodeInput(250).move(xx, 12).appendTo(_pairedSection).on(PasteShareCodeInput.CHANGE, _onPartnerShareCodePasted);
+			new PasteShareCodeInput(250, "duo_poses_paste_share").move(xx, 12).appendTo(_pairedSection).on(PasteShareCodeInput.CHANGE, _onPartnerShareCodePasted);
 			xx += (250/2) + 24/2 + 7;
 			(_partnerVisibilityButton = new PushButton(24)).setImage(new $HideEyeIcon(), 0.35).setOrigin(0.5, 0.5).move(xx, 12).appendTo(_pairedSection);
 			_partnerVisibilityButton.onToggle(_onPartnerVisibilityToggled);

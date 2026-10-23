@@ -535,12 +535,20 @@ package app.world
 		private function _saveAsAnimation(pFormat:String=null) : void {
 			if(!ConstantsApp.ANIMATION_DOWNLOAD_ENABLED) return _onSaveClicked(null);
 			
-			// FewfDisplayUtils.saveAsSpriteSheet(_character.copy().outfit.pose, "spritesheet", this.character.outfit.scaleX);
 			_toolbox.downloadButtonEnable(false);
-			FewfDisplayUtils.saveAsAnimatedGif(new Pose().applyOutfitData(_character.outfitData).poseMC, "character", _getHardcodedSaveScale() || _character.pose.scaleX, pFormat, function(){
-				_toolbox.downloadButtonEnable(true);
-			});
+			var poseItemData:ItemData = _character.outfitData.getItemData(ItemType.POSE);
+			var pose:Pose = new Pose().applyOutfitData(_character.outfitData);
+			
+			var saveScale:Number = _getHardcodedSaveScale() || _character.pose.scaleX;
+			if(!_character.outfitData.partnerOutfitData || !poseItemData || !poseItemData.hasPartnerPose) {
+				// FewfDisplayUtils.saveAsSpriteSheet(_character.copy().outfit.pose, "spritesheet", this.character.outfit.scaleX);
+				FewfDisplayUtils.saveAsAnimatedGif(pose.poseMC, "character", saveScale, pFormat, _onAnimationSaveComplete);
+			} else {
+				var partner:CharacterPartner = new CharacterPartner(_character.outfitData.partnerOutfitData, poseItemData.partnerPoseItemData, poseItemData.partnerPoseOffsetX, pose).appendToAt(pose, 0);
+				FewfDisplayUtils.saveAsAnimatedGifComposite(pose.poseMC, pose, partner.syncToMainFrame, "character", saveScale, pFormat, _onAnimationSaveComplete);
+			}
 		}
+		private function _onAnimationSaveComplete() : void { _toolbox.downloadButtonEnable(true); }
 		
 		private function _onSaveItemDataAsImage(e:ItemDataEvent) : void {
 			if(!e.itemData) { return; }

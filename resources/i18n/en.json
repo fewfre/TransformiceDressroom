@@ -24,7 +24,7 @@
     "share_tfm_syntax":        { "text":"TFM /dressing Syntax (Pose & Other not saved)" },
     "share_fewfre_syntax":     { "text":"Fewfre Syntax (full support)" },
     
-    "share_paste":             { "text":"Paste your share code / url here" },
+    "share_paste":             { "text":"Paste your share code here" },
     "share_paste_success":     { "text":"Success!" },
     "share_paste_invalid":     { "text":"Invalid" },
 	
@@ -42,6 +42,7 @@
     "btn_no_skills_mode":      { "text":"Disable skills" },
 	
     "duo_poses":               { "text":"Duo Poses" },
+    "duo_poses_paste_share":   { "text":"Paste your partner's share code here" },
 	
 	"setting_hardcoded_save_scale_label":       { "text":"Hardcoded save scale" },
 	"setting_hardcoded_save_scale_placeholder": { "text":"Dressroom uses 1-8 (default: 3)" },

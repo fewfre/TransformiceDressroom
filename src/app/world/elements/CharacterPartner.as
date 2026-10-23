@@ -43,6 +43,12 @@ package app.world.elements
 			_mainPose = null;
 		}
 
+		public function syncToMainFrame() : void {
+			var partnerClip:MovieClip = _pose.poseMC;
+			partnerClip.gotoAndStop(Math.min(_mainPose.poseMC.currentFrame, partnerClip.totalFrames));
+			_setPartnerPoseChildrenPlaying(false);
+		}
+
 		private function _syncAnimation(e:Event) : void {
 			if(!_mainPose || !_pose) return;
 

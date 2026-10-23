@@ -2,7 +2,9 @@ package com.fewfre.utils
 {
 	import com.adobe.images.PNGEncoder;
 	import com.fewfre.loaders.SpriteSheetToGifLoader;
+
 	import ext.ParentAppSystem;
+
 	import flash.desktop.Clipboard;
 	import flash.desktop.ClipboardFormats;
 	import flash.display.*;
@@ -316,6 +318,41 @@ package com.fewfre.utils
 
 			return new SpritesheetData(tBitmap, tWidth, tHeight, totalFrames);
 		}
+
+		public static function convertCompositeToSpriteSheet(mc:MovieClip, composite:DisplayObject, pSyncFrame:Function=null, scale:Number=1, bg:int=-1) : SpritesheetData {
+			var totalFrames:int = mc.totalFrames;
+			var lifetimeBounds:Rectangle = null;
+			var tempRect:Rectangle;
+			for(var i:int = 1; i <= totalFrames; i++) {
+				mc.gotoAndStop(i);
+				if(pSyncFrame != null) pSyncFrame();
+				tempRect = composite.getBounds(composite);
+				if(lifetimeBounds == null) lifetimeBounds = tempRect.clone();
+				else lifetimeBounds = lifetimeBounds.union(tempRect);
+			}
+
+			var rect:Rectangle = lifetimeBounds;
+			var frameWidth:int = Math.ceil(rect.width * scale);
+			var frameHeight:int = Math.ceil(rect.height * scale);
+			var columns:uint = totalFrames * frameWidth > 1024 * 4 ? Math.floor((1024 * 4) / frameWidth) : totalFrames;
+			var rows:uint = Math.ceil(totalFrames / columns);
+			var bitmap:BitmapData = new BitmapData(frameWidth * columns, frameHeight * rows, bg == -1, bg >= 0 ? bg : 0xFFFFFF);
+
+			mc.gotoAndStop(1);
+			for(var frame:int = 0; frame < totalFrames; frame++) {
+				if(pSyncFrame != null) pSyncFrame();
+				var frameBitmap:BitmapData = new BitmapData(frameWidth, frameHeight, true, 0xFFFFFF);
+				var frameMatrix:Matrix = new Matrix(1, 0, 0, 1, -rect.left, -rect.top);
+				frameMatrix.scale(scale, scale);
+				bitmapDataDrawBestQuality(frameBitmap, composite, frameMatrix);
+
+				var sheetMatrix:Matrix = new Matrix(1, 0, 0, 1, (frame % columns) * frameWidth, Math.floor(frame / columns) * frameHeight);
+				bitmapDataDrawBestQuality(bitmap, frameBitmap, sheetMatrix);
+				mc.nextFrame();
+			}
+
+			return new SpritesheetData(bitmap, frameWidth, frameHeight, totalFrames);
+		}
 		
 		public static function saveAsSpriteSheet(mc:MovieClip, pName:String, scale:Number=1) {
 			var sheetData = convertMovieClipToSpriteSheet(mc, scale);
@@ -335,6 +372,25 @@ package com.fewfre.utils
 				saveImageDataToDevice(data, pName, pFormat ? pFormat : 'gif');
 				pFinished && pFinished();
 			});
+		}
+		public static function saveAsAnimatedGifComposite(mc:MovieClip, composite:DisplayObject, pSyncFrame:Function, pName:String, scale:Number=1, pFormat:String=null, pFinished:Function=null) : void {
+			if(_deviceUsesCameraRoll()) {
+				handleErrorMessage(new Error("Sorry, animated GIFs cannot be saved to mobile camera roll - please use desktop app or disable animation to copy as a still image"));
+				pFinished && pFinished();
+				return;
+			}
+			var sheetData:SpritesheetData = convertCompositeToSpriteSheet(mc, composite, pSyncFrame, scale, -1);
+			var png:ByteArray = PNGEncoder.encode(sheetData.bitmapData);
+			try {
+				SpriteSheetToGifLoader.triggerApiToConvertSpritesheetToGif(png, sheetData.frameWidth, sheetData.frameHeight, sheetData.framesCount, pFormat, function(data:*, error:Error):void {
+					if(error) { handleErrorMessage(error); pFinished && pFinished(); return; }
+					saveImageDataToDevice(data, pName, pFormat ? pFormat : 'gif');
+					pFinished && pFinished();
+				});
+			} catch(err:Error) {
+				handleErrorMessage(err);
+				pFinished && pFinished();
+			}
 		}
 		private static function _fetchGif(mc:MovieClip, scale:Number, pFormat:String, pCallback:Function) {
 			var sheetData:SpritesheetData = convertMovieClipToSpriteSheet(mc, scale, -1);//pFormat && pFormat != "gif" ? -1 : 0x6A7495); // give it a bg color since gifs don't support partial opacity
