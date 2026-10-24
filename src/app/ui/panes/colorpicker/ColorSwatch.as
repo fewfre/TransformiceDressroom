@@ -1,7 +1,10 @@
 package app.ui.panes.colorpicker
 {
 	import app.ui.buttons.ScaleButton;
+
+	import com.fewfre.display.Tooltip;
 	import com.fewfre.events.FewfEvent;
+
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
@@ -86,6 +89,7 @@ package app.ui.panes.colorpicker
 			
 			bttnIcon = _createInvisibleHitboxWithIcon(SWATCH_SIZE*2, new $Lock());
 			_lockIcon = new ScaleButton(bttnIcon).appendTo(this).on(MouseEvent.CLICK, _onLockClicked) as ScaleButton
+			new Tooltip(_lockIcon, "colorpicker_lock_tooltip").setPlacement(Tooltip.LEFT).setMaxWidth(200);
 			unlock();
 			
 			_updateBorders();

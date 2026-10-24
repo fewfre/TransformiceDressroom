@@ -1,11 +1,13 @@
 package app.ui.panes.infobar
 {
-	import flash.display.Sprite;
 	import app.ui.buttons.GameButton;
 	import app.ui.buttons.PushButton;
-	import flash.events.Event;
-	import flash.geom.Rectangle;
+
+	import com.fewfre.display.Tooltip;
 	import com.fewfre.events.FewfEvent;
+
+	import flash.display.Sprite;
+	import flash.events.Event;
 
 	public class GridManagementWidget extends Sprite
 	{
@@ -43,6 +45,7 @@ package app.ui.panes.infobar
 						isRefreshLocked ? _randomizeButton.disable() : _randomizeButton.enable();
 						dispatchEvent(new FewfEvent(RANDOMIZE_LOCK_CLICKED, { locked:isRefreshLocked }));
 					});
+					new Tooltip(_randomizeLockButton, "infobar_lock_tooltip").setPlacement(Tooltip.BOTTOM).setMaxWidth(270);
 					xx += bsize + spacing;
 				}
 			}

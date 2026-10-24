@@ -1,5 +1,9 @@
 ## V1.34 - 23 October 2026
-- Added proper support for duo poses - selecting one now show the other mouse in the pose, and allows you to input an outfit code for it to use
+- Added proper support for duo poses - selecting one now shows the other mouse in the pose, and allows you to input an outfit code for it to use
+- Tooltips added - currently added support to:
+	- The two inputs on the help screen (each has a "?" icon)
+	- When hovering the lock icon button on item toolbar
+	- When hovering the lock icon button on color picker
 
 
 ## V1.33g - 8 June 2026

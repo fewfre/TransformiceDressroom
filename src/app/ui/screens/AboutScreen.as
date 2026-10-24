@@ -5,19 +5,20 @@ package app.ui.screens
 	import app.ui.buttons.GameButton;
 	import app.ui.buttons.ScaleButton;
 	import app.ui.common.FancyInput;
+	import app.ui.common.InfoTooltipIcon;
+
 	import com.fewfre.data.I18n;
 	import com.fewfre.display.DisplayWrapper;
 	import com.fewfre.display.RoundRectangle;
 	import com.fewfre.display.TextTranslated;
 	import com.fewfre.events.FewfEvent;
 	import com.fewfre.utils.Fewf;
-	import flash.display.Bitmap;
-	import flash.display.Graphics;
+
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import flash.net.navigateToURL;
 	import flash.net.URLRequest;
+	import flash.net.navigateToURL;
 
 	public class AboutScreen
 	{
@@ -33,7 +34,7 @@ package app.ui.screens
 			
 			GameAssets.createScreenBackdrop().appendTo(_root).on(MouseEvent.CLICK, _onCloseClicked);
 			
-			var tWidth:Number = 400, tHeight:Number = 200;
+			var tWidth:Number = 420, tHeight:Number = 200;
 			// Background
 			new RoundRectangle(tWidth, tHeight).toOrigin(0.5).drawAsTray().appendTo(_root);
 
@@ -82,13 +83,14 @@ package app.ui.screens
 		
 		private function _setupSettingsTray() : Sprite {
 			var tTray:Sprite = new Sprite(), yy:Number = 4;
-			var tBg:RoundRectangle = new RoundRectangle(150+250, 66).toOrigin(0.5, 0).drawAsTray().appendTo(tTray);
+			var tBg:RoundRectangle = new RoundRectangle(410, 66).toOrigin(0.5, 0).drawAsTray().appendTo(tTray);
 			
 			// Hardcoded Save Scale Input
 			yy += 28/2;
 			new TextTranslated("setting_hardcoded_save_scale_label", { size:10, originX:0 }).moveT(-tBg.width/2+10, yy).appendToT(tTray);
+			new InfoTooltipIcon("setting_hardcoded_save_scale_tooltip").setSize(14).setOrigin(0, 0.5).move(-42, yy).appendTo(tTray);
 			var hardcodedCanvasSaveScale:Object = Fewf.sharedObject.getData(ConstantsApp.SHARED_OBJECT_KEY_HARDCODED_SAVE_SCALE);
-			var hScaleInput:FancyInput = new FancyInput({ width:210 }).setText((hardcodedCanvasSaveScale || "").toString()).setPlaceholderText("setting_hardcoded_save_scale_placeholder").move(75, yy).appendTo(tTray)
+			var hScaleInput:FancyInput = new FancyInput({ width:210 }).setText((hardcodedCanvasSaveScale || "").toString()).setPlaceholderText("setting_hardcoded_save_scale_placeholder").move(88, yy).appendTo(tTray)
 				.setRestrict("0-9\.")
 				.on_field(Event.CHANGE, function(e:Event){
 					var input:FancyInput = hScaleInput, saveSO:Function = function(val:*):void { Fewf.sharedObject.setData(ConstantsApp.SHARED_OBJECT_KEY_HARDCODED_SAVE_SCALE, val); };
@@ -107,8 +109,9 @@ package app.ui.screens
 			// Hardcoded Canvas Size Input
 			yy += 28 + 2;
 			new TextTranslated("setting_hardcoded_save_size_label", { size:10, originX:0 }).moveT(-tBg.width/2+10, yy).appendToT(tTray);
+			new InfoTooltipIcon("setting_hardcoded_save_size_tooltip").setSize(14).setOrigin(0, 0.5).move(-42, yy).appendTo(tTray);
 			var hardcodedCanvasSaveSize:Object = Fewf.sharedObject.getData(ConstantsApp.SHARED_OBJECT_KEY_HARDCODED_CANVAS_SAVE_SIZE);
-			var hCanvasSizeInput:FancyInput = new FancyInput({ width:210 }).setText((hardcodedCanvasSaveSize || "").toString()).setPlaceholderText("setting_hardcoded_save_size_placeholder").move(75, yy).appendTo(tTray)
+			var hCanvasSizeInput:FancyInput = new FancyInput({ width:210 }).setText((hardcodedCanvasSaveSize || "").toString()).setPlaceholderText("setting_hardcoded_save_size_placeholder").move(88, yy).appendTo(tTray)
 				.setRestrict("0-9")
 				.on_field(Event.CHANGE, function(e:Event){
 					var input:FancyInput = hCanvasSizeInput, saveSO:Function = function(val:*):void { Fewf.sharedObject.setData(ConstantsApp.SHARED_OBJECT_KEY_HARDCODED_CANVAS_SAVE_SIZE, val); };
