@@ -1,0 +1,33 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "actionscript",
+            "debug": true,
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [],
+            "label": "ActionScript: compile debug - asconfig.json"
+        },
+        {
+            "label": "Tail Flash Player trace log",
+            "type": "shell",
+            "command": "Get-Content",
+            "args": [
+                "${env:APPDATA}\\Macromedia\\Flash Player\\Logs\\flashlog.txt",
+                "-Wait",
+                "-Tail",
+                "30"
+            ],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            },
+            "runOptions": {
+                "runOn": "folderOpen"
+            }
+        }
+    ]
+}

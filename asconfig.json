@@ -3,7 +3,9 @@
     "type":"app",
     "compilerOptions": {
 		"source-path": ["src"],
-        "output": "dressroom2.swf",
+		"output": "dressroom.swf",
+		"target-player": "32.0",
+		"swf-version": 43,
 		"warnings": false,
 		"strict": true,
 		"library-path": [

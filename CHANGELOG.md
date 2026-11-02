@@ -1,3 +1,8 @@
+## V1.34b - 1 November 2026
+- Build process updated to longer require an fla, and adding VC Code debug support
+	- as part of this the build target is also increasing from version SWF 15/Flash Player 11.2 up to the last SWF version that maps to a flash player version: SWF 43/Flash Player 32.0
+
+
 ## V1.34 - 23 October 2026
 - Added proper support for duo poses - selecting one now shows the other mouse in the pose, and allows you to input an outfit code for it to use
 - Tooltips added - currently added support to:
